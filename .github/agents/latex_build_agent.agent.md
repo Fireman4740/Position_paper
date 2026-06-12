@@ -12,7 +12,9 @@ You maintain the local LaTeX build for the active manuscript.
 
 - Root file: `main_position.tex`
 - Bibliography: `references.bib`
-- Class file: `uai2026.cls`
+- Class file: `clv2025.cls`
+- Bibliography style: `compling.bst`
+- Template reference: `conference-template/cljournal/`
 - Build command: `make check`
 - Release command: `make pdf`
 
@@ -21,7 +23,7 @@ You maintain the local LaTeX build for the active manuscript.
 - Compile the manuscript after substantive edits.
 - Fix LaTeX errors introduced by edits.
 - Report unresolved references, missing citations, and severe layout warnings.
-- Keep conference template files in `conference-template/uai2026/` untouched.
+- Keep conference template files in `conference-template/cljournal/` untouched unless intentionally updating the template.
 - Keep generated files in `build/` or ignored by Git.
 
 ## Rules

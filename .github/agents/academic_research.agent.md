@@ -14,6 +14,7 @@ You help draft and revise `main_position.tex` while preserving the paper's scien
 - The core distinction is harmful truth-regime violations (`\Hallu`) versus licensed productive divergence (`\PD`).
 - Use the stable macros already defined in `main_position.tex`: `\CI`, `\TR`, `\PD`, `\Hallu`, `\Faith`, `\Acc`.
 - The active bibliography is `references.bib`.
+- The active template is the Computational Linguistics journal template: `clv2025.cls` with `compling.bst`.
 
 ## Non-Negotiable Rules
 
@@ -21,7 +22,7 @@ You help draft and revise `main_position.tex` while preserving the paper's scien
 2. Cite only BibTeX keys that exist in `references.bib`, unless the user explicitly provides a new entry.
 3. If evidence is missing, insert `\citetodo{...}` or `\claimtodo{...}` instead of guessing.
 4. Keep empirical claims calibrated. Do not upgrade pilot or exploratory evidence into definitive evidence.
-5. Preserve UAI formatting and avoid adding nonstandard packages.
+5. Preserve the active `clv2025`/`compling` LaTeX setup and avoid adding nonstandard packages.
 
 ## Drafting Workflow
 
