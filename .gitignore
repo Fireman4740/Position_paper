@@ -1,0 +1,43 @@
+.DS_Store
+
+# Historical import and local heavy sources
+old/
+archive/*
+!archive/README.md
+!archive/old-versions.md
+sources/*
+!sources/README.md
+
+# Build outputs
+build/
+%OUTDIR%/
+.texmex-temp/
+
+# LaTeX artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.brf
+*.dvi
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.ps
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+
+# Local editor/export variants; the active manuscript is main_position.tex
+/Final.tex
+/main_position (*).tex
+
+# Keep source PDFs out of normal Git history
+*.pdf
+!main_position.pdf
