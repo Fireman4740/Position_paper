@@ -1,6 +1,8 @@
 # Archive Inventory
 
-The active manuscript was imported from:
+The heavy historical folders were removed from the active workspace during cleanup.
+
+The active manuscript was originally imported from:
 
 - `old/Position_paper_latex/main_position.tex`
 
@@ -20,4 +22,4 @@ Important context sources:
 - `old/résultat_hallulens_llm_export.md`
 - `old/Position_paper_latex/résultat_hallulens_llm_export.md`
 
-The `old/` directory is intentionally ignored by the root Git repository. Use it as read-only archive/context unless intentionally migrating specific material into the active stack.
+The active workspace now keeps only the current manuscript, bibliography, notes, agents, figures, and template placeholder/reference files needed for the rewrite.

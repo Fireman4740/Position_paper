@@ -1,12 +1,16 @@
-\documentclass{uai2026}
+\documentclass[final]{clv2025}
+
+\jvol{vv}
+\jnum{nn}
+\jyear{2025}
+\dochead{Position Paper}
 
 %% Choose your variant of English
 \usepackage[american]{babel}
 
 %% Required packages
 \usepackage{natbib}
-    \bibliographystyle{plainnat}
-    \renewcommand{\bibsection}{\subsubsection*{References}}
+    \bibliographystyle{compling}
 \usepackage{mathtools}
 \usepackage{booktabs}
 \usepackage{tikz}
@@ -49,19 +53,14 @@
 
 \title{Hallucination Is Relative: Evaluating LLM Divergence Under Truth-Regime Contracts}
 
-\author[1,2]{\href{mailto:<jj@example.edu>?Subject=Your UAI 2026 paper}{Mathis Carlesso}{}}
-\author[2]{Martino Lovisetto}
-\author[1]{Elöd Egyed-Zsigmond}
-\author[2]{Pierre-Yves Genest}
-\author[1]{Stefan Duffner}
+\runningtitle{Hallucination Is Relative}
+\runningauthor{Carlesso et al.}
 
-% Add affiliations after the authors
+\author{Mathis Carlesso$^{1,2}$, Martino Lovisetto$^{2}$, Elöd Egyed-Zsigmond$^{1}$, Pierre-Yves Genest$^{2}$, Stefan Duffner$^{1}$}
 
-\affil[1]{%
-    INSA Lyon, CNRS, LIRIS, UMR5205, Université Claude Bernard Lyon 1, 69621 Villeurbanne, France
-}
-\affil[2]{%
-    Alteca, 69100 Villeurbanne, France
+\affilblock{
+    \affil{INSA Lyon, CNRS, LIRIS, UMR5205, Université Claude Bernard Lyon 1, 69621 Villeurbanne, France\\\quad \email{mathis.carlesso@insa-lyon.fr}}
+    \affil{Alteca, 69100 Villeurbanne, France}
 }
 
 
@@ -416,7 +415,7 @@ On a subset scored with CreativityPrism \citep{hou_creativityprism_2025} ($N{=}8
 
 \paragraph{Factual constraints moderate the creativity effect (\TR-Relativity).}
 The task$\times$creativity interaction reveals a key asymmetry.
-\textsc{lesson\_plan} and \textsc{interview} show comparable creativity slopes ($+10.6$ and $+14.3$\% swings respectively; interaction n.s.), differing only in baseline level.
+\textsc{lesson\_plan} and \textsc{interview} show comparable creativity slopes ($+10.6$ and $+14.3$\% swings respectively), differing only in baseline level.
 By contrast, \textsc{news\_article} shows a significantly dampened slope ($+8.4$\%, interaction OR~$= 0.77$, $p_{\text{FDR}} < 10^{-77}$): journalism's implicit factual norms constrain how much creative prompting inflates hallucination.
 This is visible in Figure~\ref{fig:creativity-effect}, where \textsc{news\_article} slopes (right panel) are systematically flatter than those in \textsc{interview} (left panel).
 The same creative instruction thus produces markedly different hallucination impacts depending on the format's factual expectations---direct evidence for \TR-relative hallucination.
@@ -613,14 +612,6 @@ Extending the task gradient to genres with sharper regime boundaries (e.g., fict
 Our controlled study (12{,}469 texts, 10 models, 310K claims) shows that creative intent, writing format, and format-specific factual constraints jointly shape hallucination rates in a \TR-relative manner.
 The minimal vocabulary introduced here (\TR, \CI, \PD, \Hallu) makes the prompt contract explicit and turns evaluation from binary defect counting into regime-conditioned diagnosis: does the output's divergence exceed, match, or fall short of what its \TR\ licenses?
 The six open problems outlined in Section~\ref{sec:agenda} chart a path toward evaluation infrastructure that can penalize harmful fabrication under strict regimes while preserving productive divergence where exploration is intended.
-
-\begin{contributions}
-    Contributions will be disclosed after review.
-\end{contributions}
-
-\begin{acknowledgements}
-    Acknowledgements will be disclosed after review.
-\end{acknowledgements}
 
 \bibliography{references}
 

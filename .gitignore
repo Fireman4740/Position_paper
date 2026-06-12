@@ -38,6 +38,6 @@ build/
 /Final.tex
 /main_position (*).tex
 
-# Keep source PDFs out of normal Git history
+# Keep PDFs out of normal Git history
 *.pdf
-!main_position.pdf
+!conference-template/**/*.pdf

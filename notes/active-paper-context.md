@@ -16,7 +16,7 @@ Stable vocabulary:
 Current active draft:
 
 - title: `Hallucination Is Relative: Evaluating LLM Divergence Under Truth-Regime Contracts`
-- format: UAI 2026 LaTeX class
+- format: Computational Linguistics journal template (`clv2025`)
 - bibliography style: `plainnat`
 - active bibliography: `references.bib`
 
