@@ -43,7 +43,7 @@
 %% ------------------------------------------------------------
 %% Vocabulary (normalize throughout paper)
 %% ------------------------------------------------------------
-% \newcommand{\CI}{\textsc{CI}} % creative intent -- removed from the framework vocabulary
+\newcommand{\CI}{\textsc{CI}} % creative intent
 \newcommand{\TR}{\textsc{TR}} % truth regime
 \newcommand{\TRs}{\textsc{TR}s} % truth regime (plural)
 \newcommand{\PD}{\textsc{PD}} % productive divergence
@@ -59,7 +59,7 @@
 \author{Mathis Carlesso$^{1,2}$, Martino Lovisetto$^{2}$, Elöd Egyed-Zsigmond$^{1}$, Pierre-Yves Genest$^{2}$, Stefan Duffner$^{1}$}
 
 \affilblock{
-    \affil{INSA Lyon, CNRS, LIRIS, INSA, 69621 Villeurbanne, France\\\quad \email{mathis.carlesso@insa-lyon.fr}}
+    \affil{INSA Lyon, CNRS, LIRIS, UMR5205, Université Claude Bernard Lyon 1, 69621 Villeurbanne, France\\\quad \email{mathis.carlesso@insa-lyon.fr}}
     \affil{Alteca, 69100 Villeurbanne, France}
 }
 
@@ -70,10 +70,10 @@
 Hallucination is usually evaluated as a binary defect: a statement is supported or it is not.
 This misses a central property of language use: the same unsupported content can be dangerous in a medical answer, harmless in a metaphor, and useful in fiction or ideation.
 We argue that hallucination should instead be evaluated relative to the prompt's \emph{truth regime}, $\TR(p)=(O,\sigma,\kappa)$: the oracle $O$ that grounds truth, the stylistic latitude $\sigma$ that permits surface variation, and the invention license $\kappa$ that determines whether new truth-conditional content may be introduced.
-Under this view, hallucination (\Hallu) is a truth-regime violation, while productive divergence (\PD) is divergence that the regime licenses and the task rewards.
-As empirical motivation, we run a strict-regime stress test (12{,}469 texts, 9 models, 310K claims) using a HalluLens-style binary verifier.
-Even when factual invention is never licensed, requesting a more stylistically marked output raises measured hallucination (+12.8~\%), writing format has the strongest effect (+21.4~\%), and format-specific factual norms moderate this style effect.
-These patterns do not constitute a complete \TR-aware evaluator; they show why one is needed: current binary pipelines are technically mature, but conceptually under-specified with respect to the truth regime.
+Under this view, \Hallu\ is a truth-regime violation, while \PD\ is licensed and useful divergence.
+As empirical motivation, we run a strict-regime diagnostic study (12{,}469 texts, 10 models, 310K claims) using a HalluLens-style binary verifier.
+Even when factual invention is never licensed, creative intent raises measured hallucination (+12.8~\%), writing format has the strongest effect (+21.4~\%), and format-specific factual norms moderate the creativity effect.
+These patterns do not constitute a complete \TR-aware evaluator; they show why one is needed: current binary pipelines are technically mature, but conceptually under-specified with respect to the prompt contract.
 \end{abstract}
 
 
@@ -101,26 +101,26 @@ Neither tradition conditions its scores on what the user's prompt actually autho
 As a result, the same output can be scored as a serious failure by one framework and a creative success by another, depending on which evaluation protocol is applied, not on whether the divergence was appropriate given the user's intent.
 We examine both traditions and their shared blind spot in Section~\ref{sec:sota}.
 
-Recent theoretical work shows that LLMs cannot avoid hallucination entirely: formal proofs via incompleteness and undecidability \citep{banerjee_llms_2024, xu_hallucination_2024} and calibration arguments \citep{kalai_why_nodate} establish a nonzero \emph{structural} error floor.
+Recent theoretical work shows that LLMs cannot avoid hallucination entirely: formal proofs via incompleteness and undecidability \citep{banerjee_llms_2024} and calibration arguments \citep{kalai_why_nodate} establish a nonzero \emph{structural} error floor.
 Yet the same mechanism also produces novel hypotheses and creative combinations that users request in open-ended tasks \citep{sun_hallucinating_2024, he_shakespearean_2025, sui_confabulation_2024}.
 In Section~\ref{sec:inherent}, we argue that the goal should be to \emph{control} divergence relative to the task's \emph{truth regime} (\TR), not to eliminate it.
 
 \paragraph{Our thesis.}
 We claim that hallucination is not a binary property of text.
-It is \emph{relative to the prompt's truth regime} (\TR): the task-specific contract $\TR(p)=(O,\sigma,\kappa)$ specifying the oracle $O$ against which claims are checked, the stylistic latitude $\sigma$ granted to the form of the output, and the invention license $\kappa$ that determines whether new truth-conditional content may be introduced.
+It is \emph{relative to the prompt's truth regime} (\TR): the task-specific contract that specifies what must be true, what may be uncertain, and what may be invented.
 Under a strict \TR\ (e.g., ``summarize this document accurately''), any unsupported claim is a hallucination (\Hallu).
-Under a permissive \TR\ (e.g., ``write a fiction''), that same divergence may instead constitute \emph{productive divergence} (\PD): a regime-compliant departure from established facts that is novel and task-useful, and therefore fulfills rather than violates what the prompt requested.
-The distinction is not about the text itself, but it is about whether the prompt authorized the divergence.
+Under a permissive \TR\ (e.g., ``write a fiction''), that same divergence may instead constitute \emph{productive divergence} (\PD): a regime-compliant departure from established facts that is novel and task-useful, and therefore fulfills rather than violates the user's creative intent (\CI).
+The distinction is not about the text itself, but it is about whether the prompt authorized the deviation.
 Evaluation that ignores this conflates \Hallu\ with \PD.
 
 \paragraph{Empirical motivation.}
-We use the empirical study in this paper as a strict-regime stress test, not as a complete implementation of \TR-aware evaluation.
-We generate 12{,}469 texts from 9~LLMs under a strict \TR\ where factual content invention is not licensed, decompose each text into atomic claims, and check those claims against Wikipedia with a HalluLens-style binary verifier \citep{bang_hallulens_2025}.
+We use the empirical study in this paper as a diagnostic stress test, not as a complete implementation of \TR-aware evaluation.
+We generate 12{,}469 texts from 10~LLMs under a strict \TR\ where factual content invention is not licensed, decompose each text into atomic claims, and check those claims against Wikipedia with a HalluLens-style binary verifier \citep{bang_hallulens_2025}.
 The study asks whether a strong current verifier remains stable when prompt style and format vary while $\kappa$ is held low.
 It does not test the full \Hallu/\PD\ relabeling problem under permissive regimes; rather, it shows that even under a fixed strict regime, measured hallucination is substantially conditioned by prompt-level signals.
-Three findings follow: (i)~raising stylistic latitude raises measured hallucination by 12.8~\%; (ii)~writing format is the largest single driver (+21~\%); and (iii)~format-specific factual norms moderate this effect.
-\noindent\textbf{This position paper makes four contributions.}
-\emph{First} (conceptual), we introduce $\TR(p)=(O,\sigma,\kappa)$ and a minimal vocabulary (\TR, \PD, \Hallu) that makes explicit what the prompt authorizes (Section~\ref{sec:framework}).
+Three findings follow: (i)~higher \CI\ raises measured hallucination by 12.8~\%; (ii)~writing format is the largest single driver (+21~\%); and (iii)~format-specific factual constraints moderate how much creativity raises hallucination.
+\noindent\textbf{This paper makes three contributions.}
+\emph{First} (conceptual), we introduce $\TR(p)=(O,\sigma,\kappa)$ and a minimal vocabulary (\TR, \CI, \PD, \Hallu) for making the prompt contract explicit (Section~\ref{sec:framework}).
 \emph{Second} (diagnostic), we show that hallucination and creativity evaluation share a blind spot: neither tradition explicitly conditions its scores on what the prompt authorizes (Section~\ref{sec:sota}).
 \emph{Third} (empirical), we use a strict-regime stress test to show that HalluLens-style binary verification is prompt-sensitive even when invention is disallowed (Section~\ref{sec:method-results}).
 \emph{Fourth} (programmatic), we outline a research agenda for \TR-aware benchmarks that score \Hallu\ and \PD\ separately under explicit oracle and permission annotations (Section~\ref{sec:agenda}).
@@ -138,29 +138,19 @@ Three findings follow: (i)~raising stylistic latitude raises measured hallucinat
 The literature uses the word \emph{hallucination} broadly, but not consistently.
 Surveys commonly group together factuality errors against world knowledge and faithfulness errors against a provided source, sometimes adding axes such as intrinsic vs.\ extrinsic causes and different granularities~\cite{ji_survey_2023, huang_survey_2025, zhang_sirens_nodate}.
 Benchmarking work further argues that hallucination is often conflated with factuality and that evaluation depends on the chosen oracle and evaluator reliability \cite{bang_hallulens_2025}.
-To study creativity--hallucination trade-offs, we fix a minimal vocabulary that makes the prompt's \emph{truth regime} explicit.
+To study creativity-hallucination tradeoffs, we fix a minimal vocabulary that makes the \emph{prompt contract} explicit.
 Throughout, we distinguish \emph{prompt-level} variables (what the user requests) from \emph{output-level} properties (what the model produces), and adopt a \emph{claim-level} unit of analysis because evaluations explicitly vary by granularity.
 
 
+\textbf{Creative intent (\CI; prompt-level).}
+The extent to which the user \emph{requests novelty} in the response (e.g., alternatives, analogies, imaginative options) \emph{under stated constraints}.
+\CI\ increases the preferred exploration of the solution space; creativity is usually defined as \emph{novel and useful/appropriate} relative to given constraints. \cite{runco_standard_2012, acar_creativity_2019, franceschelli_creativity_2024}.
+
 \textbf{Truth regime (\TR; prompt-level contract).}
-A task-specific contract $\TR(p)=(O,\sigma,\kappa)$ that determines what must be \emph{grounded}, how freely the \emph{form} may vary, and what may be \emph{invented}.
-\TR\ is necessary because ``hallucination'' definitions and evaluation oracles vary across settings \cite{bang_hallulens_2025}.
-Its three components are detailed below.
-
-\textbf{Oracle ($O$).}
-The reference against which truth-conditional claims are checked: a source document, a retrieval set, a database, world knowledge, or user-provided facts.
-The same claim can be supported by one oracle and unsupported by another, so $O$ must be specified rather than assumed \cite{bang_hallulens_2025, ji_survey_2023}.
-
-\textbf{Stylistic latitude ($\sigma$).}
-How freely the \emph{form} of the output may vary while preserving its propositions \cite{jin_deep_2022}.
-Three illustrative levels suffice: $\sigma{=}0$, literal and neutral form (no marked figures or authorial voice); $\sigma{=}1$, moderately marked form (didactic analogies, occasional address to the reader); $\sigma{=}2$, strongly marked form (sustained imagery, salient voice).
-By definition, $\sigma$ licenses variation in form only: a metaphor that preserves the underlying proposition introduces no new truth-conditional content.
-
-\textbf{Invention license ($\kappa$).}
-Whether new truth-conditional content may be introduced.
-Again, three illustrative levels: $\kappa{=}0$, no invention (every truth-conditional claim must be supported by $O$); $\kappa{=}1$, flagged speculation (hypotheses and extrapolations are permitted provided they are marked as such); $\kappa{=}2$, free invention within a declared frame (fiction, ideation), bound by coherence and user-provided facts rather than by $O$.
-The two permissions are independent: many real prompts request creative style without factual invention (e.g., ``explain photosynthesis like a poet''), so $\sigma$ is high while $\kappa$ stays at zero, and figurative language is welcome but fabricated claims are not \cite{franceschelli_creativity_2024}.
-Throughout the paper we write $\sigma$ or $\kappa$ ``low''/``high'' for the bottom/top of these scales.
+A task-specific contract that determines (i) what must be \emph{grounded/true}, (ii) what may be \emph{uncertain} (but should be labeled), and (iii) what may be \emph{invented}, together with the relevant \emph{oracle} (source document, retrieval set, database, world facts).
+\TR\ is necessary because “hallucination” definitions and evaluation oracles vary across settings \cite{bang_hallulens_2025}.
+Critically, we separate two independent permissions within a regime: \emph{stylistic latitude} ($\sigma$), how freely form may vary while preserving propositions \cite{jin_deep_2022} and \emph{factual content invention} ($\kappa$), whether new factual content may be introduced.
+Many real prompts request creative style without factual content invention (e.g., ``explain photosynthesis like a poet''); here $\sigma$ is high but $\kappa$ remains low, so figurative language is welcome but fabricated claims are not \cite{franceschelli_creativity_2024}.
 
 
 \textbf{Faithfulness (\Faith; output-level).}
@@ -178,13 +168,9 @@ This definition unifies faithfulness and factuality failures while making the or
 
 \textbf{Productive divergence (\PD; claim-level).}
 Content that would count as hallucination under a strict factual standard, but is allowed by the prompt's truth regime and helps accomplish the task.
-A claim is \PD\ when three conditions hold: it is \emph{licensed} (the regime permits invention, $\kappa>0$, or the claim falls inside a declared fictional frame); it is \emph{useful} (novel and appropriate under the task constraints---the standard creativity criterion \cite{diedrich_are_2015, acar_creativity_2019}); and it is \emph{presented on the regime's terms} (a flagged hypothesis under $\kappa{=}1$ must not be asserted as verified fact).
+Formally, \PD\ is a \TR-compliant exploration that proposes \emph{novel} candidates (hypotheses, alternatives, analogies, fictional details) where \TR\ permits speculation or invention; it is \emph{productive} when the deviation is useful and appropriate under task constraints---the standard creativity criterion \cite{diedrich_are_2015, acar_creativity_2019}.
 This framing echoes non-LLM uses of ``productive divergence'' as variation that energizes performance \cite{parry_team_2023, lingard_pulling_2017}.
-A contrast makes the category concrete.
-Given ``summarize this medical report,'' an added claim that the patient has diabetes, absent from the report, violates a regime where $O$ is the report and $\kappa{=}0$: it is \Hallu.
-Given ``write a poem about quantum physics,'' the line that electrons dream in parallel worlds is supported by no oracle, yet the regime licenses figurative invention: it is \PD\ if it serves the poem.
-Both statements are invented; only the first is a failure, and the difference lies not in the text but in what the prompt authorized.
-Crucially, if \TR\ demands grounding, the same divergence is \Hallu, not \PD.
+Crucially, if \TR\ demands grounding, the same deviation is \Hallu, not \PD.
 
 
 \noindent\textbf{Decision rule (simple and testable).}
@@ -192,7 +178,7 @@ Given prompt $p$ and output $y$ and an oracle $O$: specify $\TR(p)$, decompose $
 
 \paragraph{Worked example.}
 Consider the prompt ``Explain photosynthesis in a poetic style, but keep the science accurate.''
-Here, the oracle is scientific world knowledge, $\sigma{=}2$ because figurative language is requested, and $\kappa{=}0$ because the science must stay accurate.
+Here, the oracle is scientific world knowledge, $\sigma$ is high because figurative language is requested, and $\kappa$ remains low because the science must stay accurate.
 Calling chlorophyll ``a green workshop for sunlight'' is stylistic variation, but claiming that plants make sugar from moonlight is \Hallu.
 If the prompt instead asks for a fictional plant ecology where moonlight powers growth, the same moonlight claim can be \PD\ if it is useful, clearly framed as invented, and consistent with the fictional constraints.
 
@@ -200,7 +186,7 @@ If the prompt instead asks for a fictional plant ecology where moonlight powers 
 
 
 \noindent Under this vocabulary, we do not oppose ``creativity vs.\ truth''.
-We oppose \textbf{\Hallu} (\TR\ violations) to \textbf{\PD} (\TR-compliant creativity). Regime-agnostic factuality evaluation fails to separate these two outcomes.
+We oppose \textbf{\Hallu} (\TR\ violations) to \textbf{\PD} (\TR-compliant creativity). Intent-agnostic factuality evaluation fails to separate these two outcomes.
 
 
 
@@ -212,13 +198,13 @@ We oppose \textbf{\Hallu} (\TR\ violations) to \textbf{\PD} (\TR-compliant creat
 \small
 \setlength{\tabcolsep}{3.5pt}
 \caption{\textbf{Canonical truth regimes, specified by an oracle $O$ and prompt-level permissions.}
-Here, $\sigma$ denotes stylistic latitude (how freely form can vary), and $\kappa$ denotes the invention license (whether new truth-conditional content may be introduced).
-The same surface ``divergence'' can be acceptable or a violation depending on whether the regime binds claims to provided evidence/world facts (faithfulness/factuality) or instead licenses invention under other constraints \cite{maynez_faithfulness_2020,kryscinski_evaluating_2020,huang_survey_2025,franceschelli_creativity_2024}.}
+Here, $\sigma$ denotes stylistic latitude (how freely form can vary), and $\kappa$ denotes the factual content invention (whether new truth-conditional content may be introduced).
+The same surface ``deviation'' can be acceptable or a violation depending on whether the regime binds claims to provided evidence/world facts (faithfulness/factuality) or instead licenses invention under other constraints \cite{maynez_faithfulness_2020,kryscinski_evaluating_2020,huang_survey_2025,franceschelli_creativity_2024}.}
 \label{tab:canonical-truth-regimes}
 \begin{tabular}{p{0.17\textwidth} p{0.20\textwidth} p{0.10\textwidth} p{0.24\textwidth} p{0.25\textwidth}}
 \toprule
 \textbf{Regime} & \textbf{Oracle $O$} & \textbf{Permissions $(\sigma,\kappa)$} &
-\textbf{Allowed divergence} & \textbf{\TR-violation (hallucination trigger)} \\
+\textbf{Allowed deviation} & \textbf{\TR-violation (hallucination trigger)} \\
 \midrule
 \textbf{Strict grounded generation / summarization} &
 Provided sources (docs / retrieved passages) &
@@ -243,7 +229,8 @@ Violating explicit constraints (e.g., incoherence; contradicting user-provided f
 
 \subsection{Truth Regimes and Regime-Relative Divergence}\label{sec:truth-regimes}
 
-The components of $\TR(p)=(O,\sigma,\kappa)$ combine into recognizable task profiles \cite{ji_survey_2023,huang_survey_2025}.
+The terms above give us a vocabulary for individual claims; we still need a way to specify \emph{what the task allows}.
+We formalize this as $\TR(p)=(O,\sigma,\kappa)$: an oracle $O$ (the reference against which claims are checked), a stylistic latitude $\sigma$, and an invention license $\kappa$ \cite{ji_survey_2023,huang_survey_2025}.
 Table~\ref{tab:canonical-truth-regimes} instantiates three canonical regimes.
 Existing benchmarks typically fix $O$ but rarely annotate $(\sigma,\kappa)$ explicitly, making it easy to conflate \PD{} with \Hallu{} \cite{bang_hallulens_2025,jiang_survey_2024}.
 
@@ -251,30 +238,28 @@ Existing benchmarks typically fix $O$ but rarely annotate $(\sigma,\kappa)$ expl
 Given a regime $\TR(p)$, each atomic claim falls into one of the categories already defined: \emph{stylistic variation} (form changes, no new propositions), \PD\ (novel content licensed by $\kappa$ and task-useful), \Hallu\ (truth-conditional content unsupported by oracle $O$), or \emph{benign noise} (minor inaccuracies with negligible impact) \cite{ji_survey_2023,huang_survey_2025,bang_hallulens_2025}.
 
 \noindent\textbf{Two-sided failure relative to $\kappa$.}
-When $\kappa$ is low, excess divergence increases \Hallu; when $\kappa$ is high, \emph{insufficient} divergence yields conservative outputs that fail the creative objective, a failure mode captured by creativity benchmarks but not by hallucination-only scoring \cite{hou_creativityprism_2025}.
-Our study varies \emph{only} $\sigma$ (style) while keeping $\kappa$ minimal; therefore, any increase in factual divergence remains \Hallu\ under the tested regime.
+When $\kappa$ is low, excess deviation increases \Hallu; when $\kappa$ is high, \emph{insufficient} deviation yields conservative outputs that fail the creative objective, a failure mode captured by creativity benchmarks but not by hallucination-only scoring \cite{hou_creativityprism_2025}.
+Our study varies \emph{only} $\sigma$ (style) while keeping $\kappa$ minimal; therefore, any increase in factual deviation remains \Hallu\ under the tested regime.
 
-With this vocabulary and labeling procedure in place, the natural question is: do existing evaluation frameworks already condition their scores on the truth regime? The next section examines both hallucination and creativity benchmarks and shows that they do not.
+With this vocabulary and labeling procedure in place, the natural question is: do existing evaluation frameworks already capture the \TR/\CI\ distinction? The next section examines both hallucination and creativity benchmarks and shows that they do not.
 
 \section{Evaluation Landscape and the Case for Controlled Divergence}\label{sec:sota}\label{sec:inherent}
 
 \paragraph{Two traditions, one shared blind spot.}
 Hallucination benchmarks treat divergence from an oracle as a defect to minimize \citep{ji_survey_2023,huang_survey_2025,bang_hallulens_2025}; creativity benchmarks treat it as evidence of novelty to maximize \citep{hou_creativityprism_2025}.
-This division holds for single-intent tasks but breaks down for mixed-intent prompts that combine novelty with factual constraints \citep{wang_user-centric_2024}: the same surface divergence can be \PD\ or \Hallu, yet on both sides the truth regime $(O,\sigma,\kappa)$ remains implicit.
+This division holds for single-intent tasks but breaks down for mixed-intent prompts that combine novelty with factual constraints \citep{wang_user-centric_2024}: the same surface deviation can be \PD\ or \Hallu, yet on both sides the prompt contract $(O,\sigma,\kappa)$ remains implicit.
 Hallucination pipelines assume $\kappa$ is low; creativity pipelines score novelty without specifying which claims are bound to an oracle, making it easy to conflate regime-compliant exploration with genuine \TR-violations.
 
 \subsection{Hallucination evaluation: factuality, faithfulness, and reasoning validity}
 Hallucination evaluation is anchored in the choice of an oracle, either \emph{world knowledge} (\Acc: factuality) or \emph{provided context} (\Faith: faithfulness) \citep{ji_survey_2023, huang_survey_2025}, with additional axes such as contradiction vs.\ fabrication, intrinsic vs.\ extrinsic errors \citep{zhang_sirens_nodate}, and evaluation granularity (token/span/claim/output) \citep{bang_hallulens_2025}.
 Accordingly, modern protocols increasingly rely on claim-level decomposition and automated or semi-automated verification, e.g., retrieval+Natural Language Inference (NLI) \citep{chen_menli_2023, hughes_vectara_2023} or QA-based checking \citep{wang_asking_2020}, building on fact-checking \citep{thorne_fever_2018} and truthfulness benchmarks \citep{lin_truthfulqa_2022, li_halueval_2023}.
 A key methodological motivation is diagnosticity: explicit claims make oracle comparison and error typing more interpretable than output-level judgments \citep{bang_hallulens_2025}.
-These pipelines are technically mature: joint claim decomposition and verification now run efficiently at scale \citep{rajendhran_verifastscore_2025}, some verifiers add a third \texttt{undecidable} verdict alongside supported and unsupported \citep{bayat_factbench_2024}, and complementary signals such as semantic entropy \citep{farquhar_detecting_2024} and linear truth probes on model internals \citep{marks_geometry_2023} detect unsupported content without consulting any prompt-level contract.
 
-However, these axes are necessary but not sufficient for \TR-aware judgment.
+However, these axes are necessary but not sufficient for \TR/\CI-aware judgment.
 Most hallucination pipelines implicitly assume a strict invention license ($\kappa$ low): any unsupported truth-conditional content is treated as a failure.
 In grounded generation, this assumption is defensible, but it collapses when prompts license speculation or invention.
 Even in summarization, a statement can be factually correct (\Acc\ satisfied) yet unsupported by the source (\Faith\ violated), showing that \Hallu\ depends on the oracle and \TR, not on the text alone \citep{maynez_faithfulness_2020, kryscinski_evaluating_2020}.
-Without explicit $(O,\sigma,\kappa)$ metadata, the same verification pipeline can conflate stylistic variation, licensed invention, and regime violations.
-Even a three-way verdict that includes \texttt{undecidable} \citep{bayat_factbench_2024} refines the label space without consulting the contract: licensed invention is not merely undecidable, it is authorized.
+Without explicit $(O,\sigma,\kappa)$ metadata, the same verification pipeline can conflate stylistic variation, factual content invention, and regime violations.
 
 \subsection{Creativity evaluation: fragmented metrics and evaluator dependence}
 Creativity is commonly defined as combining \emph{novelty} with \emph{value/appropriateness} under constraints \citep{runco_standard_2012}, but operationalizations and scoring procedures vary sharply across tasks and domains \citep{acar_creativity_2019, diedrich_are_2015, franceschelli_creativity_2024, ismayilzada_creativity_2025}.
@@ -283,33 +268,30 @@ Recent LLM work therefore treats creativity as multi-dimensional and task-depend
 
 Creativity judgments also remain evaluator-dependent: ratings shift with rubric design \citep{shively_measuring_2018, dietz_principles_2025, marco_reader_2025}, rater backgrounds \citep{cyriac_metrics_2025, ismayilzada_evaluating_2025, jr_how_2025}, and reader profiles \citep{ippolito_creative_2022}, changing model rankings even under identical prompts when using LLM-as-judge protocols \citep{liu_g-eval_2023, zheng_judging_2023, li_llms_2025, han_judges_2025}.
 
-From a \TR\ perspective, however, the deeper issue is that creativity benchmarks rarely treat the truth regime as an explicit variable.
-Novelty signals may be rewarded without distinguishing \PD\ from \Hallu\ \citep{sui_confabulation_2024, padmakumar_measuring_2025}, even when factual grounding is part of the truth regime \citep{wang_user-centric_2024, bang_hallulens_2025}.
+From a \TR/\CI\ perspective, however, the deeper issue is that creativity benchmarks rarely treat the truth regime as an explicit variable.
+Novelty signals may be rewarded without distinguishing \PD\ from \Hallu\ \citep{sui_confabulation_2024, padmakumar_measuring_2025}, even when factual grounding is part of the prompt contract \citep{wang_user-centric_2024, bang_hallulens_2025}.
 Existing faithfulness metrics \citep{maynez_faithfulness_2020, pagnoni_understanding_2021, kryscinski_evaluating_2020} and semantic verification tools \citep{wang_asking_2020, aynetdinov_semscore_2024, chen_menli_2023} could detect such violations, but they are not integrated into creativity evaluation pipelines.
 This omission, shared with hallucination benchmarks, produces a concrete failure mode.
 
-\subsection{Failure mode: regime-agnostic evaluation conflates \PD\ with \Hallu}
+\subsection{Failure mode: \CI-agnostic evaluation conflates \PD\ with \Hallu}
 When $\TR$ is left implicit, two symmetric errors arise: creativity benchmarks \citep{hou_creativityprism_2025, fein_litbench_2025} assume multiple valid outputs without conditioning on an external oracle, while hallucination benchmarks \citep{bang_hallulens_2025, lin_truthfulqa_2022} treat unsupported claims as errors relative to a specified oracle.
 Under a permissive regime ($\kappa$ high), strict factuality checks or semantic verification misclassify licensed speculation as \Hallu\ (false positives on \PD), an issue documented for both human \citep{cyriac_metrics_2025} and automated raters \citep{sui_confabulation_2024}.
 Under a strict regime ($\kappa$ low), novelty-oriented scores \citep{liu_g-eval_2023, zheng_judging_2023} reward confident fabrications that boost apparent originality (false negatives on \Hallu) \citep{chen_menli_2023, dietz_principles_2025, li_llms_2025}.
 Even benchmarks with domain-specific correctness constraints \citep{lu_benchmarking_2025, ye_assessing_2024, hou_creativityprism_2025, delorenzo_creativeval_2024} underspecify the prompt-level contract as a general variable, motivating a minimal evaluation layer that makes $(O,\sigma,\kappa)$ explicit \citep{wang_user-centric_2024, boubdir_elo_nodate}.
-The closest existing steps stop short of such a layer.
-Intent-hallucination evaluation decomposes a query into checkable constraints, conditioning the verdict on what the query asks, but it does not separate stylistic latitude from invention license \citep{hao_faithqa_2025}.
-A recent benchmark divides hallucinations into ``intelligent'' and ``defective'' ones, the closest analogue to the \PD/\Hallu\ split, yet it does not encode what the prompt authorizes, so the same output can switch categories when the contract changes \citep{yang_hicbench_2025}.
 
 Beyond evaluation gaps, there is a deeper reason why the \PD/\Hallu\ confusion persists: hallucination cannot simply be engineered away.
 
 \subsection{Why universal suppression of H is neither feasible nor desirable}
 LLMs are probabilistic next-token predictors trained under incomplete supervision; they produce plausible continuations even when the truth is underspecified, so eliminating \Hallu\ universally would require restricting the model or the task class.
-Formal arguments support this claim \citep{banerjee_llms_2024,xu_hallucination_2024,cossio_comprehensive_2025}, and empirical evidence shows that even strict \TRs\ reveal large residual error rates on short-form QA \citep{mallen_when_2023,cheng_evaluating_2023,gruber_complextempqa100m_2025}, truthfulness benchmarks \citep{lin_truthfulqa_2022,wei_measuring_2024}, and domain-specific evaluations \citep{rahman_defan_2024,sadat_mscinli_2024,uluoglakci_hypotermqa_2024}.
-HalluLens argues that \Hallu\ and \Acc\ are distinct constructs, making the relevant floor inherently \TR-dependent \citep{bang_hallulens_2025}.
+Formal arguments support this claim \citep{banerjee_llms_2024,cossio_comprehensive_2025}, and empirical evidence confirms that even strict \TRs\ reveal large residual error rates on short-form QA \citep{mallen_when_2023,cheng_evaluating_2023,gruber_complextempqa100m_2025}, truthfulness benchmarks \citep{lin_truthfulqa_2022,wei_measuring_2024}, and domain-specific evaluations \citep{rahman_defan_2024,sadat_mscinli_2024,uluoglakci_hypotermqa_2024}.
+HalluLens confirms that \Hallu\ and \Acc\ are distinct constructs, making the relevant floor inherently \TR-dependent \citep{bang_hallulens_2025}.
 
 Yet the same generative mechanism that produces unsupported claims also produces the novel hypotheses and creative combinations that users request in open-ended tasks.
 Several systems exploit this deliberately through a \emph{diverge-then-converge} pattern: first induce diverse candidates, then filter or verify to meet the task's \TR.
 \citet{sun_hallucinating_2024} formalize ``good hallucinations'' as reasoning paths that remain correct after convergence; \citet{banerjee_does_2025} show that verification-style mitigation can preserve divergent thinking whereas certain decoding interventions suppress it.
 Concrete instantiations, including creative problem-solving scaffolds \citep{rick_supermind_2023}, intent-hypothesis grounding \citep{bodonhelyi_user_2024}, logic-to-language transfer \citep{you_mih-tcct_2025}, and style and correct fine-tuning \citep{roychowdhury_fistech_2024}. All treat divergence as a resource controlled by a subsequent convergence step, not a defect.
 
-Since \Hallu\ has a structural floor and the same divergence drives \PD, the practical goal cannot be universal suppression of \Hallu{} but \TR-calibrated control: specify the regime upfront, enable divergence where the regime licenses it, and enforce convergence before any output is presented as fact.
+Since \Hallu\ has a structural floor and the same divergence drives \PD, the practical goal cannot be universal suppression of \Hallu{} but \TR-calibrated control: specify the regime upfront, enable divergence where \CI\ warrants it, and enforce convergence before any output is presented as fact.
 This perspective aligns with evidence that divergence improves outputs valued in creative contexts (\PD\ under permissive \TR) yet becomes \Hallu\ under strict regimes \citep{sui_confabulation_2024,he_shakespearean_2025}. Operationally, such control can take the form of explicit mode signaling (hypothesis vs.\ claim), selective abstention, multi-sample generation with verification, or human-in-the-loop selection when automated judges are brittle \citep{bang_hallulens_2025,li_llms_2025}.
 
 
@@ -318,11 +300,11 @@ This perspective aligns with evidence that divergence improves outputs valued in
 % C1 (empirical signal), C2 (manipulation check), supports C6 feasibility
 
 The preceding sections argue that current evaluation pipelines are conceptually under-specified because they score unsupported content without representing the prompt's truth regime.
-We therefore use the experiment as a stress test of a strong binary verifier under a deliberately strict regime.
+We therefore use the experiment as a diagnostic stress test of a strong binary verifier under a deliberately strict regime.
 The question is not whether the pipeline already separates \Hallu\ from \PD; it does not.
-The question is whether increasing stylistic latitude ($\sigma$) and changing writing format, while disallowing factual invention ($\kappa$ low), changes measured claim-level \Hallu.
+The question is whether increasing stylistic \CI\ and changing writing format, while holding factual content invention disallowed ($\kappa$ low), changes measured claim-level \Hallu.
 The verification pipeline follows HalluLens \citep{bang_hallulens_2025}, which advocates separating \Hallu\ from \Acc\ and evaluating at the claim level for diagnosticity.
-Concretely, all three task types share the same $\TR$: the prompt requests content grounded in Wikipedia knowledge ($O = $ world knowledge), grants stylistic latitude ($\sigma \in \{0,1,2\}$) but does \emph{not} license factual invention ($\kappa = $ low); any unsupported truth-conditional claim therefore counts as \Hallu.
+Concretely, all three task types share the same $\TR$: the prompt requests content grounded in Wikipedia knowledge ($O = $ world knowledge), allows stylistic variation ($\sigma \in \{\text{low}, \text{moderate}, \text{high}\}$) but does \emph{not} license factual content invention ($\kappa = $ low); any unsupported truth-conditional claim therefore counts as \Hallu.
 
 
 \begin{figure*}[t]
@@ -348,7 +330,7 @@ Concretely, all three task types share the same $\TR$: the prompt requests conte
         \node[phase, fill=gray!12, right=1.1cm of p1] (p2) {%
             \textbf{\small Phase 2}\\[3pt]
             \textbf{\small LLM Generation}\\[5pt]
-            \scriptsize 9 models $\times$ 5 temps\\[1pt]
+            \scriptsize 10 models $\times$ 5 temps\\[1pt]
             53 runs\\[1pt]
             $N{=}12{,}469$ outputs\\[1pt]
         };
@@ -373,7 +355,7 @@ Concretely, all three task types share the same $\TR$: the prompt requests conte
         \draw[arrow] (p3.east) -- (p4.west);
     \end{tikzpicture}}%
     \caption{Four-phase experimental pipeline.
-    Phases~1--2 construct and generate 12{,}469 outputs from 9 models by
+    Phases~1--2 construct and generate 12{,}469 outputs from 10 models by
     factorial crossing of task, creativity level, and length.
     Phase~3 applies the HalluLens verification paradigm \citep{bang_hallulens_2025}:
     atomic claim extraction, dense Wikipedia retrieval (\texttt{gtr-t5-large}),
@@ -388,7 +370,7 @@ Concretely, all three task types share the same $\TR$: the prompt requests conte
 \subsection{Pipeline Overview}
 
 Figure~\ref{fig:pipeline} summarizes the pipeline.
-We cross three writing formats (the \textsc{task} factor: \textsc{interview}, \textsc{lesson\_plan}, \textsc{news\_article}), three creativity levels (\textsc{factual}, \textsc{hybrid}, \textsc{very\_creative}), which operationalize increasing stylistic latitude $\sigma$, and three target lengths over Wikipedia subjects to assemble 1{,}389 prompts, none granting permission to invent facts ($\kappa$ low throughout) and generate 12{,}469 outputs from 9 models (Phases~1--2).
+We cross three task types, three creativity levels, and three target lengths over Wikipedia subjects to assemble 1{,}389 prompts, none granting permission to invent facts ($\kappa$ low throughout) and generate 12{,}469 outputs from 10 models (Phases~1--2).
 Claims are extracted with \textbf{mimo-v2-flash}~\cite{xiaomi2026mimov2flash}, verified against Wikipedia via dense retrieval and NLI following HalluLens \citep{bang_hallulens_2025} (Phase~3; 310K claims, 60\% hallucinated on average), and analyzed (Phase~4; details in Appendix~\ref{app:details}).
 
 \subsection{Empirical Findings}\label{sec:results}
@@ -401,7 +383,7 @@ Table~\ref{tab:key-findings} consolidates the main effects and the task$\times$c
 \begin{table}[t]
 \centering
 \caption{Main effects on hallucination rate
-  ($N=12{,}469$; 9~models, 53~runs).
+  ($N=12{,}469$; 10~models, 53~runs).
   Per-condition mean, $\Delta$\% vs.\ ref.~($^\dagger$),
   Spearman~$\rho$, FDR-corrected $p$.
   Interaction effects in text.}
@@ -441,17 +423,17 @@ Table~\ref{tab:key-findings} consolidates the main effects and the task$\times$c
 \paragraph{Writing format is the single largest driver.}
 The requested format dominates all other factors: \textsc{lesson\_plan} produces 21\% more hallucination than \textsc{interview} ($\rho = 0.45$), as visible in Figure~\ref{fig:creativity-effect} where the middle panel sits consistently above the other two regardless of creativity level or model.
 
-\paragraph{Creativity level raises hallucination monotonically.}
+\paragraph{Creative intent raises hallucination monotonically.}
 Without permission to invent facts, moving from \textsc{factual} to \textsc{very\_creative} raises hallucination by $+12.8$\% (Table~\ref{tab:key-findings}); every line in Figure~\ref{fig:creativity-effect} slopes upward across all three tasks.
 A mediation analysis supports the interpretation that this pattern is not merely an artifact of longer or more claim-dense outputs.
-On a subset scored with CreativityPrism \citep{hou_creativityprism_2025} ($N{=}8{,}376$), divergent-thinking and writing-quality scores rise alongside hallucination, consistent with an empirical coupling between creativity level and measured unsupportedness even under a regime that never licenses invention (full correlation matrices and claim-level distributions in Appendix~\ref{app:stats}).
+On a subset scored with CreativityPrism \citep{hou_creativityprism_2025} ($N{=}8{,}376$), divergent-thinking and writing-quality scores rise alongside hallucination, consistent with an empirical coupling between creative prompting and measured unsupportedness even under a regime that never licenses invention (full correlation matrices and claim-level distributions in Appendix~\ref{app:stats}).
 
-\paragraph{Factual norms moderate the creativity effect.}
+\paragraph{Factual constraints moderate the creativity effect.}
 The task$\times$creativity interaction reveals a key asymmetry.
 \textsc{lesson\_plan} and \textsc{interview} show comparable creativity slopes ($+10.6$ and $+14.3$\% swings respectively), differing only in baseline level.
-By contrast, \textsc{news\_article} shows a significantly dampened slope ($+8.4$\%, interaction OR~$= 0.77$, $p_{\text{FDR}} < 10^{-77}$): journalism's implicit factual norms constrain how much raising the creativity level inflates hallucination.
+By contrast, \textsc{news\_article} shows a significantly dampened slope ($+8.4$\%, interaction OR~$= 0.77$, $p_{\text{FDR}} < 10^{-77}$): journalism's implicit factual norms constrain how much creative prompting inflates hallucination.
 This is visible in Figure~\ref{fig:creativity-effect}, where \textsc{news\_article} slopes (right panel) are systematically flatter than those in \textsc{interview} (left panel).
-The same creative instruction thus produces markedly different binary-verification outcomes depending on the format's factual expectations, evidence that measured hallucination is conditioned by writing format and creativity level even under a fixed strict regime.
+The same creative instruction thus produces markedly different binary-verification outcomes depending on the format's factual expectations, evidence that measured hallucination is conditioned by prompt format and creative intent even under a fixed strict regime.
 
 \begin{figure*}[t]
 \centering
@@ -528,9 +510,9 @@ The same creative instruction thus produces markedly different binary-verificati
 \addplot+[color=hlseries7,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.601136) (2,0.682669) (3,0.782609)};
 \addlegendentry{mistral-small-creative}
 \addplot+[color=hlseries8,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.559558) (2,0.596846) (3,0.676471)};
-\addlegendentry{nemotron-nano-12b-vl}
+\addlegendentry{nemotron-nano-12b-v2-vl}
 \addplot+[color=hlseries9,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.492729) (2,0.645898) (3,0.750000)};
-\addlegendentry{qwen3-30b-a3b}
+\addlegendentry{qwen3-30b-a3b-instruct-2507}
 \end{groupplot}
 \end{tikzpicture}
 \par\smallskip
@@ -561,26 +543,26 @@ Thus, our conclusions are robust to evaluator choice.
 The framework and findings above motivate six open problems, organized from measurement foundations (items~1--3) to system-level design (items~4--6).
 
 
-\textbf{Operationalizing \TR\ as a scorable contract.}
-Our study operationalizes the style request as a three-level categorical variable and the truth regime as a fixed contract.
-For general-purpose evaluation, the contract needs finer-grained operationalization: $O$, $\sigma$, and $\kappa$ should each be annotated independently, making regime boundaries explicit rather than implicit in the task label.
-Graded components such as $\sigma$ could also be placed on a continuous scale via pairwise preference judgments fitted to a Bradley--Terry or Elo model, analogously to how arena-style leaderboards score overall quality \citep{boubdir_elo_nodate}.
+\textbf{Operationalizing \CI\ and \TR\ as scorable variables.}
+Our study operationalizes creative intent as a three-level categorical variable and truth regime as a fixed contract.
+For general-purpose evaluation, both constructs need finer-grained operationalizations.
+\CI\ could be placed on a continuous scale via pairwise preference judgments fitted to a Bradley--Terry or Elo model, analogously to how arena-style leaderboards score overall quality \citep{boubdir_elo_nodate}.
+\TR\ could be decomposed into its three components $(O, \sigma, \kappa)$ and each annotated independently, making regime boundaries explicit rather than implicit in the task label.
 A key challenge is inter-annotator reliability: creativity judgments are notoriously evaluator-dependent \citep{acar_creativity_2019, marco_reader_2025, ismayilzada_evaluating_2025}, and regime boundaries involve normative choices (what \emph{should} be grounded?) that require domain expertise.
-Agreement is likely to be lowest on the usefulness dimension of \PD; when it is, the disagreement itself is informative and should be reported, for example through soft labels, rather than forced into a consensus.
 
 \textbf{Automatic \TR\ inference from prompts.}
-Users rarely specify a formal truth regime, so $\TR(p)$ must be inferred from the prompt text \citep{wang_user-centric_2024, bodonhelyi_user_2024}.
+Users rarely specify a formal truth regime, so intent classifiers must infer $\TR(p)$ from prompt text \citep{wang_user-centric_2024, bodonhelyi_user_2024}.
 Calibration is critical: misclassifying a strict-\TR\ prompt as permissive suppresses warranted penalties, while the reverse penalizes legitimate \PD.
 Hybrid approaches (classifier-based defaults with user override) and failure-mode analysis on ambiguous prompts deserve investigation.
 
 \textbf{Metrics for ``excessive'' \Hallu\ under a given \TR.}
 Current metrics treat hallucination rate as a single number.
-Under a \TR-aware framework, what matters is \emph{excess} divergence relative to the regime's tolerance.
+Under a \TR-aware framework, what matters is \emph{excess} deviation relative to the regime's tolerance.
 This requires (i)~severity weighting (a fabricated safety claim is worse than a minor date error), (ii)~claim-level vs.\ output-level aggregation (a single critical hallucination may outweigh many benign ones), and (iii)~regime-conditioned baselines (the ``acceptable'' rate differs between grounded summarization and brainstorming).
 Existing severity-aware proposals in hallucination evaluation \citep{bang_hallulens_2025, huang_survey_2025} and risk-weighted approaches in factuality benchmarks \citep{wei_measuring_2024, lin_truthfulqa_2022} provide starting points, but none currently conditions severity on an explicit \TR\ contract.
 
 \textbf{Robust \Hallu\ detection under stylistic variation.}
-Because stylistic latitude alone raises measured hallucination, NLI-based verifiers \citep{aynetdinov_semscore_2024, chen_menli_2023} may conflate figurative language with unsupported claims.
+Because stylistic creativity alone raises measured hallucination, NLI-based verifiers \citep{aynetdinov_semscore_2024, chen_menli_2023} may conflate figurative language with unsupported claims.
 A dedicated suite pairing identical factual content with varying stylistic treatments would isolate verifier brittleness from genuine divergence \citep{jin_deep_2022}.
 
 \textbf{Controlling \Hallu\ without collapsing \PD.}
@@ -588,9 +570,9 @@ Mitigation techniques (constrained decoding, retrieval augmentation, post-hoc ve
 Recent work shows these trade-offs are asymmetric: verification style interventions can preserve divergent thinking, while decoding constraints may suppress it \citep{banerjee_does_2025, he_shakespearean_2025, sun_hallucinating_2024, li_jointly_nodate}.
 \TR-aware evaluation should therefore report \emph{both} \Hallu\ reduction and \PD\ preservation under the same regime.
 
-\textbf{Benchmarks crossing task $\times$ $\sigma$ $\times$ $\kappa$.}
-No existing benchmark systematically crosses task type, stylistic latitude, and invention license as independent variables.
-Such a benchmark needs a task gradient (summarization $\rightarrow$ style transfer $\rightarrow$ fiction), multi-level $\sigma$ and $\kappa$ manipulations, explicit $(O,\sigma,\kappa)$ annotations, and protocols scoring \Hallu\ and \PD\ separately.
+\textbf{Benchmarks crossing task $\times$ \CI $\times$ \TR.}
+No existing benchmark systematically crosses task type, creative intent level, and truth regime as independent variables.
+Such a benchmark needs a task gradient (summarization $\rightarrow$ style transfer $\rightarrow$ fiction), multi-level \CI\ manipulations, explicit $(O,\sigma,\kappa)$ annotations, and protocols scoring \Hallu\ and \PD\ separately.
 CreativityPrism \citep{hou_creativityprism_2025} and LitBench \citep{fein_litbench_2025} provide partial coverage but neither conditions scores on an explicit \TR.
 A concrete next step is a claim-level annotation layer with labels such as supported, hallucination, productive divergence, unverifiable, and stylistic variation.
 Such a layer should be evaluated as an open research problem, including whether it changes model rankings or instead primarily improves error diagnosis.
@@ -619,11 +601,11 @@ Prompt-level variance is substantial (intraclass correlation coefficient (ICC) =
 
 \paragraph{Temperature is not the main control knob.}
 We find no meaningful association between temperature and \Hallu\ ($r = -0.006$, $p = 0.52$), a null result robust across correlation methods, GLM, and mixed models.
-This aligns with recent evidence that temperature is a weak creativity-control parameter \citep{du_optimizing_2025, peeperkorn_is_2024}: semantic-level signals in the prompt appear to dominate token-level sampling noise.
+This aligns with recent evidence that temperature is a weak \CI\ parameter \citep{du_optimizing_2025, peeperkorn_is_2024}: semantic-level signals in the prompt appear to dominate token-level sampling noise.
 
-\paragraph{Format-level factual norms moderate the creativity effect.}
-The interaction between creativity level and task type is significant (OR = 0.77 for \textsc{very\_creative} $\times$ \textsc{news\_article}): when a writing format carries strong factual norms, raising the creativity level has a weaker effect on \Hallu, suggesting the model partially internalizes those norms.
-This mirrors the layer-wise creativity--hallucination trade-offs reported by \citet{he_shakespearean_2025}, though our evidence arises from prompt-level manipulations rather than model-internal dynamics.
+\paragraph{Format-level factual constraints moderate the creativity effect.}
+The interaction between \CI\ level and task type is significant (OR = 0.77 for \textsc{very\_creative} $\times$ \textsc{news\_article}): when a writing format carries strong factual expectations, creative prompting has a weaker effect on \Hallu, suggesting the model partially internalizes those constraints.
+This mirrors the layer-wise \CI/\Hallu\ trade-offs reported by \citet{he_shakespearean_2025}, though our evidence arises from prompt-level manipulations rather than model-internal dynamics.
 Together, these three patterns reinforce recent critiques of task-agnostic evaluation \citep{bang_hallulens_2025, wang_user-centric_2024, cyriac_metrics_2025} and identify prompt content, not sampling temperature, as the first-order confound that benchmarks must control.
 
 \subsection{Limitations}\label{sec:limitations}
@@ -633,7 +615,7 @@ Several design choices bound the scope of our study without undermining its diag
 \paragraph{Binary verification.}
 Our claim-level pipeline uses \texttt{supported}/\texttt{hallucinated} verdicts, following the state-of-the-art HalluLens protocol \citep{bang_hallulens_2025}, and omits an ``unverifiable'' category.
 Accordingly, absolute rates should be interpreted as strict-regime unsupportedness estimates, not as full \TR-aware judgments.
-This may overestimate absolute hallucination rates under creative conditions, where invented but unfalsifiable content is common; however, because the same classification applies uniformly across all conditions, the \emph{relative} comparisons that motivate our claims (effect of creativity level, task type, and their interaction) remain informative.
+This may overestimate absolute hallucination rates under creative conditions, where invented but unfalsifiable content is common; however, because the same classification applies uniformly across all conditions, the \emph{relative} comparisons that motivate our claims (effect of \CI, task type, and their interaction) remain informative.
 Permissive regimes require additional labels such as \PD, unverifiable content, and non-truth-conditional stylistic variation.
 
 \paragraph{Knowledge-base scope.}
@@ -647,7 +629,7 @@ Lesson plans naturally introduce objectives, activities, assessment criteria, an
 The high measured hallucination rate for this format may therefore combine genre norms, structural-template demands, genuine unsupported factual claims, and oracle coverage limits.
 
 \paragraph{Prompt and \TR\ alignment.}
-Some prompts in our design are ambiguous with respect to the intended truth regime: open-ended formulations can make it difficult to determine whether a given divergence is \TR-licensed or not.
+Some prompts in our design are ambiguous with respect to the intended truth regime: open-ended formulations can make it difficult to determine whether a given deviation is \TR-licensed or not.
 Extending the task gradient to genres with sharper regime boundaries (e.g., fiction vs.\ legal analysis) and annotating each prompt with an explicit $(O, \sigma, \kappa)$ contract would strengthen future replications.
 
 \paragraph{Permissive-regime diagnostic.}
@@ -658,10 +640,10 @@ Appendix~\ref{app:kappa-diagnostic} reports the concrete values.
 
 \section{Conclusion}\label{sec:conclusion}
 
-This position paper argues that hallucination is not a binary property of text but a violation relative to a prompt's truth regime.
-The vocabulary introduced here, $\TR(p)=(O,\sigma,\kappa)$ together with \PD\ and \Hallu, makes explicit what current hallucination and creativity evaluations often leave implicit: which oracle governs truth, how much stylistic latitude is granted, and whether new truth-conditional content is licensed.
+This paper argues that hallucination is not a binary property of text but a violation relative to a prompt's truth regime.
+The vocabulary introduced here, $\TR(p)=(O,\sigma,\kappa)$ together with \CI, \PD, and \Hallu, makes explicit what current hallucination and creativity evaluations often leave implicit: which oracle governs truth, which stylistic deviations are allowed, and whether new truth-conditional content is licensed.
 Our strict-regime study does not solve \TR-aware evaluation.
-It shows why such evaluation is needed: even a strong HalluLens-style binary verifier reports substantially different hallucination rates as writing format and creativity level change, despite a fixed low-$\kappa$ regime.
+It shows why such evaluation is needed: even a strong HalluLens-style binary verifier reports substantially different hallucination rates as prompt format and creative intent change, despite a fixed low-$\kappa$ contract.
 The research agenda is therefore to move from defect counting to regime-conditioned diagnosis, so that evaluation can penalize harmful fabrication under strict regimes while preserving productive divergence where exploration is intended.
 
 \bibliography{references}
@@ -714,8 +696,7 @@ $|\rho|$ with the hallucination rate.
 \begin{table*}[h]
     \centering
     \caption{Spearman correlations by factor (top 20 effects, $N = 12{,}469$).
-    Encoding: one-hot for categorical levels; raw ranks for numeric factors.
-    ``n.s.''\ denotes a correlation that is not statistically significant.}
+    Encoding: one-hot for categorical levels; raw ranks for numeric factors.}
     \label{tab:supp-spearman}
     \small
     \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X l c c c c}
@@ -828,7 +809,7 @@ across the full $3 \times 3$ task-by-creativity design.
 \noindent The claim-level results confirm the prompt-level patterns from
 Table~\ref{tab:key-findings}: lesson plans have the lowest support rate
 in every creativity condition, and support rates decrease monotonically
-with increasing creativity level across all three task types.
+with increasing creative intent across all three task types.
 
 
 \subsection{Creativity--Hallucination Correlation Matrix}
@@ -938,7 +919,7 @@ rates but preserves relative ordering across conditions
 
 \subsection{Run Coverage Summary}
 
-The study comprises 53 experimental runs spanning 9 models across five providers: deepseek-v3.2 \cite{deepseek2025v32},  gemini-3-flash-preview \cite{google2025gemini3flash},  gemma-3-27b-it \cite{google2025gemma3}, gpt-5.2 \cite{openai2025gpt52,openai2025gpt52systemcard},  grok-3-mini \cite{xai2025grok3mini},  grok-4.1-fast \cite{xai2025grok41fast},  mistral-small-creative \cite{mistral2025smallcreative}, nemotron-nano-12b-v2-vl \cite{nvidia2025nemotron},  and qwen3-30b-a3b-instruct-2507 \cite{alibaba2025qwen3}, with temperature $\in \{0, 0.25, 0.5, 0.75, 1.0\}$ and 3 target lengths.
+The study comprises 53 experimental runs spanning 10 models across five providers: deepseek-v3.2 \cite{deepseek2025v32},  gemini-3-flash-preview \cite{google2025gemini3flash},  gemma-3-27b-it \cite{google2025gemma3}, gpt-5.2 \cite{openai2025gpt52,openai2025gpt52systemcard},  grok-3-mini \cite{xai2025grok3mini},  grok-4.1-fast \cite{xai2025grok41fast},  mistral-small-creative \cite{mistral2025smallcreative}, nemotron-nano-12b-v2-vl \cite{nvidia2025nemotron},  and qwen3-30b-a3b-instruct-2507 \cite{alibaba2025qwen3}, with temperature $\in \{0, 0.25, 0.5, 0.75, 1.0\}$ and 3 target lengths.
 CreativityPrism scoring is available for 29 complete runs ($N = 8{,}376$);
 the remaining 24 runs lack creativity annotations due to pipeline coverage gaps.
 Table~\ref{tab:supp-run-coverage} summarizes coverage by model.
