@@ -1,0 +1,327 @@
+
+\documentclass{llncs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{array}
+\renewcommand{\arraystretch}{1.2}
+\usepackage{makecell}
+
+\begin{document}
+
+\title{A Survey on the Creative Potential of LLM Hallucinations }
+
+\author{
+  Mathis Carlesso\inst{1,2}\orcidID{0009-0004-6523-1245} \and
+  Martino Lovisetto\inst{1}\orcidID{0000-0001-7489-640X} \and
+  Elöd Egyed-Zsigmond\inst{2}\orcidID{0000-0002-1218-8026}\and
+  Stefan Duffner\inst{2}\orcidID{0000-0003-0374-3814}\and
+  Pierre-Yves Genest\inst{1}\orcidID{0000-0002-2927-5214}
+}
+\institute{ Alteca, 69100 Villeurbanne, France \and INSA Lyon, CNRS, LIRIS, UMR5205, Université Claude Bernard Lyon 1, 69621 Villeurbanne, France
+}
+
+\maketitle
+
+\begin{abstract}
+Large language models (LLMs) exhibit hallucinations not as accidental anomalies but as structural consequences of probabilistic generation and incomplete training corpora.
+While such behavior undermines reliability in factual tasks, it can also fuel creativity in domains like storytelling and design. 
+In our view, creativity and veracity are not necessarily contradictory, and effective systems must negotiate both.
+This survey synthesizes recent work linking hallucination and creativity, highlighting how deviations from ground truth can blur into innovation without discarding factual grounding. 
+We survey benchmarks and datasets that evaluate LLM creativity through dimensions like novelty, coherence, and engagement, drawing from adapted factuality tests to specialized story and code generation corpora.
+We also review methods that harness hallucinations for creative tasks, including controlled prompting, ideation pipelines, and layered decoding strategies.
+The survey reveals an emerging trend in hallucination literature, arguing that reframing hallucinations as an inevitable yet potentially innovative property of LLMs—not merely errors to suppress but resources to measure, steer, and integrate into creative use cases—promotes a shift from pure minimization to systematic understanding and harnessing under explicit constraints, while preserving ties to truth.
+\end{abstract}
+
+\keywords{Large Language Models \and Hallucinations \and Creativity \and Benchmarks \and Evaluation Methods}
+
+\section{Introduction}
+
+Large Language Models (LLMs) generate text by next-token prediction. Their outputs can diverge from truth, producing hallucinations \cite{sahoo2024comprehensive,huang2025survey}. We use the term "hallucination" to denote content that contradicts world knowledge (factuality) or the provided context or instructions (faithfulness) \cite{ji2023hallucination,huang2025survey}. These divergences persist due to probabilistic decoding, finite and imperfect training data, and objective mismatches \cite{banerjee2024llms,kalai2025why}. Even low-temperature decoding leaves nondeterministic effects from parallelism, numerical stability, and hardware variation \cite{defeating2025nondeterminism}.
+Reliability demands dominate applications in medicine, law, and education. Prior work focuses on error taxonomies and mitigation via retrieval-augmented generation (RAG), supervised fine-tuning (SFT), reinforcement learning from human feedback (RLHF), and task-specific detection in question answering (QA), summarization, and long-form generation \cite{huang2025survey,ji2023hallucination,zhang2023siren}. This survey scopes to text-only LLMs.
+
+A complementary perspective comes from creativity research. Under constraints, error and uncertainty can spark novel recombinations, refined into value \cite{acar2019creativity}. This approach suggests treating intentional deviation (unlike harmful errors) as a useful source of ideas. Controlled deviation involves intentional departures from strict factual accuracy that advance creative goals while staying within specified boundaries. For instance, in story generation \cite{franceschelli2024creativity}, a model might introduce fictional characters or scenarios, while preserving narrative coherence. Such controlled elements differ markedly from uncontrolled hallucinations that offer no task-relevant value. 
+Recent studies explore this link in story generation, design ideation, and problem solving \cite{sun2024hallucinating,he2025shakespearean,franceschelli2024creativity,rick2023supermind,tian2025macgyver}. Beyond storytelling, creative divergence matters in technical domains. Benchmarks and evaluations now probe originality in code and hardware design \cite{delorenzo2024creativeval,lu2025benchmarking} and ingenuity in mathematical problem solving \cite{ye2024assessing}. These workflows use exploration to propose hypotheses, then apply verification checks such as fact-checking against reliable sources, coherence evaluation through logical consistency tests, or human-in-the-loop reviews to preserve correctness.
+Despite this momentum, the literature remains scattered. Benchmarks often privilege factuality, while creativity metrics vary across tasks and evaluators 
+\cite{marco2025reader,cyriac2025metrics,li2025automated}. This survey bridges the gap by integrating literature on hallucination taxonomies with creativity theory and evaluation practices, clarifying when and how to harness divergence.
+
+\textbf{Survey structure.} We organize this review in six sections. Section 2 revisits hallucination fundamentals and mitigation, with attention to datasets and evaluation protocols. Section 3 examines hallucination as a driver of creative exploration. Section 4 surveys creativity benchmarks, with emphasis on story and code generation. Section 5 reviews methods that steer and filter divergence for productive use. Section 6 outlines open challenges, including safety, calibration, and creativity-aware evaluation.
+
+
+\section{Hallucination}
+
+Hallucinations in LLMs represent systematic phenomena linked to training data and objectives, neural architectures, and inference procedures, rather than isolated bugs \cite{ji2023hallucination,huang2025survey,zhang2023siren,kalai2025why}.
+
+Recent surveys offer complementary perspectives: Jiang et al. \cite{jiang2024survey} highlight creativity intersections, Huang et al. \cite{huang2025survey} cover taxonomies and challenges, and Bang et al. \cite{bang2025hallulens} focus on benchmarking and evaluator reliability. This section provides a precise taxonomy, reviews datasets, mitigation and detection methods, with emphasis on creativity-relevant limitations.
+
+\subsection{Definitions, Axes, and Taxonomy}
+Most existing taxonomies in the literature primarily distinguish hallucinations based on reference truth, creating a binary split between factuality errors (which contradict world knowledge) and faithfulness errors (which contradict provided context or instructions) \cite{ji2023hallucination,huang2025survey}. While this fundamental distinction captures the core challenge, it provides insufficient granularity for understanding the diverse manifestations of hallucinations.
+The taxonomy presented here draws from current surveys \cite{ji2023hallucination,huang2025survey,bai2025hallucination,zhang2023siren,bang2025hallulens} and serves as a summary of prevailing approaches, offering a more comprehensive framework for analyzing hallucinations—particularly in creative applications—through a four-dimensional structure that extends beyond the traditional binary classification.hg
+We categorize hallucinations along four axes guiding datasets, detection, and mitigation:
+
+\begin{itemize}
+\item \textbf{Reference.}Factuality errors contradict world knowledge (claiming Marie Curie won three Nobel Prizes when she won two). Faithfulness errors contradict provided context or instructions (e.g., inventing details in a summary absent from the source or ignoring formatting rules) \cite{ji2023hallucination,huang2025survey,zhang2023siren}.
+\item \textbf{Logical validity.} Outputs may be factual and faithful yet contain internal contradictions or fallacies (e.g., correctly defining primes but concluding all are even, ignoring counterexamples like three) \cite{huang2025survey,jiang2024survey}.
+
+\item \textbf{Source.} Intrinsic errors arise from model knowledge, biases, or decoding (e.g., fabricating a citation from training data). Extrinsic errors stem from inputs like incomplete prompts or faulty retrieval (e.g., incorporating incorrect retrieved information) \cite{ji2023hallucination,zhang2023siren}.
+
+\item \textbf{Granularity.} Divergence scales from token-level (e.g., "1925" instead of "1924") to span-level (e.g., "quantum mechanics" as "classical physics"), claim-level (e.g., wrong attribution of a discovery), or output-level (e.g., entirely off-topic responses) \cite{huang2025survey}.
+\end{itemize}
+
+While these four axes provide orthogonal dimensions for classification, the traditional binary distinction between factuality and faithfulness errors remains foundational and aligns with the Reference axis above. The following paragraphs detail these two primary error types, which can then be further characterized using the remaining three dimensions (logical validity, source, and granularity) to provide comprehensive error analysis
+
+\paragraph{Factuality errors (world-referenced).} These hallucinations involve false claims about entities, relationships, quantities, or events, verifiable against knowledge bases \cite{ji2023hallucination,huang2025survey}. Subtypes include fabricated statistics, misattributions, incorrect dates or locations, and invented details. Temporal staleness reflects outdated training data; coverage gaps occur in underrepresented domains, like cross-lingual or technical areas \cite{kasai2024realtimeqa}.
+
+\paragraph{Faithfulness errors (context-referenced).} These hallucinations mshow inconsistencies with provided context, instructions, or sources, critical for tasks requiring adherence \cite{huang2025survey}. Instruction inconsistency ignores directions on format, tone, or length; context inconsistency invents or contradicts given information. Relevant in summarization (balancing conciseness and accuracy) and retrieval-augmented generation (incorporating sources without fabrication).
+
+\paragraph{Reasoning quality (logical validity).} Treated as an orthogonal dimension to factuality and faithfulness, this assesses internal consistency and soundness, checking if conclusions follow premises \cite{huang2025survey,jiang2024survey}. Outputs can be accurate yet flawed (e.g., valid premises yielding invalid inferences). In creative tasks, logical flexibility may aid abstract thinking, metaphors, or speculation within boundaries.
+
+\subsection{Datasets and Labeling Schemes}
+
+In the literature hallucinations datasets fall into three families: world-referenced factuality (fact-checking and QA), context-referenced faithfulness (summarization and long-form QA based on sources), and reasoning (multi-hop or compositional inference), as detailed in Table~\ref{tab:hallucination_datasets} \cite{ji2023hallucination,huang2025survey,jiang2024survey}. We emphasize two key labeling decisions: (i) annotation granularity (ranging from individual tokens to complete outputs) and (ii) evaluation scale (from binary classifications to graded assessments of divergence severity).
+
+Granularity options include token-level (individual words), span-level (phrases), claim-level (atomic statements verified against evidence, as in FEVER's supported/refuted classifications), and output-level (whole responses). Claim-level approaches, like those in FEVER, classify statements based on retrieved evidence, enabling targeted verification.
+
+Evaluation scales vary from binary detection (hallucinated or not) to multi-point systems that quantify nuance. Graded methods often employ Natural Language Inference (NLI) frameworks \cite{bowman2015snli,williams2018mnli}, treating generated content as a hypothesis and source material as a premise to classify as entailment (supported), contradiction (hallucinated), or neutral (unrelated). This provides richer training signals and higher inter-annotator agreement than binary labels.
+
+Metrics in these datasets measure performance aspects not fully captured by labels alone. Accuracy (Acc) computes correct predictions over total instances; Exact Match (EM) requires identical outputs to ground truth; F1 balances precision and recall for partial matches; ROUGE evaluates summarization overlap (e.g., ROUGE-1 for unigrams, ROUGE-L for longest sequences); BERTScore assesses semantic similarity via BERT embeddings; Human corr correlates automatic scores with human judgments; and FEVER Score combines label accuracy with evidence precision/recall. QAGS-F1 uses QA models to verify summary consistency by comparing answers from sources versus generated text.
+
+For creativity, specialized benchmarks evaluate novelty and coherence alongside fidelity, as covered in Section 4 and Table~\ref{tab:creativity_datasets}.
+
+
+
+\begin{table*}[t]
+\centering
+\scriptsize
+\caption{Benchmarks commonly used for evaluating hallucinations in LLMs.}
+\label{tab:hallucination_datasets}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l l l l l p{1.5cm} p{7cm}}
+\hline
+\textbf{Dataset} & \textbf{Category} & \textbf{Size} & \textbf{Domain} & \textbf{Task} & \textbf{Metrics} & \textbf{Notes} \\
+\hline
+FEVER~\cite{thorne2018fever} & Factuality & 185K & Wikipedia & Fact-checking & FEVER Score, Acc & Canonical fact-checking benchmark requiring evidence retrieval from Wikipedia passages; claims classified as Supported/Refuted based on evidence. \\
+TruthfulQA~\cite{lin2022truthfulqa} & Factuality & 817 & General knowledge & QA & Acc & Evaluates truthfulness with adversarial questions designed to elicit common misconceptions; 817 questions across 38 categories with binary evaluation. \\
+PopQA~\cite{mallen2023popqa} & Factuality & 14K & General knowledge & Long-tail QA & Acc & Tests long-tail factual knowledge using entity-centric questions from Wikidata; focuses on rare entities with low Wikipedia pageview frequency. \\
+SimpleQA~\cite{wei2024shortformfactuality} & Factuality & 6K & General knowledge & Fact QA & Acc, F1 & Short-form factuality benchmark with definitive answers; includes uncertainty calibration and was created adversarially against GPT-4. \\
+TriviaQA~\cite{joshi2017triviaqa} & Factuality & 650K & General knowledge & QA & EM, F1 & Large-scale reading comprehension dataset with trivia questions; uses distant supervision with independently gathered evidence documents. \\
+DefAnD~\cite{rahman2024defand} & Factuality & 75K & Domain & QA & Acc & Comprehensive hallucination evaluation with definitive single answers across 8 domains; measures factual, prompt alignment, and consistency errors. \\
+HaluEval~\cite{li2023halueval} & Factuality & 35K & General knowledge & QA, summarization & Acc, F1 & Multi-task hallucination corpus covering QA, dialogue, and summarization; includes both automatic generation and human annotation. \\
+\hline
+FRANK~\cite{pagnoni2021frank} & Faithfulness & 2.2K & News & Summarization & Semantic factuality & Fine-grained factual error annotation for summarization with detailed error taxonomy; covers CNN/DM and XSum with sentence-level annotations. \\
+QAGS~\cite{wang2020qags} & Faithfulness & 11K & News & Summarization & QAGS-F1, Human corr & Question-answer generation approach for evaluating summary consistency; uses QA models to compare answers from source vs. summary. \\
+SummEval~\cite{fabbri2021summeval} & Faithfulness & 1.6K & News & Summarization & Human corr & Meta-evaluation benchmark with human annotations across multiple quality dimensions; enables evaluation of automatic summarization metrics. \\
+XSum~\cite{narayan2018xsum} & Faithfulness & 204K & News & Summarization & ROUGE, BERTScore & Extreme abstractive summarization requiring single-sentence summaries from BBC articles; tests high-level abstraction and synthesis. \\
+CNN/DailyMail~\cite{hermann2015cnn} & Faithfulness & 300K & News & Summarization & ROUGE & News summarization benchmark with article-highlight pairs; widely used standard benchmark despite extractive nature of highlights. \\
+DelusionQA~\cite{sadat2023delusionqa} & Faithfulness & 8K & Automotive & QA & F1 & Domain-specific QA dataset for automotive/car manual context; focuses on retrieval-augmented hallucination detection in technical domains. \\
+HaluQA~\cite{cheng2023haluqa} & Faithfulness & 10K & General knowledge & Long-form QA & Error localization & Long-form QA with span-level error localization; annotates hallucination types with fine-grained error spans and explanations. \\
+\hline
+BIG-Bench~\cite{BIGBench2021} & Reasoning & 204 & Multi-domain & Multi-task & Various & Comprehensive benchmarking suite with over 200 diverse language tasks, designed to evaluate broad reasoning, generalization, and multi-step problem-solving in LLMs\\
+BIG-Bench Hard~\cite{suzgun2023bigbenchhard,kazemi2025bigbenchxhard} & Reasoning & 5K & Multi-domain & Multi-task & EM & Challenging subset of BIG-Bench tasks requiring multi-step reasoning; selected tasks where LLMs underperform human raters. \\
+CR-LLM~\cite{li2024crllm} & Reasoning & 2K & Abstract concepts & Conceptual QA & Acc & Concept reasoning dataset with model knowledge and context leakage prevention; requires predicting entity concepts from masked contexts. \\
+HotpotQA~\cite{yang2018hotpotqa} & Reasoning & 113K & Wikipedia & Multi-hop QA & EM, F1 & Multi-hop reasoning over Wikipedia requiring evidence chain extraction; includes sentence-level supporting facts for explainability. \\
+HypoTermQA~\cite{uluoglakci2024hypotermqa} & Reasoning & 6K & Hypothetical terms & QA & Validity Rate & Hypothetical terms dataset using non-existent but plausible concepts; tests LLM tendency to fabricate information about fake entities. \\
+\hline
+HalluRAG~\cite{ridder2025hallurag} & RAG/Tools & 5K & General knowledge & Info-seeking QA & Acc, F1 & Closed-domain RAG hallucination detection using recent Wikipedia information; ensures information recency to test knowledge cutoff limits. \\
+ToolQA~\cite{zhuang2023toolqa} & RAG/Tools & 1.5K & External APIs & Tool-use QA & EM & External tool usage evaluation across 8 domains with compositional tool chains; distinguishes questions requiring external vs. parametric knowledge. \\
+RealTimeQA~\cite{kasai2024realtimeqa} & RAG/Tools & 1K/week & Current events & Factoid QA & Acc & Dynamic QA platform with weekly question updates about current events; challenges static assumptions with real-time knowledge requirements. \\
+\hline
+\end{tabular}
+}
+\end{table*}
+
+\subsection{Hallucination Detection and Mitigation}
+
+This subsection maps detection and mitigation approaches, directing readers to comprehensive surveys for detailed taxonomies \cite{huang2025survey,ji2023hallucination,zhang2023siren,bai2025hallucination}. We organize methods by their target causes: reference source verification, training objective alignment, and reasoning enhancement.
+
+\paragraph{Detection Approaches by Reference Source.} 
+Detection methods vary by reference target (truth source) and granularity (analysis level: tokens, spans, claims, or complete outputs). 
+\textit{World-referenced (factuality) methods} decompose outputs into individual claims, retrieve external evidence, and test support or contradiction \cite{min2023factscore,chern2023factool}. Retrieval-based approaches expand coverage but struggle with query design and rare entities \cite{gao2023rarr}. Parametric verification uses internal model knowledge, avoiding retrieval issues but reflecting training biases \cite{azaria2023internal}. Uncertainty measures (token probabilities, entropy, self-consistency voting) and multi-agent debate frameworks help identify errors, though all methods struggle with ``confident mistakes''—fluent but unfounded statements \cite{manakul2023selfcheckgpt,wang2022self}.
+
+\textit{Context-referenced (faithfulness) methods} evaluate outputs against provided sources through overlap matching, textual entailment, and question–answer comparisons. Metrics such as QAGS and FactCC target contradictions in summaries and long-form responses \cite{wang2020asking,kryscinski2020evaluating}. 
+\textit{LLM-as-judge frameworks} use structured prompts for scalable evaluation but suffer from prompt sensitivity, model bias, and reproducibility issues \cite{zheng2023judging,wang2024large}. Detection systems often apply binary classifications without considering task intent—a limitation for creativity-oriented applications (see Section~2.5).
+
+\paragraph{Mitigation by Root Causes.} 
+Hallucinations arise from data gaps, training misalignments, and reasoning limitations. 
+
+\textit{Data augmentation} addresses knowledge gaps through Retrieval-Augmented Generation (RAG), which grounds outputs with relevant documents \cite{lewis2020retrieval}, tool integration for real-time verification \cite{schick2023toolformer}, and structured knowledge graphs for entity relationships \cite{pan2024unifying}. While enhancing recall, retrieval quality remains a limiting factor.
+
+\textit{Training alignment} corrects objective mismatches where models prioritize fluency over accuracy. Supervised fine-tuning on verified datasets reinforces truthful patterns \cite{ouyang2022training}. Reinforcement Learning from Human Feedback (RLHF) penalizes hallucinations using human judgments \cite{stiennon2020learning}. Constitutional AI employs self-supervision through principled model critiques \cite{bai2022constitutional}. Parameter editing makes targeted weight modifications to correct specific errors without full retraining \cite{meng2022locating}. These approaches improve reliability but incur an ``alignment tax''—reduced creative diversity beneficial for precision-critical domains but limiting for imaginative tasks.
+
+\textit{Reasoning enhancement} employs inference-time techniques for verification and control. Decoding controls (temperature adjustment, contrastive decoding) prioritize high-confidence outputs \cite{li2023contrastive}. Chain-of-thought prompting encourages step-by-step reasoning \cite{wei2022chain}, while chain-of-verification adds evidence checks \cite{dhuliawala2024chain}. Self-consistency enables majority voting across multiple generations \cite{wang2023self}. Multi-agent debate refines outputs through simulated critiques \cite{du2023improving}. Abstention mechanisms allow confidence-based refusal, and post-hoc correction employs editor models for iterative refinement \cite{huang2025survey}.
+
+Overall, these approaches aim to balance truthfulness with other requirements, including creative flexibility. However, binary detection paradigms and task-agnostic evaluation remain problematic for creativity applications, where controlled divergence may be valuable rather than harmful.
+
+
+\subsection{Cross-cutting Limitations and Bridge to Creativity}
+
+Recent surveys highlight recurring limitations that hinder reliable assessment of hallucinations and creativity \cite{huang2025survey,ji2023hallucination,jiang2024survey}. Table~\ref{tab:dataset_limitations} summarizes the main issues. 
+
+Coarse labeling schemes \cite{li2023halueval,thorne2018fever,lin2022truthfulqa,cheng2023haluqa} collapse diverse error types into binary classes, masking distinctions between minor slips and wholesale fabrications. Task-agnostic evaluation \cite{mallen2023popqa,wei2024shortformfactuality} applies uniform criteria across domains, treating speculative storytelling like high-stakes QA. Judge variability \cite{bang2025hallulens,marco2025reader} introduces further instability, with both human annotators and LLM-as-judge frameworks showing bias. Span-level inconsistency \cite{pagnoni2021frank,cheng2023haluqa}, limited creative focus \cite{franceschelli2024creativity,ismayilzada2025evaluating}, and domain skew toward medical or legal datasets reinforce a bias toward factuality at the expense of novelty. These gaps risk over-penalizing harmless creative deviations and under-detecting plausible but harmful errors. Addressing them requires context-aware metrics and multi-objective evaluation that balance factual reliability with creative value \cite{cyriac2025metrics,li2025automated}.
+
+\begin{table}[t] 
+\centering 
+\scriptsize 
+\caption{Major limitations in current hallucination detection datasets and their impact on creativity assessment.} 
+\label{tab:dataset_limitations} 
+\resizebox{\textwidth}{!}{%
+\renewcommand{\arraystretch}{2.5}  % Augmente l'espacement vertical
+\begin{tabular}{p{2.5cm} p{2.5cm} p{5.5cm} p{5.5cm} p{6.5cm}}
+\hline
+\textbf{Limitation} & \textbf{Affected Datasets} & \textbf{Description} & \textbf{Impact on Creativity} & \textbf{Potential Solutions} \\
+\hline
+\textbf{Coarse Labeling} & HaluEval \cite{li2023halueval}, FEVER \cite{thorne2018fever}, TruthfulQA \cite{lin2022truthfulqa} & Binary or overly simplified classification schemes that compress diverse error types into broad categories & Over-penalizes minor creative deviations while under-detecting serious fabrications in creative contexts & Multi-dimensional scoring, severity-aware labeling, task-specific rubrics \\
+\hline
+\textbf{Task-Agnostic Evaluation} & PopQA \cite{mallen2023popqa}, SimpleQA \cite{wei2024shortformfactuality}, BIG-Bench \cite{BIGBench2021} & Uniform evaluation criteria applied across different task types without considering context appropriateness & Treats harmless creative speculation identically to dangerous medical misinformation & Context-aware rubrics, domain-specific evaluation protocols, intent-conditioned metrics \\
+\hline
+\textbf{Judge Variability} & LLM-as-judge frameworks, Human annotation protocols & Inconsistent scoring across evaluators due to subjective interpretation and systematic biases & Creates noise in creative evaluation where subjective quality matters significantly & Inter-rater reliability measures, bias-aware evaluation, ensemble judging approaches \\
+\hline
+\textbf{Limited Creative Focus} & Most factuality datasets & Datasets designed primarily for factual accuracy without creative quality dimensions & Missing evaluation of novelty, originality, engagement, and other creative merits & Integration with creativity benchmarks (Section 4), multi-objective evaluation frameworks \\
+\hline
+\textbf{Span-Level Inconsistency} & HaluQA \cite{cheng2023haluqa}, FRANK \cite{pagnoni2021frank} & Inconsistent span boundary annotation and context dependency in error localization & Difficulty distinguishing creative embellishment from factual error at fine-grained levels & Improved annotation guidelines, context-aware span detection, hierarchical error taxonomies \\
+\hline
+\textbf{Domain Specificity} & Medical/Legal datasets, Technical QA & Over-representation of high-stakes domains where creativity is inappropriate & Skews evaluation toward conservative, risk-averse outputs unsuitable for creative applications & Balanced dataset construction, domain-stratified evaluation, creative domain inclusion \\
+\hline
+\end{tabular}
+}
+\end{table}
+
+\section{Hallucination as a Creative Driver}
+
+This section examines controlled divergence for creative purposes, highlighting productive deviations that respect task constraints while preserving coherence and engagement \cite{wu2024writingbench,sun2024hallucinating}.
+We define productive divergence as creative deviation that aligns with task constraints, distinct from factual or faithfulness errors in Section 2.1. When tasks explicitly allow or encourage imaginative elaboration (such as storytelling, creative writing, or concept ideation) can enhance narrative depth or generate novel ideas
+\cite{tian2025macgyver,zhao2024assessing}.
+
+Productive divergence arises from generative mechanisms. Intrinsic factors include high decoding temperature, top-p sampling, and biases toward rare continuations \cite{kalai2025why,hubert2024current}. Extrinsic factors involve under-constrained prompts, loose retrieval, or intentional knowledge gaps. Controls like parameter adjustments, evidence anchoring, and verifier loops direct novelty while preventing unchecked drift, leveraging hallucination sources from Section 2 (data limits, objective misalignment) \cite{sun2024hallucinating,he2025shakespearean}.
+
+Creativity research shows constraints and uncertainty promote originality via novel knowledge recombinations \cite{acar2019creativity,carlini2024divergent}. LLM studies mirror this: exploratory decoding uncovers non-obvious ideas, filtered for coherence \cite{franceschelli2024creativity,rick2023supermind,tian2025macgyver}. In story generation, models trade factual precision for engagement, creating inventive plots through speculative details \cite{jiang2024survey,patil2024using}. This reframes hallucinations as valuable departures via weak associations and gap-filling \cite{sun2024hallucinating,feng2025generative}.
+
+Evaluation metrics spans novelty (distinct-n, MAUVE, originality scores) \cite{fein2025litbench,ismayilzada2025evaluating,creativebench2024}, coherence (human Likert ratings, rubric-guided LLM judges with prompt standardization), and reader engagement (audience interest, emotional response, conditioned on demographics/expertise) \cite{marco2025reader,li2025automated,jangra2024evaluating}. Studies address annotator agreement and prompt sensitivity \cite{bang2025hallulens,li2024automated}. These extend Section 2's detection frameworks by incorporating task-specific intent and genre considerations into assessment criteria\cite{wang2024benchmarking,chen2024exploring}.
+
+Empirical evidence confirms controlled hallucination's creative potential. Kumar et al. show human-LLM collaboration boosts divergent and convergent thinking, exceeding solo performance with prompt design \cite{kumar2025human}. Zhao et al. demonstrate LLMs match human baselines on creativity assessments \cite{zhao2024assessing}. Wang et al. find creative code solutions emerge from deviations in algorithmic patterns \cite{wang2024benchmarking}. These findings support psychological theories that position divergent and convergent thinking as complementary exploration strategies rather than opposing cognitive modes \cite{carlini2024divergent}.
+
+This challenges assumptions that hallucinations always harm utility; in controlled settings, they explore conceptual spaces rigid accuracy excludes, yielding design hypotheses, artistic syntheses, and speculative frameworks \cite{springboards2025creativity,sun2024hallucinating,chen2024role}. Critics note narrow definitions miss broader value, with evaluations lacking depth in subjective qualities like aesthetics or resonance, often favoring problem-solving over holistic creativity \cite{sun2024hallucinating,wu2024writingbench,jangra2024evaluating}.
+
+A balanced approach manages hallucinations pragmatically: strict controls (RAG, calibration, verification) for high-stakes tasks; controlled divergence via decoding and metrics for exploratory creativity \cite{chen2024exploring,li2024automated}. Further research is needed to refine tools to capture genuine creative contribution beyond surface measures \cite{sun2024hallucinating,feng2025generative}, turning liabilities into innovation resources.
+
+
+\section{Benchmarks for Evaluating Creativity}
+
+Creativity evaluation in LLMs integrates psychological theory with computational methods. The Torrance Tests of Creative Thinking (TTCT) \cite{torrance2012torrance} assess fluency (idea quantity), flexibility (category diversity), originality (novelty), and elaboration (detail richness), distinguishing divergent thinking (novel generation) from convergent thinking (focused refinement) \cite{chakrabarty2024art,franceschelli2024creativity,ismayilzada2025creativity}. Verbal tasks prompt alternative uses; figural tasks involve drawing completion. Adaptations like the Torrance Test of Creative Writing (TTCW) use 14 binary tests across TTCT dimensions, where LLMs pass 3–10 times fewer than humans \cite{chakrabarty2024art}.
+
+Human evaluation applies consensual assessment on TTCT criteria, with inter-rater reliability via Intraclass Correlation Coefficient (ICC) \cite{zedelius2019beyond,koo2016guideline,shrout1979intraclass}, ranging from 0.60–0.75 (non-experts) to 0.85–0.90 (experts) \cite{franceschelli2024creativity,ismayilzada2025evaluating}. Automated systems trained on expert data outperform crowd-sourced ones, balancing objectivity and subjectivity. Table~\ref{tab:creativity_datasets} summarizes benchmarks; narrative tasks provide open-ended contexts for comparison.
+
+\paragraph{Story Generation and Narrative Creativity Datasets.}
+Story generation suits creativity evaluation due to its open-ended nature and established metrics. Modern datasets employ controlled designs and annotations to measure narrative qualities.
+
+LitBench \cite{fein2025litbench} offers a standardized benchmark with 2,480 human-labeled story comparisons from Reddit's r/WritingPrompts and a 43,827-pair training corpus. It mitigates temporal and length biases through filtering, evaluating originality, structure, and prompt fidelity.
+
+The Short Story Dataset \cite{ismayilzada2025evaluating} uses five-sentence prompts with cue words for 200 stories, enabling comparisons via semantic diversity metrics. Human stories show greater novelty, surprise, and lexical diversity, while LLMs excel in syntactic complexity. Expert ratings align with TTCT dimensions.
+
+Specialized datasets include CollabStory \cite{chakrabarty2025can}, with over 32,000 multi-LLM stories revealing collaboration's benefits for creativity but risks to coherence, and the AI-Slop to AI-Polish dataset \cite{chakrabarty2025slop}, which demonstrates iterative refinement's role in enhancing narrative metrics.
+
+\paragraph{Problem-Solving and Code Generation Benchmarks.}
+
+Creativity benchmarks in problem-solving emphasize innovative technical solutions, balancing convergent thinking (functional outcomes) and divergent thinking (novel strategies).
+
+MacGyver \cite{tian2025macgyver} tests improvisation across 100 scenarios with everyday objects, measuring feasibility, originality, and resourcefulness. LLMs excel in functional solutions but lag in divergent thinking compared to humans.
+
+EscapeBench \cite{qian2025escapebench} assesses agent-based creativity in 120 escape room puzzles, evaluating plan novelty, logical coherence, and environmental adaptation. Results show LLMs rely on conventional patterns, limiting strategic innovation.
+
+CreativEval \cite{delorenzo2024creativeval} evaluates hardware code generation on 80 problems, focusing on feasibility, innovation, and correctness. LLMs produce correct descriptions but exhibit limited architectural creativity relative to human engineers.
+
+NeoCoder \cite{lu2025benchmarking} uses Codeforces problems with denial prompting to measure code creativity, combining convergent (correctness) and divergent (novelty) metrics via NeoGauge. Advanced models like GPT-4 score lower than humans in overall creativity \cite{lu2025benchmarking}.
+
+\paragraph{Automated Evaluation Methods and Metrics.}
+
+Automated methods enhance scalability while maintaining correlation with human creativity assessments. Semantic distance approaches quantify novelty through conceptual divergence from training distributions \cite{organisciak2023beyond}. The SemDis platform \cite{beaty2020automating} combines multiple embedding models (GloVe, Word2Vec, BERT) for robust creativity scoring, achieving correlations of r=0.70-0.85 with human ratings. Multiplicative composition models, which are computational frameworks that analyze creative responses by modeling interactions between multiple semantic components rather than treating them independently \cite{gray2017forward}, prove particularly effective for analyzing multi-word creative responses and for capturing psychological patterns such as the serial order effect in divergent thinking tasks. LLM frameworks use reference-based Likert comparisons, achieving 75\% human agreement \cite{li2025automated}, though multi-agent setups introduce biases on unconventional outputs \cite{franceschelli2024creativity}. 
+
+Hybrid approaches filter for basics (grammar, coherence) before human review, reducing costs \cite{wu2024writingbench}. Table~\ref{tab:creativity_datasets} lists benchmarks by domain and methodology.
+
+
+\begin{table*}[ht]
+\centering
+\scriptsize
+\caption{Summary of Key Datasets and Benchmarks for LLM Creativity Evaluation. Metrics are organized by evaluation approach: \textit{TTCT} refers to Torrance Test dimensions (fluency, flexibility, originality, elaboration); \textit{Semantic} indicates embedding-based novelty measures; \textit{Human} denotes expert evaluation; \textit{Automated} refers to rule-based or computational metrics; \textit{Hybrid} combines multiple approaches. }
+\label{tab:creativity_datasets}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l l p{8cm} l l}
+\hline
+\textbf{Dataset/Benchmark}  & \textbf{Domain} & \textbf{Evaluation Approach \& Key Metrics} & \textbf{Sample Size} & \textbf{Year} \\
+\hline
+LitBench~\cite{fein2025litbench}   & Creative writing & \textit{Human}: Originality (narrative novelty), Structure (coherence), Fidelity (prompt adherence) & 2,480 comparisons & 2025 \\
+Short Story Dataset~\cite{ismayilzada2025evaluating}   & Story generation & \textit{Semantic}: Diversity (embedding distance), \textit{TTCT}: Surprise elements, Syntactic complexity & 200 stories & 2025 \\
+MacGyver~\cite{tian2025macgyver}   & Problem-solving & \textit{Human}: Feasibility (practical viability), Originality (solution rarity), Resourcefulness (material use) & 100 scenarios & 2025 \\
+EscapeBench~\cite{qian2025escapebench}   & Agent reasoning & \textit{Automated}: Strategy novelty, Logic coherence, Environmental adaptation & 120 puzzles & 2025 \\
+CreativEval~\cite{delorenzo2024creativeval}   & Hardware code & \textit{Hybrid}: Design innovation, Technical feasibility, Functional correctness & 80 designs & 2024 \\
+Art or Artifice Dataset~\cite{chakrabarty2024art}   & LLM evaluation & \textit{TTCT}: 14 binary tests across fluency, flexibility, originality, elaboration dimensions & 1,000 samples & 2024 \\
+Code Generation Benchmark~\cite{lu2025benchmarking}   & Programming & \textit{Hybrid}: Algorithmic approaches, Solution coherence, Implementation elegance & 200 tasks & 2025 \\
+SemDis Platform~\cite{organisciak2023beyond}   & Divergent thinking & \textit{Semantic}: Distance metrics across multiple embedding spaces (GloVe, Word2Vec, BERT) & 1,000 responses & 2023 \\
+WritingBench~\cite{wu2024writingbench}   & General writing & \textit{Hybrid}: Semantic diversity, Syntactic complexity, Prompt adherence, Human quality scores & 800 samples & 2024 \\
+Automated Creativity Framework~\cite{li2025automated}   & Multi-domain & \textit{Automated}: Reference-based originality, Alignment scoring, Comparative assessment & 500 texts & 2025 \\
+TTCW Framework~\cite{chakrabarty2024art}   & Creative writing & \textit{TTCT}: Adapted Torrance tests for text (fluency, flexibility, originality, elaboration) & 300 stories & 2024 \\
+Hallucination Narratives~\cite{sun2024hallucinating}   & Controlled deviation & \textit{Hybrid}: Novelty scoring, Consistency measures, Controlled factual deviations & 300 narratives & 2024 \\
+Mathematical Creativity~\cite{ye2024assessing}   & Problem solving & \textit{Human}: Solution ingenuity, Mathematical soundness, Approach originality & 150 problems & 2024 \\
+Verbal Creativity Test~\cite{dinu2025testing}   & Language tasks & \textit{TTCT}: Idea generation, Response variety, Contextual fit & 200 items & 2025 \\
+\hline
+\end{tabular}
+}
+\end{table*}
+
+
+\subsection{Challenges and Limitations in Current Approaches}
+
+Creativity evaluation in LLMs encounters fundamental limitations that undermine validity and generalizability, necessitating advanced methodologies. Benchmarks predominantly favor English-language content and Western cultural norms, introducing biases in human annotations and automated metrics trained on English-dominant corpora \cite{franceschelli2024creativity}. This restricts applicability to multilingual contexts and overlooks cultural variations in creativity, such as emphases on individual versus collective innovation. Most assessments rely on binary or coarse-grained scales, which lack sensitivity to subtle creative differences and fail to capture creativity's continuous nature, complicating reliable annotations. Evaluation frameworks often apply uniform criteria without regard for context or intent, penalizing elements like hallucinations in factual tasks while undervaluing them in speculative fiction, and ignoring genre-specific norms like surprise in horror versus insight in literary works \cite{franceschelli2024creativity}. Limited sample sizes and single-source data introduce sampling bias, constraining representation of diverse creative styles and reducing statistical reliability. Furthermore, evaluations treat outputs as static, neglecting iterative processes and temporal dynamics where creative value evolves with cultural shifts. Addressing these issues demands interdisciplinary collaboration to develop culturally diverse, context-aware, and dynamic frameworks.
+
+
+
+\section{Innovative Methods Using Hallucination for Creative Purposes}
+
+Recent studies reframe hallucinations in LLMs as potential catalysts for creativity, transforming unintended fabrications from probabilistic decoding or knowledge gaps into novel ideas when guided appropriately. This section reviews methodologies that harness hallucinations for creative writing, brainstorming, and ideation, viewing them as generative sparks rather than errors.
+
+Approaches fall into four frameworks: (1) decoding strategies for divergent generation,  (2) iterative critique-and-revise systems, and (3) RAG-anchored exploration.
+\paragraph{Decoding Strategies for Divergent Generation.}
+Controlled decoding approaches use parameter manipulation to induce creative divergence. He et al. demonstrate how LLM decoding layers blend factual recall with inventive recombination, with early layers in larger models effectively balancing creativity and coherence \cite{he2025shakespearean}.
+Temperature and top-p sampling amplify uncertainty by raising parameters or thresholds, generating plausible inventions for refinement into narratives, especially useful for originality-focused story generation \cite{sun2024hallucinating}.
+Attention manipulation disrupts patterns in prediction heads to foster creativity, leveraging the trade-off between focused attention (for accuracy) and dispersed attention (for novelty) to yield coherent, innovative content \cite{he2025shakespearean}.
+\paragraph{Iterative Critique-and-Revise Systems.}
+Multi-stage framework refines hallucinated content through cycles of generation, critical evaluation, and revision. Zhang et al.'s Creative Agents integrate imaginative output with feedback loops to ensure narrative coherence \cite{zhang2023creative}.
+It proves especially useful for fiction writing, where initial hallucinations are refined across cycles, preserving creative elements while enhancing plausibility and revealing emergent properties not achievable through factual or unconstrained generation.
+Modern systems use multi-dimensional evaluation, assessing originality, coherence, and thematic consistency to deliver targeted feedback that maintains creativity while fixing structural issues.
+\paragraph{RAG-Anchored Exploration Methods.}
+RAG-anchored exploration integrates Retrieval Augmented Generation with controlled hallucination to blend factual grounding and creative deviation. This uses external knowledge bases for context while allowing invention in non-factual areas. Rick et al.'s Supermind Ideator exemplifies this by retrieving factual context for collaborative problem-solving while fostering creative analogies and narratives \cite{rick2023supermind}.
+These methods excel in ideation tasks needing domain expertise and innovation, providing factual bases for plausible creative extensions and overcoming pure hallucination's lack of grounding.
+Advanced versions employ dynamic retrieval that adapts to task needs, user preferences, and domains, adjusting the fact-creativity balance for applications from scientific ideation to art.
+\paragraph{Cognitive Foundations and Creative Mechanisms.}
+Hallucination-based creativity methods simulate human creative cognition, enhancing idea fluency (the rapid generation of numerous ideas \cite{organisciak2023beyond}) as measured in divergent thinking tasks such as the Alternate Uses Task (AUT). The AUT, a widely-used assessment where participants generate alternative uses for common objects (e.g., unusual uses for a paperclip), evaluates both the quantity and originality of creative responses \cite{beaty2021alternate,dumas2014alternates,dumas2020alternate}. 
+Cognitive research links fluency to accessing diverse semantic networks and forming novel associations \cite{zedelius2019beyond}. These methods replicate this by leveraging LLMs' probabilistic representations to mimic associative leaps.
+Temporal dynamics in human creativity involve alternating generation and evaluation phases, with refinements yielding top solutions. The described multi-stage approaches mirror these rhythms, benefiting artificial systems.
+
+
+\section{Conclusion and Future Work}
+
+LLMs produce hallucinations as structural outcomes of their probabilistic architectures and training processes. Though detrimental to factual reliability, these may enhance creativity in certain domains. This survey synthesizes the interplay between hallucination and creativity in LLMs, from traditional benchmarks to novel evaluation frameworks.
+
+Four limitations hinder creativity-aware assessment: (i) coarse labels that collapse heterogeneous errors, (ii) task-agnostic protocols that conflate creative speculation with high-stakes misinformation, (iii) judge variability in humans and LLM-as-judge, and (iv) limited attention to creative qualities. Together, they over-penalize harmless divergence and miss plausible but harmful fabrications.
+
+Benchmarks reflect this tension: LitBench for narrative evaluation \cite{fein2025litbench}; MacGyver and CreativEval \cite{tian2025macgyver,delorenzo2024creativeval} for inventive problem solving ; and NeoCoder \cite{lu2025benchmarking} for code creativity, where advanced models still trail humans in divergent thinking . Automated metrics (e.g., semantic distance) and hybrid pipelines scale assessment but leave cultural and domain-sensitivity gaps.
+
+Future work should: (1) build standardized suites integrating multiple creativity dimensions and addressing cross-cultural and multimodal coverage \cite{zhao2024assessing}; (2) run controlled studies isolating architectural and training factors shaping creative behavior \cite{jiang2024survey}; (3) develop adaptive calibration that balances accuracy and selective divergence; (4) design robust, bias-aware judging protocols beyond single LLM-as-judge setups; and (5) combine retrieval with creativity to ground imaginative outputs without suppressing novelty.
+
+Advancing these goals requires interdisciplinary collaboration and context-aware, multi-objective evaluation that treats hallucination as a controllable resource rather than a uniform defect.
+
+\bibliographystyle{splncs04}
+\bibliography{survey_references}
+
+\end{document}
+

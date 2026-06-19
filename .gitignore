@@ -8,6 +8,7 @@ archive/*
 sources/*
 !sources/README.md
 
+_scratch_builds/*
 # Build outputs
 build/
 %OUTDIR%/
