@@ -195,39 +195,53 @@ If the prompt instead asks for a fictional plant ecology where moonlight powers 
 We oppose \textbf{\Hallu} (\TR\ violations) to \textbf{\PD} (\TR-compliant creativity); regime-agnostic factuality evaluation fails to separate the two.
 
 % ============================================================
-% Truth regimes + divergences (conceptual table)
+% Truth regimes + divergences (conceptual table, with concrete examples)
 % ============================================================
 \begin{table*}[tb]
 \centering
 \small
 \setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.2}
-\caption{\textbf{Canonical truth regimes, specified by an oracle $O$ and prompt-level permissions.}
-$\sigma$ denotes stylistic latitude (how freely form can vary), and $\kappa$ denotes the invention license (whether new truth-conditional content may be introduced).
-The same surface ``divergence'' can be acceptable or a violation depending on whether the regime binds claims to provided evidence/world facts (faithfulness/factuality) or instead licenses invention under other constraints \citep{maynez_faithfulness_2020,kryscinski_evaluating_2020,franceschelli_creativity_2024}.}
+\renewcommand{\arraystretch}{1.3}
+\caption{\textbf{Canonical truth regimes with concrete examples.}
+$\sigma$ = stylistic latitude; $\kappa$ = invention license.
+The verdict on the \emph{same} surface content turns on $(O,\kappa)$, not on the text alone:
+a claim that is \Hallu\ under a strict regime can be \PD\ under a permissive one
+\citep{maynez_faithfulness_2020,kryscinski_evaluating_2020,franceschelli_creativity_2024}.}
 \label{tab:canonical-truth-regimes}
-\begin{tabularx}{\linewidth}{>{\bfseries}p{2.2cm} p{2.7cm} >{\centering\arraybackslash}p{1.85cm} X X}
+\begin{tabularx}{\linewidth}{%
+  >{\bfseries}p{1.9cm}                      % Regime
+  p{2.2cm}                                   % Oracle
+  >{\centering\arraybackslash}p{1.55cm}      % (sigma,kappa)
+  p{2.7cm}                                   % Prompt example
+  X                                          % Example PD
+  X                                          % Example H
+}
 \toprule
-\textbf{Regime} & \textbf{Oracle $O$} & \textbf{Permissions $(\sigma,\kappa)$} &
-\textbf{Allowed divergence} & \textbf{\TR-violation (hallucination trigger)} \\
+\textbf{Regime} & \textbf{Oracle $O$} & \textbf{$(\sigma,\kappa)$} &
+\textbf{Prompt example} &
+\textbf{Example \PD\ claim} &
+\textbf{Example \Hallu\ claim} \\
 \midrule
 Strict grounded generation / summarization &
 Provided sources (docs / retrieved passages) &
-(low, low) &
-Paraphrase, compression, re-ordering; \emph{no new facts}. &
-Any unsupported detail, added entity/number, or contradiction vs.\ sources. \\
+(low, 0) &
+\textit{``Summarize this medical report accurately.''} &
+--- \emph{(regime admits none)} &
+``The patient has Type 2 diabetes'' when absent from the report. \\
 \midrule
 Factual task with creative style &
 World knowledge and/or cited sources &
-(high, low) &
-Metaphor, voice, vividness \emph{without changing propositions}. &
-Any new truth-conditional claim without support, or any incorrect claim. \\
+(high, 0) &
+\textit{``Explain photosynthesis in a poetic style, but keep the science right.''} &
+``Chlorophyll---a green workshop for sunlight'' \emph{(figurative; proposition intact)}. &
+``Plants make sugar from moonlight'' \emph{(factually incorrect claim introduced)}. \\
 \midrule
 Ideation / fiction-writing &
-Prompt constraints (outline, coherence, user-provided facts) &
-(high, high) &
-Invent entities, scenes, alternatives; explore hypotheses freely. &
-Violating explicit constraints (e.g.,\ incoherence; contradicting user-provided facts/outline). \\
+Prompt constraints (coherence, user-provided facts / outline) &
+(high, 2) &
+\textit{``Write a sci-fi story where moonlight powers plant growth.''} &
+``Photovores harvest lunar energy via chloromoon'' \emph{(invented; coherent; on-brief)}. &
+``Photovores run on electricity'' \emph{(contradicts the user-specified constraint)}. \\
 \bottomrule
 \end{tabularx}
 \end{table*}

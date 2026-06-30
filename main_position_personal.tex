@@ -1,8 +1,10 @@
-\documentclass[final]{clv2025}
+\documentclass[manuscript]{clv2025}
 
 \jvol{vv}
 \jnum{nn}
 \jyear{2025}
+\jinfo{}
+\renewcommand{\footmark}{}
 \dochead{Position Paper}
 
 %% Choose your variant of English
@@ -26,6 +28,19 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usepgfplotslibrary{groupplots}
+\hypersetup{hidelinks}
+
+\makeatletter
+\renewcommand{\appendixsection}[1]{%
+   \refstepcounter{section}%
+   \setcounter{subsection}{0}%
+   \setcounter{subsubsection}{0}%
+   \setcounter{table}{0}%
+   \setcounter{figure}{0}%
+   \setcounter{equation}{0}%
+   \section*{Appendix \Alph{section}: #1}%
+}
+\makeatother
 
 
 
@@ -45,6 +60,65 @@
 \newcommand{\Hallu}{\textsc{H}} % hallucination (TR-violating)
 \newcommand{\Faith}{\textsc{F}} % faithfulness
 \newcommand{\Acc}{\textsc{A}} % accuracy/factuality
+
+%% ------------------------------------------------------------
+%% Palette and TikZ styles for the claim-annotation decision tree (Fig.)
+%% ------------------------------------------------------------
+\definecolor{clrH}  {RGB}{155, 18, 18}   % hallucination
+\definecolor{clrPD} {RGB}{ 22, 98, 48}   % productive divergence
+\definecolor{clrOK} {RGB}{ 50, 50, 50}   % ok / neither
+\definecolor{clrUV} {RGB}{160, 95,  8}   % unverifiable
+\definecolor{clrKw} {RGB}{ 22, 52,125}   % spine / keyword
+\definecolor{clrPh} {RGB}{ 38, 38, 88}   % header
+\definecolor{phbg}  {RGB}{228,232,246}   % header background
+\definecolor{decbg} {RGB}{245,247,254}   % decision node bg
+\definecolor{decbdr}{RGB}{125,150,198}   % decision node border
+\tikzset{
+  inpnode/.style={rectangle, rounded corners=5pt, draw=gray!50, fill=gray!9,
+    font=\small\itshape, text width=5.2cm, align=center, inner xsep=6pt, inner ysep=5pt},
+  decnode/.style={rectangle, rounded corners=3pt, draw=decbdr, fill=decbg,
+    font=\small, text width=5.2cm, align=center, inner xsep=6pt, inner ysep=4pt},
+  lSV/.style={rectangle, rounded corners=3pt, draw=clrOK!50, fill=clrOK!7,
+    font=\small\bfseries\sffamily, text=clrOK!75, inner xsep=7pt, inner ysep=4pt},
+  lOK/.style={rectangle, rounded corners=3pt, draw=clrOK, fill=clrOK!12,
+    font=\small\bfseries\sffamily, text=clrOK, inner xsep=7pt, inner ysep=4pt},
+  lUV/.style={rectangle, rounded corners=3pt, draw=clrUV, fill=clrUV!10,
+    font=\small\bfseries\sffamily, text=clrUV, inner xsep=7pt, inner ysep=4pt},
+  lH/.style={rectangle, rounded corners=3pt, draw=clrH, fill=clrH!9,
+    font=\small\bfseries\sffamily, text=clrH, inner xsep=7pt, inner ysep=4pt},
+  lPD/.style={rectangle, rounded corners=3pt, draw=clrPD, fill=clrPD!9,
+    font=\small\bfseries\sffamily, text=clrPD, inner xsep=7pt, inner ysep=4pt},
+  lNE/.style={rectangle, rounded corners=3pt, draw=clrOK!40, fill=clrOK!6,
+    font=\small\bfseries\sffamily, text=clrOK!65, inner xsep=7pt, inner ysep=4pt},
+  arr/.style={-{Stealth[length=4.8pt,width=3.4pt]}, thick, color=gray!58!black},
+  spinelbl/.style={font=\scriptsize\sffamily\bfseries, text=clrKw!85, fill=white,
+    inner sep=1.5pt, rounded corners=1pt},
+  exitlbl/.style={font=\scriptsize\sffamily, text=gray!68!black, fill=white,
+    inner sep=1.5pt, rounded corners=1pt},
+  annot/.style={font=\scriptsize\itshape, text=gray!60},
+}
+
+%% ------------------------------------------------------------
+%% tcolorbox cards for the thesis-at-a-glance table (Table 1)
+%% ------------------------------------------------------------
+\usepackage[most]{tcolorbox}
+\definecolor{cardStrict}{HTML}{2F5597}
+\definecolor{cardStyle} {HTML}{2E7D6B}
+\definecolor{cardFlag}  {HTML}{6A4C93}
+\definecolor{cardIdea}  {HTML}{B45F06}
+\newcommand{\vbadge}[2]{\tcbox[on line, colback=#1, colframe=#1, boxrule=0pt, arc=2pt,
+  left=3pt, right=3pt, top=0.4pt, bottom=0.4pt, boxsep=0pt]{\scriptsize\bfseries\textcolor{white}{#2}}}
+\newcommand{\bH}{\vbadge{clrH}{H}}
+\newcommand{\bPD}{\vbadge{clrPD}{PD}}
+\newcommand{\bNE}{\vbadge{clrOK}{neither}}
+\newcommand{\bIP}{\vbadge{clrUV}{insuff.\ PD}}
+\newcommand{\skb}[2]{\tcbox[on line, colback=#1!12, colframe=#1!55!black, boxrule=0.3pt, arc=2pt,
+  left=3pt, right=3pt, top=0.4pt, bottom=0.4pt, boxsep=0pt]{\scriptsize\bfseries #2}}
+\tcbset{regcard/.style={enhanced, width=\linewidth, boxrule=0.4pt, arc=3pt,
+  left=7pt, right=7pt, top=3pt, bottom=4pt, before skip=3pt, after skip=3pt,
+  fonttitle=\bfseries\small, coltitle=black,
+  attach boxed title to top left={xshift=7pt, yshift=-2.2mm},
+  boxed title style={boxrule=0pt, arc=2pt, left=5pt, right=5pt, top=1.5pt, bottom=1.5pt}}}
 
 \title{Hallucination Is Relative: A Position on Truth-Regime-Aware Evaluation of LLM Divergence}
 
@@ -68,7 +142,7 @@ This misses a central property of language use: the same unsupported content can
 We argue that hallucination should instead be evaluated relative to the prompt's \emph{truth regime}, $\TR(p)=(O,\sigma,\kappa)$: the oracle $O$ that grounds truth, the stylistic latitude $\sigma$ that permits surface variation, and the invention license $\kappa$ that determines whether new truth-conditional content may be introduced.
 Under this view, hallucination (\Hallu) is a truth-regime violation, whereas productive divergence (\PD) is divergence that the regime licenses and the task rewards.
 We then show that current hallucination and creativity benchmarks share a blind spot: neither conditions its scores on what the prompt authorizes.
-We make this gap concrete by auditing widely used benchmarks against $(O,\sigma,\kappa)$, by applying a claim-level labeling rule to documented cases in which the same output flips between \Hallu\ and \PD\ as the regime changes, and by drawing on our own preliminary measurements, in which a standard binary verifier counts licensed invention as hallucination because it has no category for it.
+We substantiate this gap by auditing widely used benchmarks against $(O,\sigma,\kappa)$, by applying a claim-level labeling rule to documented cases in which the same output changes status as the regime changes, and by using diagnostic evidence to illustrate how binary verification can mistake licensed divergence for hallucination when it lacks regime-aware labels.
 These observations motivate a research agenda for truth-regime-aware evaluation that scores \Hallu\ and \PD\ separately under explicit oracle and permission annotations.
 \end{abstract}
 
@@ -86,15 +160,15 @@ A brainstorming tool that only repeats ideas that already exist is useless; a me
 The difference lies not in the text itself, but in what the prompt asked for.
 
 \paragraph{The diagnostic gap.}
-Current evaluation frameworks do not register this difference.
+Current evaluation practice does not register this difference.
 Hallucination benchmarks treat any unsupported content as a defect to minimize \citep{bang_hallulens_2025}, whereas creativity benchmarks treat novelty as a virtue to maximize, often without checking factual grounding \citep{hou_creativityprism_2025, acar_creativity_2019}.
 Neither tradition conditions its scores on what the user's prompt actually authorizes.
-As a result, one output can be scored as a serious failure by one framework and a creative success by another, depending on which protocol is applied rather than on whether the divergence was appropriate.
+As a result, one output can be scored as a serious failure by one tradition and a creative success by another, depending on which protocol is applied rather than on whether the divergence was appropriate.
 
 Even the closest recent steps stop short of the contract. Intent-aware evaluation decomposes a query into checkable constraints, but those constraints cover query elements (subject, action, quantity) rather than stylistic latitude or invention license, and it scores intent coverage with no truth oracle: it has neither $O$ nor $\kappa$ \citep{hao_faithqa_2025}. The closest analogue to our distinction splits hallucinations into ``intelligent'' and ``defective,'' yet it reads that label off the output's own creativity and factual-deviation scores rather than off the prompt, so the label is fixed by the text and cannot flip with the contract that should govern it \citep{yang_hicbench_2025}. Neither makes $(O,\sigma,\kappa)$ a scored variable, and that omission is the gap we identify.
 
 This gap cannot be closed simply by building better detectors.
-Theoretical work shows that LLMs cannot avoid hallucination entirely: arguments from incompleteness and undecidability \citep{banerjee_llms_2024, xu_hallucination_2024} and from calibration \citep{kalai_why_nodate} establish a nonzero structural error floor.
+Theoretical work shows that LLMs cannot avoid hallucination entirely: arguments from incompleteness and undecidability \citep{banerjee_llms_2024, xu_hallucination_2024} establish a nonzero structural error floor.
 Yet the same generative mechanism also produces the novel hypotheses and creative combinations that users request in open-ended tasks \citep{sun_hallucinating_2024, he_shakespearean_2025}.
 The goal, therefore, cannot be to eliminate divergence, but to judge it against what the task permits.
 
@@ -104,8 +178,78 @@ It is \emph{relative to the prompt's truth regime} (\TR): the task-specific cont
 Under a strict \TR\ (e.g., ``summarize this document accurately''), any unsupported claim is a hallucination (\Hallu).
 Under a permissive \TR\ (e.g., ``write fiction''), that same divergence may instead constitute \emph{productive divergence} (\PD): a regime-compliant departure from established facts that is novel and task-useful, and therefore fulfills rather than violates what the prompt requested.
 The distinction turns not on the text but on whether the prompt authorized the divergence; evaluation that ignores this conflates \Hallu\ with \PD.
-Concretely, the distinction is already actionable: an evaluator who annotates a prompt's oracle and invention license can withhold the hallucination penalty wherever the regime authorized the divergence, scoring it as \PD\ rather than as error, a judgment no regime-agnostic scorer can make.
+In practice, the distinction is already actionable: an evaluator who annotates a prompt's oracle and invention license can withhold the hallucination penalty wherever the regime authorized the divergence, scoring it as \PD\ rather than as error, a judgment no regime-agnostic scorer can make.
 This is also what separates \TR\ from context-faithfulness: faithfulness asks only whether an output stays within its evidence, and has no analogue of $\kappa$, the explicit license to leave it.
+Table~\ref{tab:thesis-at-a-glance} previews the thesis on representative prompts before we formalize it.
+
+% ============================================================
+% Thesis-at-a-glance: example-driven summary of the framework
+% ============================================================
+\begin{table*}[t]
+\centering
+\small
+\caption{\textbf{The thesis in one view.}
+A fixed regime $\TR(p)=(O,\sigma,\kappa)$ sorts what an output adds into a violation (\Hallu) or a licensed move (\PD, or merely stylistic), by what it authorizes rather than by surface form.
+$O$ is the oracle, $\sigma$ the stylistic latitude, $\kappa$ the invention license ($0$: none; $1$: flagged speculation; $2$: free invention).
+Within each card the regime is held fixed, yet the outputs receive different verdicts; cases are developed in Section~\ref{sec:framework}.}
+\label{tab:thesis-at-a-glance}
+
+\begin{tcolorbox}[regcard, colframe=cardStrict, colback=cardStrict!3, colbacktitle=cardStrict!13,
+  borderline west={3.5pt}{0pt}{cardStrict},
+  title={``Summarize this medical report''\hfill \skb{cardStrict}{$\sigma$ low}\,\skb{cardStrict}{$\kappa$ 0}}]
+{\scriptsize\itshape Oracle $O$: the provided report.}\\[2pt]
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X c >{\raggedright\arraybackslash}p{4.1cm}@{}}
+``the patient has diabetes'' (not in the report) & \bH & unsupported by $O$ \\
+\end{tabularx}
+\end{tcolorbox}
+
+\begin{tcolorbox}[regcard, colframe=cardStyle, colback=cardStyle!3, colbacktitle=cardStyle!13,
+  borderline west={3.5pt}{0pt}{cardStyle},
+  title={``Explain photosynthesis like a poet, keep the science accurate''\hfill \skb{cardStyle}{$\sigma$ high}\,\skb{cardStyle}{$\kappa$ 0}}]
+{\scriptsize\itshape Oracle $O$: scientific world knowledge.}\\[2pt]
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X c >{\raggedright\arraybackslash}p{4.1cm}@{}}
+``chlorophyll, a green workshop for sunlight'' & \bNE & metaphor keeps the proposition intact \\
+\addlinespace[2pt]
+``plants make sugar from moonlight'' & \bH & new false claim; poetic license does not cover it \\
+\end{tabularx}
+\end{tcolorbox}
+
+\begin{tcolorbox}[regcard, colframe=cardFlag, colback=cardFlag!3, colbacktitle=cardFlag!13,
+  borderline west={3.5pt}{0pt}{cardFlag},
+  title={``List possible causes; flag anything unestablished''\hfill \skb{cardFlag}{$\sigma$ low}\,\skb{cardFlag}{$\kappa$ 1}}]
+{\scriptsize\itshape Oracle $O$: world knowledge; flagged speculation licensed.}\\[2pt]
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X c >{\raggedright\arraybackslash}p{4.1cm}@{}}
+``could be early Lyme disease, but speculative'' & \bPD & licensed speculation, marked as a hypothesis \\
+\addlinespace[2pt]
+``this is early Lyme disease'' (asserted) & \bH & confident error: asserted where a hedge was due \\
+\end{tabularx}
+\end{tcolorbox}
+
+\begin{tcolorbox}[regcard, colframe=cardIdea, colback=cardIdea!4, colbacktitle=cardIdea!15,
+  borderline west={3.5pt}{0pt}{cardIdea},
+  title={``Write a short story set in 1920s Paris''\hfill \skb{cardIdea}{$\sigma$ high}\,\skb{cardIdea}{$\kappa$ 2}}]
+{\scriptsize\itshape Oracle $O$: prompt constraints (declared fictional frame).}\\[2pt]
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X c >{\raggedright\arraybackslash}p{4.1cm}@{}}
+invents a caf\'e and its owner & \bPD & invention inside the declared frame \\
+\addlinespace[2pt]
+a real figure asserts a quote they never made & \bH & real-world assertion outside the frame \\
+\end{tabularx}
+\end{tcolorbox}
+
+\begin{tcolorbox}[regcard, colframe=cardIdea, colback=cardIdea!4, colbacktitle=cardIdea!15,
+  borderline west={3.5pt}{0pt}{cardIdea},
+  title={``Brainstorm ten product ideas''\hfill \skb{cardIdea}{$\sigma$ high}\,\skb{cardIdea}{$\kappa$ 2}}]
+{\scriptsize\itshape Oracle $O$: prompt constraints; invention rewarded.}\\[2pt]
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X c >{\raggedright\arraybackslash}p{4.1cm}@{}}
+only restates products that already exist & \bIP & too conservative for a regime that rewards invention \\
+\end{tabularx}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced, colback=black!4, colframe=black!20, boxrule=0.35pt, arc=2pt,
+  left=6pt, right=6pt, top=3pt, bottom=3pt, before skip=2pt, after skip=0pt]
+\footnotesize\textbf{Reading rule.} A divergence is \bH\ or \bPD\ according to what the regime licenses, not the surface text; within a fixed regime the verdict still differs by what is licensed and how it is presented.
+\end{tcolorbox}
+\end{table*}
 
 \paragraph{How we establish the gap.}
 We argue this position rather than establish it with a new controlled study.
@@ -113,7 +257,10 @@ Two analytical moves carry the weight, and a preliminary study of our own suppli
 First, we audit widely used hallucination and creativity benchmarks against the three components $(O,\sigma,\kappa)$ and find that, while the oracle is sometimes fixed, stylistic latitude and invention license are essentially never annotated, so the contract remains implicit (Section~\ref{sec:sota}).
 Second, we apply a claim-level labeling rule to documented cases and show that the same output receives opposite verdicts (\Hallu\ under one regime, \PD\ under another) once the contract is made explicit (Section~\ref{sec:worked}).
 Together these establish that the gap is structural, not anecdotal, and that a minimal evaluation layer making $(O,\sigma,\kappa)$ explicit would resolve verdicts that current pipelines leave underdetermined.
-Our preliminary experiments (Section~\ref{sec:sota}) point the same way: prompt signals move the measured hallucination rate even under a fixed strict regime, and a binary verifier counts licensed invention as hallucination for want of a category.
+Our preliminary experiments point the same way along two lines that we keep separate.
+In a large strict-regime study, stylistic signals alone move the measured hallucination rate even though no invention is licensed, a \emph{measurement} effect of $\sigma$ rather than a relabeling, where high stylistic latitude can move what a binary verifier flags as unsupported.
+In a smaller matched diagnostic, a binary verifier counts licensed invention as hallucination for want of a \PD\ category, the $\kappa$ effect that carries the \Hallu/\PD\ point.
+The large study does not on its own exhibit the relabeling; only the $\kappa$ diagnostic probes it (Section~\ref{sec:sota}).
 
 \paragraph{Contributions.}
 This position paper makes three contributions.
@@ -126,7 +273,7 @@ This position paper makes three contributions.
 
 \paragraph{Motivation.}
 The literature uses the word \emph{hallucination} broadly, but not consistently.
-Surveys commonly group together factuality errors against world knowledge and faithfulness errors against a provided source, sometimes adding axes such as intrinsic vs.\ extrinsic causes and different granularities \citep{ji_survey_2023, huang_survey_2025, zhang_sirens_nodate}.
+Surveys commonly group together factuality errors against world knowledge and faithfulness errors against a provided source, sometimes adding axes such as intrinsic vs.\ extrinsic causes and different granularities \citep{ji_survey_2023, huang_survey_2025}.
 Benchmarking work further argues that hallucination is often conflated with factuality and that any verdict depends on the chosen oracle and on evaluator reliability \citep{bang_hallulens_2025}.
 To reason about creativity--hallucination trade-offs, we fix a minimal vocabulary that makes the prompt's \emph{truth regime} explicit.
 Throughout, we separate \emph{prompt-level} variables (what the user requests) from \emph{output-level} properties (what the model produces), and adopt a \emph{claim-level} unit of analysis because evaluations vary by granularity.
@@ -176,15 +323,86 @@ This unifies faithfulness and factuality failures while making the oracle explic
 Content that would count as hallucination under a strict factual standard, but is allowed by the prompt's truth regime and helps accomplish the task.
 A claim is \PD\ when three conditions hold: it is \emph{licensed} (the regime permits invention, $\kappa>0$, or the claim falls inside a declared fictional frame); it is \emph{useful} (novel and appropriate under the task constraints, the standard creativity criterion \citep{diedrich_are_2015, acar_creativity_2019}); and it is \emph{presented on the regime's terms} (a flagged hypothesis under $\kappa{=}1$ must not be asserted as verified fact).
 This echoes non-LLM uses of ``productive divergence'' as variation that energizes performance \citep{parry_team_2023, lingard_pulling_2017}.
-A contrast makes the category concrete.
+A contrast pins the category down.
 Given ``summarize this medical report,'' an added claim that the patient has diabetes, absent from the report, violates a regime where $O$ is the report and $\kappa{=}0$: it is \Hallu.
 Given ``write a poem about quantum physics,'' the line that electrons dream in parallel worlds is supported by no oracle, yet the regime licenses figurative invention: it is \PD\ if it serves the poem.
 Both statements are invented; only the first is a failure.
-Crucially, if \TR\ demands grounding, the same divergence is \Hallu, not \PD.
+If \TR\ demands grounding, the same divergence is \Hallu, not \PD.
 
 \noindent\textbf{Decision rule.}
-Given a prompt $p$, an output $y$, and an oracle $O$: specify $\TR(p)$, decompose $y$ into atomic claims, then label each claim using $O$ as \Hallu\ (truth-conditional under $\TR$ but unsupported/incorrect), \PD\ (licensed by $\TR$ and task-useful), or neither (stylistic variation, benign noise); Appendix~\ref{app:decision-rule} gives the step-by-step procedure.
+Given a prompt $p$, an output $y$, and an oracle $O$: specify $\TR(p)$, decompose $y$ into atomic claims, then label each claim using $O$ as \Hallu\ (truth-conditional under $\TR$ but unsupported/incorrect), \PD\ (licensed by $\TR$ and task-useful), or neither (stylistic variation, benign noise).
+Figure~\ref{fig:annotation-tree} renders the full procedure as a decision tree, including the two non-divergence outcomes an operator also records in practice (\emph{supported} and \emph{unverifiable}); Appendix~\ref{app:decision-rule} gives the step-by-step version.
 The support condition is mechanically checkable against $O$; the usefulness condition inherits the evaluator dependence of creativity judgments (Section~\ref{sec:agenda}).
+
+% ============================================================
+% Claim-level annotation decision tree
+% ============================================================
+\begin{figure*}[t]
+\centering
+\colorbox{phbg}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{%
+  \vspace{3pt}\centering
+  \small\textcolor{clrPh}{%
+    \textbf{Step\,0: Regime specification} (prompt-level, once per output)\quad$|$\quad
+    $\sigma$ = stylistic latitude\quad$|$\quad
+    $\kappa\in\{0,1,2\}$ = invention licence\quad$|$\quad
+    $O$ = oracle (reference for truth)%
+  }\vspace{3pt}}}
+
+\vspace{6pt}
+
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[x=1cm, y=1cm]
+\def\xS{0}\def\xE{7.6}\def\yS{-0.5}\def\dY{1.85}
+\node[inpnode] (inp) at (\xS, 0.75) {claim $c$ extracted from output $y$};
+\node[decnode] (t1) at (\xS, \yS) {Does $c$ carry truth-conditional content under $(\sigma, O)$?};
+\node[decnode] (t2) at (\xS, \yS-\dY) {Is $c$ entailed by $O$?};
+\node[decnode] (t3) at (\xS, \yS-2*\dY) {Can $O$ determine whether $c$ is true or false?};
+\node[decnode] (t4) at (\xS, \yS-3*\dY) {Is the invention licensed?\\[-2pt]{\scriptsize $\kappa>0$ and $c\in\mathrm{scope}(\kappa)$}};
+\node[decnode] (t5) at (\xS, \yS-4*\dY) {Is $c$ properly presented?\\[-2pt]{\scriptsize (marked as hypothesis; not asserted as fact)}};
+\node[decnode] (t6) at (\xS, \yS-5*\dY) {Is $c$ novel and appropriate?};
+\node[lSV] (sv) at (\xE, \yS) {\textsf{SV}};
+\node[lOK] (ok) at (\xE, \yS-\dY) {\textsf{supported}};
+\node[lUV] (uv) at (\xE, \yS-2*\dY) {\textsf{unverifiable}};
+\node[lH]  (h1) at (\xE, \yS-3*\dY) {\textsf{H}};
+\node[lH]  (h2) at (\xE, \yS-4*\dY) {\textsf{H}};
+\node[lPD] (pd) at (\xE, \yS-5*\dY) {\textsf{PD}};
+\node[lNE] (ne) at (\xS, \yS-5*\dY-1.4) {\textsf{benign}};
+\draw[arr] (inp) -- (t1);
+\draw[arr] (t1) -- node[spinelbl, left=4pt] {yes} (t2);
+\draw[arr] (t2) -- node[spinelbl, left=4pt] {no}  (t3);
+\draw[arr] (t3) -- node[spinelbl, left=4pt] {yes} (t4);
+\draw[arr] (t4) -- node[spinelbl, left=4pt] {yes} (t5);
+\draw[arr] (t5) -- node[spinelbl, left=4pt] {yes} (t6);
+\draw[arr] (t6) -- node[spinelbl, left=4pt] {no}  (ne);
+\draw[arr] (t1.east) -- node[exitlbl, above=2pt] {no: not truth-conditional} (sv.west);
+\draw[arr] (t2.east) -- node[exitlbl, above=2pt] {yes: entailed by $O$} (ok.west);
+\draw[arr] (t3.east) -- node[exitlbl, above=2pt] {no: $O$ cannot evaluate $c$} (uv.west);
+\draw[arr] (t4.east) -- node[exitlbl, above=2pt] {no: $\kappa{=}0$, unlicensed} (h1.west);
+\draw[arr] (t5.east) -- node[exitlbl, above=2pt] {no: asserted as fact} (h2.west);
+\draw[arr] (t6.east) -- node[exitlbl, above=2pt] {yes: novel + appropriate} (pd.west);
+\node[annot, anchor=west] at (\xE+1.12, \yS) {stylistic variation};
+\node[annot, anchor=west] at (\xE+1.12, \yS-\dY) {faithful / accurate};
+\node[annot, anchor=west] at (\xE+1.12, \yS-2*\dY) {oracle has no relevant evidence};
+\node[annot, anchor=west] at (\xE+1.12, \yS-3*\dY) {unlicensed invention};
+\node[annot, anchor=west] at (\xE+1.12, \yS-4*\dY) {confident error};
+\node[annot, anchor=west] at (\xE+1.12, \yS-5*\dY) {licensed, useful};
+\node[annot, anchor=west] at (\xS+1.1, \yS-5*\dY-1.4) {benign noise};
+\foreach \i/\yy in {1/\yS, 2/{\yS-\dY}, 3/{\yS-2*\dY}, 4/{\yS-3*\dY}, 5/{\yS-4*\dY}, 6/{\yS-5*\dY}}
+{\node[circle, fill=clrKw!14, draw=clrKw!38, font=\scriptsize\bfseries\sffamily, text=clrKw, inner sep=1.5pt, minimum size=1.4em] at (-3.5, \yy) {\i};}
+\draw[gray!18, dashed, line width=0.4pt] (\xS, 0.35) -- (\xS, \yS-5*\dY-0.3);
+\end{tikzpicture}}
+
+\caption{\textbf{Claim-level annotation as a decision tree, for a regime $(O,\sigma,\kappa)$.}
+\emph{Spine} (downward, blue labels): continue to the next test. \emph{Exit} (rightward, grey labels): immediate verdict.
+\textsf{SV}: stylistic variation (no truth-conditional content);
+\textsf{supported}: faithful/accurate;
+\textsf{unverifiable}: $O$ has no evidence to confirm or falsify $c$;
+\textsf{H}: hallucination (exit\,4: unlicensed invention; exit\,5: \emph{confident error}, asserted as fact);
+\textsf{PD}: productive divergence (licensed and useful);
+\textsf{benign}: negligible-impact noise.
+Tests~1--3 are mechanically checkable against $O$ (retrieval\,+\,NLI; test~3 is a coverage check); test~4 is read off the $\kappa$ annotation; test~5 is a stance check on presentation; test~6 (utility) requires evaluator-dependent \emph{soft labels} (Section~\ref{sec:agenda}).}
+\label{fig:annotation-tree}
+\end{figure*}
 
 \paragraph{Worked example.}
 Consider ``Explain photosynthesis in a poetic style, but keep the science accurate.''
@@ -195,48 +413,89 @@ If the prompt instead asks for a fictional plant ecology where moonlight powers 
 \noindent Under this vocabulary we do not oppose ``creativity vs.\ truth.''
 We oppose \textbf{\Hallu} (\TR\ violations) to \textbf{\PD} (\TR-compliant creativity); regime-agnostic factuality evaluation fails to separate the two.
 
+\paragraph{Why $\kappa$ is not reducible to faithfulness.}
+Faithfulness asks whether an output stays within its evidence; $\kappa$ asks whether leaving it is licensed and, when it is, with what commitment the content must be presented.
+The two come apart at $\kappa{=}1$.
+Consider a clinical triage prompt whose regime requests flagged speculation (``list possible causes, and mark anything not yet established'').
+Two outputs carry the \emph{same} proposition.
+One states it flatly, ``this is early Lyme disease''; the other qualifies it, ``this could be early Lyme disease, but it is speculative and needs serology.''
+A faithfulness or factuality verifier scores the proposition, not its epistemic marking: against an oracle that cannot yet confirm the cause, both are unsupported, so both are flagged alike.
+The regime separates them.
+The flat assertion is a \Hallu, a \emph{confident error} stated as fact where the license required a hedge, whereas the qualified version is \PD: licensed speculation, presented on the regime's terms.
+This is the \emph{faithful uncertainty} that \citet{yona_metacognition_2026} argue separates a trustworthy answer from a hallucinated one, aligning a claim's linguistic uncertainty with what the model actually knows.
+The license $\kappa$ makes that alignment a scored term of the contract; faithfulness has no slot for it, which is why no faithfulness metric can recover the verdict $\kappa$ fixes.
+
+\paragraph{Scope and minimality of the contract.}
+We claim $(O,\sigma,\kappa)$ is a \emph{minimal} basis for the verdict, not a complete model of everything evaluation must weigh.
+One axis is deliberately left out: \emph{severity}.
+A medical question and a trivia question can share an identical contract ($O=$ world knowledge, $\sigma$ low, $\kappa{=}0$), yet a fabricated drug dose and a wrong trivia date are not equally costly.
+Severity differs, but the verdict does not: both fabrications are \Hallu.
+Severity therefore weights the penalty on a violation (Section~\ref{sec:agenda}); it does not decide whether a claim violates the regime, so it belongs to the scoring layer above $(O,\sigma,\kappa)$ rather than inside it.
+Other plausible factors reduce to the three components instead of extending them: audience and genre act on evaluation through the oracle they select and the latitude they grant.
+We make no completeness claim.
+$(O,\sigma,\kappa)$ is the smallest set that already suffices to flip the verdicts current pipelines get wrong, and enlarging it stays open.
+
 % ============================================================
 % Truth regimes + divergences (conceptual table)
 % ============================================================
-\begin{table*}[tb]
+% ============================================================
+% Canonical regimes in the (sigma, kappa) plane
+% ============================================================
+\begin{figure*}[tb]
 \centering
-\small
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.2}
-\caption{\textbf{Canonical truth regimes, specified by an oracle $O$ and prompt-level permissions.}
-$\sigma$ denotes stylistic latitude (how freely form can vary), and $\kappa$ denotes the invention license (whether new truth-conditional content may be introduced).
-The same surface ``divergence'' can be acceptable or a violation depending on whether the regime binds claims to provided evidence/world facts (faithfulness/factuality) or instead licenses invention under other constraints \citep{maynez_faithfulness_2020,kryscinski_evaluating_2020,franceschelli_creativity_2024}.}
-\label{tab:canonical-truth-regimes}
-\begin{tabularx}{\linewidth}{>{\bfseries}p{2.2cm} p{2.7cm} >{\centering\arraybackslash}p{1.85cm} X X}
-\toprule
-\textbf{Regime} & \textbf{Oracle $O$} & \textbf{Permissions $(\sigma,\kappa)$} &
-\textbf{Allowed divergence} & \textbf{\TR-violation (hallucination trigger)} \\
-\midrule
-Strict grounded generation / summarization &
-Provided sources (docs / retrieved passages) &
-(low, low) &
-Paraphrase, compression, re-ordering; \emph{no new facts}. &
-Any unsupported detail, added entity/number, or contradiction vs.\ sources. \\
-\midrule
-Factual task with creative style &
-World knowledge and/or cited sources &
-(high, low) &
-Metaphor, voice, vividness \emph{without changing propositions}. &
-Any new truth-conditional claim without support, or any incorrect claim. \\
-\midrule
-Ideation / fiction-writing &
-Prompt constraints (outline, coherence, user-provided facts) &
-(high, high) &
-Invent entities, scenes, alternatives; explore hypotheses freely. &
-Violating explicit constraints (e.g.,\ incoherence; contradicting user-provided facts/outline). \\
-\bottomrule
-\end{tabularx}
-\end{table*}
+\resizebox{0.82\linewidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+% quadrant fills (split at sigma=1 -> x=4.2, kappa=1 -> y=3)
+\fill[clrKw!8]  (0,0) rectangle (4.2,3);
+\fill[clrPD!11] (4.2,3) rectangle (8.4,6);
+\fill[gray!5]   (0,3) rectangle (4.2,6);
+\fill[clrH!5]   (4.2,0) rectangle (8.4,3);
+\draw[clrH,thick,dashed] (4.2,0) rectangle (8.4,3);
+\draw[gray!55] (0,0) rectangle (8.4,6);
+\draw[gray!28,dashed] (4.2,0)--(4.2,6);
+\draw[gray!28,dashed] (0,3)--(8.4,3);
+% region content
+\node[align=center, text width=3.8cm] at (2.1,1.5)
+ {\textbf{Strict grounded /}\\\textbf{summarization}\\[2pt]
+  {\scriptsize (low,\,low)\quad$O=$ provided sources}\\[1pt]
+  {\scriptsize paraphrase ok; new fact $=$ \Hallu}};
+\node[align=center, text width=3.9cm] at (6.3,4.5)
+ {\textbf{Ideation /}\\\textbf{fiction-writing}\\[2pt]
+  {\scriptsize (high,\,high)\quad$O=$ prompt constraints}\\[1pt]
+  {\scriptsize invent freely; constraint break $=$ \Hallu}};
+\node[align=center, text width=3.9cm] at (6.3,1.5)
+ {\textbf{Factual task with}\\\textbf{creative style}\\[2pt]
+  {\scriptsize (high,\,low)\quad$O=$ world knowledge}\\[1pt]
+  {\scriptsize metaphor ok; unsupported claim $=$ \Hallu}\\[3pt]
+  {\scriptsize\bfseries\textcolor{clrH}{no benchmark (Table~\ref{tab:audit})}}};
+\node[align=center, text width=3.9cm, text=gray!60] at (2.1,4.5)
+ {\textbf{Plain-style ideation}\\[2pt]
+  {\scriptsize (low,\,high)\quad$O=$ prompt constraints}\\[1pt]
+  {\scriptsize invent freely, but in literal form}\\[3pt]
+  {\scriptsize\itshape uncommon; of limited interest}};
+% axes
+\draw[-{Stealth},gray!70] (0,-0.05)--(8.7,-0.05);
+\draw[-{Stealth},gray!70] (-0.05,0)--(-0.05,6.3);
+\node[font=\scriptsize] at (2.1,-0.45){low};
+\node[font=\scriptsize] at (6.3,-0.45){high};
+\node[font=\small] at (4.2,-0.95){$\sigma$: stylistic latitude};
+\node[font=\scriptsize,rotate=90] at (-0.5,1.5){low};
+\node[font=\scriptsize,rotate=90] at (-0.5,4.5){high};
+\node[font=\small,rotate=90] at (-1.05,3){$\kappa$: invention licence};
+\end{tikzpicture}}
+\caption{\textbf{Canonical truth regimes in the $(\sigma,\kappa)$ plane.}
+$\sigma$ is stylistic latitude (how freely form may vary), $\kappa$ the invention licence (whether new truth-conditional content may be introduced).
+Each region names its oracle $O$, what divergence it allows, and what triggers a hallucination (\Hallu).
+Tinted regions are populated by existing benchmarks (Table~\ref{tab:audit}); the dashed region, a \emph{factual task with creative style}, is a canonical regime that no benchmark fills, and the one our pilot occupies (Appendix~\ref{app:experiment}).
+The fourth corner (low $\sigma$, high $\kappa$): plain-form invention, is an uncommon profile we keep for completeness; the load-bearing tension is the dashed cell, where creative form meets a strict oracle.
+The same surface divergence is acceptable or a violation according to the region, not the text \citep{maynez_faithfulness_2020,kryscinski_evaluating_2020,franceschelli_creativity_2024}.}
+\label{fig:sk-map}
+\end{figure*}
 
 \subsection{Truth regimes and regime-relative divergence}\label{sec:truth-regimes}
 
 The components of $\TR(p)=(O,\sigma,\kappa)$ combine into recognizable task profiles \citep{ji_survey_2023,huang_survey_2025}.
-Table~\ref{tab:canonical-truth-regimes} instantiates three canonical regimes.
+Figure~\ref{fig:sk-map} places the task profiles in the $(\sigma,\kappa)$ plane: three common regimes and one uncommon corner.
 Existing benchmarks typically fix $O$ but rarely annotate $(\sigma,\kappa)$ explicitly, making it easy to conflate \PD\ with \Hallu\ \citep{bang_hallulens_2025}.
 
 \paragraph{Claim-level labeling.}
@@ -248,7 +507,7 @@ When $\kappa$ is low, excess divergence increases \Hallu; when $\kappa$ is high,
 The two sides sit at different levels: excess divergence is visible claim by claim, whereas insufficient divergence is an output-level absence, a distinction we make precise when defining verdicts (Section~\ref{sec:discussion}).
 A regime-aware evaluator must therefore be able to fail an output in either direction, which a single unsupportedness count cannot.
 
-With this vocabulary and labeling procedure in place, the natural question is whether existing evaluation frameworks already condition their scores on the truth regime.
+With this vocabulary and labeling procedure in place, the natural question is whether existing benchmarks already condition their scores on the truth regime.
 The next section examines both hallucination and creativity benchmarks and shows that they do not.
 
 \section{The Diagnostic Gap: Evaluation That Ignores the Truth Regime}\label{sec:sota}
@@ -256,98 +515,105 @@ The next section examines both hallucination and creativity benchmarks and shows
 \paragraph{Two traditions, one shared blind spot.}
 Hallucination benchmarks treat divergence from an oracle as a defect to minimize \citep{ji_survey_2023, bang_hallulens_2025}; creativity benchmarks treat it as evidence of novelty to maximize \citep{hou_creativityprism_2025}.
 The split works for single-intent tasks but breaks down for mixed-intent prompts that pair novelty with factual constraints \citep{wang_user-centric_2024}: the same surface divergence can be \PD\ or \Hallu, yet on both sides the truth regime $(O,\sigma,\kappa)$ stays implicit.
-Table~\ref{tab:audit} makes the omission concrete.
+Table~\ref{tab:audit} documents the omission.
 Auditing forty benchmarks, organized by \emph{what} they evaluate (hallucination/faithfulness vs.\ creativity/divergence) and by the \emph{task} they score, we find the same pattern throughout: the oracle $O$ is frequently fixed, but stylistic latitude $\sigma$ is never annotated and the invention license $\kappa$ is never graded.
-Hallucination suites inherit a fixed $O$ and assume $\kappa$ low; creativity suites drop the factual oracle and leave $\kappa$ high but unscored; the few intent-aware benchmarks condition on the query without separating $\sigma$ from $\kappa$.
+Hallucination benchmarks inherit a fixed $O$ and run at $\sigma$ low and $\kappa$ low (neutral form, no invention); creativity benchmarks drop the factual oracle and run at $\kappa$ high, with $\sigma$ high in the writing suites; the few intent-aware benchmarks condition on the query without separating $\sigma$ from $\kappa$.
 The contract is left to the task label.
 
-\paragraph{The uniform columns are the finding, not an empty table.}
-One might object that columns repeating the same entry across forty benchmarks carry little information.
-The opposite holds: the uniformity \emph{is} the diagnostic result.
-Were stylistic latitude or invention license sometimes annotated, the columns would vary and the blind spot would be partial and design-specific; that every benchmark, across both research traditions and every task type, leaves $\sigma$ unannotated and $\kappa$ ungraded is what shows the omission to be structural rather than incidental.
-The two columns also fail in different ways, and the table records which: $\sigma$ is absent everywhere, whereas $\kappa$ is never missing at random but pinned to an assumed value (low under hallucination suites, high but unscored under creativity suites), so the audit reveals not only that the contract goes unannotated but \emph{how} each tradition silently fixes it.
+\paragraph{What the columns show, and what they do not.}
+The $\sigma$ and $\kappa$ entries are \emph{our} annotations, inferred from each task's design rather than reported by the benchmark: a factual-QA or summarization suite implies $\sigma$ low and $\kappa$ low (neutral form, no invention), a creative-writing suite implies both high, and an open-ended innovation suite implies $\kappa$ high.
+We make this inference explicit precisely because no benchmark measures any of these levels itself.
+Read that way, the finding is not that the column entries repeat but that every one is read off the task rather than scored: where a task plainly demands stylistic latitude (creative-writing suites) we mark $\sigma$ high, and where invention is central (creativity benchmarks, and the intelligent-hallucination split of \textsc{HIC-Bench}) we mark $\kappa$ high, yet no benchmark in either tradition turns that latitude or that license into a scored variable.
+The uniform fact across all forty, not any single column, is that neither permission is ever measured.
+
+\paragraph{The cell no benchmark fills.}
+Annotated this way, the forty benchmarks cluster on a diagonal: hallucination suites at $\sigma$ low, $\kappa$ low (neutral form, strict grounding) and creative-writing suites at $\sigma$ high, $\kappa$ high (marked form, free invention).
+The off-diagonal cell $\sigma$ high, $\kappa$ low---vivid or figurative form under a strict factual regime---is filled by none of them, though Figure~\ref{fig:sk-map} marks it as a canonical regime (a factual task with creative style) and it names an everyday request (``explain this like a poet, but keep the science exact'').
+That cell is not an incidental hole: it is exactly where stylistic latitude and the truth oracle pull against each other, and where an automatic verifier is most likely to misread marked form as unsupported content.
+Worse, the only region where high $\sigma$ appears at all ($\sigma$ high, $\kappa$ high) is scored solely on creativity metrics, so no existing benchmark measures hallucination under high stylistic latitude.
+This missing cell is the one our pilot deliberately occupies, holding $\kappa$ low while raising $\sigma$ (Appendix~\ref{app:experiment}).
 
 \paragraph{How the audit was coded.}
 We count a benchmark as annotating $\sigma$ only when stylistic latitude is an explicit, scored variable in its protocol, not merely present in some prompts, and as grading $\kappa$ only when invention is a scored dimension with more than one licensed level.
-By this criterion a creative-writing suite that varies the style of its prompts without making latitude a scored variable still counts as leaving $\sigma$ unannotated, since the latitude never enters the score.
+By this criterion \textsc{WritingBench} \citep{wu_writingbench_2024} is the instructive near-miss: it scores how well an output matches a requested \emph{style}, yet it never treats stylistic latitude as a graded permission that conditions the truth measurement, so by our test $\sigma$ stays unannotated even though the task plainly implies it is high.
 The coding is a single-author pass against these criteria, offered as the first instance of the annotation layer we advocate rather than as a validated resource; because the test is near-binary (is $(\sigma,\kappa)$ a scored variable?), it leaves little room for coder disagreement, and independent re-coding with reported agreement is itself part of the agenda (Section~\ref{sec:agenda}).
 
 \paragraph{An indicative pilot.}
-Our own preliminary experiments make the gap concrete.
+Our own preliminary experiments bring the gap into view.
 We designed the study to vary $\sigma$, the prompt's stylistic latitude (through creativity level and writing format), while holding the oracle fixed to Wikipedia world knowledge and $\kappa$ low, then measured the claim-level hallucination rate.
 The result is direct: making the output more creative in style raised the measured hallucination rate, even though factual invention is never licensed.
 Across 12{,}469 outputs from nine LLMs, writing format raised the rate most and creative intent next, while sampling temperature barely mattered (full design, figures, and reviewer-informed caveats in Appendix~\ref{app:experiment}).
 A matched $\kappa$ high/low diagnostic points the same way, not because permissive prompts are worse, but because a binary verifier with no \PD\ label counts licensed invention as \Hallu\ (Appendix~\ref{app:kappa-diag}).
-These measurements are indicative rather than confirmatory, the verifier is binary and may inflate absolute rates under creative conditions, so we use them to motivate the framework, not to validate it.
+These measurements are indicative rather than confirmatory: the verifier is binary and may inflate absolute rates under creative conditions, so we use them to motivate the framework rather than as a completed test of it.
 
 \begin{table*}[!tp]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.1}
+\renewcommand{\arraystretch}{0.95}
 \caption{\textbf{Audit of forty benchmarks against the truth-regime components $(O,\sigma,\kappa)$, grouped by what they evaluate and by task.}
-$\sigma$ asks whether stylistic latitude is an annotated, scored variable; $\kappa$ likewise for the invention license.
-Legend: ``--'' = not represented; ``0'' = invention not licensed (assumed by the task, not annotated); ``hi'' = invention is central but left unscored.
-No benchmark annotates $\sigma$, and none grades $\kappa$; oracle $O$ is the only component routinely fixed.
+For $\sigma$ and $\kappa$ we record \emph{our} annotation of the level each task implies ($\sigma$: stylistic latitude; $\kappa$: invention license); these are read off the task design, not reported or scored by any benchmark.
+Legend: ``low''/``high'' = the level the task implies but never makes an explicit, scored variable; ``--'' = not represented in the protocol.
+Across the benchmarks we audit, none turns $\sigma$ or $\kappa$ into a scored or graded variable; oracle $O$ is the only component routinely fixed.
 TTCT/TTCW: Torrance Tests of Creative Thinking/Writing; RAG: retrieval-augmented generation.}
 \label{tab:audit}
 \begin{tabular}{p{0.335\textwidth} p{0.135\textwidth} p{0.165\textwidth} c c p{0.155\textwidth}}
 \toprule
-\textbf{Benchmark} & \textbf{Task evaluated} & \textbf{Oracle $O$} & \boldmath$\sigma$? & \boldmath$\kappa$? & \textbf{Regime} \\
+\textbf{Benchmark} & \textbf{Task evaluated} & \textbf{Oracle $O$} & \boldmath$\sigma$ & \boldmath$\kappa$ & \textbf{Regime} \\
 \midrule
 \addlinespace[1pt]
 \multicolumn{6}{l}{\textbf{Evaluates hallucination / faithfulness}} \\
 \addlinespace[1pt]
-FEVER \citep{thorne_fever_2018} & Fact-checking & Wikipedia evidence & -- & 0 & Implicit (strict) \\
-TruthfulQA \citep{lin_truthfulqa_2022} & Factual QA & World knowledge & -- & 0 & Implicit (strict) \\
-PopQA \citep{mallen_when_2023} & Long-tail QA & Wikidata & -- & 0 & Implicit (strict) \\
-SimpleQA \citep{wei_measuring_2024} & Factual QA & World knowledge & -- & 0 & Implicit (strict) \\
-TriviaQA \citep{joshi_triviaqa_2017} & Reading-comp.\ QA & Evidence documents & -- & 0 & Implicit (strict) \\
-DefAn \citep{rahman_defan_2024} & Factual QA & World knowledge & -- & 0 & Implicit (strict) \\
-HaluEval \citep{li_halueval_2023} & QA + summarization & World knowl.\ + ctx & -- & 0 & Implicit (strict) \\
-FactBench \citep{bayat_factbench_2024} & Factual QA & World knowledge & -- & 0 & Implicit; \texttt{undecidable} \\
-HalluLens \citep{bang_hallulens_2025} & Factual QA & World knowledge & -- & 0 & Implicit (strict) \\
-FRANK \citep{pagnoni_understanding_2021} & Summarization & Source (news) & -- & 0 & Implicit (strict) \\
-QAGS \citep{wang_asking_2020} & Summarization & Source (news) & -- & 0 & Implicit (strict) \\
-SummEval \citep{fabbri_summeval_2021} & Summarization & Source (news) & -- & 0 & Implicit (strict) \\
-XSum \citep{narayan_xsum_2018} & Summarization & Source (BBC) & -- & 0 & Implicit (strict) \\
-CNN/DailyMail \citep{hermann_teaching_2015} & Summarization & Source (news) & -- & 0 & Implicit (strict) \\
-DelusionQA \citep{sadat_delucionqa_2023} & Domain QA & Source (manuals) & -- & 0 & Implicit (strict) \\
-HaluQA \citep{cheng_evaluating_2023} & Long-form QA & World knowledge & -- & 0 & Implicit (strict) \\
-BIG-Bench \citep{srivastava_beyond_2023} & Multi-task reasoning & Task gold & -- & 0 & Implicit (strict) \\
-BIG-Bench Hard \citep{suzgun_challenging_2023} & Reasoning & Task gold & -- & 0 & Implicit (strict) \\
-CR-LLM \citep{li_cr-llm_2024} & Concept reasoning & Concept gold + ctx & -- & 0 & Implicit (strict) \\
-HotpotQA \citep{yang_hotpotqa_2018} & Multi-hop QA & Wikipedia & -- & 0 & Implicit (strict) \\
-HypoTermQA \citep{uluoglakci_hypotermqa_2024} & Hypothetical QA & World knowledge & -- & 0 & Implicit (strict) \\
-HalluRAG \citep{ridder_hallurag_2025} & RAG QA & Retrieved Wikipedia & -- & 0 & Implicit (strict) \\
-ToolQA \citep{zhuang_toolqa_2023} & Tool-use QA & Tools / APIs & -- & 0 & Implicit (strict) \\
-RealTimeQA \citep{kasai_realtime_2024} & Real-time QA & Current events & -- & 0 & Implicit (strict) \\
+FEVER \citep{thorne_fever_2018} & Fact-checking & Wikipedia evidence & low & low & Implicit (strict) \\
+TruthfulQA \citep{lin_truthfulqa_2022} & Factual QA & World knowledge & low & low & Implicit (strict) \\
+PopQA \citep{mallen_when_2023} & Long-tail QA & Wikidata & low & low & Implicit (strict) \\
+SimpleQA \citep{wei_measuring_2024} & Factual QA & World knowledge & low & low & Implicit (strict) \\
+TriviaQA \citep{joshi_triviaqa_2017} & Reading-comp.\ QA & Evidence documents & low & low & Implicit (strict) \\
+DefAn \citep{rahman_defan_2024} & Factual QA & World knowledge & low & low & Implicit (strict) \\
+HaluEval \citep{li_halueval_2023} & QA + summarization & World knowl.\ + ctx & low & low & Implicit (strict) \\
+FactBench \citep{bayat_factbench_2024} & Factual QA & World knowledge & low & low & Implicit; \texttt{undecidable} \\
+HalluLens \citep{bang_hallulens_2025} & Factual QA & World knowledge & low & low & Implicit (strict) \\
+FRANK \citep{pagnoni_understanding_2021} & Summarization & Source (news) & low & low & Implicit (strict) \\
+QAGS \citep{wang_asking_2020} & Summarization & Source (news) & low & low & Implicit (strict) \\
+SummEval \citep{fabbri_summeval_2021} & Summarization & Source (news) & low & low & Implicit (strict) \\
+XSum \citep{narayan_xsum_2018} & Summarization & Source (BBC) & low & low & Implicit (strict) \\
+CNN/DailyMail \citep{hermann_teaching_2015} & Summarization & Source (news) & low & low & Implicit (strict) \\
+DelusionQA \citep{sadat_delucionqa_2023} & Domain QA & Source (manuals) & low & low & Implicit (strict) \\
+HaluQA \citep{cheng_evaluating_2023} & Long-form QA & World knowledge & low & low & Implicit (strict) \\
+BIG-Bench \citep{srivastava_beyond_2023} & Multi-task reasoning & Task gold & low & low & Implicit (strict) \\
+BIG-Bench Hard \citep{suzgun_challenging_2023} & Reasoning & Task gold & low & low & Implicit (strict) \\
+CR-LLM \citep{li_cr-llm_2024} & Concept reasoning & Concept gold + ctx & low & low & Implicit (strict) \\
+HotpotQA \citep{yang_hotpotqa_2018} & Multi-hop QA & Wikipedia & low & low & Implicit (strict) \\
+HypoTermQA \citep{uluoglakci_hypotermqa_2024} & Hypothetical QA & World knowledge & low & low & Implicit (strict) \\
+HalluRAG \citep{ridder_hallurag_2025} & RAG QA & Retrieved Wikipedia & low & low & Implicit (strict) \\
+ToolQA \citep{zhuang_toolqa_2023} & Tool-use QA & Tools / APIs & low & low & Implicit (strict) \\
+RealTimeQA \citep{kasai_realtime_2024} & Real-time QA & Current events & low & low & Implicit (strict) \\
 FaithQA \citep{hao_faithqa_2025} & Intent verification & Query constraints & -- & -- & Partial; intent only \\
-HIC-Bench \citep{yang_hicbench_2025} & Hallucination typing & Task-dependent & -- & -- & Partial; intel./defect. \\
+HIC-Bench \citep{yang_hicbench_2025} & Hallucination typing & Task-dependent & -- & high & Partial; intel./defect. \\
 \midrule
 \addlinespace[2pt]
 \multicolumn{6}{l}{\textbf{Evaluates creativity / divergence}} \\
 \addlinespace[1pt]
-CreativityPrism \citep{hou_creativityprism_2025} & Multi-task creativity & None (rubric) & -- & hi & Absent \\
-LitBench \citep{fein_litbench_2025} & Story evaluation & None (human pref.) & -- & hi & Absent \\
-Short Story \citep{ismayilzada_evaluating_2025} & Story generation & None (sem./human) & -- & hi & Absent \\
-WritingBench \citep{wu_writingbench_2024} & Creative writing & None (rubric/human) & -- & hi & Absent \\
-Art-or-Artifice / TTCW \citep{chakrabarty_art_2024} & Creative writing & None (expert rubric) & -- & hi & Absent \\
-SemDis \citep{organisciak_beyond_2023} & Divergent thinking & None (embed.\ dist.) & -- & hi & Absent \\
-Verbal Creativity \citep{dinu_testing_2025} & Divergent thinking & None (TTCT) & -- & hi & Absent \\
-Automated Creativity \citep{li_automated_2025} & Creative writing & Reference texts & -- & hi & Absent \\
-Hallu.\ Narratives \citep{sun_hallucinating_2024} & Controlled story & Mixed & -- & hi & Absent; unlabeled \\
-MacGyver \citep{tian_macgyver_2025} & Problem-solving & Feasibility (human) & -- & hi & Partial; correctness \\
-EscapeBench \citep{qian_escapebench_2025} & Agent puzzles & Env.\ state (auto) & -- & hi & Partial; correctness \\
-CreativEval \citep{delorenzo_creativeval_2024} & Code generation & Spec / correctness & -- & hi & Partial; correctness \\
-NeoCoder \citep{lu_benchmarking_2025} & Code generation & Unit tests & -- & hi & Partial; correctness \\
-Math Creativity \citep{ye_assessing_2024} & Math problem-solving & Soundness (human) & -- & hi & Partial; correctness \\
+CreativityPrism \citep{hou_creativityprism_2025} & Multi-task creativity & None (rubric) & high & high & Absent \\
+LitBench \citep{fein_litbench_2025} & Story evaluation & None (human pref.) & high & high & Absent \\
+Short Story \citep{ismayilzada_evaluating_2025} & Story generation & None (sem./human) & high & high & Absent \\
+WritingBench \citep{wu_writingbench_2024} & Creative writing & None (rubric/human) & high & high & Absent \\
+Art-or-Artifice / TTCW \citep{chakrabarty_art_2024} & Creative writing & None (expert rubric) & high & high & Absent \\
+SemDis \citep{organisciak_beyond_2023} & Divergent thinking & None (embed.\ dist.) & -- & high & Absent \\
+Verbal Creativity \citep{dinu_testing_2025} & Divergent thinking & None (TTCT) & -- & high & Absent \\
+Automated Creativity \citep{li_automated_2025} & Creative writing & Reference texts & high & high & Absent \\
+Hallu.\ Narratives \citep{sun_hallucinating_2024} & Controlled story & Mixed & high & high & Absent; unlabeled \\
+MacGyver \citep{tian_macgyver_2025} & Problem-solving & Feasibility (human) & -- & high & Partial; correctness \\
+EscapeBench \citep{qian_escapebench_2025} & Agent puzzles & Env.\ state (auto) & -- & high & Partial; correctness \\
+CreativEval \citep{delorenzo_creativeval_2024} & Code generation & Spec / correctness & -- & high & Partial; correctness \\
+NeoCoder \citep{lu_benchmarking_2025} & Code generation & Unit tests & -- & high & Partial; correctness \\
+Math Creativity \citep{ye_assessing_2024} & Math problem-solving & Soundness (human) & -- & high & Partial; correctness \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
 \subsection{Hallucination evaluation assumes a strict regime}
-Hallucination evaluation is anchored in the choice of an oracle, either \emph{world knowledge} (\Acc: factuality) or \emph{provided context} (\Faith: faithfulness), with further axes for contradiction vs.\ fabrication and evaluation granularity \citep{ji_survey_2023, zhang_sirens_nodate, bang_hallulens_2025}.
+Hallucination evaluation is anchored in the choice of an oracle, either \emph{world knowledge} (\Acc: factuality) or \emph{provided context} (\Faith: faithfulness), with further axes for contradiction vs.\ fabrication and evaluation granularity \citep{ji_survey_2023, bang_hallulens_2025}.
 Modern protocols rely on claim-level decomposition and automated verification, e.g., retrieval with natural language inference (NLI) \citep{chen_menli_2023} or QA-based checking \citep{wang_asking_2020}, building on fact-checking \citep{thorne_fever_2018}.
 These pipelines are technically mature: atomic-claim decomposition is established \citep{min_factscore_2023}, joint decomposition and verification run at scale \citep{rajendhran_verifastscore_2025}, some verifiers add a third \texttt{undecidable} verdict \citep{bayat_factbench_2024}, and complementary signals such as semantic entropy \citep{farquhar_detecting_2024} or internal probes \citep{marks_geometry_2023} flag unsupported content without consulting any prompt-level contract.
 Yet these axes are necessary, not sufficient, for \TR-aware judgment: most pipelines assume a strict invention license ($\kappa$ low), so any unsupported truth-conditional content is a failure.
@@ -372,7 +638,7 @@ Neither makes $(O,\sigma,\kappa)$ a scored variable; that minimal layer is what 
 LLMs are probabilistic next-token predictors trained under incomplete supervision; they emit plausible continuations even when truth is underspecified, so eliminating \Hallu\ universally would require restricting the model or the task class.
 Formal arguments support this floor \citep{banerjee_llms_2024, xu_hallucination_2024}, and strict regimes still reveal large residual error rates across short-form QA and truthfulness benchmarks \citep{mallen_when_2023, lin_truthfulqa_2022}.
 Alignment tuning compounds the picture rather than resolving it: policies for refusal, hedging, and abstention learned during alignment tuning are themselves implicit, provider-chosen regime commitments that reshape when a model declines to diverge \citep{ouyang_training_2022}.
-Crucially, the same generative mechanism that produces unsupported claims also produces the novel hypotheses users request: \citet{sun_hallucinating_2024} formalize ``good hallucinations'' as reasoning paths that remain correct after convergence, and \citet{banerjee_does_2025} show that verification-style mitigation can preserve divergent thinking whereas some decoding interventions suppress it.
+The same generative mechanism that produces unsupported claims also produces the novel hypotheses users request: \citet{sun_hallucinating_2024} formalize ``good hallucinations'' as reasoning paths that remain correct after convergence, and \citet{banerjee_does_2025} show that verification-style mitigation can preserve divergent thinking whereas some decoding interventions suppress it.
 Because \Hallu\ has a structural floor and the same divergence drives \PD, the practical goal is not universal suppression but \TR-calibrated control: specify the regime, license divergence where the regime allows it, and enforce convergence before anything is presented as fact \citep{bang_hallulens_2025, he_shakespearean_2025}.
 
 \section{Applying the Framework: Worked Verdicts}\label{sec:worked}
@@ -385,7 +651,7 @@ Table~\ref{tab:worked} summarizes the flips.
 \paragraph{Case A: correct but unsupported (oracle shift).}
 \citet{maynez_faithfulness_2020} document this pattern directly on XSum, where annotators label a summary span as an \emph{extrinsic but factual} hallucination: content not found in the source document yet factually correct.
 Their worked instance is a system summary that supplies the correct year of a London mayoral election (``2016''), accurate against world knowledge but absent from the article.
-Decomposing the output to the claim level isolates this token from the system's other, incorrect additions.
+Decomposing the output to the claim level isolates this token from the model's other, incorrect additions.
 Under the summarization regime $O=$ the source, $\sigma$ low, $\kappa{=}0$, the year is truth-conditional and unsupported by $O$: it is \Hallu, even though it satisfies factuality (\Acc) against world knowledge.
 Hold the output fixed and change only the oracle (``Tell me about this election,'' with $O=$ world knowledge), and the same token becomes supported, hence not \Hallu.
 The flip is exactly the unresolved tension Maynez et al.\ flag, whether summaries should tolerate such factual hallucinations \citep{maynez_faithfulness_2020, kryscinski_evaluating_2020}; the framework attributes it to $O$ rather than to the text.
@@ -432,7 +698,7 @@ We present these as the paper's main forward contribution: not a finished evalua
 
 \textbf{Operationalizing \TR\ as a scorable contract.}
 A \TR-aware benchmark must annotate $O$, $\sigma$, and $\kappa$ independently rather than folding them into a task label.
-The graded components are not hypothetical to measure: stylistic latitude already has established datasets and metrics \citep{pavlick_empirical_2016, liu_semisupervised_2022, osyvokon_pavlick_formality_2016}, and $\sigma$ could be placed on a continuous scale via pairwise preference judgments fitted to a Bradley--Terry or Elo model, as arena-style leaderboards already do for overall quality \citep{boubdir_elo_nodate}.
+The graded components are not hypothetical to measure: stylistic latitude already has established datasets and metrics \citep{pavlick_empirical_2016, liu_semisupervised_2022, osyvokon_pavlick_formality_2016}, and $\sigma$ could be placed on a continuous scale via pairwise preference judgments fitted to comparative scoring models.
 The open challenge is reliability: regime boundaries involve normative choices (what \emph{should} be grounded?) and creativity judgments are evaluator-dependent \citep{acar_creativity_2019, marco_reader_2025}; where agreement is lowest (typically on the usefulness dimension of \PD), the disagreement is itself informative and should be reported through soft labels rather than forced into consensus.
 
 \textbf{Operationalizing \PD\ as a scored quantity.}
@@ -440,7 +706,7 @@ The open challenge is reliability: regime boundaries involve normative choices (
 The three conditions of the labeling rule are not equally hard, and separating them turns \PD\ from a definition into a scoring protocol.
 The \emph{licensing} condition is mechanical: it is read off the $\kappa$ annotation, so under $\kappa{=}0$ no claim can be \PD\ and the score is zero by construction, while under $\kappa{>}0$ one checks only whether the claim falls inside the licensed scope (e.g., the declared fictional frame).
 The \emph{presented-on-the-regime's-terms} condition is a stance check: whether a claim is marked as a hypothesis or asserted as verified fact is a verifiable, constraint-style property of the text, close to the format constraints that instruction-following evaluation already scores \citep{zhou_ifeval_2023}, and far more tractable than judging content quality.
-The hard component is \emph{usefulness}, the standard novelty-with-value criterion of creativity assessment \citep{runco_standard_2012, acar_creativity_2019, diedrich_are_2015}: novelty admits automated proxies (semantic-distance and LLM-judge scoring of divergent output reach strong human correlation \citep{organisciak_beyond_2023}), and value can be aggregated from pairwise preference judgments onto a continuous scale via Bradley--Terry or Elo models, as quality leaderboards already do \citep{noauthor_bradleyterry_2025, boubdir_elo_nodate}.
+The hard component is \emph{usefulness}, the standard novelty-with-value criterion of creativity assessment \citep{runco_standard_2012, acar_creativity_2019, diedrich_are_2015}: novelty admits automated proxies (semantic-distance and LLM-judge scoring of divergent output reach strong human correlation \citep{organisciak_beyond_2023}), and value can be aggregated from pairwise preference judgments onto a continuous scale.
 A claim then scores as \PD\ when it passes the licensing gate and the stance check and its usefulness exceeds a regime-conditioned threshold.
 Because usefulness is evaluator-dependent \citep{marco_reader_2025}, \PD\ should be reported as a graded, soft-labeled quantity rather than a hard count, with disagreement on the usefulness dimension recorded rather than averaged away.
 This is a proposed instrument, not a validated one; establishing its reliability is itself part of the agenda.
@@ -480,6 +746,7 @@ Even under permissive regimes, evaluation should still flag \emph{truth-commitme
 \subsection{Limitations of the position}
 Our argument is conceptual, and four limitations bound it.
 First, the framework is partly \emph{normative}: deciding what $O$ ought to be, and what a regime \emph{should} ground, is a value judgment about a task, not a measurement we can read off the text, so reasonable annotators will disagree on regime boundaries.
+The framework treats that disagreement as signal rather than noise: where annotators diverge on a regime boundary, the divergence is recorded as a soft label instead of being forced to a single verdict (Section~\ref{sec:agenda}), which makes the normative choice auditable rather than hiding it inside an unstated default.
 Second, $\TR(p)$ is an idealization that ambiguous prompts underdetermine; locating the contract at the prompt is a modeling choice, and inferring it reliably is an open problem (Section~\ref{sec:agenda}), not a solved preprocessing step.
 Third, \PD\ is specified and we sketch a scoring protocol for it (Section~\ref{sec:agenda}), but we do not validate that protocol: its usefulness condition inherits the evaluator dependence of creativity assessment, so what we offer is a labeling rule and a measurement proposal, not an instrument shown to measure \PD\ reliably at scale.
 Fourth, we argue this position rather than establishing it with a controlled study: the audit and worked verdicts show that the gap is real and that supplying $(O,\sigma,\kappa)$ resolves verdicts, and our preliminary measurements motivate the framework, but those measurements are indicative and use a binary verifier without a \PD\ label, so quantifying how much regime annotation changes evaluation outcomes is left to future empirical work.
@@ -493,8 +760,16 @@ The agenda is therefore to move evaluation from defect counting to regime-condit
 The remaining work is to build the contract into benchmarks and to measure how much it changes what we conclude about models, but the first step is to stop scoring divergence as if every prompt asked for the same thing.
 
 \appendix
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thesubsection}{\Alph{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\Alph{section}.\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\theHsection}{appendix.\Alph{section}}
+\renewcommand{\theHsubsection}{appendix.\Alph{section}.\arabic{subsection}}
+\renewcommand{\theHfigure}{appendix.\Alph{section}.\arabic{figure}}
+\renewcommand{\theHtable}{appendix.\Alph{section}.\arabic{table}}
+\renewcommand{\theHequation}{appendix.\Alph{section}.\arabic{equation}}
 
-\section{Formal Claim-Level Decision Rule}\label{app:decision-rule}
+\appendixsection{Formal Claim-Level Decision Rule}\label{app:decision-rule}
 \noindent\textbf{Input:} a prompt $p$, an output $y$, and an oracle $O$.\\
 \noindent\textbf{Output:} a label for every atomic claim in $y$.
 
@@ -508,10 +783,11 @@ The remaining work is to build the contract into benchmarks and to measure how m
         \item[--] else \emph{neither}: purely stylistic variation or benign noise.
     \end{itemize}
 \end{enumerate}
-\noindent The supporting evidence for each step is given where the rule is introduced in Section~\ref{sec:framework}.
+\noindent Figure~\ref{fig:annotation-tree} renders this rule as a decision tree and makes explicit two operational outcomes the three-way labeling above leaves implicit: \emph{supported} (truth-conditional and entailed by $O$, hence correct rather than divergent) and \emph{unverifiable} ($O$ holds no evidence to confirm or falsify $c$), the label set the agenda calls for (Section~\ref{sec:agenda}).
+The supporting evidence for each step is given where the rule is introduced in Section~\ref{sec:framework}.
 
 
-\section{Experimental Detail: A Strict-Regime Stress Test}\label{app:experiment}
+\appendixsection{Experimental Detail: A Strict-Regime Stress Test}\label{app:experiment}
 This appendix documents the preliminary study summarized in Section~\ref{sec:sota}.
 It is offered as motivation, not as a validated \TR-aware evaluator; the reviewer-informed caveats in Appendix~\ref{app:caveats} bound every reading of these numbers.
 
@@ -667,12 +943,12 @@ Temperature & 0 to 1.0 & $\approx$\,60.7\% & $\pm0.5$ & $-0.03$\\
     title={\textsc{news\_article}},
     legend to name=creativitylegend,
     legend style={
-        legend columns=3,
-        font=\small,
+        legend columns=2,
+        font=\scriptsize,
         draw=none,
         fill=none,
         legend cell align=left,
-        column sep=1.2em,
+        column sep=0.6em,
     },
 ]
 \addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.428571) (2,0.500733) (3,0.679623)};
@@ -765,12 +1041,12 @@ Figure~\ref{fig:exp-length} shows median hallucination rate against output lengt
     title={\textsc{news\_article}},
     legend to name=lengthlegend,
     legend style={
-        legend columns=3,
+        legend columns=2,
         /tikz/every even column/.append style={column sep=0.5em},
-        font=\small,
+        font=\scriptsize,
         draw=none,
         fill=none,
-        column sep=1.2em,
+        column sep=0.6em,
     },
 ]
 \addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.478778) (2,0.528942) (3,0.578333)};
@@ -811,9 +1087,10 @@ The headline patterns are therefore not an artifact of one judge.
 The main study holds $\kappa$ low, so it does not itself exhibit the \Hallu/\PD\ relabeling.
 To probe that case we ran a matched diagnostic with an explicit invention-license block: under $\kappa$ LOW factual invention is disallowed, while under $\kappa$ HIGH fictional, speculative, or illustrative additions are permitted when useful and not presented as verified fact.
 Across 7 runs, 360 prompts, and 214K claim rows, the binary verifier reports \emph{higher} measured hallucination under $\kappa$ HIGH than $\kappa$ LOW (paired difference $+5.1$ points; GLM odds ratio for LOW vs.\ HIGH $0.76$; mixed-model coefficient for LOW $-0.053$).
-This is not evidence that permissive prompts are worse; it is direct evidence that a binary supported/hallucinated pipeline, lacking a \PD\ label, counts licensed invention as \Hallu.
+This is not evidence that permissive prompts are worse.
+It suggests that a binary supported/hallucinated pipeline, lacking both a \PD\ label and an explicit $\sigma$ control, can count licensed invention as \Hallu\ and can also mistake high stylistic latitude for unsupported content.
 
-\section{Reviewer-Informed Caveats}\label{app:caveats}
+\appendixsection{Reviewer-Informed Caveats}\label{app:caveats}
 The original study was reviewed, and four reviewer points bound how the numbers above should be read; we keep them in view rather than setting them aside.
 First, the main study holds $\kappa$ low throughout, so it does not on its own demonstrate the \Hallu/\PD\ relabeling under permissive regimes; the $\kappa$ HIGH/LOW rerun (Appendix~\ref{app:kappa-diag}) probes that case but is diagnostic, not a completed permissive-regime benchmark.
 Second, the large \textsc{lesson\_plan} effect is partly an oracle-template mismatch: lesson plans require objectives, activities, and assessment scaffolding that is pedagogical design rather than Wikipedia-groundable fact, so the $28.5\%$ factual-lesson support rate conflates genuine unsupported claims with content the chosen oracle cannot cover.

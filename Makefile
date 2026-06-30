@@ -1,5 +1,5 @@
-TEX := main_position.tex
-PDF := main_position.pdf
+TEX := main_position_personal.tex
+PDF := main_position_personal.pdf
 BUILD_DIR := build
 LATEXMK := latexmk
 
