@@ -142,7 +142,7 @@ This misses a central property of language use: the same unsupported content can
 We argue that hallucination should instead be evaluated relative to the prompt's \emph{truth regime}, $\TR(p)=(O,\sigma,\kappa)$: the oracle $O$ that grounds truth, the stylistic latitude $\sigma$ that permits surface variation, and the invention license $\kappa$ that determines whether new truth-conditional content may be introduced.
 Under this view, hallucination (\Hallu) is a truth-regime violation, whereas productive divergence (\PD) is divergence that the regime licenses and the task rewards.
 We then show that current hallucination and creativity benchmarks share a blind spot: neither conditions its scores on what the prompt authorizes.
-We substantiate this gap by auditing widely used benchmarks against $(O,\sigma,\kappa)$, by applying a claim-level labeling rule to documented cases in which the same output changes status as the regime changes, and by using diagnostic evidence to illustrate how binary verification can mistake licensed divergence for hallucination when it lacks regime-aware labels.
+We substantiate this gap by auditing widely used benchmarks against $(O,\sigma,\kappa)$ and by applying a claim-level labeling rule to documented cases in which the same output changes status as the regime changes.
 These observations motivate a research agenda for truth-regime-aware evaluation that scores \Hallu\ and \PD\ separately under explicit oracle and permission annotations.
 \end{abstract}
 
@@ -263,14 +263,11 @@ only restates products that already exist & \bIP & too conservative for a regime
 
 \paragraph{How we establish the gap.}
 We argue this position rather than establish it with a new controlled study.
-Two analytical moves carry the weight, and a preliminary study of our own supplies indicative support.
+Two analytical moves carry the weight.
 First, we audit widely used hallucination and creativity benchmarks against the three components $(O,\sigma,\kappa)$ and find that, while the oracle is sometimes fixed, stylistic latitude and invention license are essentially never annotated, so the contract remains implicit (Section~\ref{sec:sota}).
 Second, we apply a claim-level labeling rule to documented cases and show that the same output receives opposite verdicts (\Hallu\ under one regime, \PD\ under another) once the contract is made explicit (Section~\ref{sec:worked}).
 Together these establish that the gap is structural, not anecdotal, and that a minimal evaluation layer making $(O,\sigma,\kappa)$ explicit would resolve verdicts that current pipelines leave underdetermined.
-Our preliminary experiments point the same way along two lines that we keep separate.
-In a large strict-regime study, stylistic signals alone move the measured hallucination rate even though no invention is licensed, a \emph{measurement} effect of $\sigma$ rather than a relabeling, where high stylistic latitude can move what a binary verifier flags as unsupported.
-In a smaller matched diagnostic, a binary verifier counts licensed invention as hallucination for want of a \PD\ category, the $\kappa$ effect that carries the \Hallu/\PD\ point.
-The large study does not on its own exhibit the relabeling; only the $\kappa$ diagnostic probes it (Section~\ref{sec:sota}).
+Preliminary observations of our own are consistent with this analysis; we report them only as motivation (Section~\ref{sec:sota}) and defer a controlled, regime-aware study to future empirical work.
 
 \paragraph{Contributions.}
 This position paper makes three contributions.
@@ -302,20 +299,20 @@ The same claim can be supported by one oracle and unsupported by another, so $O$
 How freely the \emph{form} of the output may vary while preserving its propositions.
 This axis is studied independently of content: style is not a single variable but a bundle of co-varying dimensions \citep{kang_style_2021}, it can be transferred while meaning is held fixed \citep{jin_deep_2022}, and the dual operation (moving facts across a fixed style) is equally well defined \citep{balepur_text_2023}.
 Figurative devices such as metaphor and hyperbole are formal deviations that leave truth conditions intact \citep{badathala_match_2023}, and foregrounding, the long-standing notion that stylistically marked language stands out against an unmarked background \citep{leech_short_style_1981}, is reliably recognized by readers \citep{vanpeer_stylistics_2020}, which is what lets a graded $\sigma$ be annotated rather than guessed; established formality datasets and style-transfer metrics make the axis operationally measurable \citep{pavlick_empirical_2016, rao_dear_2018, briakou_evaluating_2021}.
-Three illustrative levels suffice: $\sigma{=}0$, literal and neutral form (no marked figures or authorial voice); $\sigma{=}1$, moderately marked form (didactic analogies, occasional address to the reader); $\sigma{=}2$, strongly marked form (sustained imagery, salient voice).
-Three levels, rather than two or five, keep an explicit median anchor (the contested ``moderately marked'' zone a binary split would erase) while omitting the extreme registers that rarely surface in model output.
+For now we treat $\sigma$ as a coarse ``low''/``high'' distinction: low is literal, neutral form (no marked figures or authorial voice); high is strongly marked form (sustained imagery, salient voice).
+We keep this scale binary deliberately: a finer, validated gradation of stylistic latitude---and in particular where the contested ``moderately marked'' middle falls---calls for input from stylistics that is still ongoing, so we defer a graded $\sigma$ to future work (Section~\ref{sec:agenda}).
 By construction, $\sigma$ licenses variation in form only: a metaphor that preserves the underlying proposition introduces no new truth-conditional content.
 Two consequences fix $\sigma$'s role in the framework.
-First, $\sigma$ is orthogonal to truth: since it neither adds nor removes a proposition, it cannot by itself make a claim \Hallu\ or \PD; those verdicts turn only on $O$ and $\kappa$, the two components that bear on content.
+First, $\sigma$ is orthogonal to truth: since it neither adds nor removes a proposition, it cannot by itself make a claim \Hallu\ or \PD, and varying it leaves both faithfulness (\Faith) and accuracy (\Acc) unchanged in principle; those verdicts turn only on $O$ and $\kappa$, the two components that bear on content.
 Second, $\sigma$ is nonetheless load-bearing for \emph{measurement}: raising stylistic latitude is exactly what leads an automatic verifier to misread marked form as unsupported content, so a regime that leaves $\sigma$ unspecified leaves the validity of any \Hallu\ count undefined.
 $\sigma$ thus enters the contract not as a third verdict axis but as the dimension along which measurement of the other two must be held invariant (Section~\ref{sec:agenda}).
 
 \textbf{Invention license ($\kappa$).}
 Whether new truth-conditional content may be introduced.
-Again, three illustrative levels: $\kappa{=}0$, no invention (every truth-conditional claim must be supported by $O$); $\kappa{=}1$, flagged speculation (hypotheses and extrapolations are permitted provided they are marked as such); $\kappa{=}2$, free invention within a declared frame (fiction, ideation), bound by coherence and user-provided facts rather than by $O$.
+We use three levels: $\kappa{=}0$, no invention (every truth-conditional claim must be supported by $O$); $\kappa{=}1$, flagged speculation (hypotheses and extrapolations are permitted provided they are marked as such); $\kappa{=}2$, free invention within a declared frame (fiction, ideation), bound by coherence and user-provided facts rather than by $O$.
 Theoretically, $\kappa$ tracks the kind of speech act the prompt licenses: at $\kappa{=}0$ the model must make genuine assertions, committing to the truth of what it adds to the common ground \citep{stalnaker_assertion_1978}, whereas a declared fictional frame ($\kappa{=}2$) licenses what \citet{searle_logical_1975} calls pretended assertions, utterances with the form of assertion but without the commitment to truth, with $\kappa{=}1$ in between, admitting assertions explicitly marked as provisional.
-The two permissions are independent: many real prompts request creative style without factual invention (e.g., ``explain photosynthesis like a poet''), so $\sigma$ is high while $\kappa$ stays at zero, and figurative language is welcome but fabricated claims are not \citep{franceschelli_creativity_2024}.
-Throughout, we write $\sigma$ or $\kappa$ ``low''/``high'' for the bottom/top of these scales.
+The two permissions are independent: many real prompts request creative style without factual invention (e.g., ``explain photosynthesis like a poet''), so $\sigma$ is high while $\kappa{=}0$, and figurative language is welcome but fabricated claims are not \citep{franceschelli_creativity_2024}.
+Throughout, we write $\sigma$ ``low''/``high'' for the bottom/top of its scale, and refer to $\kappa$ by its level ($0$, $1$, or $2$).
 
 \textbf{Faithfulness (\Faith; output-level).}
 Whether the output is \emph{supported by the provided evidence} (documents, retrieved passages, tables), without introducing unsupported details.
@@ -417,7 +414,7 @@ Tests~1--3 are mechanically checkable against $O$ (retrieval\,+\,NLI; test~3 is 
 
 \paragraph{Worked example.}
 Consider ``Explain photosynthesis in a poetic style, but keep the science accurate.''
-Here the oracle is scientific world knowledge, $\sigma{=}2$ because figurative language is requested, and $\kappa{=}0$ because the science must stay accurate.
+Here the oracle is scientific world knowledge, $\sigma$ high because figurative language is requested, and $\kappa{=}0$ because the science must stay accurate.
 Calling chlorophyll ``a green workshop for sunlight'' is stylistic variation, but claiming that plants make sugar from moonlight is \Hallu.
 If the prompt instead asks for a fictional plant ecology where moonlight powers growth, the same moonlight claim can be \PD: useful, clearly framed as invented, and consistent with the fictional constraints.
 
@@ -437,7 +434,7 @@ This is the \emph{faithful uncertainty} that \citet{yona_metacognition_2026} arg
 The license $\kappa$ makes that alignment a scored term of the contract; faithfulness has no slot for it, which is why no faithfulness metric can recover the verdict $\kappa$ fixes.
 
 \paragraph{Scope and minimality of the contract.}
-We claim $(O,\sigma,\kappa)$ is a \emph{minimal} basis for the verdict, not a complete model of everything evaluation must weigh.
+We claim $(O,\sigma,\kappa)$ is a \emph{sufficient} basis for the verdict---enough to flip the verdicts current pipelines get wrong---not a complete model of everything evaluation must weigh.
 One axis is deliberately left out: \emph{severity}.
 A medical question and a trivia question can share an identical contract ($O=$ world knowledge, $\sigma$ low, $\kappa{=}0$), yet a fabricated drug dose and a wrong trivia date are not equally costly.
 Severity differs, but the verdict does not: both fabrications are \Hallu.
@@ -468,20 +465,20 @@ $(O,\sigma,\kappa)$ is the smallest set that already suffices to flip the verdic
 % region content
 \node[align=center, text width=3.8cm] at (2.1,1.5)
  {\textbf{Strict grounded /}\\\textbf{summarization}\\[2pt]
-  {\scriptsize (low,\,low)\quad$O=$ provided sources}\\[1pt]
+  {\scriptsize (low,\,$0$)\quad$O=$ provided sources}\\[1pt]
   {\scriptsize paraphrase ok; new fact $=$ \Hallu}};
 \node[align=center, text width=3.9cm] at (6.3,4.5)
  {\textbf{Ideation /}\\\textbf{fiction-writing}\\[2pt]
-  {\scriptsize (high,\,high)\quad$O=$ prompt constraints}\\[1pt]
+  {\scriptsize (high,\,$2$)\quad$O=$ prompt constraints}\\[1pt]
   {\scriptsize invent freely; constraint break $=$ \Hallu}};
 \node[align=center, text width=3.9cm] at (6.3,1.5)
  {\textbf{Factual task with}\\\textbf{creative style}\\[2pt]
-  {\scriptsize (high,\,low)\quad$O=$ world knowledge}\\[1pt]
+  {\scriptsize (high,\,$0$)\quad$O=$ world knowledge}\\[1pt]
   {\scriptsize metaphor ok; unsupported claim $=$ \Hallu}\\[3pt]
   {\scriptsize\bfseries\textcolor{clrH}{no benchmark (Table~\ref{tab:audit})}}};
 \node[align=center, text width=3.9cm, text=gray!60] at (2.1,4.5)
  {\textbf{Plain-style ideation}\\[2pt]
-  {\scriptsize (low,\,high)\quad$O=$ prompt constraints}\\[1pt]
+  {\scriptsize (low,\,$2$)\quad$O=$ prompt constraints}\\[1pt]
   {\scriptsize invent freely, but in literal form}\\[3pt]
   {\scriptsize\itshape uncommon; of limited interest}};
 % axes
@@ -490,15 +487,15 @@ $(O,\sigma,\kappa)$ is the smallest set that already suffices to flip the verdic
 \node[font=\scriptsize] at (2.1,-0.45){low};
 \node[font=\scriptsize] at (6.3,-0.45){high};
 \node[font=\small] at (4.2,-0.95){$\sigma$: stylistic latitude};
-\node[font=\scriptsize,rotate=90] at (-0.5,1.5){low};
-\node[font=\scriptsize,rotate=90] at (-0.5,4.5){high};
+\node[font=\scriptsize,rotate=90] at (-0.5,1.5){$0$};
+\node[font=\scriptsize,rotate=90] at (-0.5,4.5){$2$};
 \node[font=\small,rotate=90] at (-1.05,3){$\kappa$: invention licence};
 \end{tikzpicture}}
 \caption{\textbf{Canonical truth regimes in the $(\sigma,\kappa)$ plane.}
 $\sigma$ is stylistic latitude (how freely form may vary), $\kappa$ the invention licence (whether new truth-conditional content may be introduced).
 Each region names its oracle $O$, what divergence it allows, and what triggers a hallucination (\Hallu).
-Tinted regions are populated by existing benchmarks (Table~\ref{tab:audit}); the dashed region, a \emph{factual task with creative style}, is a canonical regime that no benchmark fills, and the one our pilot occupies (Appendix~\ref{app:experiment}).
-The fourth corner (low $\sigma$, high $\kappa$): plain-form invention, is an uncommon profile we keep for completeness; the load-bearing tension is the dashed cell, where creative form meets a strict oracle.
+Tinted regions are populated by existing benchmarks (Table~\ref{tab:audit}); the dashed region, a \emph{factual task with creative style}, is a canonical regime that no benchmark fills.
+The fourth corner ($\sigma$ low, $\kappa{=}2$): plain-form invention, is an uncommon profile we keep for completeness; the load-bearing tension is the dashed cell, where creative form meets a strict oracle.
 The same surface divergence is acceptable or a violation according to the region, not the text \citep{maynez_faithfulness_2020,kryscinski_evaluating_2020,franceschelli_creativity_2024}.}
 \label{fig:sk-map}
 \end{figure*}
@@ -514,7 +511,7 @@ Given a regime $\TR(p)$, each atomic claim falls into one of the categories alre
 These four categories are the leaves of the decision rule's three branches: \Hallu\ and \PD\ are the two scored verdicts, while stylistic variation and benign noise jointly form its \emph{neither} branch.
 
 \noindent\textbf{Two-sided failure relative to $\kappa$.}
-When $\kappa$ is low, excess divergence increases \Hallu; when $\kappa$ is high, \emph{insufficient} divergence yields conservative outputs that fail the creative objective, a failure mode captured by creativity benchmarks but invisible to hallucination-only scoring \citep{hou_creativityprism_2025}.
+When $\kappa{=}0$, excess divergence increases \Hallu; when $\kappa{>}0$, \emph{insufficient} divergence yields conservative outputs that fail the creative objective, a failure mode captured by creativity benchmarks but invisible to hallucination-only scoring \citep{hou_creativityprism_2025}.
 The two sides sit at different levels: excess divergence is visible claim by claim, whereas insufficient divergence is an output-level absence, a distinction we make precise when defining verdicts (Section~\ref{sec:discussion}).
 A regime-aware evaluator must therefore be able to fail an output in either direction, which a single unsupportedness count cannot.
 
@@ -528,36 +525,34 @@ Hallucination benchmarks treat divergence from an oracle as a defect to minimize
 The split works for single-intent tasks but breaks down for mixed-intent prompts that pair novelty with factual constraints \citep{wang_user-centric_2024}: the same surface divergence can be \PD\ or \Hallu, yet on both sides the truth regime $(O,\sigma,\kappa)$ stays implicit.
 Table~\ref{tab:audit} documents the omission.
 Auditing forty benchmarks, organized by \emph{what} they evaluate (hallucination/faithfulness vs.\ creativity/divergence) and by the \emph{task} they score, we find the same pattern throughout: the oracle $O$ is frequently fixed, but stylistic latitude $\sigma$ is never annotated and the invention license $\kappa$ is never graded.
-Hallucination benchmarks inherit a fixed $O$ and run at $\sigma$ low and $\kappa$ low (neutral form, no invention); creativity benchmarks drop the factual oracle and run at $\kappa$ high, with $\sigma$ high in the writing suites; the few intent-aware benchmarks condition on the query without separating $\sigma$ from $\kappa$.
+Hallucination benchmarks inherit a fixed $O$ and run at $\sigma$ low and $\kappa{=}0$ (neutral form, no invention); creativity benchmarks drop the factual oracle and run at $\kappa{=}2$, with $\sigma$ high in the writing suites; the few intent-aware benchmarks condition on the query without separating $\sigma$ from $\kappa$.
 The contract is left to the task label.
 
 \paragraph{What the columns show, and what they do not.}
-The $\sigma$ and $\kappa$ entries are \emph{our} annotations, inferred from each task's design rather than reported by the benchmark: a factual-QA or summarization suite implies $\sigma$ low and $\kappa$ low (neutral form, no invention), a creative-writing suite implies both high, and an open-ended innovation suite implies $\kappa$ high.
+The $\sigma$ and $\kappa$ entries are \emph{our} annotations, inferred from each task's design rather than reported by the benchmark: a factual-QA or summarization suite implies $\sigma$ low and $\kappa{=}0$ (neutral form, no invention), a creative-writing suite implies $\sigma$ high and $\kappa{=}2$, and an open-ended innovation suite implies $\kappa{=}2$.
 We make this inference explicit precisely because no benchmark measures any of these levels itself.
 The empirical object of the audit is the protocol-level absence of scored regime variables.
-The low/high entries are author annotations used to expose that absence; they are not measurements reported by the benchmark authors.
-Read that way, the finding is not that the column entries repeat but that every one is read off the task rather than scored: where a task plainly demands stylistic latitude (creative-writing suites) we mark $\sigma$ high, and where invention is central (creativity benchmarks, and the intelligent-hallucination split of \textsc{HIC-Bench}) we mark $\kappa$ high, yet no benchmark in either tradition turns that latitude or that license into a scored variable.
+These entries are author annotations used to expose that absence; they are not measurements reported by the benchmark authors.
+Read that way, the finding is not that the column entries repeat but that every one is read off the task rather than scored: where a task plainly demands stylistic latitude (creative-writing suites) we mark $\sigma$ high, and where invention is central (creativity benchmarks, and the intelligent-hallucination split of \textsc{HIC-Bench}) we mark $\kappa{=}2$, yet no benchmark in either tradition turns that latitude or that license into a scored variable.
 The uniform fact across all forty, not any single column, is that neither permission is ever measured.
 
 \paragraph{The cell no benchmark fills.}
-Annotated this way, the forty benchmarks cluster on a diagonal: hallucination suites at $\sigma$ low, $\kappa$ low (neutral form, strict grounding) and creative-writing suites at $\sigma$ high, $\kappa$ high (marked form, free invention).
-The off-diagonal cell $\sigma$ high, $\kappa$ low (vivid or figurative form under a strict factual regime) is filled by none of them, though Figure~\ref{fig:sk-map} marks it as a canonical regime (a factual task with creative style) and it names an everyday request (``explain this like a poet, but keep the science exact'').
+Annotated this way, the forty benchmarks cluster on a diagonal: hallucination suites at $\sigma$ low, $\kappa{=}0$ (neutral form, strict grounding) and creative-writing suites at $\sigma$ high, $\kappa{=}2$ (marked form, free invention).
+The off-diagonal cell $\sigma$ high, $\kappa{=}0$ (vivid or figurative form under a strict factual regime) is filled by none of them, though Figure~\ref{fig:sk-map} marks it as a canonical regime (a factual task with creative style) and it names an everyday request (``explain this like a poet, but keep the science exact'').
 That cell is not an incidental hole: it is exactly where stylistic latitude and the truth oracle pull against each other, and where an automatic verifier is most likely to misread marked form as unsupported content.
-Worse, the only region where high $\sigma$ appears at all ($\sigma$ high, $\kappa$ high) is scored solely on creativity metrics, so no existing benchmark measures hallucination under high stylistic latitude.
-This missing cell is the one our pilot deliberately occupies, holding $\kappa$ low while raising $\sigma$ (Appendix~\ref{app:experiment}).
+Worse, the only region where high $\sigma$ appears at all ($\sigma$ high, $\kappa{=}2$) is scored solely on creativity metrics, so no existing benchmark measures hallucination under high stylistic latitude.
+Building a benchmark for this cell---creative form under a strict oracle---is therefore a concrete priority of our agenda (Section~\ref{sec:agenda}).
 
 \paragraph{How the audit was coded.}
 We count a benchmark as annotating $\sigma$ only when stylistic latitude is an explicit, scored variable in its protocol, not merely present in some prompts, and as grading $\kappa$ only when invention is a scored dimension with more than one licensed level.
 By this criterion \textsc{WritingBench} \citep{wu_writingbench_2024} is the instructive near-miss: it scores how well an output matches a requested \emph{style}, yet it never treats stylistic latitude as a graded permission that conditions the truth measurement, so by our test $\sigma$ stays unannotated even though the task plainly implies it is high.
 The coding is a single-author pass against these criteria, offered as the first instance of the annotation layer we advocate rather than as a validated resource; because the test is near-binary (is $(\sigma,\kappa)$ a scored variable?), it leaves little room for coder disagreement, and independent re-coding with reported agreement is itself part of the agenda (Section~\ref{sec:agenda}).
 
-\paragraph{An indicative pilot.}
-Our own preliminary experiments bring the gap into view.
-We designed the study to vary $\sigma$, the prompt's stylistic latitude (through creativity level and writing format), while holding the oracle fixed to Wikipedia world knowledge and $\kappa$ low, then measured the claim-level hallucination rate.
-The pattern is diagnostic: making the output more creative in style raised the measured hallucination rate, even though factual invention is never licensed.
-Across 12{,}469 outputs from nine LLMs, writing format raised the rate most and creative intent next, while sampling temperature barely mattered (full design, figures, and reviewer-informed caveats in Appendix~\ref{app:experiment}).
-A matched $\kappa$ high/low diagnostic points the same way, not because permissive prompts are worse, but because a binary verifier with no \PD\ label and no explicit $\sigma$ control can count licensed invention or high stylistic latitude as \Hallu\ (Appendix~\ref{app:kappa-diag}).
-These measurements are indicative rather than confirmatory: the verifier is binary and may inflate absolute rates under creative conditions, so we use them to motivate the framework rather than as a completed test of it.
+\paragraph{An indicative observation.}
+Preliminary, exploratory runs of our own are consistent with this diagnosis, and we report them only as motivation.
+Holding the oracle fixed and licensing no invention ($\kappa{=}0$), we observed that raising a prompt's stylistic latitude $\sigma$ alone moved what a binary verifier flagged as unsupported.
+In principle $\sigma$ changes no proposition and so leaves both faithfulness and accuracy untouched, so any such movement is a property of the verifier, not of the output's truth-status---the measurement brittleness our agenda targets (Section~\ref{sec:agenda}).
+Because that verifier is binary and lacks a \PD\ label, we treat these runs as motivation only and leave a controlled, regime-aware study to future empirical work.
 
 \begin{table*}[!tp]
 \centering
@@ -566,8 +561,8 @@ These measurements are indicative rather than confirmatory: the verifier is bina
 \renewcommand{\arraystretch}{0.95}
 \caption{\textbf{Audit of forty benchmarks against the truth-regime components $(O,\sigma,\kappa)$, grouped by what they evaluate and by task.}
 For $\sigma$ and $\kappa$ we record \emph{our} annotation of the level each task implies ($\sigma$: stylistic latitude; $\kappa$: invention license); these are read off the task design, not reported or scored by any benchmark.
-The audit tests whether the protocol scores these variables, not whether our low/high annotations are independently measured data.
-Legend: ``low''/``high'' = the level the task implies but never makes an explicit, scored variable; ``--'' = not represented in the protocol.
+The audit tests whether the protocol scores these variables, not whether our annotations are independently measured data.
+Legend: $\sigma$ as ``low''/``high'' and $\kappa$ as $0$/$1$/$2$ = the level the task implies but never makes an explicit, scored variable; ``--'' = not represented in the protocol.
 Across the benchmarks we audit, none turns $\sigma$ or $\kappa$ into a scored or graded variable; oracle $O$ is the only component routinely fixed.
 TTCT/TTCW: Torrance Tests of Creative Thinking/Writing; RAG: retrieval-augmented generation.}
 \label{tab:audit}
@@ -578,50 +573,50 @@ TTCT/TTCW: Torrance Tests of Creative Thinking/Writing; RAG: retrieval-augmented
 \addlinespace[1pt]
 \multicolumn{6}{l}{\textbf{Evaluates hallucination / faithfulness}} \\
 \addlinespace[1pt]
-FEVER \citep{thorne_fever_2018} & Fact-checking & Wikipedia evidence & low & low & Implicit (strict) \\
-TruthfulQA \citep{lin_truthfulqa_2022} & Factual QA & World knowledge & low & low & Implicit (strict) \\
-PopQA \citep{mallen_when_2023} & Long-tail QA & Wikidata & low & low & Implicit (strict) \\
-SimpleQA \citep{wei_measuring_2024} & Factual QA & World knowledge & low & low & Implicit (strict) \\
-TriviaQA \citep{joshi_triviaqa_2017} & Reading-comp.\ QA & Evidence documents & low & low & Implicit (strict) \\
-DefAn \citep{rahman_defan_2024} & Factual QA & World knowledge & low & low & Implicit (strict) \\
-HaluEval \citep{li_halueval_2023} & QA + summarization & World knowl.\ + ctx & low & low & Implicit (strict) \\
-FactBench \citep{bayat_factbench_2024} & Factual QA & World knowledge & low & low & Implicit; \texttt{undecidable} \\
-HalluLens \citep{bang_hallulens_2025} & Factual QA & World knowledge & low & low & Implicit (strict) \\
-FRANK \citep{pagnoni_understanding_2021} & Summarization & Source (news) & low & low & Implicit (strict) \\
-QAGS \citep{wang_asking_2020} & Summarization & Source (news) & low & low & Implicit (strict) \\
-SummEval \citep{fabbri_summeval_2021} & Summarization & Source (news) & low & low & Implicit (strict) \\
-XSum \citep{narayan_xsum_2018} & Summarization & Source (BBC) & low & low & Implicit (strict) \\
-CNN/DailyMail \citep{hermann_teaching_2015} & Summarization & Source (news) & low & low & Implicit (strict) \\
-DelusionQA \citep{sadat_delucionqa_2023} & Domain QA & Source (manuals) & low & low & Implicit (strict) \\
-HaluQA \citep{cheng_evaluating_2023} & Long-form QA & World knowledge & low & low & Implicit (strict) \\
-BIG-Bench \citep{srivastava_beyond_2023} & Multi-task reasoning & Task gold & low & low & Implicit (strict) \\
-BIG-Bench Hard \citep{suzgun_challenging_2023} & Reasoning & Task gold & low & low & Implicit (strict) \\
-CR-LLM \citep{li_cr-llm_2024} & Concept reasoning & Concept gold + ctx & low & low & Implicit (strict) \\
-HotpotQA \citep{yang_hotpotqa_2018} & Multi-hop QA & Wikipedia & low & low & Implicit (strict) \\
-HypoTermQA \citep{uluoglakci_hypotermqa_2024} & Hypothetical QA & World knowledge & low & low & Implicit (strict) \\
-HalluRAG \citep{ridder_hallurag_2025} & RAG QA & Retrieved Wikipedia & low & low & Implicit (strict) \\
-ToolQA \citep{zhuang_toolqa_2023} & Tool-use QA & Tools / APIs & low & low & Implicit (strict) \\
-RealTimeQA \citep{kasai_realtime_2024} & Real-time QA & Current events & low & low & Implicit (strict) \\
+FEVER \citep{thorne_fever_2018} & Fact-checking & Wikipedia evidence & low & $0$ &Implicit (strict) \\
+TruthfulQA \citep{lin_truthfulqa_2022} & Factual QA & World knowledge & low & $0$ &Implicit (strict) \\
+PopQA \citep{mallen_when_2023} & Long-tail QA & Wikidata & low & $0$ &Implicit (strict) \\
+SimpleQA \citep{wei_measuring_2024} & Factual QA & World knowledge & low & $0$ &Implicit (strict) \\
+TriviaQA \citep{joshi_triviaqa_2017} & Reading-comp.\ QA & Evidence documents & low & $0$ &Implicit (strict) \\
+DefAn \citep{rahman_defan_2024} & Factual QA & World knowledge & low & $0$ &Implicit (strict) \\
+HaluEval \citep{li_halueval_2023} & QA + summarization & World knowl.\ + ctx & low & $0$ &Implicit (strict) \\
+FactBench \citep{bayat_factbench_2024} & Factual QA & World knowledge & low & $0$ &Implicit; \texttt{undecidable} \\
+HalluLens \citep{bang_hallulens_2025} & Factual QA & World knowledge & low & $0$ &Implicit (strict) \\
+FRANK \citep{pagnoni_understanding_2021} & Summarization & Source (news) & low & $0$ &Implicit (strict) \\
+QAGS \citep{wang_asking_2020} & Summarization & Source (news) & low & $0$ &Implicit (strict) \\
+SummEval \citep{fabbri_summeval_2021} & Summarization & Source (news) & low & $0$ &Implicit (strict) \\
+XSum \citep{narayan_xsum_2018} & Summarization & Source (BBC) & low & $0$ &Implicit (strict) \\
+CNN/DailyMail \citep{hermann_teaching_2015} & Summarization & Source (news) & low & $0$ &Implicit (strict) \\
+DelusionQA \citep{sadat_delucionqa_2023} & Domain QA & Source (manuals) & low & $0$ &Implicit (strict) \\
+HaluQA \citep{cheng_evaluating_2023} & Long-form QA & World knowledge & low & $0$ &Implicit (strict) \\
+BIG-Bench \citep{srivastava_beyond_2023} & Multi-task reasoning & Task gold & low & $0$ &Implicit (strict) \\
+BIG-Bench Hard \citep{suzgun_challenging_2023} & Reasoning & Task gold & low & $0$ &Implicit (strict) \\
+CR-LLM \citep{li_cr-llm_2024} & Concept reasoning & Concept gold + ctx & low & $0$ &Implicit (strict) \\
+HotpotQA \citep{yang_hotpotqa_2018} & Multi-hop QA & Wikipedia & low & $0$ &Implicit (strict) \\
+HypoTermQA \citep{uluoglakci_hypotermqa_2024} & Hypothetical QA & World knowledge & low & $0$ &Implicit (strict) \\
+HalluRAG \citep{ridder_hallurag_2025} & RAG QA & Retrieved Wikipedia & low & $0$ &Implicit (strict) \\
+ToolQA \citep{zhuang_toolqa_2023} & Tool-use QA & Tools / APIs & low & $0$ &Implicit (strict) \\
+RealTimeQA \citep{kasai_realtime_2024} & Real-time QA & Current events & low & $0$ &Implicit (strict) \\
 FaithQA \citep{hao_faithqa_2025} & Intent verification & Query constraints & -- & -- & Partial; intent only \\
-HIC-Bench \citep{yang_hicbench_2025} & Hallucination typing & Task-dependent & -- & high & Partial; intel./defect. \\
+HIC-Bench \citep{yang_hicbench_2025} & Hallucination typing & Task-dependent & -- & $2$ &Partial; intel./defect. \\
 \midrule
 \addlinespace[2pt]
 \multicolumn{6}{l}{\textbf{Evaluates creativity / divergence}} \\
 \addlinespace[1pt]
-CreativityPrism \citep{hou_creativityprism_2025} & Multi-task creativity & None (rubric) & high & high & Absent \\
-LitBench \citep{fein_litbench_2025} & Story evaluation & None (human pref.) & high & high & Absent \\
-Short Story \citep{ismayilzada_evaluating_2025} & Story generation & None (sem./human) & high & high & Absent \\
-WritingBench \citep{wu_writingbench_2024} & Creative writing & None (rubric/human) & high & high & Absent \\
-Art-or-Artifice / TTCW \citep{chakrabarty_art_2024} & Creative writing & None (expert rubric) & high & high & Absent \\
-SemDis \citep{organisciak_beyond_2023} & Divergent thinking & None (embed.\ dist.) & -- & high & Absent \\
-Verbal Creativity \citep{dinu_testing_2025} & Divergent thinking & None (TTCT) & -- & high & Absent \\
-Automated Creativity \citep{li_automated_2025} & Creative writing & Reference texts & high & high & Absent \\
-Hallu.\ Narratives \citep{sun_hallucinating_2024} & Controlled story & Mixed & high & high & Absent; unlabeled \\
-MacGyver \citep{tian_macgyver_2025} & Problem-solving & Feasibility (human) & -- & high & Partial; correctness \\
-EscapeBench \citep{qian_escapebench_2025} & Agent puzzles & Env.\ state (auto) & -- & high & Partial; correctness \\
-CreativEval \citep{delorenzo_creativeval_2024} & Code generation & Spec / correctness & -- & high & Partial; correctness \\
-NeoCoder \citep{lu_benchmarking_2025} & Code generation & Unit tests & -- & high & Partial; correctness \\
-Math Creativity \citep{ye_assessing_2024} & Math problem-solving & Soundness (human) & -- & high & Partial; correctness \\
+CreativityPrism \citep{hou_creativityprism_2025} & Multi-task creativity & None (rubric) & high & $2$ &Absent \\
+LitBench \citep{fein_litbench_2025} & Story evaluation & None (human pref.) & high & $2$ &Absent \\
+Short Story \citep{ismayilzada_evaluating_2025} & Story generation & None (sem./human) & high & $2$ &Absent \\
+WritingBench \citep{wu_writingbench_2024} & Creative writing & None (rubric/human) & high & $2$ &Absent \\
+Art-or-Artifice / TTCW \citep{chakrabarty_art_2024} & Creative writing & None (expert rubric) & high & $2$ &Absent \\
+SemDis \citep{organisciak_beyond_2023} & Divergent thinking & None (embed.\ dist.) & -- & $2$ &Absent \\
+Verbal Creativity \citep{dinu_testing_2025} & Divergent thinking & None (TTCT) & -- & $2$ &Absent \\
+Automated Creativity \citep{li_automated_2025} & Creative writing & Reference texts & high & $2$ &Absent \\
+Hallu.\ Narratives \citep{sun_hallucinating_2024} & Controlled story & Mixed & high & $2$ &Absent; unlabeled \\
+MacGyver \citep{tian_macgyver_2025} & Problem-solving & Feasibility (human) & -- & $2$ &Partial; correctness \\
+EscapeBench \citep{qian_escapebench_2025} & Agent puzzles & Env.\ state (auto) & -- & $2$ &Partial; correctness \\
+CreativEval \citep{delorenzo_creativeval_2024} & Code generation & Spec / correctness & -- & $2$ &Partial; correctness \\
+NeoCoder \citep{lu_benchmarking_2025} & Code generation & Unit tests & -- & $2$ &Partial; correctness \\
+Math Creativity \citep{ye_assessing_2024} & Math problem-solving & Soundness (human) & -- & $2$ &Partial; correctness \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -630,7 +625,7 @@ Math Creativity \citep{ye_assessing_2024} & Math problem-solving & Soundness (hu
 Hallucination evaluation is anchored in the choice of an oracle, either \emph{world knowledge} (\Acc: factuality) or \emph{provided context} (\Faith: faithfulness), with further axes for contradiction vs.\ fabrication and evaluation granularity \citep{ji_survey_2023, bang_hallulens_2025}.
 Modern protocols rely on claim-level decomposition and automated verification, e.g., retrieval with natural language inference (NLI) \citep{chen_menli_2023} or QA-based checking \citep{wang_asking_2020}, building on fact-checking \citep{thorne_fever_2018}.
 These pipelines are technically mature: atomic-claim decomposition is established \citep{min_factscore_2023}, joint decomposition and verification run at scale \citep{rajendhran_verifastscore_2025}, some verifiers add a third \texttt{undecidable} verdict \citep{bayat_factbench_2024}, and complementary signals such as semantic entropy \citep{farquhar_detecting_2024} or internal probes \citep{marks_geometry_2023} flag unsupported content without consulting any prompt-level contract.
-Yet these axes are necessary, not sufficient, for \TR-aware judgment: most pipelines assume a strict invention license ($\kappa$ low), so any unsupported truth-conditional content is a failure.
+Yet these axes are necessary, not sufficient, for \TR-aware judgment: most pipelines assume a strict invention license ($\kappa{=}0$), so any unsupported truth-conditional content is a failure.
 The assumption is defensible in grounded generation but collapses when prompts license speculation, and even a three-way verdict with \texttt{undecidable} \citep{bayat_factbench_2024} refines the label space without consulting the contract: licensed invention is not merely undecidable, it is \emph{authorized}.
 
 \subsection{Creativity evaluation leaves the oracle implicit}
@@ -642,7 +637,7 @@ Faithfulness metrics could detect such violations \citep{maynez_faithfulness_202
 
 \subsection{The shared failure mode and the closest prior work}
 When $\TR$ is left implicit, two symmetric errors arise.
-Under a permissive regime ($\kappa$ high), strict factuality checks misclassify licensed speculation as \Hallu\ (false positives on \PD) \citep{cyriac_metrics_2025, sui_confabulation_2024}; under a strict regime ($\kappa$ low), novelty-oriented scores reward confident fabrications that inflate apparent originality (false negatives on \Hallu) \citep{liu_g-eval_2023, chen_menli_2023}.
+Under a permissive regime ($\kappa{>}0$), strict factuality checks misclassify licensed speculation as \Hallu\ (false positives on \PD) \citep{cyriac_metrics_2025, sui_confabulation_2024}; under a strict regime ($\kappa{=}0$), novelty-oriented scores reward confident fabrications that inflate apparent originality (false negatives on \Hallu) \citep{liu_g-eval_2023, chen_menli_2023}.
 Uncertainty and abstention methods address the strict-regime case: when support is insufficient, a system should hedge, refuse, or defer rather than assert.
 Our claim is orthogonal: under $\kappa{>}0$, the question is not only whether the model should abstain, but whether the prompt licenses a non-assertoric or inventive move in the first place.
 The closest existing steps narrow but do not close the gap.
@@ -716,7 +711,7 @@ We present these as the paper's main forward contribution: not a finished evalua
 
 \textbf{Operationalizing \TR\ as a scorable contract.}
 A \TR-aware benchmark must annotate $O$, $\sigma$, and $\kappa$ independently rather than folding them into a task label.
-The graded components are not hypothetical to measure: stylistic latitude already has established datasets and metrics \citep{pavlick_empirical_2016, liu_semisupervised_2022, osyvokon_pavlick_formality_2016}, and $\sigma$ could be placed on a continuous scale via pairwise preference judgments fitted to comparative scoring models.
+The graded components are not hypothetical to measure: stylistic latitude already has established datasets and metrics \citep{pavlick_empirical_2016, liu_semisupervised_2022, osyvokon_pavlick_formality_2016}, and $\sigma$ could be placed on a graded scale via pairwise preference judgments fitted to comparative scoring models, though where its discrete levels should fall is a question for stylistic expertise that we leave open.
 The open challenge is reliability: regime boundaries involve normative choices (what \emph{should} be grounded?) and creativity judgments are evaluator-dependent \citep{acar_creativity_2019, marco_reader_2025}; where agreement is lowest (typically on the usefulness dimension of \PD), the disagreement is itself informative and should be reported through soft labels rather than forced into consensus.
 
 \textbf{Operationalizing \PD\ as a scored quantity.}
@@ -762,12 +757,13 @@ The same measured rate therefore carries different meaning under strict and perm
 Even under permissive regimes, evaluation should still flag \emph{truth-commitment violations}, cases where invented content is presented as fact rather than as hypothesis or creative proposal \citep{bang_hallulens_2025, hou_creativityprism_2025}.
 
 \subsection{Limitations of the position}
-Our argument is conceptual, and four limitations bound it.
+Our argument is conceptual, and five limitations bound it.
 First, the framework is partly \emph{normative}: deciding what $O$ ought to be, and what a regime \emph{should} ground, is a value judgment about a task, not a measurement we can read off the text, so reasonable annotators will disagree on regime boundaries.
 The framework treats that disagreement as signal rather than noise: where annotators diverge on a regime boundary, the divergence is recorded as a soft label instead of being forced to a single verdict (Section~\ref{sec:agenda}), which makes the normative choice auditable rather than hiding it inside an unstated default.
 Second, $\TR(p)$ is an idealization that ambiguous prompts underdetermine; locating the contract at the prompt is a modeling choice, and inferring it reliably is an open problem (Section~\ref{sec:agenda}), not a solved preprocessing step.
 Third, \PD\ is specified and we sketch a scoring protocol for it (Section~\ref{sec:agenda}), but we do not validate that protocol: its usefulness condition inherits the evaluator dependence of creativity assessment, so what we offer is a labeling rule and a measurement proposal, not an instrument shown to measure \PD\ reliably at scale.
-Fourth, we argue this position rather than establishing it with a controlled study: the audit and worked verdicts show that the gap is real and that supplying $(O,\sigma,\kappa)$ resolves verdicts, and our preliminary measurements motivate the framework, but those measurements are indicative and use a binary verifier without a \PD\ label, so quantifying how much regime annotation changes evaluation outcomes is left to future empirical work.
+Fourth, we argue this position rather than establishing it with a controlled study: the audit and worked verdicts show that the gap is real and that supplying $(O,\sigma,\kappa)$ resolves verdicts, but quantifying how much regime annotation changes evaluation outcomes at scale is left to future empirical work, which our preliminary observations only motivate.
+Fifth, the framework is single-turn: it locates the contract in one prompt $p$ and does not model how a truth regime is established or revised across the turns of a dialogue, a restriction we leave for future work.
 
 \section{Conclusion}\label{sec:conclusion}
 
@@ -805,316 +801,6 @@ The remaining work is to build the contract into benchmarks and to measure how m
 The supporting evidence for each step is given where the rule is introduced in Section~\ref{sec:framework}.
 
 
-\appendixsection{Experimental Detail: A Strict-Regime Stress Test}\label{app:experiment}
-This appendix documents the preliminary study summarized in Section~\ref{sec:sota}.
-It is offered as motivation, not as a validated \TR-aware evaluator; the reviewer-informed caveats in Appendix~\ref{app:caveats} bound every reading of these numbers.
-
-\subsection{Setup}
-We assemble 1{,}389 prompts over Wikipedia subjects by crossing three writing formats (\textsc{interview}, \textsc{lesson\_plan}, \textsc{news\_article}), three creativity levels (\textsc{factual}, \textsc{hybrid}, \textsc{very\_creative}) that operationalize increasing stylistic latitude $\sigma$, three target lengths (250/500/1000 words), and five sampling temperatures.
-No prompt licenses factual invention ($\kappa$ low throughout).
-We generate 12{,}469 outputs from nine LLMs (53 runs), decompose them into 310{,}357 atomic claims, and check each claim against Wikipedia with a HalluLens-style binary verifier \citep{bang_hallulens_2025}.
-The verifier returns supported/hallucinated only; it has no \emph{unverifiable} or \PD\ category, a limitation we return to in Appendix~\ref{app:caveats}.
-Figure~\ref{fig:pipeline} summarizes the four-phase pipeline (prompt construction, generation, HalluLens-style verification, analysis).
-
-\begin{figure}[t]
-    \centering
-    \resizebox{\linewidth}{!}{%
-    \begin{tikzpicture}[
-        phase/.style={
-            rectangle, draw, rounded corners=4pt,
-            minimum height=2.8cm, text width=3.6cm,
-            align=center, inner sep=6pt
-        },
-        arrow/.style={-{Stealth[length=2.5mm]}, thick}
-    ]
-        % Phase boxes — all content inside, no sub-boxes
-        \node[phase, fill=gray!12] (p1) {%
-            \textbf{\small Phase 1}\\[3pt]
-            \textbf{\small Prompt Construction}\\[5pt]
-            \scriptsize Wikipedia subjects\\[1pt]
-            Modular building blocks\\[1pt]
-            3 tasks $\times$ 3 creativity\\
-            $\times$ 3 lengths = 1{,}389 prompts
-        };
-        \node[phase, fill=gray!12, right=1.1cm of p1] (p2) {%
-            \textbf{\small Phase 2}\\[3pt]
-            \textbf{\small LLM Generation}\\[5pt]
-            \scriptsize 9 models $\times$ 5 temps\\[1pt]
-            53 runs\\[1pt]
-            $N{=}12{,}469$ outputs\\[1pt]
-        };
-        \node[phase, fill=blue!7, right=1.1cm of p2] (p3) {%
-            \textbf{\small Phase 3}\\[3pt]
-            \textbf{\small HalluLens Verification}\\[5pt]
-            \scriptsize (i) Abstention filter\\[1pt]
-            (ii) Claim extraction (LLM)\\[1pt]
-            (iii) Dense retrieval (Wiki)\\[1pt]
-            (iv) NLI verdict: \texttt{S}/\texttt{H}
-        };
-        \node[phase, fill=gray!12, right=1.1cm of p3] (p4) {%
-            \textbf{\small Phase 4}\\[3pt]
-            \textbf{\small Diagnostic Summaries}\\[5pt]
-            \scriptsize effect summaries (odds ratios)\\[1pt]
-            prompt-level robustness checks\\[1pt]
-            mediator sensitivity checks\\[1pt]
-        };
-
-        \draw[arrow] (p1.east) -- (p2.west);
-        \draw[arrow] (p2.east) -- (p3.west);
-        \draw[arrow] (p3.east) -- (p4.west);
-    \end{tikzpicture}}%
-    \caption{Four-phase experimental pipeline.
-    Phases~1--2 construct and generate 12{,}469 outputs from 9 models by
-    factorial crossing of task, creativity level, and length.
-    Phase~3 applies the HalluLens verification paradigm \citep{bang_hallulens_2025}:
-    atomic claim extraction, dense Wikipedia retrieval (\texttt{gtr-t5-large}),
-    and NLI verdict (\texttt{S}upported / \texttt{H}allucinated).
-    Phase~4 reports diagnostic effect summaries and robustness checks with false discovery rate (FDR) correction
-    \citep{benjamini_controlling_1995}.
-    Reviewer-informed caveats in Appendix~\ref{app:caveats}.}
-    \label{fig:pipeline}
-\end{figure}
-
-\subsection{Main effects}
-Table~\ref{tab:exp-main} reports per-condition median hallucination rates.
-Writing format is the strongest driver (\textsc{lesson\_plan} is $+21.4$ points over \textsc{interview}; Spearman $\rho=0.45$).
-Creative intent is next (\textsc{very\_creative} is $+12.8$ points over \textsc{factual}; $\rho=0.30$), even though invention is never licensed.
-Length matters weakly ($+5.7$ points at 1000 vs.\ 250 words; $\rho=0.11$), and sampling temperature is essentially flat ($\rho=-0.03$).
-Figure~\ref{fig:exp-task-creat} shows the creativity pattern per model and per task, and a \textsc{very\_creative}\,$\times$\,\textsc{news\_article} interaction (odds ratio $0.77$) suggests that news-style factual norms dampen the style effect.
-
-\begin{table}[t]
-\centering\small
-\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
-\caption{Main effects on median hallucination rate under the strict regime ($\kappa$ low; $N=12{,}469$, nine models, 53 runs). Difference vs.\ the reference condition ($^\dagger$) in percentage points; Spearman $\rho$.}
-\label{tab:exp-main}
-\begin{tabular}{l l c r c}
-\toprule
-\textbf{Factor} & \textbf{Condition} & \textbf{Mean} & \textbf{$\Delta$ (pts)} & \textbf{$\rho$}\\
-\midrule
-\multirow{3}{*}{Task} & interview$^\dagger$ & 51.3\% & -- & \multirow{3}{*}{0.45}\\
- & news & 56.4\% & $+5.2$ & \\
- & lesson\_plan & 72.6\% & $+21.4$ & \\
-\midrule
-\multirow{3}{*}{Creativity} & factual$^\dagger$ & 54.7\% & -- & \multirow{3}{*}{0.30}\\
- & hybrid & 60.5\% & $+5.8$ & \\
- & very\_creative & 67.5\% & $+12.8$ & \\
-\midrule
-\multirow{3}{*}{Length} & 250 w$^\dagger$ & 57.8\% & -- & \multirow{3}{*}{0.11}\\
- & 500 w & 59.5\% & $+1.7$ & \\
- & 1000 w & 63.5\% & $+5.7$ & \\
-\midrule
-Temperature & 0 to 1.0 & $\approx$\,60.7\% & $\pm0.5$ & $-0.03$\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[t]
-\centering
-\definecolor{hlseries1}{HTML}{636EFA}
-\definecolor{hlseries2}{HTML}{EF553B}
-\definecolor{hlseries3}{HTML}{00CC96}
-\definecolor{hlseries4}{HTML}{AB63FA}
-\definecolor{hlseries5}{HTML}{FFA15A}
-\definecolor{hlseries6}{HTML}{19D3F3}
-\definecolor{hlseries7}{HTML}{FF6692}
-\definecolor{hlseries8}{HTML}{B6E880}
-\definecolor{hlseries9}{HTML}{FF97FF}
-\resizebox{\linewidth}{!}{%
-\begin{tikzpicture}
-\begin{groupplot}[
-    group style={group size=3 by 1, horizontal sep=1.0cm},
-    width=0.34\textwidth,
-    height=0.40\textwidth,
-    grid=major,
-    major grid style={draw=gray!20},
-    tick align=outside,
-    xlabel={Creativity level},
-    ymin=0.228913, ymax=0.947653,
-    xtick={1,2,3},
-    xticklabels={\textsc{factual},\textsc{hybrid},\textsc{v.\_creative}},
-    xticklabel style={font=\small},
-    yticklabel style={font=\small},
-    title style={font=\bfseries\small},
-    label style={font=\small},
-]
-\nextgroupplot[title={\textsc{interview}}, ylabel={Hallucination rate (median)}]
-\addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.273715) (2,0.404545) (3,0.600498)};
-\addplot+[color=hlseries2,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.320755) (2,0.506667) (3,0.671080)};
-\addplot+[color=hlseries3,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.390625) (2,0.444492) (3,0.619982)};
-\addplot+[color=hlseries4,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.261583) (2,0.414994) (3,0.537887)};
-\addplot+[color=hlseries5,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.402985) (2,0.483871) (3,0.551724)};
-\addplot+[color=hlseries6,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.367048) (2,0.483242) (3,0.627196)};
-\addplot+[color=hlseries7,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.538026) (2,0.690506) (3,0.848214)};
-\addplot+[color=hlseries8,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.503521) (2,0.569444) (3,0.732394)};
-\addplot+[color=hlseries9,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.397265) (2,0.505051) (3,0.771429)};
-\nextgroupplot[title={\textsc{lesson\_plan}}]
-\addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.550505) (2,0.652193) (3,0.820328)};
-\addplot+[color=hlseries2,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.518445) (2,0.650000) (3,0.774824)};
-\addplot+[color=hlseries3,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.587762) (2,0.629573) (3,0.740233)};
-\addplot+[color=hlseries4,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.715633) (2,0.760435) (3,0.811655)};
-\addplot+[color=hlseries5,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.715251) (2,0.755556) (3,0.792706)};
-\addplot+[color=hlseries6,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.686322) (2,0.759263) (3,0.850532)};
-\addplot+[color=hlseries7,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.725786) (2,0.825071) (3,0.894681)};
-\addplot+[color=hlseries8,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.588979) (2,0.660000) (3,0.727454)};
-\addplot+[color=hlseries9,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.669345) (2,0.759808) (3,0.914983)};
-\nextgroupplot[
-    title={\textsc{news\_article}},
-    legend to name=creativitylegend,
-    legend style={
-        legend columns=2,
-        font=\scriptsize,
-        draw=none,
-        fill=none,
-        legend cell align=left,
-        column sep=0.6em,
-    },
-]
-\addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.428571) (2,0.500733) (3,0.679623)};
-\addlegendentry{deepseek-v3.2}
-\addplot+[color=hlseries2,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.459818) (2,0.562940) (3,0.651515)};
-\addlegendentry{gemini-3-flash-preview}
-\addplot+[color=hlseries3,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.462019) (2,0.476329) (3,0.593712)};
-\addlegendentry{gemma-3-27b-it}
-\addplot+[color=hlseries4,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.394338) (2,0.509287) (3,0.629167)};
-\addlegendentry{gpt-5.2}
-\addplot+[color=hlseries5,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.483871) (2,0.526316) (3,0.571429)};
-\addlegendentry{grok-3-mini}
-\addplot+[color=hlseries6,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.462143) (2,0.546921) (3,0.639610)};
-\addlegendentry{grok-4.1-fast}
-\addplot+[color=hlseries7,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.601136) (2,0.682669) (3,0.782609)};
-\addlegendentry{mistral-small-creative}
-\addplot+[color=hlseries8,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.559558) (2,0.596846) (3,0.676471)};
-\addlegendentry{nemotron-nano-12b-v2-vl}
-\addplot+[color=hlseries9,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.492729) (2,0.645898) (3,0.750000)};
-\addlegendentry{qwen3-30b-a3b-instruct-2507}
-\end{groupplot}
-\end{tikzpicture}}%
-\par\smallskip
-\ref{creativitylegend}
-\caption{Median hallucination rate by model, task, and creativity level.
-    Each panel shows one task; lines connect the same model across creativity levels.
-    Two patterns emerge: (1)~\textsc{lesson\_plan} (middle) is consistently higher, and (2)~upward slopes show the creativity pattern, which is attenuated in \textsc{news\_article} (right).
-    Verification follows HalluLens \citep{bang_hallulens_2025}.}
-\label{fig:exp-task-creat}
-\end{figure}
-
-\subsection{Claim-level distribution and support}
-Of the 310{,}357 claims, 50.8\% were marked hallucinated, 36.4\% supported, and 12.7\% filtered as containing no checkable claim; among verified claims the support rate is 41.7\%.
-Disaggregated by task and creativity, \textsc{lesson\_plan} has the lowest support in every condition (28.5\% even when \textsc{factual}), and support falls monotonically as creativity rises; this mirrors the hallucination pattern in Figure~\ref{fig:exp-task-creat} (support is its claim-level complement), so we do not plot it separately.
-
-\subsection{Length effect}
-The length effect is real but small relative to task and creativity.
-Figure~\ref{fig:exp-length} shows median hallucination rate against output length per model and task.
-
-\begin{figure}[t]
-\centering
-\definecolor{hlseries1}{HTML}{636EFA}
-\definecolor{hlseries2}{HTML}{EF553B}
-\definecolor{hlseries3}{HTML}{00CC96}
-\definecolor{hlseries4}{HTML}{AB63FA}
-\definecolor{hlseries5}{HTML}{FFA15A}
-\definecolor{hlseries6}{HTML}{19D3F3}
-\definecolor{hlseries7}{HTML}{FF6692}
-\definecolor{hlseries8}{HTML}{B6E880}
-\definecolor{hlseries9}{HTML}{FF97FF}
-\resizebox{\linewidth}{!}{%
-\begin{tikzpicture}
-\begin{groupplot}[
-    group style={group size=3 by 1, horizontal sep=1.4cm},
-    width=0.34\textwidth,
-    height=0.60\textwidth,
-    grid=major,
-    major grid style={draw=gray!20},
-    tick align=outside,
-    xlabel={Output length (words)},
-    ymin=0.341614, ymax=0.866927,
-    xtick={1,2,3},
-    xticklabels={250,500,1000},
-    xticklabel style={font=\small},
-    yticklabel style={font=\small},
-    title style={font=\bfseries\small},
-    label style={font=\small},
-]
-\nextgroupplot[title={\textsc{interview}}, ylabel={Hallucination rate (median)}]
-\addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.403390) (2,0.388861) (3,0.449506)};
-\addplot+[color=hlseries2,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.459167) (2,0.506667) (3,0.557215)};
-\addplot+[color=hlseries3,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.442740) (2,0.469439) (3,0.506667)};
-\addplot+[color=hlseries4,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.365492) (3,0.420671)};
-\addplot+[color=hlseries5,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.477273) (2,0.484360) (3,0.527625)};
-\addplot+[color=hlseries6,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.467001) (2,0.476871) (3,0.562803)};
-\addplot+[color=hlseries7,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.674699) (2,0.728239) (3,0.715251)};
-\addplot+[color=hlseries8,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.557692) (2,0.626603) (3,0.636364)};
-\addplot+[color=hlseries9,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.542727) (2,0.587701) (3,0.583473)};
-\nextgroupplot[title={\textsc{lesson\_plan}}]
-\addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.634259) (2,0.661202) (3,0.749150)};
-\addplot+[color=hlseries2,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.640762) (2,0.605263) (3,0.695338)};
-\addplot+[color=hlseries3,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.652273) (2,0.647887) (3,0.649771)};
-\addplot+[color=hlseries4,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.741795) (3,0.786474)};
-\addplot+[color=hlseries5,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.750000) (2,0.743888) (3,0.779831)};
-\addplot+[color=hlseries6,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.727885) (2,0.768454) (3,0.794029)};
-\addplot+[color=hlseries7,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.843049) (2,0.818182) (3,0.830307)};
-\addplot+[color=hlseries8,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.653846) (2,0.658571) (3,0.664103)};
-\addplot+[color=hlseries9,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.770330) (2,0.759310) (3,0.777686)};
-\nextgroupplot[
-    title={\textsc{news\_article}},
-    legend to name=lengthlegend,
-    legend style={
-        legend columns=2,
-        /tikz/every even column/.append style={column sep=0.5em},
-        font=\scriptsize,
-        draw=none,
-        fill=none,
-        column sep=0.6em,
-    },
-]
-\addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.478778) (2,0.528942) (3,0.578333)};
-\addlegendentry{deepseek-v3.2}
-\addplot+[color=hlseries2,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.505814) (2,0.560976) (3,0.602521)};
-\addlegendentry{gemini-3-flash-preview}
-\addplot+[color=hlseries3,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.450957) (2,0.492516) (3,0.527158)};
-\addlegendentry{gemma-3-27b-it}
-\addplot+[color=hlseries4,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.492424) (3,0.553526)};
-\addlegendentry{gpt-5.2}
-\addplot+[color=hlseries5,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.484848) (2,0.526316) (3,0.597403)};
-\addlegendentry{grok-3-mini}
-\addplot+[color=hlseries6,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.486833) (2,0.523810) (3,0.657393)};
-\addlegendentry{grok-4.1-fast}
-\addplot+[color=hlseries7,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.655738) (2,0.684783) (3,0.720000)};
-\addlegendentry{mistral-small-creative}
-\addplot+[color=hlseries8,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.575000) (2,0.599381) (3,0.627679)};
-\addlegendentry{nemotron-nano-12b-v2-vl}
-\addplot+[color=hlseries9,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.614141) (2,0.642857) (3,0.701040)};
-\addlegendentry{qwen3-30b-a3b-instruct-2507}
-\end{groupplot}
-\end{tikzpicture}}%
-\par\smallskip
-\ref{lengthlegend}
-\caption{Median hallucination rate by model, task, and requested length.
-    Each panel shows one task; lines connect the same model across output lengths.
-    Longer outputs show moderately higher hallucination rates, but the effect is much weaker than that of task type or creativity level.
-    Verification follows HalluLens \citep{bang_hallulens_2025}.}
-\label{fig:exp-length}
-\end{figure}
-
-\subsection{Evaluator reliability}
-Four evaluator LLMs judged a shared 90-prompt subset.
-All six evaluator pairs reach substantial agreement (mean $\kappa_{\mathrm{agree}}=0.756$, mean agreement $88.1\%$), and the maximum absolute rate gap is $6.4$ points with identical condition ordering across judges.
-The headline patterns are therefore not an artifact of one judge.
-
-\subsection{Indicative \texorpdfstring{$\kappa$}{kappa} HIGH/LOW diagnostic}\label{app:kappa-diag}
-The main study holds $\kappa$ low, so it does not itself exhibit the \Hallu/\PD\ relabeling.
-To probe that case we ran a matched diagnostic with an explicit invention-license block: under $\kappa$ LOW factual invention is disallowed, while under $\kappa$ HIGH fictional, speculative, or illustrative additions are permitted when useful and not presented as verified fact.
-Across 7 runs, 360 prompts, and 214K claim rows, the binary verifier reports \emph{higher} measured hallucination under $\kappa$ HIGH than $\kappa$ LOW (paired difference $+5.1$ points; model-based summaries give an odds ratio for LOW vs.\ HIGH of $0.76$ and a random-prompt coefficient for LOW of $-0.053$).
-This is not evidence that permissive prompts are worse.
-It suggests that a binary supported/hallucinated pipeline, lacking both a \PD\ label and an explicit $\sigma$ control, can count licensed invention as \Hallu\ and can also mistake high stylistic latitude for unsupported content.
-
-\appendixsection{Reviewer-Informed Caveats}\label{app:caveats}
-The original study was reviewed, and four reviewer points bound how the numbers above should be read; we keep them in view rather than setting them aside.
-First, the main study holds $\kappa$ low throughout, so it does not on its own demonstrate the \Hallu/\PD\ relabeling under permissive regimes; the $\kappa$ HIGH/LOW rerun (Appendix~\ref{app:kappa-diag}) probes that case but is diagnostic, not a completed permissive-regime benchmark.
-Second, the large \textsc{lesson\_plan} effect is partly an oracle-template mismatch: lesson plans require objectives, activities, and assessment scaffolding that is pedagogical design rather than Wikipedia-groundable fact, so the $28.5\%$ factual-lesson support rate conflates genuine unsupported claims with content the chosen oracle cannot cover.
-Third, the binary verifier has no \emph{unverifiable} category, so absolute rates are likely inflated under creative conditions; we therefore read the \emph{relative} patterns (orderings and differences), not the absolute levels.
-Fourth, creativity and factuality judgments are evaluator-dependent; the $0.756$ agreement mitigates but does not remove this, though the condition orderings are stable across four judges.
-These are precisely the reasons we present the study as motivation rather than proof: the framework specifies what a measurement respecting $(O,\sigma,\kappa)$ would require, and the binary pipeline's inability to label \PD\ is the gap that measurement is built to close.
 
 \bibliography{references}
 
