@@ -165,7 +165,17 @@ Hallucination benchmarks treat any unsupported content as a defect to minimize \
 Neither tradition conditions its scores on what the user's prompt actually authorizes.
 As a result, one output can be scored as a serious failure by one tradition and a creative success by another, depending on which protocol is applied rather than on whether the divergence was appropriate.
 
-Even the closest recent steps stop short of the contract. Intent-aware evaluation decomposes a query into checkable constraints, but those constraints cover query elements (subject, action, quantity) rather than stylistic latitude or invention license, and it scores intent coverage with no truth oracle: it has neither $O$ nor $\kappa$ \citep{hao_faithqa_2025}. The closest analogue to our distinction splits hallucinations into ``intelligent'' and ``defective,'' yet it reads that label off the output's own creativity and factual-deviation scores rather than off the prompt, so the label is fixed by the text and cannot flip with the contract that should govern it \citep{yang_hicbench_2025}. Neither makes $(O,\sigma,\kappa)$ a scored variable, and that omission is the gap we identify.
+Even the closest recent steps stop short of the contract.
+Intent-aware evaluation decomposes a query into checkable constraints, but those constraints cover query elements (subject, action, quantity) rather than stylistic latitude or invention license, and it scores intent coverage with no truth oracle: it has neither $O$ nor $\kappa$ \citep{hao_faithqa_2025}.
+The closest analogue to our distinction splits hallucinations into ``intelligent'' and ``defective,'' yet it reads that label off the output's own creativity and factual-deviation scores rather than off the prompt, so the label is fixed by the text and cannot flip with the contract that should govern it \citep{yang_hicbench_2025}.
+Neither makes $(O,\sigma,\kappa)$ a scored variable, and that omission is the gap we identify.
+
+\paragraph{What the contract is not.}
+$(O,\sigma,\kappa)$ is not a relabeling of grounding, style, or task type.
+$O$ fixes what counts as support but cannot say whether leaving the evidence is licensed.
+$\sigma$ governs form but cannot license new truth-conditional content.
+A task label is too coarse because the same task can pair high stylistic freedom with $\kappa{=}0$, or neutral form with $\kappa{>}0$.
+The irreducible component is $\kappa$: it determines whether unsupported content is an error, a flagged hypothesis, or invention inside a declared frame.
 
 This gap cannot be closed simply by building better detectors.
 Theoretical work shows that LLMs cannot avoid hallucination entirely: arguments from incompleteness and undecidability \citep{banerjee_llms_2024, xu_hallucination_2024} establish a nonzero structural error floor.
@@ -322,6 +332,7 @@ This unifies faithfulness and factuality failures while making the oracle explic
 \textbf{Productive divergence (\PD; claim-level).}
 Content that would count as hallucination under a strict factual standard, but is allowed by the prompt's truth regime and helps accomplish the task.
 A claim is \PD\ when three conditions hold: it is \emph{licensed} (the regime permits invention, $\kappa>0$, or the claim falls inside a declared fictional frame); it is \emph{useful} (novel and appropriate under the task constraints, the standard creativity criterion \citep{diedrich_are_2015, acar_creativity_2019}); and it is \emph{presented on the regime's terms} (a flagged hypothesis under $\kappa{=}1$ must not be asserted as verified fact).
+The construct is therefore decomposable rather than fully solved: licensing and stance are auditable gates, while usefulness is the soft component that must be reported with disagreement rather than hidden inside a binary label.
 This echoes non-LLM uses of ``productive divergence'' as variation that energizes performance \citep{parry_team_2023, lingard_pulling_2017}.
 A contrast pins the category down.
 Given ``summarize this medical report,'' an added claim that the patient has diabetes, absent from the report, violates a regime where $O$ is the report and $\kappa{=}0$: it is \Hallu.
@@ -523,12 +534,14 @@ The contract is left to the task label.
 \paragraph{What the columns show, and what they do not.}
 The $\sigma$ and $\kappa$ entries are \emph{our} annotations, inferred from each task's design rather than reported by the benchmark: a factual-QA or summarization suite implies $\sigma$ low and $\kappa$ low (neutral form, no invention), a creative-writing suite implies both high, and an open-ended innovation suite implies $\kappa$ high.
 We make this inference explicit precisely because no benchmark measures any of these levels itself.
+The empirical object of the audit is the protocol-level absence of scored regime variables.
+The low/high entries are author annotations used to expose that absence; they are not measurements reported by the benchmark authors.
 Read that way, the finding is not that the column entries repeat but that every one is read off the task rather than scored: where a task plainly demands stylistic latitude (creative-writing suites) we mark $\sigma$ high, and where invention is central (creativity benchmarks, and the intelligent-hallucination split of \textsc{HIC-Bench}) we mark $\kappa$ high, yet no benchmark in either tradition turns that latitude or that license into a scored variable.
 The uniform fact across all forty, not any single column, is that neither permission is ever measured.
 
 \paragraph{The cell no benchmark fills.}
 Annotated this way, the forty benchmarks cluster on a diagonal: hallucination suites at $\sigma$ low, $\kappa$ low (neutral form, strict grounding) and creative-writing suites at $\sigma$ high, $\kappa$ high (marked form, free invention).
-The off-diagonal cell $\sigma$ high, $\kappa$ low---vivid or figurative form under a strict factual regime---is filled by none of them, though Figure~\ref{fig:sk-map} marks it as a canonical regime (a factual task with creative style) and it names an everyday request (``explain this like a poet, but keep the science exact'').
+The off-diagonal cell $\sigma$ high, $\kappa$ low (vivid or figurative form under a strict factual regime) is filled by none of them, though Figure~\ref{fig:sk-map} marks it as a canonical regime (a factual task with creative style) and it names an everyday request (``explain this like a poet, but keep the science exact'').
 That cell is not an incidental hole: it is exactly where stylistic latitude and the truth oracle pull against each other, and where an automatic verifier is most likely to misread marked form as unsupported content.
 Worse, the only region where high $\sigma$ appears at all ($\sigma$ high, $\kappa$ high) is scored solely on creativity metrics, so no existing benchmark measures hallucination under high stylistic latitude.
 This missing cell is the one our pilot deliberately occupies, holding $\kappa$ low while raising $\sigma$ (Appendix~\ref{app:experiment}).
@@ -541,9 +554,9 @@ The coding is a single-author pass against these criteria, offered as the first 
 \paragraph{An indicative pilot.}
 Our own preliminary experiments bring the gap into view.
 We designed the study to vary $\sigma$, the prompt's stylistic latitude (through creativity level and writing format), while holding the oracle fixed to Wikipedia world knowledge and $\kappa$ low, then measured the claim-level hallucination rate.
-The result is direct: making the output more creative in style raised the measured hallucination rate, even though factual invention is never licensed.
+The pattern is diagnostic: making the output more creative in style raised the measured hallucination rate, even though factual invention is never licensed.
 Across 12{,}469 outputs from nine LLMs, writing format raised the rate most and creative intent next, while sampling temperature barely mattered (full design, figures, and reviewer-informed caveats in Appendix~\ref{app:experiment}).
-A matched $\kappa$ high/low diagnostic points the same way, not because permissive prompts are worse, but because a binary verifier with no \PD\ label counts licensed invention as \Hallu\ (Appendix~\ref{app:kappa-diag}).
+A matched $\kappa$ high/low diagnostic points the same way, not because permissive prompts are worse, but because a binary verifier with no \PD\ label and no explicit $\sigma$ control can count licensed invention or high stylistic latitude as \Hallu\ (Appendix~\ref{app:kappa-diag}).
 These measurements are indicative rather than confirmatory: the verifier is binary and may inflate absolute rates under creative conditions, so we use them to motivate the framework rather than as a completed test of it.
 
 \begin{table*}[!tp]
@@ -553,6 +566,7 @@ These measurements are indicative rather than confirmatory: the verifier is bina
 \renewcommand{\arraystretch}{0.95}
 \caption{\textbf{Audit of forty benchmarks against the truth-regime components $(O,\sigma,\kappa)$, grouped by what they evaluate and by task.}
 For $\sigma$ and $\kappa$ we record \emph{our} annotation of the level each task implies ($\sigma$: stylistic latitude; $\kappa$: invention license); these are read off the task design, not reported or scored by any benchmark.
+The audit tests whether the protocol scores these variables, not whether our low/high annotations are independently measured data.
 Legend: ``low''/``high'' = the level the task implies but never makes an explicit, scored variable; ``--'' = not represented in the protocol.
 Across the benchmarks we audit, none turns $\sigma$ or $\kappa$ into a scored or graded variable; oracle $O$ is the only component routinely fixed.
 TTCT/TTCW: Torrance Tests of Creative Thinking/Writing; RAG: retrieval-augmented generation.}
@@ -629,6 +643,8 @@ Faithfulness metrics could detect such violations \citep{maynez_faithfulness_202
 \subsection{The shared failure mode and the closest prior work}
 When $\TR$ is left implicit, two symmetric errors arise.
 Under a permissive regime ($\kappa$ high), strict factuality checks misclassify licensed speculation as \Hallu\ (false positives on \PD) \citep{cyriac_metrics_2025, sui_confabulation_2024}; under a strict regime ($\kappa$ low), novelty-oriented scores reward confident fabrications that inflate apparent originality (false negatives on \Hallu) \citep{liu_g-eval_2023, chen_menli_2023}.
+Uncertainty and abstention methods address the strict-regime case: when support is insufficient, a system should hedge, refuse, or defer rather than assert.
+Our claim is orthogonal: under $\kappa{>}0$, the question is not only whether the model should abstain, but whether the prompt licenses a non-assertoric or inventive move in the first place.
 The closest existing steps narrow but do not close the gap.
 Intent-hallucination evaluation decomposes a query into intent constraints (subject, action, qualifiers, quantity, and the like) and conditions the verdict on whether the response covers them, but it defines failure independently of factual accuracy, supplies no oracle, and treats even flagged invention as a misinterpretation rather than a licensed move: it encodes neither $O$ nor $\kappa$ \citep{hao_faithqa_2025}.
 A recent benchmark splits hallucinations into ``intelligent'' and ``defective,'' the closest analogue to the \PD/\Hallu\ distinction, but it reads that label off the output's creativity and factual-deviation scores rather than off the prompt, so the label is determined by the text and cannot flip with the contract that should govern it \citep{yang_hicbench_2025}.
@@ -645,14 +661,16 @@ Because \Hallu\ has a structural floor and the same divergence drives \PD, the p
 
 The audit shows that the contract is missing; this section shows that supplying it \emph{changes verdicts}.
 We apply the decision rule of Section~\ref{sec:framework} by hand to three illustrative cases.
-Each case is drawn from a documented phenomenon: human-annotated XSum hallucinations (A), fictional role-play hallucination (B), and FactBench's \texttt{undecidable} label (C). Each isolates a verdict that current pipelines leave underdetermined, and in each the label flips between \Hallu\ and \PD\ when only $(O,\sigma,\kappa)$ changes.
+Each case instantiates a documented phenomenon: human-annotated XSum hallucinations (A), fictional role-play hallucination (B), and FactBench's \texttt{undecidable} label (C).
+The claim strings are illustrative rather than asserted as verbatim dataset items, because their role is to isolate a verdict current pipelines leave underdetermined.
+In each case the label changes status when only $(O,\sigma,\kappa)$ changes.
 Table~\ref{tab:worked} summarizes the flips.
 
 \paragraph{Case A: correct but unsupported (oracle shift).}
 \citet{maynez_faithfulness_2020} document this pattern directly on XSum, where annotators label a summary span as an \emph{extrinsic but factual} hallucination: content not found in the source document yet factually correct.
-Their worked instance is a system summary that supplies the correct year of a London mayoral election (``2016''), accurate against world knowledge but absent from the article.
+An instance of the kind they document is a system summary that supplies the correct year of an event, accurate against world knowledge but absent from the article.
 Decomposing the output to the claim level isolates this token from the model's other, incorrect additions.
-Under the summarization regime $O=$ the source, $\sigma$ low, $\kappa{=}0$, the year is truth-conditional and unsupported by $O$: it is \Hallu, even though it satisfies factuality (\Acc) against world knowledge.
+Under the summarization regime $O=$ the source, $\sigma$ low, $\kappa{=}0$, the event year is truth-conditional and unsupported by $O$: it is \Hallu, even though it satisfies factuality (\Acc) against world knowledge.
 Hold the output fixed and change only the oracle (``Tell me about this election,'' with $O=$ world knowledge), and the same token becomes supported, hence not \Hallu.
 The flip is exactly the unresolved tension Maynez et al.\ flag, whether summaries should tolerate such factual hallucinations \citep{maynez_faithfulness_2020, kryscinski_evaluating_2020}; the framework attributes it to $O$ rather than to the text.
 
@@ -665,7 +683,7 @@ A novelty-oriented score would reward both as inventive \citep{hou_creativitypri
 
 \paragraph{Case C: undecidable is not authorized (license shift).}
 FactBench's VERIFY pipeline labels each verifiable unit \texttt{supported}, \texttt{unsupported}, or \texttt{undecidable}, the last when retrieved evidence is insufficient to confirm or refute it, and its hallucination score penalizes \texttt{undecidable} units at a fixed weight regardless of what the prompt asked for \citep{bayat_factbench_2024}.
-A documented instance is a model claim that a tool ``supports multiple input formats,'' which VERIFY marks \texttt{undecidable} because support varies across versions.
+A FactBench-style instance is a model claim that a tool ``supports multiple input formats,'' which a verifier may mark \texttt{undecidable} when support varies across versions.
 That label tracks evidence availability, not the regime: under $\kappa{=}0$, asserting such a claim as established fact is \Hallu\ and the penalty is warranted; under $\kappa{=}1$ (flagged speculation), the same epistemically undecidable content, marked as a hypothesis, is \PD.
 The epistemic status (undecidable) is constant; the verdict is set by the license $\kappa$, which a fixed undecidable penalty, and even a three-way verdict, cannot see.
 
@@ -674,7 +692,7 @@ The epistemic status (undecidable) is constant; the verdict is set by the licens
 \small
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
-\caption{Worked verdicts: the same claim flips between \Hallu\ and \PD\ when one component of $(O,\sigma,\kappa)$ changes.}
+\caption{Worked verdicts: the same claim changes status when one component of $(O,\sigma,\kappa)$ changes.}
 \label{tab:worked}
 \begin{tabular}{@{}p{0.05\columnwidth} p{0.33\columnwidth} p{0.27\columnwidth} p{0.27\columnwidth}@{}}
 \toprule
@@ -707,7 +725,7 @@ The three conditions of the labeling rule are not equally hard, and separating t
 The \emph{licensing} condition is mechanical: it is read off the $\kappa$ annotation, so under $\kappa{=}0$ no claim can be \PD\ and the score is zero by construction, while under $\kappa{>}0$ one checks only whether the claim falls inside the licensed scope (e.g., the declared fictional frame).
 The \emph{presented-on-the-regime's-terms} condition is a stance check: whether a claim is marked as a hypothesis or asserted as verified fact is a verifiable, constraint-style property of the text, close to the format constraints that instruction-following evaluation already scores \citep{zhou_ifeval_2023}, and far more tractable than judging content quality.
 The hard component is \emph{usefulness}, the standard novelty-with-value criterion of creativity assessment \citep{runco_standard_2012, acar_creativity_2019, diedrich_are_2015}: novelty admits automated proxies (semantic-distance and LLM-judge scoring of divergent output reach strong human correlation \citep{organisciak_beyond_2023}), and value can be aggregated from pairwise preference judgments onto a continuous scale.
-A claim then scores as \PD\ when it passes the licensing gate and the stance check and its usefulness exceeds a regime-conditioned threshold.
+A practical \PD\ score should therefore expose three sublabels: license-pass, stance-pass, and usefulness, with \PD\ assigned only when the first two pass and the third exceeds a regime-conditioned threshold.
 Because usefulness is evaluator-dependent \citep{marco_reader_2025}, \PD\ should be reported as a graded, soft-labeled quantity rather than a hard count, with disagreement on the usefulness dimension recorded rather than averaged away.
 This is a proposed instrument, not a validated one; establishing its reliability is itself part of the agenda.
 
@@ -835,10 +853,10 @@ Figure~\ref{fig:pipeline} summarizes the four-phase pipeline (prompt constructio
         };
         \node[phase, fill=gray!12, right=1.1cm of p3] (p4) {%
             \textbf{\small Phase 4}\\[3pt]
-            \textbf{\small Statistical Analysis}\\[5pt]
-            \scriptsize generalized linear model (odds ratios)\\[1pt]
-            generalized linear mixed model (prompt variance)\\[1pt]
-            Mediation analysis\\[1pt]
+            \textbf{\small Diagnostic Summaries}\\[5pt]
+            \scriptsize effect summaries (odds ratios)\\[1pt]
+            prompt-level robustness checks\\[1pt]
+            mediator sensitivity checks\\[1pt]
         };
 
         \draw[arrow] (p1.east) -- (p2.west);
@@ -851,7 +869,7 @@ Figure~\ref{fig:pipeline} summarizes the four-phase pipeline (prompt constructio
     Phase~3 applies the HalluLens verification paradigm \citep{bang_hallulens_2025}:
     atomic claim extraction, dense Wikipedia retrieval (\texttt{gtr-t5-large}),
     and NLI verdict (\texttt{S}upported / \texttt{H}allucinated).
-    Phase~4 analyses effects via GLM, GLMM, and mediation with false discovery rate (FDR) correction
+    Phase~4 reports diagnostic effect summaries and robustness checks with false discovery rate (FDR) correction
     \citep{benjamini_controlling_1995}.
     Reviewer-informed caveats in Appendix~\ref{app:caveats}.}
     \label{fig:pipeline}
@@ -862,7 +880,7 @@ Table~\ref{tab:exp-main} reports per-condition median hallucination rates.
 Writing format is the strongest driver (\textsc{lesson\_plan} is $+21.4$ points over \textsc{interview}; Spearman $\rho=0.45$).
 Creative intent is next (\textsc{very\_creative} is $+12.8$ points over \textsc{factual}; $\rho=0.30$), even though invention is never licensed.
 Length matters weakly ($+5.7$ points at 1000 vs.\ 250 words; $\rho=0.11$), and sampling temperature is essentially flat ($\rho=-0.03$).
-Figure~\ref{fig:exp-task-creat} shows the creativity effect holds per model and per task, and a \textsc{very\_creative}\,$\times$\,\textsc{news\_article} interaction (odds ratio $0.77$) shows that news-style factual norms dampen the style effect.
+Figure~\ref{fig:exp-task-creat} shows the creativity pattern per model and per task, and a \textsc{very\_creative}\,$\times$\,\textsc{news\_article} interaction (odds ratio $0.77$) suggests that news-style factual norms dampen the style effect.
 
 \begin{table}[t]
 \centering\small
@@ -975,7 +993,7 @@ Temperature & 0 to 1.0 & $\approx$\,60.7\% & $\pm0.5$ & $-0.03$\\
 \ref{creativitylegend}
 \caption{Median hallucination rate by model, task, and creativity level.
     Each panel shows one task; lines connect the same model across creativity levels.
-    Two patterns emerge: (1)~\textsc{lesson\_plan} (middle) is consistently higher, and (2)~upward slopes confirm the creativity effect, which is attenuated in \textsc{news\_article} (right).
+    Two patterns emerge: (1)~\textsc{lesson\_plan} (middle) is consistently higher, and (2)~upward slopes show the creativity pattern, which is attenuated in \textsc{news\_article} (right).
     Verification follows HalluLens \citep{bang_hallulens_2025}.}
 \label{fig:exp-task-creat}
 \end{figure}
@@ -1086,7 +1104,7 @@ The headline patterns are therefore not an artifact of one judge.
 \subsection{Indicative \texorpdfstring{$\kappa$}{kappa} HIGH/LOW diagnostic}\label{app:kappa-diag}
 The main study holds $\kappa$ low, so it does not itself exhibit the \Hallu/\PD\ relabeling.
 To probe that case we ran a matched diagnostic with an explicit invention-license block: under $\kappa$ LOW factual invention is disallowed, while under $\kappa$ HIGH fictional, speculative, or illustrative additions are permitted when useful and not presented as verified fact.
-Across 7 runs, 360 prompts, and 214K claim rows, the binary verifier reports \emph{higher} measured hallucination under $\kappa$ HIGH than $\kappa$ LOW (paired difference $+5.1$ points; GLM odds ratio for LOW vs.\ HIGH $0.76$; mixed-model coefficient for LOW $-0.053$).
+Across 7 runs, 360 prompts, and 214K claim rows, the binary verifier reports \emph{higher} measured hallucination under $\kappa$ HIGH than $\kappa$ LOW (paired difference $+5.1$ points; model-based summaries give an odds ratio for LOW vs.\ HIGH of $0.76$ and a random-prompt coefficient for LOW of $-0.053$).
 This is not evidence that permissive prompts are worse.
 It suggests that a binary supported/hallucinated pipeline, lacking both a \PD\ label and an explicit $\sigma$ control, can count licensed invention as \Hallu\ and can also mistake high stylistic latitude for unsupported content.
 
