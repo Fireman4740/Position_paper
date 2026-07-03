@@ -554,7 +554,7 @@ By this criterion \textsc{WritingBench} \citep{wu_writingbench_2025} is the inst
 The coding is a single-author pass against these criteria, offered as the first instance of the annotation layer we advocate rather than as a validated resource; borderline cases remain (does \textsc{WritingBench} \emph{score style} or \emph{annotate stylistic latitude}?), and independent re-coding with reported agreement is itself part of the agenda (Section~\ref{sec:agenda}).
 
 \paragraph{An indicative observation.}
-In preliminary, exploratory runs that held the oracle fixed and licensed no invention ($\kappa{=}0$), raising a prompt's stylistic latitude $\sigma$ alone moved what a binary verifier flagged as unsupported.
+In preliminary, exploratory runs that held the oracle fixed and licensed no invention ($\kappa{=}0$), raising a prompt's stylistic latitude $\sigma$ alone moved what a binary verifier flagged as unsupported (Appendix~\ref{app:experiment}).
 In principle $\sigma$ changes no proposition and so leaves both faithfulness and accuracy untouched; any such movement is therefore a property of the verifier, not of the output's truth-status. This measurement brittleness is what our agenda targets (Section~\ref{sec:agenda}).
 Because that verifier is binary and lacks a \PD\ label, we report these runs only as motivation and leave a controlled, regime-aware study to future empirical work.
 
@@ -816,6 +816,131 @@ The remaining work is to build the contract into benchmarks and to measure how m
 The supporting evidence for each step is given where the rule is introduced in Section~\ref{sec:framework}.
 
 
+
+\appendixsection{Indicative Pilot: Stylistic Latitude and Measured Hallucination}\label{app:experiment}
+This appendix reports the preliminary observation referenced in Section~\ref{sec:sota}. It is offered as motivation, not as a validated \TR-aware evaluation; the caveats at the end bound every reading of these numbers, and the \Hallu/\PD\ relabeling itself is argued in Section~\ref{sec:worked}, not measured here.
+
+\subsection{Setup}
+We construct 1{,}389 prompts over Wikipedia subjects by crossing three writing formats (\textsc{interview}, \textsc{lesson\_plan}, \textsc{news\_article}), three creativity levels (\textsc{factual}, \textsc{hybrid}, \textsc{very\_creative}) that raise stylistic latitude $\sigma$, and three target lengths, and generate 12{,}469 outputs from nine LLMs across five sampling temperatures. Each output is decomposed into atomic claims (310{,}357 in total) and checked against Wikipedia with a HalluLens-style binary verifier \citep{bang_hallulens_2025}. No prompt licenses factual invention ($\kappa{=}0$ throughout), and the verifier returns supported/hallucinated only, with no \emph{unverifiable} or \PD\ category.
+
+\subsection{Result: raising $\sigma$ raises the measured rate}
+Making the output more creative in style raises the measured hallucination rate even though no invention is licensed (Table~\ref{tab:exp-main}, Figure~\ref{fig:exp-task-creat}). Writing format is the strongest driver (\textsc{lesson\_plan} is $+21.4$ points over \textsc{interview}; Spearman $\rho=0.45$) and creativity level next (\textsc{very\_creative} is $+12.8$ points over \textsc{factual}; $\rho=0.30$), while length matters weakly ($\rho=0.11$) and sampling temperature is essentially flat ($\rho=-0.03$). Because $\sigma$ introduces no new proposition, this pattern is a property of the verifier, not of the outputs' truth-status.
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.1}
+\caption{Main effects on median hallucination rate under the strict regime ($\kappa{=}0$; $N=12{,}469$, nine LLMs). Difference versus the reference condition ($^\dagger$) in percentage points; Spearman $\rho$.}
+\label{tab:exp-main}
+\begin{tabular}{l l c r c}
+\toprule
+\textbf{Factor} & \textbf{Condition} & \textbf{Mean} & \textbf{$\Delta$ (pts)} & \textbf{$\rho$}\\
+\midrule
+\multirow{3}{*}{Task} & interview$^\dagger$ & 51.3\% & -- & \multirow{3}{*}{0.45}\\
+ & news & 56.4\% & $+5.2$ & \\
+ & lesson\_plan & 72.6\% & $+21.4$ & \\
+\midrule
+\multirow{3}{*}{Creativity} & factual$^\dagger$ & 54.7\% & -- & \multirow{3}{*}{0.30}\\
+ & hybrid & 60.5\% & $+5.8$ & \\
+ & very\_creative & 67.5\% & $+12.8$ & \\
+\midrule
+\multirow{3}{*}{Length} & 250 w$^\dagger$ & 57.8\% & -- & \multirow{3}{*}{0.11}\\
+ & 500 w & 59.5\% & $+1.7$ & \\
+ & 1000 w & 63.5\% & $+5.7$ & \\
+\midrule
+Temperature & 0 to 1.0 & $\approx$\,60.7\% & $\pm0.5$ & $-0.03$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\definecolor{hlseries1}{HTML}{636EFA}
+\definecolor{hlseries2}{HTML}{EF553B}
+\definecolor{hlseries3}{HTML}{00CC96}
+\definecolor{hlseries4}{HTML}{AB63FA}
+\definecolor{hlseries5}{HTML}{FFA15A}
+\definecolor{hlseries6}{HTML}{19D3F3}
+\definecolor{hlseries7}{HTML}{FF6692}
+\definecolor{hlseries8}{HTML}{B6E880}
+\definecolor{hlseries9}{HTML}{FF97FF}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=3 by 1, horizontal sep=1.0cm},
+    width=0.34\textwidth,
+    height=0.40\textwidth,
+    grid=major,
+    major grid style={draw=gray!20},
+    tick align=outside,
+    xlabel={Creativity level},
+    ymin=0.228913, ymax=0.947653,
+    xtick={1,2,3},
+    xticklabels={\textsc{factual},\textsc{hybrid},\textsc{v.\_creative}},
+    xticklabel style={font=\small},
+    yticklabel style={font=\small},
+    title style={font=\bfseries\small},
+    label style={font=\small},
+]
+\nextgroupplot[title={\textsc{interview}}, ylabel={Hallucination rate (median)}]
+\addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.273715) (2,0.404545) (3,0.600498)};
+\addplot+[color=hlseries2,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.320755) (2,0.506667) (3,0.671080)};
+\addplot+[color=hlseries3,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.390625) (2,0.444492) (3,0.619982)};
+\addplot+[color=hlseries4,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.261583) (2,0.414994) (3,0.537887)};
+\addplot+[color=hlseries5,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.402985) (2,0.483871) (3,0.551724)};
+\addplot+[color=hlseries6,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.367048) (2,0.483242) (3,0.627196)};
+\addplot+[color=hlseries7,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.538026) (2,0.690506) (3,0.848214)};
+\addplot+[color=hlseries8,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.503521) (2,0.569444) (3,0.732394)};
+\addplot+[color=hlseries9,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.397265) (2,0.505051) (3,0.771429)};
+\nextgroupplot[title={\textsc{lesson\_plan}}]
+\addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.550505) (2,0.652193) (3,0.820328)};
+\addplot+[color=hlseries2,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.518445) (2,0.650000) (3,0.774824)};
+\addplot+[color=hlseries3,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.587762) (2,0.629573) (3,0.740233)};
+\addplot+[color=hlseries4,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.715633) (2,0.760435) (3,0.811655)};
+\addplot+[color=hlseries5,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.715251) (2,0.755556) (3,0.792706)};
+\addplot+[color=hlseries6,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.686322) (2,0.759263) (3,0.850532)};
+\addplot+[color=hlseries7,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.725786) (2,0.825071) (3,0.894681)};
+\addplot+[color=hlseries8,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.588979) (2,0.660000) (3,0.727454)};
+\addplot+[color=hlseries9,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.669345) (2,0.759808) (3,0.914983)};
+\nextgroupplot[
+    title={\textsc{news\_article}},
+    legend to name=creativitylegend,
+    legend style={
+        legend columns=3,
+        font=\small,
+        draw=none,
+        fill=none,
+        legend cell align=left,
+        column sep=1.2em,
+    },
+]
+\addplot+[color=hlseries1,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.428571) (2,0.500733) (3,0.679623)};
+\addlegendentry{deepseek-v3.2}
+\addplot+[color=hlseries2,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.459818) (2,0.562940) (3,0.651515)};
+\addlegendentry{gemini-3-flash-preview}
+\addplot+[color=hlseries3,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.462019) (2,0.476329) (3,0.593712)};
+\addlegendentry{gemma-3-27b-it}
+\addplot+[color=hlseries4,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.394338) (2,0.509287) (3,0.629167)};
+\addlegendentry{gpt-5.2}
+\addplot+[color=hlseries5,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.483871) (2,0.526316) (3,0.571429)};
+\addlegendentry{grok-3-mini}
+\addplot+[color=hlseries6,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.462143) (2,0.546921) (3,0.639610)};
+\addlegendentry{grok-4.1-fast}
+\addplot+[color=hlseries7,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.601136) (2,0.682669) (3,0.782609)};
+\addlegendentry{mistral-small-creative}
+\addplot+[color=hlseries8,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.559558) (2,0.596846) (3,0.676471)};
+\addlegendentry{nemotron-nano-12b-v2-vl}
+\addplot+[color=hlseries9,line width=1.1pt,mark=*,mark size=1.7pt] coordinates {(1,0.492729) (2,0.645898) (3,0.750000)};
+\addlegendentry{qwen3-30b-a3b-2507}
+\end{groupplot}
+\end{tikzpicture}}%
+\par\smallskip
+\ref{creativitylegend}
+\caption{Median hallucination rate by model, task, and creativity level. Each panel shows one task; lines connect the same model across creativity levels. Two patterns emerge: \textsc{lesson\_plan} (middle) is consistently higher, and the upward slopes show the creativity effect, attenuated in \textsc{news\_article} (right). Verification follows HalluLens \citep{bang_hallulens_2025}.}
+\label{fig:exp-task-creat}
+\end{figure}
+
+\subsection{How to read these numbers}
+Four points bound the reading. First, the study holds $\kappa{=}0$ throughout, so it does not exhibit the \Hallu/\PD\ relabeling under permissive regimes; that case is argued in Section~\ref{sec:worked}, not measured here. Second, the large \textsc{lesson\_plan} effect is partly an oracle-template mismatch: lesson plans require objectives, activities, and assessment scaffolding that is pedagogical design rather than Wikipedia-groundable fact, so its support rate conflates genuine unsupported claims with content the chosen oracle cannot cover. Third, the binary verifier has no \emph{unverifiable} category, so absolute rates are likely inflated under creative conditions; we therefore read the \emph{relative} orderings and differences, not the absolute levels. Fourth, four evaluator LLMs judged a shared subset and reached substantial agreement (mean $\kappa_{\mathrm{agree}}=0.756$) with stable condition orderings, so the pattern is not an artifact of one judge.
 
 \bibliography{references}
 
