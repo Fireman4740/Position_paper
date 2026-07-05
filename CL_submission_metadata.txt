@@ -1,0 +1,78 @@
+COMPUTATIONAL LINGUISTICS — SUBMISSION METADATA
+(separate text file required by the "Original Submissions" checklist, submissions.cljournal.org)
+
+--------------------------------------------------------------------
+CATEGORY
+--------------------------------------------------------------------
+Position Paper
+
+--------------------------------------------------------------------
+TITLE
+--------------------------------------------------------------------
+Hallucination Is Relative: A Position on Truth-Contract-Aware Evaluation of LLM Divergence
+
+--------------------------------------------------------------------
+AUTHORS (full first + last names, no initials)
+--------------------------------------------------------------------
+Mathis Carlesso        — affiliations 1, 2
+Martino Lovisetto      — affiliation 2
+Elöd Egyed-Zsigmond    — affiliation 1
+Pierre-Yves Genest     — affiliation 2
+Stefan Duffner         — affiliation 1
+
+--------------------------------------------------------------------
+AFFILIATIONS
+--------------------------------------------------------------------
+1. INSA Lyon, CNRS, LIRIS, UMR5205, Université Claude Bernard Lyon 1,
+   69621 Villeurbanne, France
+2. Alteca, 69100 Villeurbanne, France
+
+--------------------------------------------------------------------
+CONTACT AUTHOR
+--------------------------------------------------------------------
+Mathis Carlesso — mathis.carlesso@insa-lyon.fr
+
+--------------------------------------------------------------------
+ABSTRACT
+--------------------------------------------------------------------
+Hallucination is usually scored as a binary defect: a statement is supported or it
+is not. This misses a central property of language use: the same unsupported content
+can be dangerous in a medical answer, harmless in a metaphor, and useful in fiction
+or ideation. We argue that hallucination should instead be evaluated against the
+prompt's truth contract, TC(p) = (O, sigma, kappa). The content oracle O fixes what
+counts as true. The form license sigma sets how freely the answer may be phrased.
+The content license kappa sets what the answer may claim beyond the oracle. Under
+this view, hallucination (H) is unlicensed divergence: it breaks the contract.
+Licensed divergence (LD) is a departure the contract permits, presented as the
+contract requires; its usefulness is scored separately. The same output can therefore
+change verdict, H under one contract and LD under another, while its text stays the
+same. We then show that current hallucination and creativity benchmarks share a blind
+spot: neither ties its scores to what the prompt licenses. We make this concrete in
+two ways: an illustrative audit of forty representative benchmarks against (O, sigma, kappa),
+and a claim-level labeling rule that relabels documented outputs as H or LD once their
+contract is stated. These observations motivate a research agenda for contract-aware
+evaluation that scores H and LD separately under explicit oracle and license annotations.
+
+--------------------------------------------------------------------
+KEYWORDS (for "Comments to the Editor")
+--------------------------------------------------------------------
+hallucination; evaluation of large language models; faithfulness and factuality;
+creativity; truth contract; benchmarking; natural language generation evaluation
+
+--------------------------------------------------------------------
+DECLARATIONS (for "Comments to the Editor")
+--------------------------------------------------------------------
+1. This work has not been published elsewhere and is not currently under review at
+   any other archival venue.
+2. This work has not previously appeared in conference or workshop proceedings.
+3. This work is not subject to any non-disclosure agreement or other restriction that
+   would prevent its publication.
+
+--------------------------------------------------------------------
+REVIEW / FORMAT NOTES
+--------------------------------------------------------------------
+- Single-blind review: author names and affiliations appear on the first page of the
+  PDF (do NOT anonymize).
+- PDF built with the clv2025 class; verify rendering against COLI-manual.pdf.
+- Enter all five authors in the "Contributors" section of the submission form.
+- Copyright: assignment to the ACL only if accepted — nothing to do at submission time.

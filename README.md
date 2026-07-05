@@ -2,7 +2,7 @@
 
 This repository contains the active LaTeX stack for the position paper:
 
-**Hallucination Is Relative: Evaluating LLM Divergence Under Truth-Regime Contracts**
+**Hallucination Is Relative: A Position on Truth-Contract-Aware Evaluation of LLM Divergence**
 
 ## Active Files
 

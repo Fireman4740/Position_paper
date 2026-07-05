@@ -2,20 +2,22 @@
 
 Working thesis:
 
-> Hallucination is not a binary property of text. It is relative to the prompt's truth regime: what must be true, what may be uncertain, and what may be invented.
+> Hallucination is not a binary property of text. It is relative to the prompt's truth contract: what must be true, what may be uncertain, and what may be invented.
 
-Stable vocabulary:
+Stable vocabulary (macro names unchanged; printed expansions migrated to the contract lexicon):
 
-- `\CI`: creative intent
-- `\TR`: truth regime
-- `\PD`: productive divergence
-- `\Hallu`: hallucination as a truth-regime violation
+- `\TR`: truth contract (prints `TC`; formerly "truth regime")
+- `\PD`: licensed divergence (prints `LD`; formerly "productive divergence")
+- `\Hallu`: hallucination as unlicensed divergence — a breach of the truth contract
 - `\Faith`: faithfulness
 - `\Acc`: accuracy/factuality
+- `sigma`: form license (formerly "stylistic latitude")
+- `kappa`: content license (formerly "invention license")
+- `O`: content oracle
 
 Current active draft:
 
-- title: `Hallucination Is Relative: Evaluating LLM Divergence Under Truth-Regime Contracts`
+- title: `Hallucination Is Relative: A Position on Truth-Contract-Aware Evaluation of LLM Divergence`
 - format: Computational Linguistics journal template (`clv2025`)
 - bibliography style: `plainnat`
 - active bibliography: `references.bib`
