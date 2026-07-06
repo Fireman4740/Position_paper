@@ -684,6 +684,7 @@ But it derives that label from the output's creativity and factual-deviation sco
 The label is therefore determined by the text and cannot flip with the contract that should govern it.
 Closest in spirit, \citet{jiang_survey_2024} survey hallucination from a creativity perspective and ask whether hallucinated content can be creatively valuable.
 We differ by shifting the unit of analysis: not the potential value of the content, but the prompt-level truth contract that decides whether unsupported content is licensed at all.
+A domain-specific instance of the same tension appears in legal summarization: \citet{bendahman_hallucinations_2025} observe that expert reference summaries introduce legal entities absent from the source document yet factual under domain knowledge, and build an entity-guided system that preserves these \emph{factual} hallucinations while reducing non-factual ones. In our terms, the status of such an entity turns on the oracle: a hallucination under $O=$ the source document alone, but supported once $O$ expands to the legal dataset and domain knowledge.
 None of these makes $(O,\sigma,\kappa)$ a scored variable; that layer is what we argue for.
 
 \subsection{Why universal suppression of \Hallu\ is neither feasible nor desirable}
@@ -709,6 +710,7 @@ Decomposing the output to the claim level isolates this added proposition as a s
 Under the summarization contract $O=$ the source, $\sigma$ low, $\kappa{=}0$, the claim is truth-conditional and unsupported by $O$: it is \Hallu, even though it satisfies factuality (\Acc) against world knowledge.
 Hold the output fixed and change only the oracle (``What became of the plant's operators?'', with $O=$ world knowledge), and the same claim becomes supported, hence not \Hallu.
 The flip is exactly the unresolved tension Maynez et al.\ flag, whether summaries should tolerate such factual hallucinations \citep{maynez_faithfulness_2020, kryscinski_evaluating_2020}; the framework attributes it to $O$ rather than to the text.
+Case~A is not specific to news summarization: \citet{bendahman_hallucinations_2025} document the same extrinsic-but-factual pattern at the entity level in legal summarization, where an entity absent from the source but certifiable against the legal record flips from \Hallu\ to supported exactly as the oracle expands.
 
 \paragraph{Case B: licensed invention that flips with the frame (license shift).}
 Fictional role-play makes this routine \citep{sadeq_mitigating_2024}.
@@ -801,6 +803,7 @@ A contract-aware protocol should therefore report \emph{both} \Hallu\ reduction 
 \textbf{Benchmarks crossing task $\times\,\sigma\,\times\,\kappa$.}
 No existing benchmark systematically crosses task type, form license, and content license as independent variables; \textsc{CreativityPrism} and LitBench provide partial coverage but condition no scores on an explicit \TR\ \citep{hou_creativityprism_2025, fein_litbench_2025}.
 A concrete next step is a claim-level annotation layer with labels such as supported, hallucination, licensed divergence, unverifiable, and stylistic variation, evaluated as a research object in its own right, including whether it changes model rankings or instead chiefly sharpens error diagnosis.
+An emerging effort in this direction is CLEF~2026 SimpleText Task~2 (\emph{controlled creativity} in scientific text simplification), which targets grounded transformation ( the form may change while new content must not be introduced ,$\sigma>0$, $\kappa{=}0$ ) and annotates system outputs for overgeneration and information distortion, though it does not yet treat $(O,\sigma,\kappa)$ as jointly scored variables \citep{simpletext_task2_2026}.
 
 \section{Discussion}\label{sec:discussion}
 
