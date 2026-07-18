@@ -143,7 +143,7 @@ The form license $\sigma$ sets how freely the answer may be phrased.
 The content license $\kappa$ sets what the answer may claim beyond the oracle.
 Under this view, hallucination (\Hallu) is unlicensed divergence: it breaks the contract.
 Licensed divergence (\PD) is a departure the contract permits, presented as the contract requires; its usefulness is scored separately.
-The same output can therefore change verdict, \Hallu\ under one contract and \PD\ under another, while its text stays the same.
+The same output can therefore be \Hallu\ under one contract and \PD\ under another, even though its text does not change.
 We then show that current hallucination and creativity benchmarks share a blind spot: neither ties its scores to what the prompt licenses.
 We make this concrete in two ways: an illustrative audit of forty representative benchmarks against $(O,\sigma,\kappa)$, and a claim-level labeling rule that relabels documented outputs as \Hallu\ or \PD\ once their contract is stated.
 These observations motivate a research agenda for contract-aware evaluation that scores \Hallu\ and \PD\ separately under explicit oracle and license annotations.
@@ -158,7 +158,7 @@ Hallucination is widely regarded as the central reliability barrier for deployin
 A large body of work consequently aims to detect, measure, and reduce it \citep{li_halueval_2023, wei_measuring_2024, thorne_fever_2018}.
 
 This effort hides a paradox.
-When users ask an LLM to write fiction, brainstorm, or propose creative solutions, they actively \emph{want} the model to go beyond established facts, and punishing every unsupported statement would suppress the very outputs they seek \citep{franceschelli_creativity_2024, hou_creativityprism_2025, rick_supermind_2023}.
+When users ask an LLM to write fiction, brainstorm, or propose creative solutions, they want the model to go beyond established facts. Punishing every unsupported statement would suppress exactly the outputs these users ask for \citep{franceschelli_creativity_2024, hou_creativityprism_2025, rick_supermind_2023}.
 A brainstorming tool that only repeats ideas that already exist is useless; a medical assistant that invents diagnoses is dangerous.
 The difference lies not in the text itself, but in what the prompt asked for.
 
@@ -169,19 +169,19 @@ Neither tradition conditions its scores on what the user's prompt actually licen
 As a result, one output can be scored as a serious failure by one tradition and a creative success by another, depending on which protocol is applied rather than on whether the divergence was appropriate.
 
 Even the closest recent work does not model the contract.
-Intent-aware evaluation checks whether a response covers the query's constraints, but it has neither $O$ nor $\kappa$ \citep{hao_faithqa_2025}; the closest split of hallucinations into ``intelligent'' and ``defective'' derives its label from the output rather than from the prompt, so the label cannot flip with the contract \citep{yang_hicbench_2025}.
+Intent-aware evaluation checks whether a response covers the query's constraints, but it has neither $O$ nor $\kappa$ \citep{hao_faithqa_2025}. The closest work splits hallucinations into ``intelligent'' and ``defective'', but it derives the label from the output, not from the prompt: the same output always keeps the same label, whatever the prompt asked for \citep{yang_hicbench_2025}.
 Section~\ref{sec:sota} examines both.
 Neither makes $(O,\sigma,\kappa)$ a scored variable, and that omission is the gap we identify.
 
 \paragraph{What the contract is not.}
 $(O,\sigma,\kappa)$ is not a relabeling of grounding, style, or task type.
-$O$ fixes what counts as support but cannot say whether leaving the evidence is licensed.
+$O$ determines what counts as support but cannot say whether going beyond the evidence is licensed.
 $\sigma$ governs form but cannot license new truth-conditional content.
 A task label is too coarse because the same task can pair a high form license with $\kappa{=}0$, or neutral form with $\kappa{>}0$.
-$\kappa$ is the one component nothing else can replace: it determines whether unsupported content is an error, a flagged hypothesis, or invention inside a declared frame.
+$\kappa$ is the one component that nothing else can replace: it determines whether unsupported content is an error, a flagged hypothesis, or invention inside a declared frame.
 
-Better detectors alone do not address the missing variable, which is not only evidential support but license: whether the task allowed the model to leave the evidence.
-Recent theoretical arguments moreover suggest that unsupported generation will not disappear under broad task distributions: appeals to incompleteness and undecidability \citep{banerjee_llms_2024, xu_hallucination_2024} point to a structural error floor that better training does not remove.
+Better detectors alone do not solve this. The missing variable is not evidential support but license: did the task allow the model to go beyond the evidence?
+Recent theoretical arguments moreover suggest that unsupported generation will not disappear under broad task distributions: arguments based on incompleteness and undecidability \citep{banerjee_llms_2024, xu_hallucination_2024} suggest that some level of error will remain, no matter how well the model is trained.
 Yet the same generative mechanism also produces the novel hypotheses and creative combinations that users request in open-ended tasks \citep{sun_hallucinating_2024, he_shakespearean_2025}.
 The goal, therefore, cannot be to eliminate divergence, but to judge it against what the task permits.
 
@@ -194,10 +194,10 @@ Under a permissive \TR\ (for example, ``write fiction''), the same divergence ca
 \PD\ is a departure from established facts that the contract permits, presented as the contract requires.
 It fulfills what the prompt requested rather than violating it; its usefulness is scored separately (Section~\ref{sec:framework}).
 The distinction turns not on the text but on whether the prompt licensed the divergence; evaluation that ignores this confuses \Hallu\ with \PD.
-The contract changes the verdict, not the truth: what is true does not change with the prompt; what counts as a violation does.
+The contract changes the verdict, not the truth: what is true does not depend on the prompt, but what counts as a violation does depend on it.
 In practice, the distinction is already actionable: an evaluator who annotates a prompt's oracle and content license can withhold the hallucination penalty wherever the contract licensed the divergence, scoring it as \PD\ rather than as error.
 No contract-blind scorer can make that judgment.
-This is also what separates \TR\ from context-faithfulness: faithfulness asks only whether an output stays within its evidence, and has no analogue of $\kappa$, the explicit license to leave it.
+This is also what separates \TR\ from context-faithfulness: faithfulness asks only whether an output stays within its evidence, and has no analogue of $\kappa$, the explicit license to go beyond it.
 Table~\ref{tab:thesis-at-a-glance} previews the thesis on representative prompts before we formalize it.
 
 % ============================================================
@@ -241,7 +241,7 @@ Cases are developed in Section~\ref{sec:framework}.}
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X c >{\raggedright\arraybackslash}p{4.1cm}@{}}
 ``could be early Lyme disease, but speculative'' & \bPD & licensed speculation, marked as a hypothesis \\
 \addlinespace[2pt]
-``this is early Lyme disease'' (asserted) & \bH & confident error: asserted where a hedge was due \\
+``this is early Lyme disease'' (asserted) & \bH & confident error: asserted where a hedge (an explicit marker of uncertainty) was due \\
 \end{tabularx}
 \end{tcolorbox}
 
@@ -273,10 +273,10 @@ only restates products that already exist & \bIP & too conservative for a contra
 
 \paragraph{How we establish the gap.}
 We argue this position rather than establish it with a new controlled study.
-Two analytical moves carry the weight.
+Our argument rests on two analyses.
 First, we present an illustrative audit of representative hallucination and creativity benchmarks against the three components $(O,\sigma,\kappa)$ and find that, while the oracle is sometimes fixed, form license and content license are essentially never annotated, so the contract remains implicit (Section~\ref{sec:sota}).
 Second, we apply a claim-level labeling rule to documented cases and show that the same output receives opposite verdicts (\Hallu\ under one contract, \PD\ under another) once the contract is made explicit (Section~\ref{sec:worked}).
-Together these suggest the gap is not merely anecdotal: it follows from leaving the prompt's truth commitments implicit, and a lightweight layer making $(O,\sigma,\kappa)$ explicit would settle verdicts that current pipelines cannot decide.
+Together, these two analyses suggest that the gap is not anecdotal. It comes from leaving the prompt's truth commitments implicit. A lightweight annotation layer that makes $(O,\sigma,\kappa)$ explicit would decide verdicts that current pipelines cannot.
 Preliminary observations of our own are consistent with this analysis; we report them only as motivation (Section~\ref{sec:sota}) and defer a controlled, contract-aware study to future empirical work.
 
 \paragraph{Contributions.}
@@ -293,17 +293,17 @@ The vocabulary separates the two components that bear on truth (the oracle $O$ a
 The literature uses the word \emph{hallucination} broadly, but not consistently.
 Surveys commonly group together factuality errors against world knowledge and faithfulness errors against a provided source, sometimes adding axes such as intrinsic versus extrinsic causes and different granularities \citep{ji_survey_2023, huang_survey_2025}.
 Benchmarking work further argues that hallucination is often confused with factuality and that any verdict depends on the chosen oracle and on evaluator reliability \citep{bang_hallulens_2025}.
-To reason about creativity--hallucination trade-offs, we fix a minimal vocabulary that makes the prompt's \emph{truth contract} explicit.
+To reason about creativity--hallucination trade-offs, we settle on a minimal vocabulary that makes the prompt's \emph{truth contract} explicit.
 Throughout, we separate \emph{prompt-level} variables (what the user requests) from \emph{output-level} properties (what the model produces), and adopt a \emph{claim-level} unit of analysis because evaluations vary by granularity.
 
 The idea that speakers operate under shared expectations about truthfulness is much older than LLM evaluation.
 Grice's maxim of quality makes truthfulness a default norm of cooperative conversation \citep{grice_logic_1975}, and interlocutors track what counts as established through common ground \citep{clark_using_1996, stalnaker_assertion_1978}.
-The truth contract borrows this insight and narrows it: where Gricean norms are implicit and global, $\TR(p)$ isolates the truth-relevant subset of those expectations and makes it explicit enough to annotate and score, one prompt at a time.
+The truth contract borrows this insight but makes it narrower. Gricean norms are implicit and global. $\TR(p)$ instead selects only the truth-related expectations, for one prompt at a time, in a form explicit enough to annotate and score.
 
 \textbf{Truth contract (\TR; prompt-level contract).}
 A task-specific contract $\TR(p)=(O,\sigma,\kappa)$ that determines what must be \emph{grounded}, how freely the \emph{form} may vary, and what may be \emph{invented}.
 \TR\ is needed because both the definition of ``hallucination'' and the evaluation oracle shift across settings \citep{bang_hallulens_2025}.
-We treat $\TR(p)$ as an \emph{idealization}: in deployment the contract is shaped not only by the visible prompt but also by system instructions, domain conventions, and user expectations, and an ambiguous prompt may not fix it fully.
+We treat $\TR(p)$ as an \emph{idealization}: in deployment the contract is shaped not only by the visible prompt but also by system instructions, domain conventions, and user expectations, and an ambiguous prompt may not determine it fully.
 Inferring \TR\ under such ambiguity is itself an open problem (Section~\ref{sec:agenda}); we nonetheless locate the contract at the prompt because that is where evaluation can render it explicit and auditable.
 
 \textbf{Content oracle ($O$).}
@@ -315,22 +315,21 @@ How freely the \emph{form} of the output may vary while preserving its propositi
 This axis is studied independently of content.
 Style is not a single variable but a bundle of co-varying dimensions \citep{kang_style_2021}; it can be transferred while meaning is held fixed \citep{jin_deep_2022}, and the dual operation (moving facts across a fixed style) is equally well defined \citep{balepur_text_2023}.
 Figurative devices such as metaphor and hyperbole change the form of a claim while leaving its truth conditions intact \citep{badathala_match_2023}.
-Foregrounding, the long-standing notion that stylistically marked language stands out against an unmarked background \citep{leech_short_style_1981}, is reliably recognized by readers \citep{vanpeer_stylistics_2020}.
+Foregrounding, the long-standing notion that stylistically marked language (language that draws deliberate attention to its own form, for example through imagery or unusual phrasing) stands out against an unmarked, plain background \citep{leech_short_style_1981}, is reliably recognized by readers \citep{vanpeer_stylistics_2020}.
 This is what lets a graded $\sigma$ be annotated rather than guessed, and established formality datasets and style-transfer metrics make the axis operationally measurable \citep{pavlick_empirical_2016, rao_dear_2018, briakou_evaluating_2021}.
 For now we treat $\sigma$ as a coarse ``low''/``high'' distinction: low is literal, neutral form (no marked figures or authorial voice); high is strongly marked form (sustained imagery, salient voice).
-We keep this scale binary deliberately. A finer, validated gradation of form license (and in particular a decision about where the contested ``moderately marked'' middle falls) calls for input from stylistics that is still ongoing; we therefore defer a graded $\sigma$ to future work (Section~\ref{sec:agenda}).
+We keep this scale binary deliberately. Defining a finer, validated scale for the form license --- in particular, deciding where the middle level lies --- requires ongoing work in stylistics; we therefore defer a graded $\sigma$ to future work (Section~\ref{sec:agenda}).
 By construction, $\sigma$ licenses variation in form only: a metaphor that preserves the underlying proposition introduces no new truth-conditional content.
-Two consequences fix $\sigma$'s role in the framework.
+Two consequences determine $\sigma$'s role in the framework.
 First, $\sigma$ is independent of truth.
 Since it neither adds nor removes a proposition, it cannot by itself make a claim \Hallu\ or \PD.
 Varying it leaves both faithfulness (\Faith) and accuracy (\Acc) unchanged in principle: those verdicts turn only on $O$ and $\kappa$, the two components that bear on content.
-Second, $\sigma$ is nonetheless critical for \emph{measurement}: raising the form license is exactly what leads an automatic verifier to misread marked form as unsupported content, so a contract that leaves $\sigma$ unspecified leaves the validity of any \Hallu\ count undefined.
-$\sigma$ thus enters the contract not as a third verdict axis but as the dimension along which measurement of the other two must be held invariant (Section~\ref{sec:agenda}). When the requested form itself is not delivered, that is an instruction-following failure, measured separately, not a breach of the truth contract.
+Second, $\sigma$ still matters for measurement. When the form license is high, an automatic verifier may misread stylistic form as unsupported content. A contract that does not specify $\sigma$ therefore cannot guarantee that the \Hallu\ count is valid. In short, $\sigma$ is not a third verdict axis: it is the dimension that must not distort the measurement of the other two (Section~\ref{sec:agenda}). When the requested form itself is not delivered, that is an instruction-following failure, measured separately, not a breach of the truth contract.
 
 \textbf{Content license ($\kappa$).}
 Whether new truth-conditional content may be introduced.
 We use three levels: $\kappa{=}0$, no invention (every truth-conditional claim must be supported by $O$); $\kappa{=}1$, flagged speculation (hypotheses and extrapolations are permitted provided they are marked as such); $\kappa{=}2$, free invention within a declared frame (fiction, ideation), bound by coherence and user-provided facts rather than by $O$.
-Theoretically, $\kappa$ tracks the kind of speech act the prompt licenses.
+Theoretically, $\kappa$ reflects the kind of speech act the prompt licenses.
 At $\kappa{=}0$ the model must make genuine assertions, committing to the truth of what it adds to the common ground \citep{stalnaker_assertion_1978}.
 A declared fictional frame ($\kappa{=}2$) licenses what \citet{searle_logical_1975} calls pretended assertions: utterances with the form of assertion but without the commitment to truth.
 $\kappa{=}1$ sits in between and admits assertions explicitly marked as provisional.
@@ -352,27 +351,27 @@ This unifies faithfulness and factuality failures while making the oracle explic
 \textbf{Licensed divergence (\PD; claim-level).}
 Content that would count as hallucination under a strict factual standard, but that the prompt's truth contract permits.
 A claim is \PD\ when two conditions hold: it is \emph{licensed} (the contract permits invention, $\kappa>0$, or the claim falls inside a declared fictional frame) and it is \emph{presented as the contract requires} (a flagged hypothesis under $\kappa{=}1$ must not be asserted as verified fact).
-Both conditions are constraint-like and checkable, so the verdict itself is decidable rather than subjective.
-Usefulness is not a third gate but a graded score reported over licensed divergences, with annotator disagreement recorded rather than hidden inside a binary label.
+Both conditions can be checked like constraints, so the verdict is objective, not subjective.
+Usefulness is not a third gate (a further binary pass/fail check) but a graded score reported over licensed divergences, with annotator disagreement recorded rather than hidden inside a binary label.
 Usefulness here means that the divergence is novel and appropriate under the task constraints, the standard creativity criterion \citep{diedrich_are_2015, acar_creativity_2019}.
 When a licensed divergence is also useful we may informally call it \emph{productive divergence}, as the term is used outside NLP for variation that improves performance \citep{parry_team_2023, lingard_pulling_2017}.
 A contrast makes the category concrete.
 Given ``summarize this medical report,'' an added claim that the patient has diabetes, absent from the report, violates a contract where $O$ is the report and $\kappa{=}0$: it is \Hallu.
-Given ``write a poem about quantum physics,'' the line that electrons dream in parallel worlds is supported by no oracle, yet the contract licenses figurative invention: it is \PD\ if it serves the poem.
+Given ``write a poem about quantum physics,'' the line ``electrons dream in parallel worlds'' is not supported by any oracle, yet the contract licenses figurative invention: it is \PD\ if it serves the poem.
 Both statements are invented; only the first is a failure.
 If \TR\ demands grounding, the same divergence is \Hallu, not \PD.
 
 \begin{tcolorbox}[enhanced, colback=clrPD!5, colframe=clrPD!45, boxrule=0.35pt, arc=2pt,
   left=6pt, right=6pt, top=3pt, bottom=3pt, before skip=4pt, after skip=4pt]
-\footnotesize\textbf{\PD\ is a verdict from two gates, plus a usefulness score.}
-The verdict has two constraint-like, checkable parts: \emph{license-pass} ($\kappa>0$ and the claim is in scope, that is, inside the declared frame or the topic the license covers) and \emph{stance-pass} (marked as the contract requires, not asserted as verified fact).
+\footnotesize\textbf{\PD\ is a verdict from two gates (two binary checks that must both pass), plus a usefulness score.}
+The verdict has two constraint-like, checkable parts: \emph{license-pass} ($\kappa>0$ and the claim is in scope, that is, inside the declared frame or the topic the license covers) and \emph{stance-pass}, whether the claim's stance (how it is presented: asserted as fact, or marked as a hypothesis) matches what the contract requires.
 Usefulness is not a third gate but a separate score: it is evaluator-dependent and should be reported with its uncertainty or annotator disagreement rather than collapsed into the label (Section~\ref{sec:agenda}).
 \end{tcolorbox}
 
 \noindent\textbf{Decision rule.}
 Given a prompt $p$, an output $y$, and an oracle $O$: specify $\TR(p)$, decompose $y$ into atomic claims, and label each claim in three layers.
 First record its \emph{evidence state} against $O$ (supported, unsupported, or unverifiable).
-A truth-conditional claim not entailed by $O$ (unsupported or merely unverifiable) is not yet a verdict.
+A truth-conditional claim that $O$ does not entail (unsupported or unverifiable) does not yet receive a verdict.
 It is \Hallu\ in two cases: the departure is unlicensed ($\kappa{=}0$ or outside the licensed scope), or the claim is asserted as verified fact where the license required a hedge.
 It is \PD\ when the contract licenses it and it is presented as the contract requires; its usefulness is then scored separately.
 A supported claim, or purely stylistic variation, is neither.
@@ -401,7 +400,7 @@ The evidence state is mechanically checkable against $O$; the usefulness score i
 \node[inpnode] (inp) at (\xS, 0.75) {claim $c$ extracted from output $y$};
 \node[decnode] (t1) at (\xS, \yS) {Does $c$ carry truth-conditional content under $(\sigma, O)$?};
 \node[decnode] (t2) at (\xS, \yS-\dY) {Is $c$ entailed by $O$?};
-\node[decnode] (t3) at (\xS, \yS-2*\dY) {Is leaving the evidence licensed?\\[-2pt]{\scriptsize $\kappa>0$ and $c\in\mathrm{scope}(\kappa)$}};
+\node[decnode] (t3) at (\xS, \yS-2*\dY) {Is going beyond the evidence licensed?\\[-2pt]{\scriptsize $\kappa>0$ and $c\in\mathrm{scope}(\kappa)$}};
 \node[decnode] (t4) at (\xS, \yS-3*\dY) {Presented as the contract requires?\\[-2pt]{\scriptsize marked per $\kappa$; not asserted as fact}};
 \node[decnode] (t5) at (\xS, \yS-4*\dY) {Score usefulness (graded):\\[-2pt]{\scriptsize how novel and appropriate is $c$?}};
 \node[lSV] (sv) at (\xE, \yS) {\textsf{SV}};
@@ -442,7 +441,7 @@ A truth-conditional claim not entailed by $O$, whether \emph{unsupported} (contr
 \textsf{H}: hallucination (test~3: an unlicensed departure, $\kappa{=}0$ or outside the licensed scope; test~4: a \emph{confident error}, asserted as verified fact where the license required a hedge or a declared frame).
 \textsf{LD}: licensed divergence (licensed and presented as the contract requires); test~5 then scores its usefulness.
 \textsf{LD} (low use): licensed divergence whose usefulness score is low.
-Tests~1--2 are mechanically checkable against $O$ (retrieval and natural language inference); test~3 is read from the $\kappa$ annotation; test~4 is a stance check on presentation; test~5 (usefulness) is a graded, evaluator-dependent \emph{soft label} (Section~\ref{sec:agenda}).}
+Tests~1--2 are mechanically checkable against $O$ (retrieval and natural language inference); test~3 is read from the $\kappa$ annotation; test~4 is a stance check on presentation; test~5 (usefulness) is a graded, evaluator-dependent \emph{soft label} (a score reported together with its disagreement, rather than collapsed into a single verdict) (Section~\ref{sec:agenda}).}
 \label{fig:annotation-tree}
 \end{figure*}
 
@@ -465,10 +464,10 @@ A faithfulness or factuality verifier scores the proposition, not its epistemic 
 The contract separates them.
 The flat assertion is a \Hallu, a \emph{confident error} stated as fact where the license required a hedge, whereas the qualified version is \PD: licensed speculation, presented as the contract requires.
 This is the \emph{faithful uncertainty} that \citet{yona_metacognition_2026} argue separates a trustworthy answer from a hallucinated one, aligning a claim's linguistic uncertainty with what the model actually knows.
-The license $\kappa$ makes that alignment a scored term of the contract; faithfulness has no slot for it, which is why no faithfulness metric can recover the verdict $\kappa$ fixes.
+The license $\kappa$ turns that alignment into an explicit, scored part of the contract. Faithfulness has no place for it. This is why no faithfulness metric can produce the verdict that $\kappa$ determines.
 
 \paragraph{Scope and minimality of the contract.}
-We claim $(O,\sigma,\kappa)$ is a \emph{sufficient} basis for the verdict (enough to flip the verdicts current pipelines get wrong), rather than a complete model of everything evaluation must weigh.
+We claim $(O,\sigma,\kappa)$ is a \emph{sufficient} basis for the verdict (enough to flip, that is, reverse, the verdicts that current pipelines get wrong), rather than a complete model of everything evaluation must weigh.
 One axis is deliberately left out: \emph{severity}.
 A medical question and a trivia question can share an identical contract ($O=$ world knowledge, $\sigma$ low, $\kappa{=}0$), yet a fabricated drug dose and a wrong trivia date are not equally costly.
 Severity differs, but the verdict does not: both fabrications are \Hallu.
@@ -476,7 +475,7 @@ Severity therefore weights the penalty on a violation (Section~\ref{sec:agenda})
 Other plausible factors reduce to the three components instead of extending them: audience and genre act on evaluation through the oracle they select and the form license they grant.
 For example, writing for children selects an age-appropriate oracle and a narrower form license; the verdict logic is unchanged.
 We make no completeness claim.
-$(O,\sigma,\kappa)$ is the smallest set that already suffices to flip the verdicts current pipelines get wrong; adding components remains possible.
+$(O,\sigma,\kappa)$ is the smallest set that is already enough to correct the verdicts that current pipelines get wrong; adding components remains possible.
 
 % ============================================================
 % Truth contracts + divergences (conceptual table)
@@ -539,7 +538,7 @@ The same surface divergence is acceptable or a violation according to the region
 
 The components of $\TR(p)=(O,\sigma,\kappa)$ combine into recognizable task profiles \citep{ji_survey_2023,huang_survey_2025}.
 Figure~\ref{fig:sk-map} places the task profiles in the $(\sigma,\kappa)$ plane: three common contracts and one uncommon corner.
-Existing benchmarks typically fix $O$ but rarely annotate $(\sigma,\kappa)$ explicitly, making it easy to confuse \PD\ with \Hallu\ \citep{bang_hallulens_2025}.
+Existing benchmarks typically hold $O$ fixed but rarely annotate $(\sigma,\kappa)$ explicitly, making it easy to confuse \PD\ with \Hallu\ \citep{bang_hallulens_2025}.
 
 \paragraph{Claim-level labeling.}
 Given a contract $\TR(p)$, each atomic claim is labelled \emph{stylistic variation} (form changes, no new propositions), \emph{supported} (entailed by $O$), \Hallu\ (an unlicensed or mis-presented truth commitment), or \PD\ (licensed and presented as the contract requires, with usefulness scored separately) \citep{ji_survey_2023,bang_hallulens_2025}.
@@ -562,11 +561,11 @@ The split works for single-intent tasks but breaks down for mixed-intent prompts
 Table~\ref{tab:audit} documents the omission.
 Auditing a representative sample of forty benchmarks, organized by \emph{what} they evaluate (hallucination/faithfulness versus creativity/divergence) and by the \emph{task} they score, we find the same pattern throughout: the oracle $O$ is frequently fixed, but form license $\sigma$ is never annotated and the content license $\kappa$ is never graded.
 Hallucination benchmarks inherit a fixed $O$ and run at $\sigma$ low and $\kappa{=}0$ (neutral form, no invention); creativity benchmarks drop the factual oracle and run at $\kappa{=}2$, with $\sigma$ high in the writing suites; the few intent-aware benchmarks condition on the query without separating $\sigma$ from $\kappa$.
-The contract is left to the task label.
+The contract is only implicit in the task label.
 
 \paragraph{What the columns show, and what they do not.}
 The $\sigma$ and $\kappa$ entries are \emph{our} annotations, inferred from each task's design rather than reported by the benchmark: a factual-QA or summarization suite implies $\sigma$ low and $\kappa{=}0$ (neutral form, no invention), a creative-writing suite implies $\sigma$ high and $\kappa{=}2$, and an open-ended innovation suite implies $\kappa{=}2$.
-They are not measurements; the empirical object of the audit is the protocol-level absence of scored contract variables.
+They are not measurements. What the audit documents is that no protocol scores these contract variables at all.
 The point is not that the column entries repeat but that each one is inferred from the task, never scored: in this sample, no benchmark in either tradition turns the form license or the content license into a scored variable.
 
 \paragraph{The cell no benchmark fills.}
@@ -578,12 +577,12 @@ Building a benchmark for this cell (where creative form meets a strict oracle) i
 
 \paragraph{How the audit was coded.}
 We count a benchmark as annotating $\sigma$ only when form license is an explicit, scored variable in its protocol, not merely present in some prompts, and as grading $\kappa$ only when invention is a scored dimension with more than one licensed level.
-By this criterion \textsc{WritingBench} \citep{wu_writingbench_2025} is the most instructive case: it scores how well an output matches a requested \emph{style}, yet it never treats the form license as a graded permission that conditions the truth measurement, so by our test $\sigma$ stays unannotated even though the task plainly implies it is high.
+By this criterion, \textsc{WritingBench} \citep{wu_writingbench_2025} is the most instructive case. It scores how well an output matches a requested \emph{style}, but it never treats the form license as a graded permission that conditions the truth measurement. By our test, $\sigma$ therefore stays unannotated, even though the task clearly implies a high $\sigma$.
 The coding is a single-author pass against these criteria, offered as the first instance of the annotation layer we advocate rather than as a validated resource.
 Borderline cases remain (does \textsc{WritingBench} \emph{score style} or \emph{annotate the form license}?), and independent re-coding with reported agreement is itself part of the agenda (Section~\ref{sec:agenda}).
 
 \paragraph{An indicative observation.}
-In preliminary, exploratory runs that held the oracle fixed and licensed no invention ($\kappa{=}0$), raising a prompt's form license $\sigma$ alone moved what a binary verifier flagged as unsupported (Appendix~\ref{app:experiment}).
+In preliminary, exploratory runs that held the oracle fixed and licensed no invention ($\kappa{=}0$), raising a prompt's form license $\sigma$ alone changed how much content a binary verifier flagged as unsupported (Appendix~\ref{app:experiment}).
 In principle $\sigma$ changes no proposition and so leaves both faithfulness and accuracy untouched.
 The measured movement therefore has two possible explanations: the verifier misreads marked form as unsupported content, or the styled outputs really add unsupported claims because the model infers a wider content license than the prompt grants.
 A binary verifier with no \PD\ label cannot separate the two; that missing instrument is exactly what our agenda specifies (Section~\ref{sec:agenda}).
@@ -661,7 +660,7 @@ Hallucination evaluation is anchored in the choice of an oracle, either \emph{wo
 Modern protocols rely on claim-level decomposition and automated verification, for example, retrieval with natural language inference (NLI) \citep{chen_menli_2023} or QA-based checking \citep{wang_asking_2020}, building on fact-checking \citep{thorne_fever_2018}.
 These pipelines are technically mature: atomic-claim decomposition is established \citep{min_factscore_2023}, joint decomposition and verification run at scale \citep{rajendhran_verifastscore_2025}, some verifiers add a third \texttt{undecidable} verdict \citep{bayat_factbench_2024}, and complementary signals such as semantic entropy \citep{farquhar_detecting_2024} or internal probes \citep{marks_geometry_2023} flag unsupported content without consulting any prompt-level contract.
 Yet these axes are necessary, not sufficient, for contract-aware judgment: most pipelines assume a strict content license ($\kappa{=}0$), so any unsupported truth-conditional content is a failure.
-The assumption is defensible in grounded generation but collapses when prompts license speculation, and even a three-way verdict with \texttt{undecidable} \citep{bayat_factbench_2024} refines the label space without consulting the contract: licensed invention is not merely undecidable, the contract \emph{allows} it.
+The assumption is defensible in grounded generation but collapses when prompts license speculation, and even a three-way verdict with \texttt{undecidable} \citep{bayat_factbench_2024} refines the label space without consulting the contract: licensed invention is not merely undecidable --- the contract \emph{allows} it.
 
 \subsection{Creativity evaluation leaves the oracle implicit}
 Creativity is commonly defined as combining \emph{novelty} with \emph{value/appropriateness} under constraints \citep{runco_standard_2012}, but operationalizations vary sharply across tasks \citep{acar_creativity_2019, franceschelli_creativity_2024}.
@@ -684,15 +683,29 @@ But it derives that label from the output's creativity and factual-deviation sco
 The label is therefore determined by the text and cannot flip with the contract that should govern it.
 Closest in spirit, \citet{jiang_survey_2024} survey hallucination from a creativity perspective and ask whether hallucinated content can be creatively valuable.
 We differ by shifting the unit of analysis: not the potential value of the content, but the prompt-level truth contract that decides whether unsupported content is licensed at all.
-A domain-specific instance of the same tension appears in legal summarization: \citet{bendahman_hallucinations_2025} observe that expert reference summaries introduce legal entities absent from the source document yet factual under domain knowledge, and build an entity-guided system that preserves these \emph{factual} hallucinations while reducing non-factual ones. In our terms, the status of such an entity turns on the oracle: a hallucination under $O=$ the source document alone, but supported once $O$ expands to the legal dataset and domain knowledge.
+A domain-specific instance of the same tension appears in legal summarization. \citet{bendahman_hallucinations_2025} observe that expert reference summaries introduce legal entities that are absent from the source document, yet factual under domain knowledge. Their entity-guided system preserves these factual hallucinations while reducing the non-factual ones. In our terms, the status of such an entity turns on the oracle: a hallucination under $O=$ the source document alone, but supported once $O$ expands to the legal dataset and domain knowledge.
 None of these makes $(O,\sigma,\kappa)$ a scored variable; that layer is what we argue for.
 
 \subsection{Why universal suppression of \Hallu\ is neither feasible nor desirable}
-LLMs are probabilistic next-token predictors trained under incomplete supervision; they emit plausible continuations even when truth is underspecified, so eliminating \Hallu\ universally would require restricting the model or the task class.
-Recent arguments support this floor \citep{banerjee_llms_2024, xu_hallucination_2024}, and strict contracts still reveal large residual error rates across short-form QA and truthfulness benchmarks \citep{mallen_when_2023, lin_truthfulqa_2022}.
-Alignment tuning adds to the problem rather than solving it: policies for refusal, hedging, and abstention learned during alignment tuning are themselves implicit, provider-chosen contract commitments that reshape when a model declines to diverge \citep{ouyang_training_2022}.
+For sufficiently general generative models operating on open or incompletely observed distributions, perfect elimination of \Hallu\ cannot be guaranteed.
+Two independent formal arguments support this claim.
+The first is statistical.
+\citet{kalai_calibrated_2024} show that for calibrated language models, the probability of hallucinating an \emph{arbitrary} fact --- one whose truth value cannot be determined from the training corpus --- is bounded below by the fraction of facts that occur only once in training, a Good-Turing estimate of missing mass.
+The bound holds even for ideal, error-free training data and does not depend on the Transformer architecture, though post-training can reduce it, typically at some cost to calibration.
+Controlled experiments on n-gram and fine-tuned Transformer models confirm the predicted relationship between the rate of singly-occurring facts and the measured hallucination rate \citep{miao_hallucination_2025}.
+The second argument is computability-theoretic: a computable model cannot learn every computable function, so a language model used as a general-purpose solver must answer incorrectly on some inputs \citep{xu_hallucination_2024}.
+This is a worst-case result: it establishes that such inputs exist, not how often real users encounter them.
+\citet{banerjee_llms_2024} reach a related conclusion from undecidability and G\"odel's incompleteness theorem, though their argument is broader and its extension to ordinary factual error is more contestable than the statistical bound above.
+
+Neither argument implies a constant, irreducible error rate in deployment.
+\citet{kalai_why_2025} trace much of the practical persistence of hallucination to training and evaluation incentives rather than to inevitability alone: when correct and incorrect statements are not perfectly separable, standard benchmarks score a confident guess above an honest abstention, so optimizing for benchmark performance optimizes for guessing.
+\citet{suzuki_negligible_2025} show that logical inevitability and statistical negligibility can coexist: a model may still fail on an infinite set of inputs while the probability of encountering such a failure is pushed arbitrarily low with sufficient data quality and appropriate algorithms.
+Empirically, strict contracts still show large residual error rates on short-form QA and truthfulness benchmarks \citep{mallen_when_2023, lin_truthfulqa_2022}, consistent with a floor that current methods have not closed.
+The relevant mechanism is therefore not stochasticity alone but the interaction of incomplete data, generalization, calibration, and open-ended generation: a model must generalize beyond its observed corpus to remain useful, and assigning probability to unseen outputs creates some nonzero possibility of generating unsupported ones.
+
+Alignment tuning adds to the problem rather than solving it. The refusal, hedging, and abstention policies learned during alignment tuning are themselves implicit contract commitments, chosen by the provider: they change the conditions under which a model refuses to diverge \citep{ouyang_training_2022}.
 The same generative mechanism that produces unsupported claims also produces the novel hypotheses users request: \citet{sun_hallucinating_2024} formalize ``good hallucinations'' as reasoning paths that remain correct after convergence, and \citet{banerjee_does_2025} show that verification-style mitigation can preserve divergent thinking whereas some decoding interventions suppress it.
-Because \Hallu\ has a structural floor and the same divergence drives \PD, the practical goal is not universal suppression but contract-calibrated control: specify the contract, license divergence where the contract allows it, and enforce convergence before anything is presented as fact \citep{bang_hallulens_2025, he_shakespearean_2025}.
+Because \Hallu\ has a structural floor and the same divergence drives \PD, the practical goal is not universal suppression but contract-calibrated control: specify the contract, license divergence where the contract allows it, and require support before anything is presented as fact \citep{bang_hallulens_2025, he_shakespearean_2025}.
 
 \section{Applying the Framework: Worked Verdicts}\label{sec:worked}
 
@@ -700,16 +713,16 @@ The audit shows that the contract is missing; this section shows that supplying 
 We apply the decision rule of Section~\ref{sec:framework} by hand to four illustrative cases.
 Cases~A--C each flip the verdict on the \emph{same} claim when one component of $(O,\sigma,\kappa)$ changes; Case~D is a scope boundary that does not flip.
 Each instantiates a documented phenomenon: extrinsic-but-factual XSum hallucinations (A) \citep{maynez_faithfulness_2020}, fictional role-play (B and D) \citep{sadeq_mitigating_2024}, and FactBench's \texttt{undecidable} label (C) \citep{bayat_factbench_2024}.
-Apart from Case~A, which cites a specific annotated XSum item, the claim strings are constructed test cases rather than verbatim dataset items; their role is to isolate a verdict current pipelines cannot decide.
+Apart from Case~A, which cites a specific annotated XSum item, the claim strings are constructed test cases rather than verbatim dataset items; their role is to isolate a verdict that current pipelines cannot decide.
 Table~\ref{tab:worked} summarizes the outcomes.
 
 \paragraph{Case A: correct but unsupported (oracle shift).}
 \citet{maynez_faithfulness_2020} document this pattern directly on XSum, where annotators label a summary span as an \emph{extrinsic but factual} hallucination: content not found in the source document yet factually correct.
-A concrete annotated instance is XSum item \texttt{bbcid~28328378} (system \textsc{BERTS2S}), whose summary adds that the owners of a fire-destroyed recycling plant in Greater Manchester had been stripped of their environmental permit---content the annotators mark as extrinsic (absent from the source article) yet unanimously judge factual.
+A concrete annotated instance is XSum item \texttt{bbcid~28328378} (system \textsc{BERTS2S}), whose summary adds that the owners of a fire-destroyed recycling plant in Greater Manchester had been stripped of their environmental permit---content that the annotators mark as extrinsic (absent from the source article) yet unanimously judge factual.
 Decomposing the output to the claim level isolates this added proposition as a single truth-conditional claim.
 Under the summarization contract $O=$ the source, $\sigma$ low, $\kappa{=}0$, the claim is truth-conditional and unsupported by $O$: it is \Hallu, even though it satisfies factuality (\Acc) against world knowledge.
-Hold the output fixed and change only the oracle (``What became of the plant's operators?'', with $O=$ world knowledge), and the same claim becomes supported, hence not \Hallu.
-The flip is exactly the unresolved tension Maynez et al.\ flag, whether summaries should tolerate such factual hallucinations \citep{maynez_faithfulness_2020, kryscinski_evaluating_2020}; the framework attributes it to $O$ rather than to the text.
+If we keep the output fixed and change only the oracle (``What became of the plant's operators?'', with $O=$ world knowledge), the same claim becomes supported, so it is no longer \Hallu.
+This flip is exactly the unresolved question that Maynez et al.\ raise: should summaries tolerate such factual hallucinations \citep{maynez_faithfulness_2020, kryscinski_evaluating_2020}? The framework attributes it to $O$ rather than to the text.
 Case~A is not specific to news summarization: \citet{bendahman_hallucinations_2025} document the same extrinsic-but-factual pattern at the entity level in legal summarization, where an entity absent from the source but certifiable against the legal record flips from \Hallu\ to supported exactly as the oracle expands.
 
 \paragraph{Case B: licensed invention that flips with the frame (license shift).}
@@ -717,20 +730,20 @@ Fictional role-play makes this routine \citep{sadeq_mitigating_2024}.
 Take a single claim: that a certain café and its proprietor existed in 1920s Paris.
 Under a historical-QA prompt ($O=$ world knowledge, $\kappa{=}0$), the café is unsupported and asserted as fact: it is \Hallu.
 Under ``write a short story set in 1920s Paris'' ($\kappa{=}2$), the \emph{same} invented café is a pretended assertion the frame licenses \citep{searle_logical_1975}: it is \PD, and how well it serves the story is its usefulness score.
-Only the content license changed; the claim, and its surface form, did not.
-This is a flip a novelty-oriented score and a factuality score each miss from opposite sides \citep{hou_creativityprism_2025, sui_confabulation_2024}.
+Only the content license changed; the claim, and its surface form, did not change.
+This is a flip that a novelty-oriented score and a factuality score each miss, from opposite sides \citep{hou_creativityprism_2025, sui_confabulation_2024}.
 
 \paragraph{Case C: undecidable does not settle the verdict (license shift).}
 FactBench's VERIFY pipeline labels each verifiable unit \texttt{supported}, \texttt{unsupported}, or \texttt{undecidable}, the last when retrieved evidence is insufficient to confirm or refute it, and its hallucination score penalizes \texttt{undecidable} units at a fixed weight regardless of what the prompt asked for \citep{bayat_factbench_2024}.
 A FactBench-style instance is a model claim that a tool ``supports multiple input formats,'' which a verifier may mark \texttt{undecidable} when support varies across versions.
-That label tracks evidence availability, not the contract: under $\kappa{=}0$, asserting such a claim as established fact is \Hallu\ and the penalty is warranted; under $\kappa{=}1$ (flagged speculation), the same epistemically undecidable content, marked as a hypothesis, is \PD.
-The epistemic status (undecidable) is constant; the verdict is set by the license $\kappa$, which a fixed undecidable penalty, and even a three-way verdict, cannot see.
+That label follows evidence availability, not the contract: under $\kappa{=}0$, asserting such a claim as established fact is \Hallu\ and the penalty is warranted; under $\kappa{=}1$ (flagged speculation), the same epistemically undecidable content, marked as a hypothesis, is \PD.
+The epistemic status (undecidable) is constant; the verdict is set by the license $\kappa$. A fixed penalty on undecidable content cannot capture this --- even a three-way verdict cannot.
 
 \paragraph{Case D: a scope boundary that does not flip.}
 Not every invention a fictional frame contains is licensed by it.
 In the same 1920s-Paris story, suppose the model has a real, named historical figure assert a specific claim that figure never made, presented as biographical fact.
 This is a genuine assertion about the real world, so it steps outside the declared frame: the claim falls outside the licensed scope ($c\notin\mathrm{scope}(\kappa)$) and stays \Hallu\ even under $\kappa{=}2$ \citep{searle_logical_1975}.
-Case~D marks the edge of $\kappa$: a license reaches only the content inside its declared scope, which is what separates the invented café of Case~B from a fabricated real-world fact placed beside it.
+Case~D shows the limit of $\kappa$: a license reaches only the content inside its declared scope, which is what separates the invented café of Case~B from a fabricated real-world fact placed beside it.
 
 \begin{table}[htbp]
 \centering
@@ -752,7 +765,7 @@ D & a fake quote by a real person & stated as biographical fact & stays \Hallu\ 
 \end{table}
 
 \noindent These verdicts are not measurements; they show that the rule is well-defined and that its output tracks the contract rather than the surface text.
-That is the property current pipelines lack: a contract-blind scorer cannot justify the appropriate verdict in these cases without silently assuming a task contract it has no slot to represent ($O$, $\sigma$, or $\kappa$).
+That is the property current pipelines lack: a contract-blind scorer cannot justify the appropriate verdict in these cases without silently assuming a task contract that it has no way to represent ($O$, $\sigma$, or $\kappa$).
 
 \section{Research Agenda (Open Problems)}\label{sec:agenda}
 
@@ -760,18 +773,18 @@ If hallucination is contract-relative, evaluation must make the contract a first
 The framework and the audit above turn that principle into concrete, tractable problems, organized from measurement foundations (items~1--4) to system-level design (items~5--7).
 We present these as the paper's main forward contribution: not a finished evaluator, but the specification one would have to build.
 
-\textbf{Operationalizing \TR\ as a scorable contract.}
+\textbf{1. Operationalizing \TR\ as a scorable contract.}
 A contract-aware benchmark must annotate $O$, $\sigma$, and $\kappa$ independently rather than folding them into a task label.
 The graded components are measurable today: the form license already has established datasets and metrics \citep{pavlick_empirical_2016, liu_semisupervised_2022}.
-$\sigma$ could be placed on a graded scale via pairwise preference judgments fitted to comparative scoring models; where its discrete levels should fall is a question for stylistic expertise that we leave open.
+$\sigma$ could be turned into a graded scale: annotators compare pairs of outputs, and a comparative scoring model converts these judgments into scores; where its discrete levels should fall is a question for stylistic expertise that we leave open.
 The open challenge is reliability: contract boundaries involve normative choices (what \emph{should} be grounded?) and creativity judgments are evaluator-dependent \citep{acar_creativity_2019, marco_reader_2025}.
 Where agreement is lowest (typically on the usefulness dimension of \PD), the disagreement is itself informative.
 It should be reported through soft labels rather than forced into consensus.
 
-\textbf{Operationalizing \PD\ and its usefulness score.}
+\textbf{2. Operationalizing \PD\ and its usefulness score.}
 \PD\ is the framework's central new construct, yet Section~\ref{sec:framework} specifies it without saying how to measure it.
 The two gates of the labeling rule and its usefulness score are not equally hard to obtain, and separating them turns \PD\ from a definition into a scoring protocol.
-The \emph{licensing} condition is mechanical: it is taken directly from the $\kappa$ annotation, so under $\kappa{=}0$ no claim can be \PD\ and the score is zero by construction, while under $\kappa{>}0$ one checks only whether the claim falls inside the licensed scope (for example, the declared fictional frame).
+The \emph{licensing} condition is mechanical: it is read directly from the $\kappa$ annotation. Under $\kappa{=}0$, no claim can be \PD, so the score is zero by construction. Under $\kappa{>}0$, one only checks whether the claim falls inside the licensed scope (for example, the declared fictional frame).
 The \emph{presented-as-the-contract-requires} condition is a stance check.
 Whether a claim is marked as a hypothesis or asserted as verified fact is a verifiable, constraint-style property of the text.
 It is close to the format constraints that instruction-following evaluation already scores \citep{zhou_ifeval_2023}, and far more tractable than judging content quality.
@@ -782,28 +795,28 @@ A practical \PD\ report should therefore expose three sublabels: license-pass, s
 Because usefulness is evaluator-dependent \citep{marco_reader_2025}, \PD\ should be reported as a graded, soft-labeled quantity rather than a hard count, with disagreement on the usefulness dimension recorded rather than averaged away.
 This is a proposed instrument, not a validated one; establishing its reliability is itself part of the agenda.
 
-\textbf{Inferring \TR\ from prompts, and separating it from instruction-following.}
+\textbf{3. Inferring \TR\ from prompts, and separating it from instruction-following.}
 Users rarely state a formal contract, so $\TR(p)$ must be inferred from prompt text \citep{wang_user-centric_2024, bodonhelyi_user_2024}, and calibration is critical: misreading a strict prompt as permissive suppresses warranted penalties, while the reverse penalizes legitimate \PD.
 Inference must also be kept distinct from instruction-following fidelity: whether a model satisfied a verifiable format constraint is separately measurable \citep{zhou_ifeval_2023} and should not be confused with whether its content respects the contract, since an output can follow the requested form while violating $\kappa$.
 
-\textbf{Metrics for \emph{excess} \Hallu\ under a given \TR.}
+\textbf{4. Metrics for \emph{excess} \Hallu\ under a given \TR.}
 Under a contract-aware view what matters is not the raw hallucination count but the excess relative to the contract's tolerance.
 This requires severity weighting (a fabricated safety claim outweighs a date slip), claim- versus output-level aggregation, and contract-conditioned baselines (the acceptable rate differs between grounded summarization and brainstorming).
 Severity-aware and risk-weighted proposals exist \citep{bang_hallulens_2025, wei_measuring_2024}, but none yet conditions severity on an explicit \TR\ contract.
 
-\textbf{Robust \Hallu\ detection under stylistic variation.}
+\textbf{5. Robust \Hallu\ detection under stylistic variation.}
 This is $\sigma$'s practical role in the framework: it changes no verdict, but it is the axis along which a verifier's \Hallu\ count can be distorted.
 Because raising $\sigma$ alone can move what a verifier flags, NLI-based verifiers risk treating figurative language as unsupported claims \citep{chen_menli_2023, aynetdinov_semscore_2024}, a fragility already visible in style-transfer metric meta-evaluations \citep{lai_multidimensional_2023, pauli_mind_2025}.
 A diagnostic suite pairing identical propositional content with varying stylistic treatments \citep{jin_deep_2022} would separate verifier sensitivity to form from genuine divergence in content.
 
-\textbf{Controlling \Hallu\ without collapsing \PD.}
+\textbf{6. Controlling \Hallu\ without collapsing \PD.}
 Mitigation (constrained decoding, retrieval augmentation, post-hoc verification) typically targets \Hallu\ reduction without measuring collateral damage to creative quality, and the trade-off is asymmetric: verification-style interventions can preserve divergent thinking while some decoding constraints suppress it \citep{banerjee_does_2025, sun_hallucinating_2024, he_shakespearean_2025}.
 A contract-aware protocol should therefore report \emph{both} \Hallu\ reduction and \PD\ preservation under the same contract.
 
-\textbf{Benchmarks crossing task $\times\,\sigma\,\times\,\kappa$.}
+\textbf{7. Benchmarks crossing task $\times\,\sigma\,\times\,\kappa$.}
 No existing benchmark systematically crosses task type, form license, and content license as independent variables; \textsc{CreativityPrism} and LitBench provide partial coverage but condition no scores on an explicit \TR\ \citep{hou_creativityprism_2025, fein_litbench_2025}.
 A concrete next step is a claim-level annotation layer with labels such as supported, hallucination, licensed divergence, unverifiable, and stylistic variation, evaluated as a research object in its own right, including whether it changes model rankings or instead chiefly sharpens error diagnosis.
-An emerging effort in this direction is CLEF~2026 SimpleText Task~2 (\emph{controlled creativity} in scientific text simplification), which targets grounded transformation ( the form may change while new content must not be introduced ,$\sigma>0$, $\kappa{=}0$ ) and annotates system outputs for overgeneration and information distortion, though it does not yet treat $(O,\sigma,\kappa)$ as jointly scored variables \citep{simpletext_task2_2026}.
+An emerging effort in this direction is CLEF~2026 SimpleText Task~2 (\emph{controlled creativity} in scientific text simplification), which targets grounded transformation (the form may change while new content must not be introduced; $\sigma$ high, $\kappa{=}0$) and annotates system outputs for overgeneration and information distortion, though it does not yet treat $(O,\sigma,\kappa)$ as jointly scored variables \citep{simpletext_task2_2026}.
 
 \section{Discussion}\label{sec:discussion}
 
@@ -820,10 +833,10 @@ Even under permissive contracts, evaluation should still flag \emph{truth-commit
 \subsection{Limitations of the position}
 Our argument is conceptual, and five limitations bound it.
 First, the framework is partly \emph{normative}.
-Deciding what $O$ ought to be, and what a contract \emph{should} ground, is a value judgment about a task, not a measurement we can make from the text alone.
-Reasonable annotators will therefore disagree on contract boundaries, and that disagreement will concentrate where the scope of $\kappa$ must be drawn (the frontier Case~D illustrates).
-The framework treats that disagreement as signal rather than noise: where annotators diverge on a contract boundary, the divergence is recorded as a soft label instead of being forced to a single verdict (Section~\ref{sec:agenda}), which makes the normative choice auditable rather than hiding it inside an unstated default.
-Second, $\TR(p)$ is an idealization, and an ambiguous prompt may not fix it fully; locating the contract at the prompt is a modeling choice, and inferring it reliably is an open problem (Section~\ref{sec:agenda}), not a solved preprocessing step.
+Deciding what $O$ ought to be, and what a contract \emph{should} ground, is a value judgment about a task, not a measurement that we can make from the text alone.
+Reasonable annotators will therefore disagree on contract boundaries, and that disagreement will concentrate where the scope of $\kappa$ must be drawn (the frontier that Case~D illustrates).
+The framework treats that disagreement as signal, not noise. Where annotators diverge on a contract boundary, the divergence is recorded as a soft label instead of being forced into a single verdict (Section~\ref{sec:agenda}). The normative choice then stays visible and auditable, instead of hiding inside an unstated default.
+Second, $\TR(p)$ is an idealization, and an ambiguous prompt may not determine it fully; locating the contract at the prompt is a modeling choice, and inferring it reliably is an open problem (Section~\ref{sec:agenda}), not a solved preprocessing step.
 Third, \PD\ is specified and we sketch a scoring protocol for it (Section~\ref{sec:agenda}), but we do not validate that protocol.
 Its usefulness condition inherits the evaluator dependence of creativity assessment.
 What we offer is a labeling rule and a measurement proposal, not an instrument shown to measure \PD\ reliably at scale.
@@ -838,7 +851,7 @@ Hallucination is not a binary property of text but a violation relative to a pro
 The vocabulary introduced here, $\TR(p)=(O,\sigma,\kappa)$ together with \PD\ and \Hallu, makes explicit what current hallucination and creativity evaluations leave implicit: which oracle governs truth, how much form license is granted, and whether new truth-conditional content is licensed.
 Auditing widely used benchmarks shows that none of them encodes this contract, and applying the labeling rule by hand shows that supplying the contract flips verdicts that otherwise depend on which protocol happens to be used.
 The agenda is therefore to move evaluation from defect counting to contract-conditioned diagnosis, so that it can penalize harmful fabrication under strict contracts while preserving licensed divergence where exploration is the point.
-The remaining work is to build the contract into benchmarks and to measure how much it changes what we conclude about models, but the first step is to stop scoring divergence as if every prompt asked for the same thing.
+The remaining work is to build the contract into benchmarks, and to measure how much it changes our conclusions about models. The first step, however, is simpler: stop scoring divergence as if every prompt asked for the same thing.
 
 \appendix
 \renewcommand{\thesection}{\Alph{section}}
@@ -865,7 +878,7 @@ The remaining work is to build the contract into benchmarks and to measure how m
         \item[\PD] if the departure is licensed ($\kappa>0$ and $c\in\mathrm{scope}(\kappa)$) and presented as the contract requires; its usefulness is then scored separately, and a low score is recorded as such rather than as a separate category.
     \end{itemize}
 \end{enumerate}
-\noindent Figure~\ref{fig:annotation-tree} renders this rule as a decision tree. The evidence state (supported / unsupported / unverifiable) is recorded but does not by itself fix the verdict: an unverifiable claim is \Hallu\ under $\kappa{=}0$ if asserted as fact, yet \PD\ under $\kappa{=}1$ if marked as a hypothesis (Case~C, Section~\ref{sec:worked}).
+\noindent Figure~\ref{fig:annotation-tree} renders this rule as a decision tree. The evidence state (supported / unsupported / unverifiable) is recorded but does not by itself determine the verdict: an unverifiable claim is \Hallu\ under $\kappa{=}0$ if asserted as fact, yet \PD\ under $\kappa{=}1$ if marked as a hypothesis (Case~C, Section~\ref{sec:worked}).
 The supporting evidence for each step is given where the rule is introduced in Section~\ref{sec:framework}.
 
 
