@@ -119,35 +119,38 @@ The contract does not change what is true.
 It determines whether the model's departure from the relevant evidence violates the task.
 
 Figure~\ref{fig:flip} illustrates this position.
-The example compares one surface sentence across two discourse frames.
-It does not assume that the historical and fictional interpretations express the same contextualized claim.
+The figure uses a constructed example: \emph{Verdier} is an invented name introduced here, not a quotation from a dataset.
+It follows one claim wording extracted from a hypothetical model response and shows that its label depends on the prompt and truth contract.
+The wording is fixed, but the prompt establishes a different discourse frame, so the two occurrences do not express the same contextualized claim.
 
 \begin{figure}[t]
 \centering
 \resizebox{0.94\linewidth}{!}{%
 \begin{tikzpicture}[x=1cm,y=1cm]
   \node[input,text width=6.7cm] (s) at (0,0)
-    {same surface sentence:\\``the caf\'e \emph{Verdier} and its owner existed in 1920s Paris''};
-  \node[decision,text width=3.8cm] (qa) at (-2.8,-2.1)
-    {Historical QA\\[-1pt]{\scriptsize $O=$ historical evidence\\$\kappa=0$: factual only}};
-  \node[decision,text width=3.8cm] (fi) at (2.8,-2.1)
-    {Fiction writing\\[-1pt]{\scriptsize $O=$ prompt constraints\\$\kappa=2$: in-frame invention}};
-  \node[verdictH] (h) at (-2.8,-3.8) {\Hall};
-  \node[verdictLD] (ld) at (2.8,-3.8) {\LD};
-  \node[font=\scriptsize,align=center,text width=3.7cm] at (-2.8,-4.45)
+    {claim extracted from a model response:\\``the caf\'e \emph{Verdier} and its owner existed in 1920s Paris''};
+  \node[decision,text width=4.25cm] (qa) at (-3.0,-2.35)
+    {\textbf{Prompt:} ``Did caf\'e Verdier and its owner exist in 1920s Paris?''\\[-1pt]{\scriptsize $\TC(p)$\\$O_p=$ historical evidence\\$\kappa_p=0$: factual only}};
+  \node[decision,text width=4.25cm] (fi) at (3.0,-2.35)
+    {\textbf{Prompt:} ``Write a fictional story set in 1920s Paris about caf\'e Verdier and its owner.''\\[-1pt]{\scriptsize $\TC(p)$\\$O_p=$ prompt constraints\\$\kappa_p=2$: in-frame invention}};
+  \node[verdictH] (h) at (-3.0,-4.45) {\Hall};
+  \node[verdictLD] (ld) at (3.0,-4.45) {\LD};
+  \node[font=\scriptsize,align=center,text width=3.7cm] at (-3.0,-5.10)
     {unsupported real-world assertion};
-  \node[font=\scriptsize,align=center,text width=3.7cm] at (2.8,-4.45)
+  \node[font=\scriptsize,align=center,text width=3.7cm] at (3.0,-5.10)
     {invention inside the fictional frame};
   \draw[arrow] (s.south west) ++(0.9,0) -- (qa.north);
   \draw[arrow] (s.south east) ++(-0.9,0) -- (fi.north);
   \draw[arrow] (qa) -- (h);
   \draw[arrow] (fi) -- (ld);
 \end{tikzpicture}}
-\caption{\textbf{Contract-dependent evaluation of one surface sentence.}
-In historical QA, the sentence is interpreted as a real-world claim and is unsupported under a grounded-only contract (\Hall).
-In fiction writing, it is interpreted within the declared fictional world and falls inside the licensed scope (\LD).
-Because the contextualized claims differ, the figure illustrates frame dependence rather than a same-claim label reversal.
-Both labels are claim-level; neither is a verdict for the complete response.}
+\caption{\textbf{One extracted claim wording, two contract-dependent labels.}
+This constructed example starts from the same claim wording in a hypothetical model response.
+Under the historical-QA prompt, it is a real-world assertion unsupported by $O_p$ and receives \Hall.
+Under the fiction-writing prompt, it is an in-frame invention permitted by $K_p$ and receives \LD.
+Thus, a claim extracted from a response can be labelled differently when the prompt changes the truth contract.
+Strictly, the discourse frame changes the contextualized claim; the figure therefore shows contract dependence, not a contradiction about one fixed proposition.
+Both labels are claim-level, not verdicts for the complete response.}
 \label{fig:flip}
 \end{figure}
 
@@ -391,7 +394,7 @@ Combining them into a response-level assessment $R(y\mid p)$ is shown as a separ
 Table~\ref{tab:contracts} applies the rule to representative prompts.
 Each card specifies one contract and evaluates one or two claims recovered from example output spans.
 
-\begin{table*}[!t]
+\begin{table*}[!tp]
 \centering
 \small
 \caption{\textbf{The thesis in one view.}
@@ -402,47 +405,47 @@ The table does not assign one verdict to the complete response: response-level a
 \setlength{\fboxsep}{5pt}
 \fcolorbox{clrB}{clrB!3}{%
 \begin{minipage}{0.94\linewidth}
-\textbf{``Summarize this medical report''}\hfill
+\textbf{Prompt:} ``Summarize this medical report''\hfill
 \colorbox{clrB!12}{\strut $\sigma_p=0,\ \kappa_p=0$}\\[-1pt]
-\emph{Contract:} $O_p=$ provided report; $\Gamma_p=\varnothing$; $\rho_p=$ factual assertion.\par\smallskip
+\textbf{Truth contract:} $O_p=$ provided report; $\Gamma_p=\varnothing$; $\rho_p=$ factual assertion.\par\smallskip
 \begin{tabularx}{\linewidth}{@{}YP{0.15\linewidth}P{0.26\linewidth}@{}}
-``The patient has diabetes'' (not in the report) & \textcolor{clrH}{\bfseries \Hall} & unsupported by $O_p$ and not licensed\\
+\textbf{Response claim:} ``The patient has diabetes'' (not in the report) & \textcolor{clrH}{\bfseries \Hall} & unsupported by $O_p$ and not licensed\\
 \end{tabularx}
 \end{minipage}}
 
 \smallskip
 \fcolorbox{clrLD}{clrLD!3}{%
 \begin{minipage}{0.94\linewidth}
-\textbf{``Explain photosynthesis like a poet, but keep the science accurate''}\hfill
+\textbf{Prompt:} ``Explain photosynthesis like a poet, but keep the science accurate''\\[-1pt]
 \colorbox{clrLD!12}{\strut $\sigma_p=2,\ \kappa_p=0$}\\[-1pt]
-\emph{Contract:} $O_p=$ scientific references; $\Gamma_p=\varnothing$; $\rho_p=$ factual assertion.\par\smallskip
+\textbf{Truth contract:} $O_p=$ scientific references; $\Gamma_p=\varnothing$; $\rho_p=$ factual assertion.\par\smallskip
 \begin{tabularx}{\linewidth}{@{}YP{0.15\linewidth}P{0.26\linewidth}@{}}
-``Chlorophyll catches sunlight, fueling the plant's sugar-making work'' & \textcolor{clrLD}{\bfseries \SUP+\SV} & supported claim in marked form\\
-``Plants make sugar from moonlight'' & \textcolor{clrH}{\bfseries \Hall} & contradicted claim; $\sigma_p=2$ does not license it\\
+\textbf{Response claim:} ``Chlorophyll catches sunlight, fueling the plant's sugar-making work'' & \textcolor{clrLD}{\bfseries \SUP+\SV} & supported claim in marked form\\
+\textbf{Response claim:} ``Plants make sugar from moonlight'' & \textcolor{clrH}{\bfseries \Hall} & contradicted claim; $\sigma_p=2$ does not license it\\
 \end{tabularx}
 \end{minipage}}
 
 \smallskip
 \fcolorbox{clrP}{clrP!3}{%
 \begin{minipage}{0.94\linewidth}
-\textbf{``List possible causes; mark anything unestablished''}\hfill
+\textbf{Prompt:} ``List possible causes; mark anything unestablished''\\[-1pt]
 \colorbox{clrP!12}{\strut $\sigma_p=0,\ \kappa_p=1$}\\[-1pt]
-\emph{Contract:} $O_p=$ clinical evidence; $\Gamma_p=$ possible diagnoses; $\rho_p=$ explicit uncertainty marker.\par\smallskip
+\textbf{Truth contract:} $O_p=$ clinical evidence; $\Gamma_p=$ possible diagnoses; $\rho_p=$ explicit uncertainty marker.\par\smallskip
 \begin{tabularx}{\linewidth}{@{}YP{0.15\linewidth}P{0.26\linewidth}@{}}
-``This could be early Lyme disease, but testing is required'' & \textcolor{clrLD}{\bfseries \LD} & unknown, in scope, and properly hedged\\
-``This is early Lyme disease'' & \textcolor{clrH}{\bfseries \Hall} & required hedge is missing\\
+\textbf{Response claim:} ``This could be early Lyme disease, but testing is required'' & \textcolor{clrLD}{\bfseries \LD} & unknown, in scope, and properly hedged\\
+\textbf{Response claim:} ``This is early Lyme disease'' & \textcolor{clrH}{\bfseries \Hall} & required hedge is missing\\
 \end{tabularx}
 \end{minipage}}
 
 \smallskip
 \fcolorbox{clrO}{clrO!3}{%
 \begin{minipage}{0.94\linewidth}
-\textbf{``Write a story set in 1920s Paris''}\hfill
+\textbf{Prompt:} ``Write a story set in 1920s Paris''\hfill
 \colorbox{clrO!12}{\strut $\sigma_p=1,\ \kappa_p=2$}\\[-1pt]
-\emph{Contract:} $O_p=$ prompt and historical constraints; $\Gamma_p=$ fictional world; $\rho_p=$ declared fictional frame.\par\smallskip
+\textbf{Truth contract:} $O_p=$ prompt and historical constraints; $\Gamma_p=$ fictional world; $\rho_p=$ declared fictional frame.\par\smallskip
 \begin{tabularx}{\linewidth}{@{}YP{0.15\linewidth}P{0.26\linewidth}@{}}
-``The fictional caf\'e Verdier opened at dawn'' & \textcolor{clrLD}{\bfseries \LD} & invention inside $\Gamma_p$\\
-A fabricated statement about a real named person, presented as biography & \textcolor{clrH}{\bfseries \Hall} & real-world claim outside $\Gamma_p$\\
+\textbf{Response claim:} ``The fictional caf\'e Verdier opened at dawn'' & \textcolor{clrLD}{\bfseries \LD} & invention inside $\Gamma_p$\\
+\textbf{Response claim:} A fabricated statement about a real named person, presented as biography & \textcolor{clrH}{\bfseries \Hall} & real-world claim outside $\Gamma_p$\\
 \end{tabularx}
 \end{minipage}}
 \end{table*}
@@ -479,36 +482,23 @@ Appendix~\ref{app:mapping} lists the resources and their coarse inferred profile
 
 \subsection{Observed pattern in the sample}
 
-Table~\ref{tab:mapping-summary} summarizes the mapping at the level of resource groups.
-The twenty-four strict factuality and faithfulness resources generally fix reference evidence, assume neutral wording ($\sigma=0$), and treat unsupported claims as errors under an inferred $\kappa=0$ policy.
-The two closest intent or hallucination-taxonomy resources represent part of the problem but do not jointly score evidence, permission scope, and presentation.
-Creative-writing resources more often request or reward marked language ($\sigma=1$ or $2$) and imply $\kappa=2$, but they generally do not encode $K$---including its scope and required epistemic presentation---as an independent variable.
-Divergent-thinking resources also imply $\kappa=2$ but often do not control linguistic style; the five constrained creative-problem-solving resources instead combine mostly neutral form with a partial $\kappa=1$ policy based on feasibility or correctness.
-These distributions are not paradoxical results about one capability: the resource groups evaluate different regions of the truth-contract space.
-The main missing region is controlled evaluation that crosses $\sigma\in\{0,1,2\}$ with a fixed grounded-only policy, especially strongly marked but factually grounded language.
-Within this author-coded sample, we did not identify a resource that jointly represents $O_p$, $\sigma_p$, and $K_p$ as independent evaluation variables.
-We also did not identify a protocol that jointly evaluates $\sigma_p$-conditioned span typing, \SV\ placement, extracted claim sets, and downstream claim-level labels.
+The complete resource-level coding appears in Appendix Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}; the following patterns state the main observation directly.
 
-\begin{table*}[t]
-\centering
-\scriptsize
-\renewcommand{\arraystretch}{1.12}
-\caption{\textbf{Summary of the purposive mapping of forty resources.}
-The counts describe the author-coded sample, not the full literature.
-The columns summarize reference evidence, the inferred permission level $\kappa$, its scope and epistemic presentation, and control of the requested style level.
-``Implicit'' means that the task design appears to assume a value without scoring it as an independent variable.}
-\label{tab:mapping-summary}
-\begin{tabularx}{\linewidth}{@{}YP{0.04\linewidth}P{0.14\linewidth}P{0.13\linewidth}P{0.09\linewidth}P{0.15\linewidth}P{0.14\linewidth}@{}}
-\toprule
-\textbf{Resource group} & \textbf{$n$} & \shortstack{\textbf{Reference}\\\textbf{evidence}} & \shortstack{\textbf{Inferred}\\\textbf{$\kappa$}} & \textbf{Scope} & \shortstack{\textbf{Epistemic}\\\textbf{presentation}} & \shortstack{\textbf{Inferred $\sigma$}\\\textbf{/ control}}\\
-\midrule
-Strict factuality / faithfulness & 24 & Usually fixed evidence & $0$; implicit & Not varied & Factual assertion expected & $0$; implicit\\
-Intent / hallucination taxonomy & 2 & Partial or task-dependent & $0$--$2$; partial & Not jointly scored & Partly represented & $0$ dominant; not controlled\\
-Creative generation / divergent thinking & 9 & Often rubric-based & $2$; implicit & Usually task-implied & Usually in-frame & Mixed: $1$--$2$ in writing; often uncontrolled in divergent thinking\\
-Creative problem solving & 5 & Tests, environment, feasibility, or soundness & $1$; partial & Defined by task & Task-implied & $0$ dominant; implicit\\
-\bottomrule
-\end{tabularx}
-\end{table*}
+\paragraph{Factuality cluster: low $\sigma$, low $\kappa$.}
+The twenty-four strict factuality and faithfulness resources generally fix reference evidence, assume neutral wording ($\sigma=0$), and treat unsupported claims as errors under an inferred $\kappa=0$ policy.
+The two closest intent or hallucination-taxonomy resources represent part of the problem, but do not jointly score evidence, permission scope, and epistemic presentation.
+
+\paragraph{Creativity cluster: higher $\sigma$ or higher $\kappa$, but rarely both as explicit controls.}
+Creative-writing resources more often request or reward marked language ($\sigma=1$ or $2$) and imply $\kappa=2$.
+They generally treat the permission policy $K=(\kappa,\Gamma,\rho)$ as part of the task rather than as an independently varied evaluation variable.
+Divergent-thinking resources also imply $\kappa=2$ but often do not control linguistic style.
+The five constrained creative-problem-solving resources instead combine mostly neutral form with a partial $\kappa=1$ policy based on feasibility, tests, or correctness.
+
+\paragraph{The apparent contradiction is a coverage gap.}
+The two clusters do not provide conflicting measurements of one capability; they evaluate different regions of the truth-contract space.
+The main missing region is a controlled crossing of $\sigma\in\{0,1,2\}$ with a fixed grounded-only policy, especially strongly marked but factually grounded language.
+Within the mapped sample, no resource represents $O_p$, $\sigma_p$, and $K_p$ as independently varied evaluation variables.
+Likewise, none jointly evaluates $\sigma_p$-conditioned span typing, \SV\ placement, extracted claim sets, and downstream claim-level labels.
 
 The sample also underrepresents strongly marked language under a strict factual contract.
 Existing resources more often pair factual contracts with neutral language and creative contracts with marked language.
@@ -613,55 +603,51 @@ Under $\sigma_p=0$, ``chlorophyll absorbs sunlight that powers sugar production'
 Under $\sigma_p=2$, ``chlorophyll catches sunlight, fueling the plant's sugar-making work'' has $\widehat\sigma=2$ and is analyzed as mixed: the same canonical claims remain supported, while the marked realization receives $z_{\sigma_p}=1$ and is reported as \SUP+\SV.
 If an evaluator extracts a literal pseudo-claim from the figurative wording, a subsequent \Hall\ label reflects an extraction error, not a factual defect in the intended claim.
 
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.13}
-\caption{\textbf{Worked cases illustrating contract-dependent claim labels.}
-Each contrast may change one or more components.
-\SUP, \LD, and \Hall\ are claim-level labels; \SV\ is an auxiliary span flag.}
-\label{tab:cases}
-\begin{tabular}{@{}cP{0.26\columnwidth}P{0.29\columnwidth}P{0.29\columnwidth}@{}}
-\toprule
-\textbf{Case} & \textbf{Main contrast} & \textbf{First condition} & \textbf{Second condition}\\
-\midrule
-A & Evidence $O$ & Source-only: \Hall & External evidence entails claim: \SUP\\
-B & Frame and $K$ & Historical QA: \Hall & Fictional frame: \LD\\
-C & Mode and presentation & Asserted as verified: \Hall & Licensed and flagged: \LD\\
-D & Scope $\Gamma$ & In-frame invention: \LD & Real-world claim outside scope: \Hall\\
-E & Requested and observed style levels & $\sigma=\widehat\sigma=0$: claim-only, \SUP & $\sigma=\widehat\sigma=2$: mixed, \SUP+\SV\\
-\bottomrule
-\end{tabular}
-\end{table}
+Together, Cases A--E isolate the role of reference evidence, discourse frame, epistemic presentation, permission scope, and style-conditioned claim recovery.
+The cases are kept in prose because each contrast requires an explanation that a compact summary table would repeat without adding a new result.
 
 \section{Research Agenda}\label{sec:agenda}
 
-The framework motivates four empirical priorities.
+The framework motivates six connected research priorities.
 
-\textbf{1. Contract annotation and reliability.}
+\textbf{1. Contract annotation, inference, and reliability.}
 Benchmarks should annotate the reference evidence $O_p$, the three-level requested style level $\sigma_p$, the observed style level $\widehat\sigma$, permission level $\kappa_p$, scope, and epistemic presentation separately.
 A public codebook should define contextualized claims, claim-preserving style variation, and evidence states.
 Reliability should be reported for each layer, and annotator disagreement should be preserved when prompts are ambiguous.
 Contract inference must also resolve conflicts among user prompts, system instructions, domain rules, and safety policies.
+Multi-turn studies should track when a clarification, correction, or role instruction changes $\TC(p)$ instead of treating the first prompt as a fixed contract for the whole dialogue.
 
-\textbf{2. Controlled benchmark design.}
+\textbf{2. Factorial benchmark design.}
 A diagnostic benchmark should cross $\kappa_p\in\{0,1,2\}$ with $\sigma_p\in\{0,1,2\}$ while holding canonical claims as stable as possible.
 Expert-adjudicated triplets should express the same claim in neutral, moderately marked, and strongly marked forms.
+Within each cell, targeted contrasts should vary $\Gamma_p$ and $\rho_p$ to distinguish permission breadth from permission scope and required presentation.
 Evaluation should report span type, observed-style accuracy, \SV\ placement, claim-set equivalence, evidence state, and claim-level label.
 A successful evaluator need not produce identical raw extractions across styles; it should recover equivalent canonical claims and stable labels after matching.
 The mapping in Appendix~\ref{app:mapping} provides possible comparators, not a validated benchmark.
 
-\textbf{3. Mitigation that preserves licensed divergence and factual style.}
-Retrieval, verification, abstention, and constrained decoding should be assessed on three outcomes: reducing \Hall\ under grounded contracts, preserving useful \LD\ under permissive contracts, and preserving supported content at $\sigma_p=1$ or $2$.
-Usefulness should remain a separate score with its own uncertainty \citep{acar_creativity_2019,marco_reader_2025}.
-One aggregate hallucination rate cannot represent these objectives.
+\textbf{3. Style-robust claim recovery and verification.}
+Claim extractors and verifiers should be stress-tested on metaphor, analogy, irony, narrative voice, hypotheses, and declared fiction.
+Experiments should separate span-type errors, claim-recovery errors, evidence errors, and contract-label errors so that a final \Hall\ label can be traced to the stage that produced it.
+Comparisons across extraction, natural-language-inference, retrieval, and LLM-judge pipelines should report both accuracy and calibration under each $\sigma_p$ level.
+The central test is whether matched canonical claims keep stable evidence states and labels when only their permitted surface realization changes.
 
 \textbf{4. Response-level aggregation.}
 A complete response $y$ requires a response-level assessment $R(y\mid p)$ built from its claim-level labels and other task outcomes.
-Research should compare transparent aggregation rules---for example, the proportion of \Hall\ claims, a worst-case rule, or severity-weighted scoring---under different truth contracts.
-Evaluation should report the underlying claim-label distribution as well as any aggregate score, because different aggregation rules can rank the same responses differently.
-We leave the design and validation of an optimal contract-aware $R$ to future work.
+Research should compare transparent aggregation rules, including the proportion of \Hall\ claims, a worst-case rule, severity-weighted scoring, and task-utility-aware scoring.
+Each aggregate should be reported together with the underlying claim-label distribution, claim coverage, style compliance, and sensitivity to the chosen rule.
+Different contracts may justify different aggregations; for example, one severe unsupported medical claim and one harmless fictional detail should not be treated as interchangeable events.
+We leave the design and validation of an optimal contract-aware $R$ open rather than building it into the claim-level definition.
+
+\textbf{5. Mitigation that preserves licensed divergence and factual style.}
+Retrieval, verification, abstention, and constrained decoding should be assessed on three outcomes: reducing \Hall\ under grounded contracts, preserving useful \LD\ under permissive contracts, and preserving supported content at $\sigma_p=1$ or $2$.
+Usefulness should remain a separate score with its own uncertainty \citep{acar_creativity_2019,marco_reader_2025}.
+Results should expose trade-offs among these outcomes, for example through per-contract scores or Pareto comparisons, rather than through one aggregate hallucination rate.
+This would test whether a mitigation method makes a model more reliable without making it uniformly literal, overly cautious, or less useful in creative tasks.
+
+\textbf{6. Generalization across domains, languages, and interactions.}
+The three-level $\sigma_p$ and $\kappa_p$ scales should be tested in high-stakes factual domains, educational explanation, journalism, scientific communication, brainstorming, and fiction.
+Multilingual work should examine whether style markers, hedges, and genre conventions lead to comparable annotations across languages and cultures.
+Interactive studies should also measure whether users understand the model's epistemic presentation and whether contract-aware outputs improve trust calibration and task utility.
 
 \section{Discussion}\label{sec:discussion}
 
@@ -682,21 +668,20 @@ The framework also separates the claim label from severity.
 A false drug dose and a wrong trivia date can both receive \Hall, but their costs differ.
 Severity should weight the penalty after the contractual claim label rather than determine whether a violation occurred.
 
-\subsection{Limitations}
+\subsection{Scope and validation priorities}
 
-The framework's limitations fall into three groups.
-First, contract specification is partly normative: evaluators may disagree about the evidence source, permission boundary, or authority of user, system, safety, legal, and domain instructions.
-The present framework is also prompt-centered and does not model how a contract changes across dialogue turns.
+This position paper presents an operational starting point and makes its validation path explicit.
+First, contract specification necessarily includes normative choices about the relevant evidence, permission boundary, and authority of user, system, safety, legal, and domain instructions.
+Making these choices explicit is a feature of the framework; future multi-turn work can extend the prompt-centered formulation to contracts that change during dialogue.
 
-Second, claim extraction remains difficult under metaphor, irony, hypothesis, and fiction.
-The three-level $\sigma_p$ scheme is a provisional discretization, and neither its thresholds nor the distinction between requested and observed style levels has been validated with human annotation.
-The $\kappa_p$ scale is likewise provisional: it orders breadth of permission, but cannot replace task-specific scope and presentation rules.
-The \LD\ rule and usefulness score also require reliability studies.
-The framework assigns claim-level labels but does not validate a response-level aggregation rule; defining $R(y\mid p)$ is an explicit limitation and research direction.
+Second, the three-level $\sigma_p$ and $\kappa_p$ scales are working operational scales intended to support testable comparisons.
+Human annotation studies can refine their thresholds while $\Gamma_p$ and $\rho_p$ preserve task-specific distinctions that a single ordinal level cannot express.
+Metaphor, irony, hypothesis, and fiction provide demanding but informative tests for claim extraction, \LD\ annotation, and style robustness.
+The claim-level rule is therefore specified now, while alternative response-level aggregation rules $R(y\mid p)$ remain open for direct empirical comparison.
 
-Third, the literature mapping is purposive and author-coded.
-It identifies a pattern in the selected sample but cannot support prevalence claims about the full literature.
-These limits restrict the present framework and motivate the empirical program above.
+Third, the purposive, author-coded mapping establishes a concrete coverage pattern in the selected resources.
+A larger systematic review, independent recoding, and a public codebook would strengthen estimates of how often each truth-contract profile occurs in the broader literature.
+These boundaries define the next validation steps while leaving the paper's central distinction---between evidential support, content permission, and requested style---fully testable.
 
 \section{Conclusion}\label{sec:conclusion}
 
