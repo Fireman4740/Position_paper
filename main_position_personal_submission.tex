@@ -64,26 +64,19 @@
 \maketitle
 
 \begin{abstract}
-Hallucination in large language models is often operationalized as unsupported or contradicted content.
-This definition fits factual tasks, but not tasks that intentionally go beyond evidence: fiction allows invention, whereas medical reporting does not.
-We therefore argue that hallucination is a claim-level verdict relative to a task's \emph{truth contract}, $\TC(p)=(O_p,\sigma_p,K_p)$.
-The reference evidence $O_p$ specifies what supports a claim.
-The requested style level $\sigma_p\in\{0,1,2\}$ specifies neutral, moderately marked, or strongly marked language.
-The content-permission policy $K_p$ controls claims that lack evidential support.
-It specifies whether such a claim is allowed, its scope, and its required epistemic presentation.
-These components are independent: metaphorical wording can express supported claims, while literal wording can introduce an unlicensed claim.
-Under our rule, an entailed claim receives the supported verdict (\SUP), and a contradicted claim receives the hallucination verdict (\Hall).
-An evidence-unknown claim receives \Hall\ unless $K_p$ permits it within the stated scope and it uses the required epistemic presentation; when these conditions are satisfied, it receives the licensed-divergence verdict (\LD), which marks a task-permitted departure from evidence.
-Usefulness is scored separately.
-$\sigma_p$ never grants permission to add unsupported content.
-It guides interpretation before verification by distinguishing the requested style level from the observed style level $\widehat\sigma$.
-The evaluator then separates claims from stylistic variation (\SV), and only the extracted claims are verified.
-This procedure exposes errors when a verifier literalizes a metaphor or misses a supported claim.
-We support the position with a purposive (deliberately selected), author-coded mapping of forty evaluation resources and five worked cases.
-In this sample, factuality protocols cluster around neutral language ($\sigma=0$) and a grounded-only content-permission policy, whereas creative-writing protocols cluster around marked language ($\sigma=1$ or $2$) and task-implied permission to invent that is not encoded as an independent policy variable.
-The two literatures therefore evaluate different truth contracts rather than provide conflicting evidence about the same task.
-We did not identify a resource that jointly operationalizes all three contract components and the full span-to-claim procedure.
-We propose controlled evaluation and mitigation that reduce \Hall\ while preserving \LD\ and factually grounded style.
+Hallucination in large language models is usually defined as unsupported or contradicted content.
+This definition fits factual reporting, but it becomes ambiguous when a task allows invention or asks for figurative language.
+We argue that hallucination should instead be a claim-level verdict relative to a task's \emph{truth contract}, $\TC(p)=(O_p,\sigma_p,K_p)$.
+The contract specifies the reference evidence $O_p$, the requested style level $\sigma_p$, and the content-permission policy $K_p$.
+Within $K_p$, a permission level $\kappa_p\in\{0,1,2\}$ distinguishes factual-only tasks, limited and explicitly marked divergence, and invention inside a declared frame; the policy also specifies where and how such divergence is allowed.
+The evaluator first separates factual claims from stylistic wording and then checks only the extracted claims.
+A supported claim receives \SUP; a contradicted or unlicensed claim receives \Hall; and an evidence-unknown claim receives \LD\ only when the task permits it within scope and it is presented as required.
+The style level guides the interpretation of metaphors and other marked forms, but never permits unsupported content by itself.
+This separation makes it possible to evaluate outputs that are creative in form while remaining factual when required.
+We support the position with five worked cases and an author-coded mapping of forty evaluation resources.
+In this sample, factuality benchmarks cluster around neutral language ($\sigma=0$) and factual-only permission ($\kappa=0$), whereas creative-writing benchmarks cluster around marked language ($\sigma=1$ or $2$) and task-implied invention ($\kappa=2$).
+The two literatures therefore evaluate different truth contracts rather than conflicting versions of the same task.
+The missing test is a controlled benchmark that varies style and permission independently.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -129,9 +122,9 @@ It does not assume that the historical and fictional interpretations express the
   \node[input,text width=6.7cm] (s) at (0,0)
     {same surface sentence:\\``the caf\'e \emph{Verdier} and its owner existed in 1920s Paris''};
   \node[decision,text width=3.8cm] (qa) at (-2.8,-2.1)
-    {Historical QA\\[-1pt]{\scriptsize $O=$ historical evidence\\$K=$ grounded only}};
+    {Historical QA\\[-1pt]{\scriptsize $O=$ historical evidence\\$\kappa=0$: factual only}};
   \node[decision,text width=3.8cm] (fi) at (2.8,-2.1)
-    {Fiction writing\\[-1pt]{\scriptsize $O=$ prompt constraints\\$K=$ in-frame invention}};
+    {Fiction writing\\[-1pt]{\scriptsize $O=$ prompt constraints\\$\kappa=2$: in-frame invention}};
   \node[verdictH] (h) at (-2.8,-3.8) {\Hall};
   \node[verdictLD] (ld) at (2.8,-3.8) {\LD};
   \node[font=\scriptsize,align=center,text width=3.7cm] at (-2.8,-4.45)
@@ -189,7 +182,7 @@ The missing bridge is a protocol that varies stylistic marking while holding the
 \textbf{Truth contract (\TC).}
 For prompt $p$, the truth contract is
 \[
-  \TC(p)=(O_p,\sigma_p,K_p), \qquad K_p=(m_p,\Gamma_p,\rho_p).
+  \TC(p)=(O_p,\sigma_p,K_p), \qquad K_p=(\kappa_p,\Gamma_p,\rho_p).
 \]
 The three components answer different questions: what supports a claim, what style level the task requests, and what unsupported content the task permits.
 We drop the subscript $p$ when the prompt is clear from context.
@@ -201,12 +194,13 @@ The phrase ``world knowledge'' is only a shorthand; reproducible evaluation requ
 \textbf{Content-permission policy ($K_p$).}
 $K_p$ specifies three properties:
 \begin{itemize}
-  \item $m_p$: the permission mode; this paper uses grounded only, flagged speculation, and in-frame invention;
+  \item $\kappa_p\in\{0,1,2\}$: the permission level, where $0$ is factual only, $1$ allows limited and explicitly marked divergence, and $2$ allows invention inside a declared frame;
   \item $\Gamma_p$: the scope within which unsupported content is allowed;
   \item $\rho_p$: the required epistemic presentation, such as a hedge, an explicit hypothesis marker, or a declared fictional frame.
 \end{itemize}
-These modes are categorical rather than ordinal.
-Flagged speculation is not simply a weaker version of fiction; it carries a different commitment and a different presentation requirement.
+The scale orders only the breadth of permitted departure from the reference evidence.
+It is not a scale of quality, creativity, or factuality, and the number does not replace the scope and presentation constraints.
+In particular, limited speculation and fiction carry different commitments and presentation requirements.
 
 A grounded-only task has an empty permission scope for unsupported claims.
 A hypothesis-generation task may allow claims within a stated topic if they are marked as provisional.
@@ -296,7 +290,7 @@ E(c,O_p)\in\{\textsc{entailed},\textsc{contradicted},\textsc{unknown}\}.
 The last value means that the available evidence neither supports nor contradicts the claim.
 Evidence state alone does not determine the contractual verdict.
 
-Let $L(c,K_p)$ indicate whether mode $m_p$ permits claim $c$ within scope $\Gamma_p$, and let $M(c,s,K_p)$ indicate whether its realization in span $s$ satisfies the epistemic-presentation requirement $\rho_p$.
+Let $L(c,K_p)$ indicate whether permission level $\kappa_p$ permits claim $c$ within scope $\Gamma_p$, and let $M(c,s,K_p)$ indicate whether its realization in span $s$ satisfies the epistemic-presentation requirement $\rho_p$.
 Then
 \[
 V(c\mid p)=
@@ -322,37 +316,46 @@ Figure~\ref{fig:decision} summarizes the procedure.
 \centering
 \resizebox{0.95\linewidth}{!}{%
 \begin{tikzpicture}[x=1cm,y=1cm]
-  \node[input] (s) at (0,0) {span $s$ interpreted under $(p,\sigma_p)$};
-  \node[decision] (x) at (0,-1.55)
-    {contract-guided analysis\\[-1pt]{\scriptsize $\mathcal X_{\sigma_p}(s,p)=(\mathcal C_{\sigma_p},\widehat\sigma,z_{\sigma_p})$}};
-  \node[decision] (q1) at (0,-3.15) {Is the extracted claim set $\mathcal C_{\sigma_p}$ empty?};
-  \node[decision] (q2) at (0,-4.80) {For each $c\in\mathcal C_{\sigma_p}$, is $E(c,O_p)=\textsc{entailed}$?};
-  \node[decision] (q3) at (0,-6.45) {Is $E(c,O_p)=\textsc{unknown}$ and is $c$ licensed inside $\Gamma_p$?};
-  \node[decision] (q4) at (0,-8.10) {Does the presentation satisfy $\rho_p$?};
-  \node[verdict] (note) at (7.3,-1.55) {retain $\widehat\sigma$ and $z_{\sigma_p}$ as span annotations};
-  \node[verdict] (sv) at (7.3,-3.15) {\SV-only if $z_{\sigma_p}=1$; otherwise other};
-  \node[verdict] (sup) at (7.3,-4.80) {\SUP};
-  \node[verdictH] (h1) at (7.3,-6.45) {\Hall};
-  \node[verdictH] (h2) at (7.3,-8.10) {\Hall};
-  \node[verdictLD] (ld) at (0,-9.75) {\LD\quad{\scriptsize score $U$ separately}};
-  \draw[arrow] (s) -- (x);
-  \draw[arrow] (x) -- (q1);
-  \draw[dashed,gray!65] (x.east) -- (note.west);
-  \draw[arrow] (q1) -- node[edge,left]{no: verify extracted claim(s)} (q2);
-  \draw[arrow] (q2) -- node[edge,left]{no} (q3);
-  \draw[arrow] (q3) -- node[edge,left]{yes} (q4);
-  \draw[arrow] (q4) -- node[edge,left]{yes} (ld);
-  \draw[arrow] (q1.east) -- node[edge,above]{yes} (sv.west);
-  \draw[arrow] (q2.east) -- node[edge,above]{yes} (sup.west);
-  \draw[arrow] (q3.east) -- node[edge,above,pos=0.42]{no} (h1.west);
-  \draw[arrow] (q4.east) -- node[edge,above,pos=0.42]{no} (h2.west);
+  \node[input,text width=5.7cm] (response) at (0,0) {model response};
+  \node[decision,text width=6.2cm] (contract) at (0,-1.35)
+    {read the task instructions:\\[-1pt]{\scriptsize reference evidence, requested style, and allowed content}};
+  \node[decision,text width=6.2cm] (label) at (0,-2.70)
+    {label each span as a factual claim, stylistic wording, both, or neither};
+  \node[decision,text width=5.6cm] (hasclaim) at (0,-4.05)
+    {does the span contain a factual claim?};
+  \node[verdict,text width=4.4cm,align=center] (styleonly) at (6.4,-4.05)
+    {keep the style label;\\no factuality check};
+  \node[decision,text width=5.6cm] (plainclaim) at (0,-5.40)
+    {express the factual claim in clear, literal wording};
+  \node[decision,text width=5.6cm] (evidence) at (0,-6.75)
+    {compare the claim with the reference evidence};
+  \node[verdict,text width=3.5cm,align=center] (sup) at (-6.0,-6.75)
+    {supported claim\\(\SUP)};
+  \node[verdictH,text width=3.5cm,align=center] (contradicted) at (6.0,-6.75)
+    {hallucination\\(\Hall)};
+  \node[decision,text width=6.2cm] (permission) at (0,-8.25)
+    {if the evidence is silent: is the content allowed here and clearly framed?};
+  \node[verdictLD,text width=3.8cm,align=center] (licensed) at (-3.5,-9.75)
+    {licensed divergence\\(\LD)};
+  \node[verdictH,text width=3.8cm,align=center] (unlicensed) at (3.5,-9.75)
+    {hallucination\\(\Hall)};
+  \draw[arrow] (response) -- (contract);
+  \draw[arrow] (contract) -- (label);
+  \draw[arrow] (label) -- (hasclaim);
+  \draw[arrow] (hasclaim) -- node[edge,left]{yes} (plainclaim);
+  \draw[arrow] (hasclaim.east) -- node[edge,above]{no} (styleonly.west);
+  \draw[arrow] (plainclaim) -- (evidence);
+  \draw[arrow] (evidence.west) -- node[edge,above]{supported} (sup.east);
+  \draw[arrow] (evidence.east) -- node[edge,above]{contradicted} (contradicted.west);
+  \draw[arrow] (evidence) -- node[edge,left]{not determined} (permission);
+  \draw[arrow] (permission.south west) -- node[edge,above,pos=0.62]{yes} (licensed.north);
+  \draw[arrow] (permission.south east) -- node[edge,above,pos=0.62]{no} (unlicensed.north);
 \end{tikzpicture}}
-\caption{\textbf{Span-to-claim evaluation procedure.}
-The evaluator uses the requested style level $\sigma_p$ to interpret the span, then records the observed style level $\widehat\sigma$, extracts canonical claims, and assigns the auxiliary \SV\ flag.
-SV-only and other spans bypass factual verification.
-Each extracted claim receives \SUP, \LD, or \Hall; contradicted claims and unlicensed or out-of-scope unknown claims reach \Hall\ through the ``no'' branches.
-Span annotations remain separate from claim-level verdicts.
-Usefulness is scored only after \LD\ classification.}
+\caption{\textbf{Plain-language span-to-claim evaluation procedure.}
+The evaluator first reads the task instructions and labels the role of each span.
+Stylistic wording without a factual claim is retained but not fact-checked.
+Each factual claim is rewritten in a clear form and compared with the reference evidence.
+When the evidence is silent, the claim is accepted as licensed divergence only if the task allows it in that context and the response presents it as required.}
 \label{fig:decision}
 \end{figure*}
 
@@ -367,18 +370,18 @@ Each row specifies one contract and evaluates the claims recovered from one outp
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.15}
 \caption{\textbf{Representative truth contracts and claim-level verdicts.}
-$O$ is the reference evidence, $\sigma$ is the requested style level, and $K$ is the content-permission policy.
+$O$ is the reference evidence, $\sigma$ is the requested style level, $\kappa$ is the permission level, and $K$ is the full content-permission policy.
 \SUP, \LD, and \Hall\ are claim-level verdicts; \SV\ is an auxiliary span flag.}
 \label{tab:contracts}
 \begin{tabularx}{\linewidth}{@{}P{0.18\linewidth}P{0.18\linewidth}YP{0.12\linewidth}P{0.17\linewidth}@{}}
 \toprule
 \textbf{Prompt} & \textbf{Contract} & \textbf{Output span} & \textbf{Label} & \textbf{Reason}\\
 \midrule
-Summarize this medical report & $O$: report; $\sigma=0$; $K$: grounded only & The patient has diabetes (absent from the report) & \Hall & Unknown and unlicensed\\
-Explain photosynthesis like a poet, but keep the science accurate & $O$: scientific references; $\sigma=2$; $K$: grounded only & Chlorophyll catches sunlight, fueling the plant's sugar-making work & \SUP+\SV & Canonical claims supported; form marked\\
-List possible causes and mark unestablished suggestions & $O$: clinical evidence; $\sigma=0$; $K$: flagged speculation in diagnostic scope & This could be early Lyme disease, but it requires testing & \LD & Unknown, in scope, and provisional\\
-Write a story set in 1920s Paris & $O$: prompt constraints; $\sigma=1$; $K$: in-frame invention & The fictional caf\'e Verdier opened at dawn & \LD & Invention inside the fictional frame\\
-Write a story set in 1920s Paris & $O$: prompt and historical constraints; $\sigma=1$; $K$: in-frame invention & A real named person made a fabricated statement, presented as biography & \Hall & Real-world claim outside scope\\
+Summarize this medical report & $O$: report; $\sigma=0$; $\kappa=0$ (factual only) & The patient has diabetes (absent from the report) & \Hall & Unknown and unlicensed\\
+Explain photosynthesis like a poet, but keep the science accurate & $O$: scientific references; $\sigma=2$; $\kappa=0$ (factual only) & Chlorophyll catches sunlight, fueling the plant's sugar-making work & \SUP+\SV & Canonical claims supported; form marked\\
+List possible causes and mark unestablished suggestions & $O$: clinical evidence; $\sigma=0$; $\kappa=1$ (limited divergence in diagnostic scope) & This could be early Lyme disease, but it requires testing & \LD & Unknown, in scope, and provisional\\
+Write a story set in 1920s Paris & $O$: prompt constraints; $\sigma=1$; $\kappa=2$ (in-frame invention) & The fictional caf\'e Verdier opened at dawn & \LD & Invention inside the fictional frame\\
+Write a story set in 1920s Paris & $O$: prompt and historical constraints; $\sigma=1$; $\kappa=2$ (in-frame invention) & A real named person made a fabricated statement, presented as biography & \Hall & Real-world claim outside scope\\
 \bottomrule
 \end{tabularx}
 \end{table*}
@@ -402,10 +405,10 @@ For each resource, we recorded five questions:
 For the second question, we also recorded whether marked form is evaluated as a possible source of factuality-measurement error.
 
 Appendix~\ref{app:mapping} expresses these observations in the framework's terms.
-Each resource receives a coarse task-level code for its reference evidence $O$, its dominant requested style level $\sigma$, and its inferred content-permission mode $K$.
-We use $G$ for grounded only, $I$ for in-frame invention, and $C$ for constrained divergence, where candidate content may depart from evidence but must satisfy feasibility, tests, or soundness criteria.
-An ``implicit'' code means that the mode is inferred from the task design rather than represented as an independent evaluation variable.
-These $K$ modes are categorical policies, not low-to-high scores.
+Each resource receives a coarse task-level code for its reference evidence $O$, its dominant requested style level $\sigma$, and its inferred permission level $\kappa$.
+We use $\kappa=0$ for factual-only tasks, $\kappa=1$ for limited divergence constrained by explicit marking, feasibility, tests, or soundness, and $\kappa=2$ for invention inside a declared task frame.
+An ``implicit'' code means that the level is inferred from the task design rather than represented as an independent evaluation variable.
+The number estimates the breadth of permitted departure; it does not measure benchmark quality or replace the scope and presentation components of $K$.
 
 The mapping was coded in a single pass by one author.
 The inferred task profiles are interpretive annotations, not measurements reported by the original resources.
@@ -416,10 +419,10 @@ Appendix~\ref{app:mapping} lists the resources and their coarse inferred profile
 \subsection{Observed pattern in the sample}
 
 Table~\ref{tab:mapping-summary} summarizes the mapping at the level of resource groups.
-The twenty-four strict factuality and faithfulness resources generally fix reference evidence, assume neutral wording ($\sigma=0$), and treat unsupported claims as errors under an inferred $G$ policy.
+The twenty-four strict factuality and faithfulness resources generally fix reference evidence, assume neutral wording ($\sigma=0$), and treat unsupported claims as errors under an inferred $\kappa=0$ policy.
 The two closest intent or hallucination-taxonomy resources represent part of the problem but do not jointly score evidence, permission scope, and presentation.
-Creative-writing resources more often request or reward marked language ($\sigma=1$ or $2$) and assume an $I$ policy, but they generally do not encode $K$---including its scope and required epistemic presentation---as an independent variable.
-Divergent-thinking resources also assume permission to generate new content, but often do not control linguistic style; the five constrained creative-problem-solving resources instead combine mostly neutral form with a partial $C$ policy based on feasibility or correctness.
+Creative-writing resources more often request or reward marked language ($\sigma=1$ or $2$) and imply $\kappa=2$, but they generally do not encode $K$---including its scope and required epistemic presentation---as an independent variable.
+Divergent-thinking resources also imply $\kappa=2$ but often do not control linguistic style; the five constrained creative-problem-solving resources instead combine mostly neutral form with a partial $\kappa=1$ policy based on feasibility or correctness.
 These distributions are not paradoxical results about one capability: the resource groups evaluate different regions of the truth-contract space.
 The main missing region is controlled evaluation that crosses $\sigma\in\{0,1,2\}$ with a fixed grounded-only policy, especially strongly marked but factually grounded language.
 Within this author-coded sample, we did not identify a resource that jointly represents $O_p$, $\sigma_p$, and $K_p$ as independent evaluation variables.
@@ -431,17 +434,17 @@ We also did not identify a protocol that jointly evaluates $\sigma_p$-conditione
 \renewcommand{\arraystretch}{1.12}
 \caption{\textbf{Summary of the purposive mapping of forty resources.}
 The counts describe the author-coded sample, not the full literature.
-The columns summarize reference evidence, the inferred $K$ mode, its scope and epistemic presentation, and control of the requested style level.
+The columns summarize reference evidence, the inferred permission level $\kappa$, its scope and epistemic presentation, and control of the requested style level.
 ``Implicit'' means that the task design appears to assume a value without scoring it as an independent variable.}
 \label{tab:mapping-summary}
 \begin{tabularx}{\linewidth}{@{}YP{0.04\linewidth}P{0.14\linewidth}P{0.13\linewidth}P{0.09\linewidth}P{0.15\linewidth}P{0.14\linewidth}@{}}
 \toprule
-\textbf{Resource group} & \textbf{$n$} & \shortstack{\textbf{Reference}\\\textbf{evidence}} & \shortstack{\textbf{Inferred}\\\textbf{$K$ mode}} & \textbf{Scope} & \shortstack{\textbf{Epistemic}\\\textbf{presentation}} & \shortstack{\textbf{Inferred $\sigma$}\\\textbf{/ control}}\\
+\textbf{Resource group} & \textbf{$n$} & \shortstack{\textbf{Reference}\\\textbf{evidence}} & \shortstack{\textbf{Inferred}\\\textbf{$\kappa$}} & \textbf{Scope} & \shortstack{\textbf{Epistemic}\\\textbf{presentation}} & \shortstack{\textbf{Inferred $\sigma$}\\\textbf{/ control}}\\
 \midrule
-Strict factuality / faithfulness & 24 & Usually fixed evidence & $G$; implicit & Not varied & Factual assertion expected & $0$; implicit\\
-Intent / hallucination taxonomy & 2 & Partial or task-dependent & Partial & Not jointly scored & Partly represented & $0$ dominant; not controlled\\
-Creative generation / divergent thinking & 9 & Often rubric-based & $I$; implicit & Usually task-implied & Usually in-frame & Mixed: $1$--$2$ in writing; often uncontrolled in divergent thinking\\
-Creative problem solving & 5 & Tests, environment, feasibility, or soundness & $C$; partial & Defined by task & Task-implied & $0$ dominant; implicit\\
+Strict factuality / faithfulness & 24 & Usually fixed evidence & $0$; implicit & Not varied & Factual assertion expected & $0$; implicit\\
+Intent / hallucination taxonomy & 2 & Partial or task-dependent & $0$--$2$; partial & Not jointly scored & Partly represented & $0$ dominant; not controlled\\
+Creative generation / divergent thinking & 9 & Often rubric-based & $2$; implicit & Usually task-implied & Usually in-frame & Mixed: $1$--$2$ in writing; often uncontrolled in divergent thinking\\
+Creative problem solving & 5 & Tests, environment, feasibility, or soundness & $1$; partial & Defined by task & Task-implied & $0$ dominant; implicit\\
 \bottomrule
 \end{tabularx}
 \end{table*}
@@ -453,7 +456,7 @@ Such tasks can reveal whether a factuality verifier mistakes figurative wording 
 Modern verification pipelines make this a plausible failure mode because claim decomposition, natural-language inference, and semantic similarity may all depend on the surface realization \citep{chen_menli_2023,aynetdinov_semscore_2024}.
 This is a measurement hypothesis, not a prevalence result established by the present paper.
 
-Figure~\ref{fig:profiles} organizes the target task profiles without treating permission modes as an ordinal scale.
+Figure~\ref{fig:profiles} organizes the target task profiles by requested style and breadth of permitted departure.
 
 \begin{figure*}[t]
 \centering
@@ -497,14 +500,14 @@ Figure~\ref{fig:profiles} organizes the target task profiles without treating pe
   \node[font=\scriptsize,align=center] at (1.5*\cw,-0.42){$\sigma_p=1$\\moderately marked};
   \node[font=\scriptsize,align=center] at (2.5*\cw,-0.42){$\sigma_p=2$\\strongly marked};
   \node[font=\small] at (1.5*\cw,-1.15){requested style level $\sigma_p$};
-  \node[font=\scriptsize,anchor=east] at (-0.16,0.5*\rh){grounded only};
-  \node[font=\scriptsize,anchor=east] at (-0.16,1.5*\rh){flagged speculation};
-  \node[font=\scriptsize,anchor=east] at (-0.16,2.5*\rh){in-frame invention};
-  \node[font=\small,rotate=90] at (-3.05,1.5*\rh){permission mode $m_p$};
+  \node[font=\scriptsize,anchor=east] at (-0.16,0.5*\rh){$\kappa_p=0$: factual only};
+  \node[font=\scriptsize,anchor=east] at (-0.16,1.5*\rh){$\kappa_p=1$: limited divergence};
+  \node[font=\scriptsize,anchor=east] at (-0.16,2.5*\rh){$\kappa_p=2$: in-frame invention};
 \end{tikzpicture}}
 \caption{\textbf{Conceptual task-design space.}
-The grid crosses three categorical content-permission modes with the three requested style levels, $\sigma_p\in\{0,1,2\}$.
+The grid crosses three content-permission levels with the three requested style levels, $\sigma_p\in\{0,1,2\}$.
 Each cell is an illustrative task profile, not an empirical frequency or quality ranking.
+A higher $\kappa_p$ broadens the type of departure that a task may permit, but scope and presentation constraints still apply.
 A higher $\sigma_p$ changes the requested style level but does not license unsupported claims.}
 \label{fig:profiles}
 \end{figure*}
@@ -576,13 +579,13 @@ E & Requested and observed style levels & $\sigma=\widehat\sigma=0$: claim-only,
 The framework motivates three empirical priorities.
 
 \textbf{1. Contract annotation and reliability.}
-Benchmarks should annotate the reference evidence $O_p$, the three-level requested style level $\sigma_p$, the observed style level $\widehat\sigma$, permission mode, scope, and epistemic presentation separately.
+Benchmarks should annotate the reference evidence $O_p$, the three-level requested style level $\sigma_p$, the observed style level $\widehat\sigma$, permission level $\kappa_p$, scope, and epistemic presentation separately.
 A public codebook should define contextualized claims, claim-preserving style variation, and evidence states.
 Reliability should be reported for each layer, and annotator disagreement should be preserved when prompts are ambiguous.
 Contract inference must also resolve conflicts among user prompts, system instructions, domain rules, and safety policies.
 
 \textbf{2. Controlled benchmark design.}
-A diagnostic benchmark should cross permission mode with $\sigma_p\in\{0,1,2\}$ while holding canonical claims as stable as possible.
+A diagnostic benchmark should cross $\kappa_p\in\{0,1,2\}$ with $\sigma_p\in\{0,1,2\}$ while holding canonical claims as stable as possible.
 Expert-adjudicated triplets should express the same claim in neutral, moderately marked, and strongly marked forms.
 Evaluation should report span type, observed-style accuracy, \SV\ placement, claim-set equivalence, evidence state, and final verdict.
 A successful evaluator need not produce identical raw extractions across styles; it should recover equivalent canonical claims and stable verdicts after matching.
@@ -618,6 +621,7 @@ The present framework is also prompt-centered and does not model how a contract 
 
 Second, claim extraction remains difficult under metaphor, irony, hypothesis, and fiction.
 The three-level $\sigma_p$ scheme is a provisional discretization, and neither its thresholds nor the distinction between requested and observed style levels has been validated with human annotation.
+The $\kappa_p$ scale is likewise provisional: it orders breadth of permission, but cannot replace task-specific scope and presentation rules.
 The \LD\ rule and usefulness score also require reliability studies.
 
 Third, the literature mapping is purposive and author-coded.
@@ -656,7 +660,7 @@ E(c,O_p)\in\{\textsc{entailed},\textsc{contradicted},\textsc{unknown}\},
 \]
 let $r(c,s)$ denote the realization of claim $c$ in span $s$, and let
 \begin{align*}
-L(c,K_p)&=\mathbf{1}[m_p\text{ permits }c\text{ within }\Gamma_p],\\
+L(c,K_p)&=\mathbf{1}[\kappa_p\text{ permits }c\text{ within }\Gamma_p],\\
 M(c,s,K_p)&=\mathbf{1}[r(c,s)\text{ satisfies the epistemic presentation }\rho_p].
 \end{align*}
 The verdict is
@@ -690,11 +694,11 @@ This is a claim about contract-dependent verdicts, not relative truth.
 \appendixsection{Resource Mapping}\label{app:mapping}
 
 Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative} list the forty resources used in the purposive mapping.
-Each row encodes the reference evidence $O$, the dominant requested style level $\sigma$, and the inferred content-permission mode $K$.
+Each row encodes the reference evidence $O$, the dominant requested style level $\sigma$, and the inferred permission level $\kappa$.
 The $\sigma$ column uses the paper's three levels; ``not controlled'' means that style is neither fixed nor scored as a distinct variable.
-The $K$ column uses $G$ for grounded only, $I$ for in-frame invention, and $C$ for constrained divergence.
-``Implicit'' means that the policy is inferred from the task design, while ``partial'' means that the resource encodes a constraint such as correctness or feasibility without representing the full tuple $(m,\Gamma,\rho)$.
-Thus, an implicit $I$ code does not mean that a benchmark explicitly annotates $K$; it means that invention is needed or accepted by the task although its permission boundary is not independently evaluated.
+The $\kappa$ column uses $0$ for factual only, $1$ for limited divergence, and $2$ for in-frame invention.
+``Implicit'' means that the level is inferred from the task design, while ``partial'' means that the resource encodes a constraint such as correctness or feasibility without representing the full policy $(\kappa,\Gamma,\rho)$.
+Thus, an implicit $\kappa=2$ code does not mean that a benchmark explicitly annotates the content-permission policy; it means that invention is needed or accepted by the task although its permission boundary is not independently evaluated.
 The task profiles are coarse author annotations inferred from the original protocols, not labels reported by those resources.
 They require a public codebook and independent recoding before release as a validated dataset.
 
@@ -704,28 +708,28 @@ They require a public codebook and independent recoding before release as a vali
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{0.98}
 \caption{\textbf{Factuality and faithfulness resources in the purposive mapping (part I).}
-The recurring profile is fixed reference evidence, implicit $\sigma=0$, and an inferred grounded-only policy ($K=G$).
+The recurring profile is fixed reference evidence, implicit $\sigma=0$, and inferred factual-only permission ($\kappa=0$).
 No listed resource crosses a grounded-only policy with controlled $\sigma=1$ or $2$.
 These are author-coded profiles, not labels reported by the original resources.}
 \label{tab:full-mapping-factual-a}
 \begin{tabularx}{0.98\linewidth}{@{}P{0.23\textwidth}P{0.18\textwidth}P{0.20\textwidth}P{0.11\textwidth}Y@{}}
 \toprule
-\textbf{Resource} & \textbf{Task} & \textbf{$O$: reference evidence or rubric} & \textbf{Inferred $\sigma$} & \textbf{Inferred $K$ / encoding}\\
+\textbf{Resource} & \textbf{Task} & \textbf{$O$: reference evidence or rubric} & \textbf{Inferred $\sigma$} & \textbf{Inferred $\kappa$ / status}\\
 \midrule
 \multicolumn{5}{l}{\textbf{Strict factuality and faithfulness}}\\
-FEVER \citep{thorne_fever_2018} & Fact checking & Wikipedia evidence & $0$ (implicit) & $G$ (implicit)\\
-TruthfulQA \citep{lin_truthfulqa_2022} & Factual QA & External factual reference & $0$ (implicit) & $G$ (implicit)\\
-PopQA \citep{mallen_when_2023} & Long-tail QA & Wikidata & $0$ (implicit) & $G$ (implicit)\\
-SimpleQA \citep{wei_measuring_2024} & Factual QA & External factual reference & $0$ (implicit) & $G$ (implicit)\\
-TriviaQA \citep{joshi_triviaqa_2017} & Reading QA & Evidence documents & $0$ (implicit) & $G$ (implicit)\\
-DefAn \citep{rahman_defan_2024} & Factual QA & External factual reference & $0$ (implicit) & $G$ (implicit)\\
-HaluEval \citep{li_halueval_2023} & QA and summarization & World/reference context & $0$ (implicit) & $G$ (implicit)\\
-FactBench \citep{bayat_factbench_2024} & Factual QA & Retrieved evidence & $0$ (implicit) & $G$ (implicit; undecidable retained)\\
-HalluLens \citep{bang_hallulens_2025} & Factual QA & Task-specific evidence & $0$ (implicit) & $G$ (implicit)\\
-FRANK \citep{pagnoni_understanding_2021} & Summarization & Source documents & $0$ (implicit) & $G$ (implicit)\\
-QAGS \citep{wang_asking_2020} & Summarization & Source documents & $0$ (implicit) & $G$ (implicit)\\
-SummEval \citep{fabbri_summeval_2021} & Summarization & Source documents & $0$ (implicit) & $G$ (implicit)\\
-XSum \citep{narayan_xsum_2018} & Summarization & BBC source & $0$ (implicit) & $G$ (implicit)\\
+FEVER \citep{thorne_fever_2018} & Fact checking & Wikipedia evidence & $0$ (implicit) & $0$ (implicit)\\
+TruthfulQA \citep{lin_truthfulqa_2022} & Factual QA & External factual reference & $0$ (implicit) & $0$ (implicit)\\
+PopQA \citep{mallen_when_2023} & Long-tail QA & Wikidata & $0$ (implicit) & $0$ (implicit)\\
+SimpleQA \citep{wei_measuring_2024} & Factual QA & External factual reference & $0$ (implicit) & $0$ (implicit)\\
+TriviaQA \citep{joshi_triviaqa_2017} & Reading QA & Evidence documents & $0$ (implicit) & $0$ (implicit)\\
+DefAn \citep{rahman_defan_2024} & Factual QA & External factual reference & $0$ (implicit) & $0$ (implicit)\\
+HaluEval \citep{li_halueval_2023} & QA and summarization & World/reference context & $0$ (implicit) & $0$ (implicit)\\
+FactBench \citep{bayat_factbench_2024} & Factual QA & Retrieved evidence & $0$ (implicit) & $0$ (implicit; undecidable retained)\\
+HalluLens \citep{bang_hallulens_2025} & Factual QA & Task-specific evidence & $0$ (implicit) & $0$ (implicit)\\
+FRANK \citep{pagnoni_understanding_2021} & Summarization & Source documents & $0$ (implicit) & $0$ (implicit)\\
+QAGS \citep{wang_asking_2020} & Summarization & Source documents & $0$ (implicit) & $0$ (implicit)\\
+SummEval \citep{fabbri_summeval_2021} & Summarization & Source documents & $0$ (implicit) & $0$ (implicit)\\
+XSum \citep{narayan_xsum_2018} & Summarization & BBC source & $0$ (implicit) & $0$ (implicit)\\
 \bottomrule
 \end{tabularx}
 \end{table*}
@@ -736,29 +740,29 @@ XSum \citep{narayan_xsum_2018} & Summarization & BBC source & $0$ (implicit) & $
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{0.98}
 \caption{\textbf{Factuality, faithfulness, and adjacent resources in the purposive mapping (part II).}
-The coding follows Table~\ref{tab:full-mapping-factual-a}: $G$ denotes grounded only, and ``partial $K$'' denotes incomplete representation of the content-permission policy.
+The coding follows Table~\ref{tab:full-mapping-factual-a}: $\kappa=0$ denotes factual only, and ``partial'' denotes incomplete representation of the content-permission policy.
 These are author-coded profiles, not labels reported by the original resources.}
 \label{tab:full-mapping-factual-b}
 \begin{tabularx}{0.98\linewidth}{@{}P{0.23\textwidth}P{0.18\textwidth}P{0.20\textwidth}P{0.11\textwidth}Y@{}}
 \toprule
-\textbf{Resource} & \textbf{Task} & \textbf{$O$: reference evidence or rubric} & \textbf{Inferred $\sigma$} & \textbf{Inferred $K$ / encoding}\\
+\textbf{Resource} & \textbf{Task} & \textbf{$O$: reference evidence or rubric} & \textbf{Inferred $\sigma$} & \textbf{Inferred $\kappa$ / status}\\
 \midrule
 \multicolumn{5}{l}{\textbf{Strict factuality and faithfulness (continued)}}\\
-CNN/DailyMail \citep{hermann_teaching_2015} & Summarization & News source & $0$ (implicit) & $G$ (implicit)\\
-DelusionQA \citep{sadat_delucionqa_2023} & Domain QA & Manuals & $0$ (implicit) & $G$ (implicit)\\
-HaluQA \citep{cheng_evaluating_2023} & Long-form QA & External factual reference & $0$ (implicit) & $G$ (implicit)\\
-BIG-Bench \citep{srivastava_beyond_2023} & Multi-task reasoning & Task gold & $0$ (implicit) & $G$ (implicit)\\
-BIG-Bench Hard \citep{suzgun_challenging_2023} & Reasoning & Task gold & $0$ (implicit) & $G$ (implicit)\\
-CR-LLM \citep{li_cr-llm_2024} & Concept reasoning & Gold concepts/context & $0$ (implicit) & $G$ (implicit)\\
-HotpotQA \citep{yang_hotpotqa_2018} & Multi-hop QA & Wikipedia & $0$ (implicit) & $G$ (implicit)\\
-HypoTermQA \citep{uluoglakci_hypotermqa_2024} & Hypothetical QA & Task/world reference & $0$ (implicit) & $G$ (implicit)\\
-HalluRAG \citep{ridder_hallurag_2025} & RAG QA & Retrieved Wikipedia & $0$ (implicit) & $G$ (implicit)\\
-ToolQA \citep{zhuang_toolqa_2023} & Tool-use QA & Tools and APIs & $0$ (implicit) & $G$ (implicit)\\
-RealTimeQA \citep{kasai_realtime_2024} & Real-time QA & Current evidence & $0$ (implicit) & $G$ (implicit)\\
+CNN/DailyMail \citep{hermann_teaching_2015} & Summarization & News source & $0$ (implicit) & $0$ (implicit)\\
+DelusionQA \citep{sadat_delucionqa_2023} & Domain QA & Manuals & $0$ (implicit) & $0$ (implicit)\\
+HaluQA \citep{cheng_evaluating_2023} & Long-form QA & External factual reference & $0$ (implicit) & $0$ (implicit)\\
+BIG-Bench \citep{srivastava_beyond_2023} & Multi-task reasoning & Task gold & $0$ (implicit) & $0$ (implicit)\\
+BIG-Bench Hard \citep{suzgun_challenging_2023} & Reasoning & Task gold & $0$ (implicit) & $0$ (implicit)\\
+CR-LLM \citep{li_cr-llm_2024} & Concept reasoning & Gold concepts/context & $0$ (implicit) & $0$ (implicit)\\
+HotpotQA \citep{yang_hotpotqa_2018} & Multi-hop QA & Wikipedia & $0$ (implicit) & $0$ (implicit)\\
+HypoTermQA \citep{uluoglakci_hypotermqa_2024} & Hypothetical QA & Task/world reference & $0$ (implicit) & $0$ (implicit)\\
+HalluRAG \citep{ridder_hallurag_2025} & RAG QA & Retrieved Wikipedia & $0$ (implicit) & $0$ (implicit)\\
+ToolQA \citep{zhuang_toolqa_2023} & Tool-use QA & Tools and APIs & $0$ (implicit) & $0$ (implicit)\\
+RealTimeQA \citep{kasai_realtime_2024} & Real-time QA & Current evidence & $0$ (implicit) & $0$ (implicit)\\
 \midrule
 \multicolumn{5}{l}{\textbf{Closest intent and hallucination taxonomies}}\\
-FaithQA \citep{hao_faithqa_2025} & Intent verification & Query constraints & $0$ dominant; not controlled & Partial $K$: intent constraints\\
-HIC-Bench \citep{yang_hicbench_2025} & Hallucination typing & Task-dependent & $0$ dominant; not controlled & Partial $K$: hallucination types\\
+FaithQA \citep{hao_faithqa_2025} & Intent verification & Query constraints & $0$ dominant; not controlled & $0$--$1$ (partial: intent constraints)\\
+HIC-Bench \citep{yang_hicbench_2025} & Hallucination typing & Task-dependent & $0$ dominant; not controlled & $0$--$2$ (partial: hallucination types)\\
 \bottomrule
 \end{tabularx}
 \end{table*}
@@ -769,31 +773,31 @@ HIC-Bench \citep{yang_hicbench_2025} & Hallucination typing & Task-dependent & $
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{0.98}
 \caption{\textbf{Creativity and constrained problem-solving resources in the purposive mapping.}
-Creative-writing resources tend toward $\sigma=1$--$2$ with task-implied $K=I$, whereas divergent-thinking tasks often leave style uncontrolled.
-Constrained problem-solving resources mostly use neutral form and partial $K=C$ constraints.
+Creative-writing resources tend toward $\sigma=1$--$2$ with task-implied $\kappa=2$, whereas divergent-thinking tasks often leave style uncontrolled.
+Constrained problem-solving resources mostly use neutral form and partial $\kappa=1$ constraints.
 The profiles are author annotations inferred from task design, not variables reported by the original resources.}
 \label{tab:full-mapping-creative}
 \begin{tabularx}{0.98\linewidth}{@{}P{0.23\textwidth}P{0.18\textwidth}P{0.20\textwidth}P{0.11\textwidth}Y@{}}
 \toprule
-\textbf{Resource} & \textbf{Task} & \textbf{$O$: reference evidence or rubric} & \textbf{Inferred $\sigma$} & \textbf{Inferred $K$ / encoding}\\
+\textbf{Resource} & \textbf{Task} & \textbf{$O$: reference evidence or rubric} & \textbf{Inferred $\sigma$} & \textbf{Inferred $\kappa$ / status}\\
 \midrule
 \multicolumn{5}{l}{\textbf{Creative generation and divergent thinking}}\\
-CreativityPrism \citep{hou_creativityprism_2025} & Multi-task creativity & Task-specific rubrics & Mixed; not isolated & $I$ (implicit)\\
-LitBench \citep{fein_litbench_2025} & Story evaluation & Human preferences & $1$--$2$ (implicit) & $I$ (implicit)\\
-Short Story \citep{ismayilzada_evaluating_2025} & Story generation & Semantic/human criteria & $1$--$2$ (implicit) & $I$ (implicit)\\
-WritingBench \citep{wu_writingbench_2025} & Creative writing & Rubric/human criteria & $1$--$2$ (style scored) & $I$ (implicit)\\
-Art-or-Artifice / TTCW \citep{chakrabarty_art_2024} & Creative writing & Expert rubric & $1$--$2$ (implicit) & $I$ (implicit)\\
-Automated DT scoring \citep{organisciak_beyond_2023} & Divergent thinking & Automated rubric & Not controlled & $I$ (implicit)\\
-Verbal Creativity \citep{dinu_testing_2025} & Divergent thinking & TTCT & Not controlled & $I$ (implicit)\\
-Automated Creativity \citep{li_automated_2025} & Creative writing & Reference texts & $1$--$2$ (implicit) & $I$ (implicit)\\
-Hallucinating Narratives \citep{sun_hallucinating_2024} & Controlled story/reasoning & Mixed evidence/rubric & $1$--$2$ (implicit) & $I$ (partial; mixed support)\\
+CreativityPrism \citep{hou_creativityprism_2025} & Multi-task creativity & Task-specific rubrics & Mixed; not isolated & $2$ (implicit)\\
+LitBench \citep{fein_litbench_2025} & Story evaluation & Human preferences & $1$--$2$ (implicit) & $2$ (implicit)\\
+Short Story \citep{ismayilzada_evaluating_2025} & Story generation & Semantic/human criteria & $1$--$2$ (implicit) & $2$ (implicit)\\
+WritingBench \citep{wu_writingbench_2025} & Creative writing & Rubric/human criteria & $1$--$2$ (style scored) & $2$ (implicit)\\
+Art-or-Artifice / TTCW \citep{chakrabarty_art_2024} & Creative writing & Expert rubric & $1$--$2$ (implicit) & $2$ (implicit)\\
+Automated DT scoring \citep{organisciak_beyond_2023} & Divergent thinking & Automated rubric & Not controlled & $2$ (implicit)\\
+Verbal Creativity \citep{dinu_testing_2025} & Divergent thinking & TTCT & Not controlled & $2$ (implicit)\\
+Automated Creativity \citep{li_automated_2025} & Creative writing & Reference texts & $1$--$2$ (implicit) & $2$ (implicit)\\
+Hallucinating Narratives \citep{sun_hallucinating_2024} & Controlled story/reasoning & Mixed evidence/rubric & $1$--$2$ (implicit) & $2$ (partial; mixed support)\\
 \midrule
 \multicolumn{5}{l}{\textbf{Constrained creative problem solving}}\\
-MacGyver \citep{tian_macgyver_2025} & Problem solving & Human feasibility & $0$ (implicit) & $C$ (partial: feasibility)\\
-EscapeBench \citep{qian_escapebench_2025} & Agent puzzles & Environment state & $0$ (implicit) & $C$ (partial: correctness)\\
-CreativEval \citep{delorenzo_creativeval_2024} & Code generation & Specification/tests & $0$ (implicit) & $C$ (partial: correctness)\\
-NeoCoder \citep{lu_benchmarking_2025} & Code generation & Unit tests & $0$ (implicit) & $C$ (partial: correctness)\\
-Math Creativity \citep{ye_assessing_2024} & Math problem solving & Human soundness & $0$ (implicit) & $C$ (partial: soundness)\\
+MacGyver \citep{tian_macgyver_2025} & Problem solving & Human feasibility & $0$ (implicit) & $1$ (partial: feasibility)\\
+EscapeBench \citep{qian_escapebench_2025} & Agent puzzles & Environment state & $0$ (implicit) & $1$ (partial: correctness)\\
+CreativEval \citep{delorenzo_creativeval_2024} & Code generation & Specification/tests & $0$ (implicit) & $1$ (partial: correctness)\\
+NeoCoder \citep{lu_benchmarking_2025} & Code generation & Unit tests & $0$ (implicit) & $1$ (partial: correctness)\\
+Math Creativity \citep{ye_assessing_2024} & Math problem solving & Human soundness & $0$ (implicit) & $1$ (partial: soundness)\\
 \bottomrule
 \end{tabularx}
 \end{table*}
