@@ -165,6 +165,85 @@ Third, it proposes a research agenda for contract-aware benchmarks and mitigatio
 
 \section{Related Evaluation Paradigms}\label{sec:related}
 
+\subsection{Hallucination taxonomies and the missing contract layer}
+
+Hallucination surveys organize the phenomenon along several related but non-equivalent axes.
+\citet{ji_survey_2023} distinguish intrinsic hallucinations, which contradict the source, from extrinsic hallucinations, which cannot be verified from it.
+\citet{huang_survey_2025} separate factuality hallucinations---factual contradiction or fabrication---from faithfulness hallucinations involving instruction, context, or logical inconsistency.
+\citet{zhang_sirens_2025} instead distinguish input-, context-, and fact-conflicting outputs.
+Other reviews organize causes across the model lifecycle or examine factuality and faithfulness metrics for open-ended generation \citep{wang_factuality_survey_2024,malin_faithfulness_review_2025,lamba_lifecycle_2026}.
+From a creativity perspective, \citet{jiang_survey_2024} distinguish divergent generation from convergent evaluation.
+
+These surveys describe what kind of mismatch occurred, where it may arise, and how it may be measured or used.
+They do not, however, jointly represent the relevant evidence, requested style, and permitted divergence as explicit task variables.
+Our truth contract adds this complementary decision layer: $O_p$ selects the evidence, $\sigma_p$ describes the requested style, and $K_p=(\kappa_p,\Gamma_p,\rho_p)$ specifies whether evidence-unknown content is permitted, where it is permitted, and how it must be presented.
+Descriptive taxonomy and contract-relative label should therefore remain distinct.
+As Figure~\ref{fig:survey-contract} shows, an evidence-unknown claim may be described as extrinsic or fact-conflicting, yet receive \Hall\ under a factual-only contract and \LD\ when it falls within the licensed scope and satisfies the required epistemic presentation.
+
+\begin{figure*}[t]
+\centering
+\resizebox{0.98\linewidth}{!}{%
+\begin{tikzpicture}[font=\small]
+  \tikzset{
+    surveybox/.style={rectangle,rounded corners=4pt,draw=clrB!70,fill=clrB!6,
+      text width=6.4cm,align=left,inner sep=8pt,minimum height=4.05cm},
+    contractbox/.style={rectangle,rounded corners=4pt,draw=clrP!75,fill=clrP!6,
+      text width=6.4cm,align=left,inner sep=8pt,minimum height=4.05cm},
+    resultbox/.style={rectangle,rounded corners=3pt,draw=gray!60,fill=gray!5,
+      text width=6.4cm,align=center,inner sep=7pt,font=\small\bfseries},
+    sharedbox/.style={rectangle,rounded corners=4pt,draw=clrG!70,fill=gray!5,
+      text width=7.4cm,align=center,inner sep=7pt,font=\small\bfseries}
+  }
+
+  \node[sharedbox] (claim) at (0,0)
+    {One extracted claim $c$ (from prompt $p$ and response $y$)};
+
+  \node[surveybox,anchor=north east] (surveys) at (-0.35,-1.35) {%
+    \textbf{Existing survey lenses: \emph{describe} the divergence}\\[3pt]
+    {\scriptsize
+    \textbf{Relation to the source:} intrinsic / extrinsic \citep{ji_survey_2023}\\
+    \textbf{Type of inconsistency:} factuality / faithfulness \citep{huang_survey_2025}\\
+    \textbf{Conflict target:} input / context / fact \citep{zhang_sirens_2025}\\
+    \textbf{Other views:} lifecycle cause, evaluation metric, or creative phase
+    \citep{lamba_lifecycle_2026,wang_factuality_survey_2024,malin_faithfulness_review_2025,jiang_survey_2024}}
+  };
+
+  \node[contractbox,anchor=north west] (contract) at (0.35,-1.35) {%
+    \textbf{Truth-contract lens: \emph{judge} the claim in this task}\\[3pt]
+    {\scriptsize
+    $O_p$: which evidence supports or contradicts the claim?\\
+    $\sigma_p$: what style did the prompt request?\\
+    $K_p=(\kappa_p,\Gamma_p,\rho_p)$: is evidence-unknown content allowed, within which scope, and under which presentation?\\[2pt]
+    Requested style guides interpretation but never licenses unsupported content.}
+  };
+
+  \node[resultbox,below=0.75cm of surveys] (category)
+    {Descriptive category\\[-1pt]
+    {\scriptsize\mdseries e.g.\ \emph{extrinsic} or \emph{fact-conflicting}}};
+
+  \node[resultbox,below=0.75cm of contract] (label)
+    {Contract-relative label\\[-1pt]
+    {\scriptsize\mdseries \SUP\ (supported), \LD\ (licensed, evidence-unknown),\\ or \Hall\ (contradicted or unlicensed)}};
+
+  \node[sharedbox,below=0.9cm of $(category.south)!0.5!(label.south)$] (joint)
+    {The two lenses are complementary: the same claim keeps \emph{one} descriptive category \emph{and} receives \emph{one} contract-relative label.};
+
+  \draw[arrow] (claim.south west) ++(0.9,0) -- (surveys.north);
+  \draw[arrow] (claim.south east) ++(-0.9,0) -- (contract.north);
+  \draw[arrow] (surveys.south) -- (category.north);
+  \draw[arrow] (contract.south) -- (label.north);
+  \draw[arrow] (category.south) -- (joint.north west);
+  \draw[arrow] (label.south) -- (joint.north east);
+\end{tikzpicture}}
+\caption{\textbf{Existing hallucination taxonomies and the complementary truth-contract layer.}
+Existing surveys \emph{describe} a claim: its relation to a source, the type or target of an inconsistency, its possible cause, its evaluation, or its role in a creative process.
+The truth-contract lens does not replace these descriptions; it \emph{judges} the same claim by adding the task-specific information needed to assign \SUP, \Hall, or \LD.
+The two outputs coexist: an evidence-unknown claim can keep one descriptive category (for example, extrinsic or fact-conflicting) while receiving \Hall\ when unlicensed or \LD\ when $K_p$ licenses it within $\Gamma_p$ and its presentation satisfies $\rho_p$.}
+\label{fig:survey-contract}
+\end{figure*}
+
+\subsection{Adjacent evaluation paradigms}
+
 Faithfulness asks whether a claim is supported by provided evidence, whereas factuality asks whether it is correct against an external reference \citep{maynez_faithfulness_2020,kryscinski_evaluating_2020}.
 Both define evidence relations.
 The content-permission policy asks a different question: what may an output do when the reference evidence does not entail a claim?
