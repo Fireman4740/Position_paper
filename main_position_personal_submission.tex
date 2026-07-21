@@ -69,14 +69,13 @@
 Hallucination in large language models is usually defined as unsupported or contradicted content.
 This definition is useful for factual reporting but ambiguous when a task allows invention or requests figurative language.
 We argue that hallucination should instead be a claim-level label relative to a task's \emph{truth contract}, $\TC(p)=(O_p,\sigma_p,K_p)$.
-The contract specifies reference evidence $O_p$, requested style $\sigma_p$, and a content-permission policy $K_p=(\kappa_p,\Gamma_p,\rho_p)$.
-Its permission level $\kappa_p\in\{0,1,2\}$ distinguishes factual-only tasks, limited divergence, and in-frame invention; $\Gamma_p$ and $\rho_p$ specify where and how divergence is allowed.
+The contract specifies reference evidence $O_p$, a requested style level $\sigma_p$, and a content-permission policy $K_p$.
+Its permission level $\kappa_p\in\{0,1,2\}$ distinguishes factual-only tasks, limited divergence, and in-frame invention, while further components specify where and how divergence is allowed.
 The evaluator first separates factual claims from stylistic wording and then checks only the extracted claims.
+The requested style level guides the interpretation of metaphors and other marked forms, but never permits unsupported content by itself.
 A supported claim receives \emph{supported} (\SUP); a contradicted or unlicensed claim receives \emph{hallucination} (\Hall); and an evidence-unknown but properly licensed claim receives \emph{licensed divergence} (\LD).
-These are claim-level labels: a complete response may contain several of them.
-Current methods often aggregate claim results, but no single rule is known to be optimal across truth contracts; contract-aware response-level assessment remains an open problem.
-The style level guides the interpretation of metaphors and other marked forms, but never permits unsupported content by itself.
-We support the position with five worked cases and an author-coded mapping of forty evaluation resources.
+These claim-level labels do not by themselves score a complete response, and no aggregation rule is known to be optimal across truth contracts.
+We support the position with an author-coded mapping of forty evaluation resources and five worked cases.
 In this sample, factuality benchmarks cluster around neutral language ($\sigma=0$) and factual-only permission ($\kappa=0$), whereas creative-writing benchmarks cluster around marked language ($\sigma=1$ or $2$) and task-implied invention ($\kappa=2$).
 The two literatures therefore evaluate different truth contracts rather than conflicting versions of the same task.
 The missing test is a controlled benchmark that varies style and permission independently.
@@ -91,7 +90,7 @@ However, unsupported generation is not always an error.
 Fiction, brainstorming, and hypothesis generation require the model to go beyond established facts or provided documents \citep{franceschelli_creativity_2024,jiang_survey_2024,sui_confabulation_2024}.
 A medical assistant should not invent a diagnosis.
 A fiction-writing assistant must be able to invent characters and events.
-The relevant distinction is therefore not only whether a statement is supported, but also whether the task permits that departure from support.
+The relevant distinction is therefore whether the task permits that departure from support, not merely whether a statement is supported.
 
 Many current evaluation protocols do not represent this distinction explicitly.
 Factuality and faithfulness evaluations typically penalize unsupported claims under a fixed evidence source \citep{maynez_faithfulness_2020,bang_hallulens_2025}.
@@ -102,7 +101,7 @@ A second diagnostic problem concerns form rather than invention.
 Stylistic foregrounding makes linguistic form salient through devices such as deviation, parallelism, metaphor, and unusual phrasing \citep{leech_short_style_1981,vanpeer_stylistics_2020}.
 Some of these devices can change how a claim is expressed without adding a new factual commitment \citep{badathala_match_2023,jin_deep_2022}.
 An evaluator that literalizes a metaphor, or reads surface unexpectedness as evidence of factual deviation, can therefore report a hallucination although the underlying claim remains supported.
-The point is not that all current factuality systems make this error, but that many protocols do not expose requested style level as a variable with which the error can be measured.
+The point is not that all current factuality systems make this error, but that many protocols do not expose the requested style level as a variable, so the error cannot be measured.
 
 \paragraph{Our position}
 Hallucination is not a context-free property of a sentence.
@@ -111,17 +110,15 @@ We write this contract as $\TC(p)=(O_p,\sigma_p,K_p)$.
 The reference evidence $O_p$ specifies the standard of support.
 The requested style level $\sigma_p$ specifies how strongly the prompt asks for departure from neutral wording, with factual commitments preserved.
 The content-permission policy $K_p$ specifies the type, scope, and required epistemic presentation of any permitted departure.
-An unsupported claim is \Hall\ if it violates $K_p$; an evidentially unknown claim is \LD\ if $K_p$ permits it and its presentation satisfies the contract.
-These labels apply to individual claims.
-Assessing a complete response requires a separate aggregation step over its claim labels and other properties, such as coverage, usefulness, severity, and style compliance.
-This paper does not claim an optimal response-level aggregation rule.
+An unsupported claim is \Hall\ if it violates $K_p$; an evidence-unknown claim is \LD\ if $K_p$ permits it and its presentation satisfies the contract.
+These labels apply to individual claims; assessing a complete response requires a separate aggregation step that this paper does not fix.
 The contract does not change what is true.
 It determines whether the model's departure from the relevant evidence violates the task.
 
 Figure~\ref{fig:flip} illustrates this position.
 The figure uses a constructed example: \emph{Verdier} is an invented name introduced here, not a quotation from a dataset.
 It follows one claim wording extracted from a hypothetical model response and shows that its label depends on the prompt and truth contract.
-The wording is fixed, but the prompt establishes a different discourse frame, so the two occurrences do not express the same contextualized claim.
+The wording is fixed, but each prompt establishes a different discourse frame, so the two occurrences do not express the same contextualized claim.
 
 \begin{figure}[t]
 \centering
@@ -145,11 +142,9 @@ The wording is fixed, but the prompt establishes a different discourse frame, so
   \draw[arrow] (fi) -- (ld);
 \end{tikzpicture}}
 \caption{\textbf{One extracted claim wording, two contract-dependent labels.}
-This constructed example starts from the same claim wording in a hypothetical model response.
-Under the historical-QA prompt, it is a real-world assertion unsupported by $O_p$ and receives \Hall.
-Under the fiction-writing prompt, it is an in-frame invention permitted by $K_p$ and receives \LD.
-Thus, a claim extracted from a response can be labelled differently when the prompt changes the truth contract.
-Strictly, the discourse frame changes the contextualized claim; the figure therefore shows contract dependence, not a contradiction about one fixed proposition.
+The same constructed claim wording is evaluated under two prompts.
+Under the historical-QA prompt it is an unsupported real-world assertion and receives \Hall; under the fiction-writing prompt it is an in-frame invention permitted by $K_p$ and receives \LD.
+Strictly, each prompt changes the contextualized claim, so the figure shows contract dependence, not a contradiction about one fixed proposition.
 Both labels are claim-level, not verdicts for the complete response.}
 \label{fig:flip}
 \end{figure}
@@ -186,7 +181,7 @@ Foregrounding and style-transfer research shows that marked form can be describe
 Hallucination evaluation, by contrast, focuses mainly on support and contradiction.
 The missing bridge is a protocol that varies stylistic marking while holding the expressed claims and reference evidence fixed, then tests whether extraction and claim-level labels remain stable.
 
-\section{Truth Contracts and Claim-Level Verdicts}\label{sec:framework}
+\section{Truth Contracts and Claim-Level Labels}\label{sec:framework}
 
 \subsection{The truth contract}
 
@@ -210,11 +205,11 @@ $K_p$ specifies three properties:
   \item $\rho_p$: the \emph{required epistemic presentation}, meaning how the response must signal the status of that content, for example with a hedge, an explicit hypothesis marker, or a declared fictional frame.
 \end{itemize}
 The scale orders only the breadth of permitted departure from the reference evidence.
-It is not a scale of quality, creativity, or factuality, and the number does not replace the scope and presentation constraints.
+It is not a scale of quality, creativity, or factuality.
 In particular, limited speculation and fiction carry different commitments and presentation requirements.
 
 A factual-only task has an empty permission scope: every factual claim must be supported.
-For $\Gamma_p$, consider a medical brainstorming task that permits possible diagnoses but not invented drug doses; the diagnosis space is inside the scope, whereas treatment instructions are outside it.
+For $\Gamma_p$, consider a medical brainstorming task that permits possible diagnoses but not invented drug doses; the diagnosis space is inside the scope, whereas invented treatment content, such as drug doses, is outside it.
 For $\rho_p$, ``this may be early Lyme disease, but testing is required'' satisfies a request to mark uncertainty, while ``this is early Lyme disease'' does not.
 In fiction, the declared story frame can satisfy $\rho_p$ for invented characters and events, but $\Gamma_p$ may still exclude fabricated real-world claims about named people \citep{searle_logical_1975}.
 
@@ -290,7 +285,7 @@ where $\sigma_{p_0}=0$, $\sigma_{p_1}=1$, and $\sigma_{p_2}=2$.
 The observed style levels and \SV\ flags may legitimately differ.
 An automatic evaluator fails if it drops a recoverable claim as style, literalizes stylistic material into a spurious claim, or changes the claim-level label after the canonical claim has been matched.
 This requirement applies only to claim-preserving variants.
-The target capability is to produce stylistically creative yet factually grounded output whenever $K_p$ requires grounding.
+For models, the target capability is to produce stylistically creative yet factually grounded output whenever $K_p$ requires grounding.
 Failure to produce the requested style level is an instruction-following error, whereas adding an unsupported claim under a grounded-only $K_p$ is a truth-contract violation.
 
 \subsection{Evidence state and claim label}
@@ -319,7 +314,7 @@ An \LD\ label records contractual permission, not proof that the claim is true i
 
 By default, a claim that contradicts $O_p$ receives \Hall.
 For fiction, $O_p$ includes the declared fictional frame and its constraints; disagreement with the real world alone does not make an in-frame invention contradicted.
-If an entailed claim violates a requested hedge or style, it remains \SUP\ but receives a separate task-compliance error.
+If an entailed claim violates a requested hedge or style, it remains \SUP\ but is additionally flagged with a task-compliance error.
 Usefulness $U(c,p)$ is reported as a separate task-dependent score over \LD\ claims.
 A low usefulness score does not change \LD\ into \Hall.
 
@@ -327,7 +322,7 @@ An explicit refusal or a statement such as ``the available evidence is insuffici
 It is not automatically treated as asserting the embedded unsupported claim.
 This distinction prevents calibrated abstention from being mislabeled as hallucination.
 
-\paragraph{Claim labels versus response-level assessment.}
+\paragraph{Claim labels versus response-level assessment}
 The rule above returns one claim-level label $V(c_i\mid p)$ for each extracted claim $c_i$ in a response $y$.
 It does not by itself return a verdict for the complete response.
 Current evaluation methods often aggregate claim-level results with a proportion, mean score, or binary rule such as whether any error occurs \citep{min_factscore_2023,bayat_factbench_2024}.
@@ -374,9 +369,9 @@ Figure~\ref{fig:decision} summarizes the procedure.
   \draw[arrow] (hasclaim) -- node[edge,left]{yes} (plainclaim);
   \draw[arrow] (hasclaim.east) -- node[edge,above]{no} (styleonly.west);
   \draw[arrow] (plainclaim) -- (evidence);
-  \draw[arrow] (evidence.west) -- node[edge,above]{supported} (sup.east);
+  \draw[arrow] (evidence.west) -- node[edge,above]{entailed} (sup.east);
   \draw[arrow] (evidence.east) -- node[edge,above]{contradicted} (contradicted.west);
-  \draw[arrow] (evidence) -- node[edge,left]{not determined} (permission);
+  \draw[arrow] (evidence) -- node[edge,left]{unknown} (permission);
   \draw[arrow] (permission.south west) -- node[edge,above,pos=0.62]{yes} (licensed.north);
   \draw[arrow] (permission.south east) -- node[edge,above,pos=0.62]{no} (unlicensed.north);
 \end{tikzpicture}}
@@ -394,21 +389,20 @@ Combining them into a response-level assessment $R(y\mid p)$ is shown as a separ
 Table~\ref{tab:contracts} applies the rule to representative prompts.
 Each card specifies one contract and evaluates one or two claims recovered from example output spans.
 
-\begin{table*}[!tp]
+\begin{table*}[t]
 \centering
 \small
 \caption{\textbf{The thesis in one view.}
-Each colored card fixes one truth contract $\TC(p)=(O_p,\sigma_p,K_p)$, with $K_p=(\kappa_p,\Gamma_p,\rho_p)$, and places its examples one below another.
-\SUP, \Hall, and \LD\ are claim-level labels; \SV\ is an auxiliary span label.
-The table does not assign one verdict to the complete response: response-level aggregation is a separate open problem.}
+Each colored card fixes one truth contract $\TC(p)=(O_p,\sigma_p,K_p)$, with $K_p=(\kappa_p,\Gamma_p,\rho_p)$, and lists one or two evaluated claims from example outputs.
+\SUP, \Hall, and \LD\ are claim-level labels and \SV\ is an auxiliary span label; the table assigns no verdict to a complete response.}
 \label{tab:contracts}
 \setlength{\fboxsep}{5pt}
 \fcolorbox{clrB}{clrB!3}{%
 \begin{minipage}{0.94\linewidth}
-\textbf{Prompt:} ``Summarize this medical report''\hfill
-\colorbox{clrB!12}{\strut $\sigma_p=0,\ \kappa_p=0$}\\[-1pt]
+\textbf{Prompt:} ``Summarize this medical report''\\[2pt]
+\null\hfill\colorbox{clrB!12}{\strut $\sigma_p=0,\ \kappa_p=0$}\\[2pt]
 \textbf{Truth contract:} $O_p=$ provided report; $\Gamma_p=\varnothing$; $\rho_p=$ factual assertion.\par\smallskip
-\begin{tabularx}{\linewidth}{@{}YP{0.15\linewidth}P{0.26\linewidth}@{}}
+\begin{tabularx}{\linewidth}{@{}YP{0.12\linewidth}P{0.30\linewidth}@{}}
 \textbf{Response claim:} ``The patient has diabetes'' (not in the report) & \textcolor{clrH}{\bfseries \Hall} & unsupported by $O_p$ and not licensed\\
 \end{tabularx}
 \end{minipage}}
@@ -416,11 +410,12 @@ The table does not assign one verdict to the complete response: response-level a
 \smallskip
 \fcolorbox{clrLD}{clrLD!3}{%
 \begin{minipage}{0.94\linewidth}
-\textbf{Prompt:} ``Explain photosynthesis like a poet, but keep the science accurate''\\[-1pt]
-\colorbox{clrLD!12}{\strut $\sigma_p=2,\ \kappa_p=0$}\\[-1pt]
+\textbf{Prompt:} ``Explain photosynthesis like a poet, but keep the science accurate''\\[2pt]
+\null\hfill\colorbox{clrLD!12}{\strut $\sigma_p=2,\ \kappa_p=0$}\\[2pt]
 \textbf{Truth contract:} $O_p=$ scientific references; $\Gamma_p=\varnothing$; $\rho_p=$ factual assertion.\par\smallskip
-\begin{tabularx}{\linewidth}{@{}YP{0.15\linewidth}P{0.26\linewidth}@{}}
-\textbf{Response claim:} ``Chlorophyll catches sunlight, fueling the plant's sugar-making work'' & \textcolor{clrLD}{\bfseries \SUP+\SV} & supported claim in marked form\\
+\begin{tabularx}{\linewidth}{@{}YP{0.12\linewidth}P{0.30\linewidth}@{}}
+\textbf{Response claim:} ``Chlorophyll catches sunlight, fueling the plant's sugar-making work'' & {\bfseries \SUP+\SV} & supported claim in marked form\\
+\addlinespace[3pt]
 \textbf{Response claim:} ``Plants make sugar from moonlight'' & \textcolor{clrH}{\bfseries \Hall} & contradicted claim; $\sigma_p=2$ does not license it\\
 \end{tabularx}
 \end{minipage}}
@@ -428,11 +423,12 @@ The table does not assign one verdict to the complete response: response-level a
 \smallskip
 \fcolorbox{clrP}{clrP!3}{%
 \begin{minipage}{0.94\linewidth}
-\textbf{Prompt:} ``List possible causes; mark anything unestablished''\\[-1pt]
-\colorbox{clrP!12}{\strut $\sigma_p=0,\ \kappa_p=1$}\\[-1pt]
+\textbf{Prompt:} ``List possible causes; mark anything unestablished''\\[2pt]
+\null\hfill\colorbox{clrP!12}{\strut $\sigma_p=0,\ \kappa_p=1$}\\[2pt]
 \textbf{Truth contract:} $O_p=$ clinical evidence; $\Gamma_p=$ possible diagnoses; $\rho_p=$ explicit uncertainty marker.\par\smallskip
-\begin{tabularx}{\linewidth}{@{}YP{0.15\linewidth}P{0.26\linewidth}@{}}
+\begin{tabularx}{\linewidth}{@{}YP{0.12\linewidth}P{0.30\linewidth}@{}}
 \textbf{Response claim:} ``This could be early Lyme disease, but testing is required'' & \textcolor{clrLD}{\bfseries \LD} & unknown, in scope, and properly hedged\\
+\addlinespace[3pt]
 \textbf{Response claim:} ``This is early Lyme disease'' & \textcolor{clrH}{\bfseries \Hall} & required hedge is missing\\
 \end{tabularx}
 \end{minipage}}
@@ -440,12 +436,13 @@ The table does not assign one verdict to the complete response: response-level a
 \smallskip
 \fcolorbox{clrO}{clrO!3}{%
 \begin{minipage}{0.94\linewidth}
-\textbf{Prompt:} ``Write a story set in 1920s Paris''\hfill
-\colorbox{clrO!12}{\strut $\sigma_p=1,\ \kappa_p=2$}\\[-1pt]
+\textbf{Prompt:} ``Write a story set in 1920s Paris''\\[2pt]
+\null\hfill\colorbox{clrO!12}{\strut $\sigma_p=1,\ \kappa_p=2$}\\[2pt]
 \textbf{Truth contract:} $O_p=$ prompt and historical constraints; $\Gamma_p=$ fictional world; $\rho_p=$ declared fictional frame.\par\smallskip
-\begin{tabularx}{\linewidth}{@{}YP{0.15\linewidth}P{0.26\linewidth}@{}}
+\begin{tabularx}{\linewidth}{@{}YP{0.12\linewidth}P{0.30\linewidth}@{}}
 \textbf{Response claim:} ``The fictional caf\'e Verdier opened at dawn'' & \textcolor{clrLD}{\bfseries \LD} & invention inside $\Gamma_p$\\
-\textbf{Response claim:} A fabricated statement about a real named person, presented as biography & \textcolor{clrH}{\bfseries \Hall} & real-world claim outside $\Gamma_p$\\
+\addlinespace[3pt]
+\textbf{Response claim:} \emph{A fabricated statement about a real named person, presented as biography} & \textcolor{clrH}{\bfseries \Hall} & real-world claim outside $\Gamma_p$\\
 \end{tabularx}
 \end{minipage}}
 \end{table*}
@@ -472,37 +469,36 @@ Appendix~\ref{app:mapping} expresses these observations in the framework's terms
 Each resource receives a coarse task-level code for its reference evidence $O$, its dominant requested style level $\sigma$, and its inferred permission level $\kappa$.
 We use $\kappa=0$ for factual-only tasks, $\kappa=1$ for limited divergence constrained by explicit marking, feasibility, tests, or soundness, and $\kappa=2$ for invention inside a declared task frame.
 An ``implicit'' code means that the level is inferred from the task design rather than represented as an independent evaluation variable.
-The number estimates the breadth of permitted departure; it does not measure benchmark quality or replace the scope and presentation components of $K$.
+The level estimates the breadth of permitted departure; it does not measure benchmark quality or replace the scope and presentation components of $K$.
 
-The mapping was coded in a single pass by one author.
-The inferred task profiles are interpretive annotations, not measurements reported by the original resources.
-Our conclusions are therefore limited to this sample.
-Independent recoding and a public codebook would be required before treating the mapping as a validated resource.
+The mapping was coded in a single pass by one author, so the inferred task profiles are interpretive annotations rather than measurements reported by the original resources.
+Independent recoding and a public codebook would be required before treating it as a validated resource, and our conclusions are limited to this sample.
 Appendix~\ref{app:mapping} lists the resources and their coarse inferred profiles.
 
 \subsection{Observed pattern in the sample}
 
 The complete resource-level coding appears in Appendix Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}; the following patterns state the main observation directly.
 
-\paragraph{Factuality cluster: low $\sigma$, low $\kappa$.}
+\paragraph{Factuality cluster: low $\sigma$, low $\kappa$}
 The twenty-four strict factuality and faithfulness resources generally fix reference evidence, assume neutral wording ($\sigma=0$), and treat unsupported claims as errors under an inferred $\kappa=0$ policy.
 The two closest intent or hallucination-taxonomy resources represent part of the problem, but do not jointly score evidence, permission scope, and epistemic presentation.
 
-\paragraph{Creativity cluster: higher $\sigma$ or higher $\kappa$, but rarely both as explicit controls.}
+\paragraph{Creativity cluster: higher $\sigma$ or higher $\kappa$, but rarely both as explicit controls}
 Creative-writing resources more often request or reward marked language ($\sigma=1$ or $2$) and imply $\kappa=2$.
 They generally treat the permission policy $K=(\kappa,\Gamma,\rho)$ as part of the task rather than as an independently varied evaluation variable.
 Divergent-thinking resources also imply $\kappa=2$ but often do not control linguistic style.
 The five constrained creative-problem-solving resources instead combine mostly neutral form with a partial $\kappa=1$ policy based on feasibility, tests, or correctness.
 
-\paragraph{The apparent contradiction is a coverage gap.}
+\paragraph{The apparent contradiction is a coverage gap}
 The two clusters do not provide conflicting measurements of one capability; they evaluate different regions of the truth-contract space.
 The main missing region is a controlled crossing of $\sigma\in\{0,1,2\}$ with a fixed grounded-only policy, especially strongly marked but factually grounded language.
 Within the mapped sample, no resource represents $O_p$, $\sigma_p$, and $K_p$ as independently varied evaluation variables.
 Likewise, none jointly evaluates $\sigma_p$-conditioned span typing, \SV\ placement, extracted claim sets, and downstream claim-level labels.
 
+No factuality or faithfulness resource in the sample treats marked form as a possible source of factuality-measurement error, which answers the second recorded sub-question in the negative.
 The sample also underrepresents strongly marked language under a strict factual contract.
 Existing resources more often pair factual contracts with neutral language and creative contracts with marked language.
-Examples include ``explain this scientific result like a poet, but keep every claim accurate.''
+The underrepresented combination corresponds to prompts such as ``explain this scientific result like a poet, but keep every claim accurate.''
 Such tasks can reveal whether a factuality verifier mistakes figurative wording for unsupported claim content.
 Modern verification pipelines make this a plausible failure mode because claim decomposition, natural-language inference, and semantic similarity may all depend on the surface realization \citep{chen_menli_2023,aynetdinov_semscore_2024}.
 This is a measurement hypothesis, not a prevalence result established by the present paper.
@@ -529,6 +525,7 @@ Figure~\ref{fig:profiles} organizes the target task profiles by requested style 
   \draw[gray!35] (2*\cw,0)--(2*\cw,3*\rh);
   \draw[gray!35] (0,\rh)--(3*\cw,\rh);
   \draw[gray!35] (0,2*\rh)--(3*\cw,2*\rh);
+  \draw[very thick,clrH] (2*\cw,0) rectangle (3*\cw,\rh);
   \node[align=center,text width=3.15cm] at (0.5*\cw,0.5*\rh)
     {\textbf{Grounded reporting}\\{\scriptsize paraphrase; no new claim}};
   \node[align=center,text width=3.15cm] at (1.5*\cw,0.5*\rh)
@@ -559,7 +556,8 @@ Figure~\ref{fig:profiles} organizes the target task profiles by requested style 
 The grid crosses three content-permission levels with the three requested style levels, $\sigma_p\in\{0,1,2\}$.
 Each cell is an illustrative task profile, not an empirical frequency or quality ranking.
 A higher $\kappa_p$ broadens the type of departure that a task may permit, but scope and presentation constraints still apply.
-A higher $\sigma_p$ changes the requested style level but does not license unsupported claims.}
+A higher $\sigma_p$ changes the requested style level but does not license unsupported claims.
+Background shading only groups rows by $\kappa_p$ and carries no ordering; the highlighted $\sigma_p=2,\ \kappa_p=0$ cell (strongly marked but grounded) is the region most underrepresented in our sample.}
 \label{fig:profiles}
 \end{figure*}
 
@@ -568,7 +566,7 @@ A higher $\sigma_p$ changes the requested style level but does not license unsup
 Formal work suggests that some errors remain possible for sufficiently general models operating with incomplete evidence \citep{kalai_calibrated_2024,xu_hallucination_2024,banerjee_llms_2024}.
 This does not imply a constant deployment error rate \citep{suzuki_negligible_2025}.
 For our position, the main point is operational: suppressing every departure from observed evidence would also suppress hypotheses and in-frame invention.
-Evaluation should instead reduce unlicensed departures (\Hall), preserve licensed ones (\LD), and retain supported content at the requested $\sigma_p$ level \citep{banerjee_does_2025,sun_hallucinating_2024,he_shakespearean_2025}.
+Evaluation should instead target three outcomes: reducing unlicensed departures (\Hall), preserving licensed ones (\LD), and retaining supported content at the requested $\sigma_p$ level \citep{banerjee_does_2025,sun_hallucinating_2024,he_shakespearean_2025}.
 
 \section{Worked Cases}\label{sec:cases}
 
@@ -583,7 +581,7 @@ With $O=$ an external evidence set that entails the same claim, it receives \SUP
 The surface text does not change; the reference evidence does.
 
 \paragraph{Case B: changing the discourse frame}
-The caf\'e sentence in Figure~\ref{fig:flip} is \Hall\ when interpreted as a real-world historical assertion under a grounded QA contract.
+The caf\'e sentence in Figure~\ref{fig:flip} is \Hall\ when interpreted as a real-world historical assertion under a grounded historical-QA contract.
 Under a declared fictional frame, the corresponding fictional-world claim is in scope and receives \LD.
 The example holds the wording fixed while changing its contextualized claim and content-permission policy.
 
@@ -604,7 +602,6 @@ Under $\sigma_p=2$, ``chlorophyll catches sunlight, fueling the plant's sugar-ma
 If an evaluator extracts a literal pseudo-claim from the figurative wording, a subsequent \Hall\ label reflects an extraction error, not a factual defect in the intended claim.
 
 Together, Cases A--E isolate the role of reference evidence, discourse frame, epistemic presentation, permission scope, and style-conditioned claim recovery.
-The cases are kept in prose because each contrast requires an explanation that a compact summary table would repeat without adding a new result.
 
 \section{Research Agenda}\label{sec:agenda}
 
@@ -662,7 +659,6 @@ Likewise, a response may remain supported but reduce a requested $\sigma_p=2$ st
 These are output-level task-compliance failures, not new claim labels.
 Conversely, satisfying $\sigma_p=2$ does not excuse a fabricated claim under a grounded-only $K_p$.
 Reporting claim-level labels, their aggregation rule, and style compliance separately makes ``creative and factual when required'' an evaluable target.
-Because this paper does not define an optimal $R$, its formal results should not be read as a complete response-scoring method.
 
 The framework also separates the claim label from severity.
 A false drug dose and a wrong trivia date can both receive \Hall, but their costs differ.
@@ -681,16 +677,15 @@ The claim-level rule is therefore specified now, while alternative response-leve
 
 Third, the purposive, author-coded mapping establishes a concrete coverage pattern in the selected resources.
 A larger systematic review, independent recoding, and a public codebook would strengthen estimates of how often each truth-contract profile occurs in the broader literature.
-These boundaries define the next validation steps while leaving the paper's central distinction---between evidential support, content permission, and requested style---fully testable.
+These boundaries define the next validation steps, and they leave the paper's central distinction fully testable: evidential support, content permission, and requested style.
 
 \section{Conclusion}\label{sec:conclusion}
 
 Hallucination is not a context-free property of a sentence.
 It is a claim-level label relative to a task's reference evidence, requested style level, and content-permission policy.
 The truth contract $\TC(p)=(O_p,\sigma_p,K_p)$ separates these components.
-An unknown claim is \LD\ only when it falls within the permitted scope and uses the required epistemic presentation; otherwise it is \Hall.
+An evidence-unknown claim is \LD\ only when it falls within the permitted scope and uses the required epistemic presentation; otherwise it is \Hall.
 Usefulness, severity, and style compliance remain separate.
-These are claim-level decisions.
 A complete response may contain several labels, and its response-level assessment depends on an aggregation rule that this position paper deliberately leaves open.
 
 The purposive mapping suggests that these variables are rarely represented together in the resources we examined.
@@ -699,7 +694,8 @@ The next step is to validate contract-guided span typing, measure label stabilit
 
 \appendix
 
-\appendixsection{Additional Diagnostics and Response-Level Aggregation}\label{app:diagnostics}
+\appendixsection{Additional Diagnostics and Response-Level Aggregation}%
+\makeatletter\def\@currentlabel{A}\makeatother\label{app:diagnostics}
 
 Section~\ref{sec:framework} defines the truth contract, span types, and claim-label rule.
 To avoid repeating that formalism, this appendix records only additional diagnostics needed for an empirical implementation.
@@ -718,7 +714,8 @@ When $K_p$ changes, the same evidence-unknown claim may intentionally change fro
 For a complete response $y$, an evaluation should publish the number or proportion of \SUP, \Hall, and \LD\ claims, the observed style compliance, and any severity or usefulness weights before reporting an aggregate $R(y\mid p)$.
 Because the present paper does not validate one aggregation rule, comparisons should report sensitivity to plausible alternatives rather than present $R$ as a uniquely determined final verdict.
 
-\appendixsection{Resource Mapping}\label{app:mapping}
+\appendixsection{Resource Mapping}%
+\makeatletter\def\@currentlabel{B}\makeatother\label{app:mapping}
 
 Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative} list the forty resources used in the purposive mapping.
 Each row encodes the reference evidence $O$, the dominant requested style level $\sigma$, and the inferred permission level $\kappa$.
@@ -776,8 +773,8 @@ These are author-coded profiles, not labels reported by the original resources.}
 \midrule
 \multicolumn{5}{l}{\textbf{Strict factuality and faithfulness (continued)}}\\
 CNN/DailyMail \citep{hermann_teaching_2015} & Summarization & News source & $0$ (implicit) & $0$ (implicit)\\
-DelusionQA \citep{sadat_delucionqa_2023} & Domain QA & Manuals & $0$ (implicit) & $0$ (implicit)\\
-HaluQA \citep{cheng_evaluating_2023} & Long-form QA & External factual reference & $0$ (implicit) & $0$ (implicit)\\
+DelucionQA \citep{sadat_delucionqa_2023} & Domain QA & Manuals & $0$ (implicit) & $0$ (implicit)\\
+HalluQA \citep{cheng_evaluating_2023} & Long-form QA & External factual reference & $0$ (implicit) & $0$ (implicit)\\
 BIG-Bench \citep{srivastava_beyond_2023} & Multi-task reasoning & Task gold & $0$ (implicit) & $0$ (implicit)\\
 BIG-Bench Hard \citep{suzgun_challenging_2023} & Reasoning & Task gold & $0$ (implicit) & $0$ (implicit)\\
 CR-LLM \citep{li_cr-llm_2024} & Concept reasoning & Gold concepts/context & $0$ (implicit) & $0$ (implicit)\\
@@ -785,7 +782,7 @@ HotpotQA \citep{yang_hotpotqa_2018} & Multi-hop QA & Wikipedia & $0$ (implicit) 
 HypoTermQA \citep{uluoglakci_hypotermqa_2024} & Hypothetical QA & Task/world reference & $0$ (implicit) & $0$ (implicit)\\
 HalluRAG \citep{ridder_hallurag_2025} & RAG QA & Retrieved Wikipedia & $0$ (implicit) & $0$ (implicit)\\
 ToolQA \citep{zhuang_toolqa_2023} & Tool-use QA & Tools and APIs & $0$ (implicit) & $0$ (implicit)\\
-RealTimeQA \citep{kasai_realtime_2024} & Real-time QA & Current evidence & $0$ (implicit) & $0$ (implicit)\\
+RealTime QA \citep{kasai_realtime_2024} & Real-time QA & Current evidence & $0$ (implicit) & $0$ (implicit)\\
 \midrule
 \multicolumn{5}{l}{\textbf{Closest intent and hallucination taxonomies}}\\
 FaithQA \citep{hao_faithqa_2025} & Intent verification & Query constraints & $0$ dominant; not controlled & $0$--$1$ (partial: intent constraints)\\
@@ -829,6 +826,7 @@ Math Creativity \citep{ye_assessing_2024} & Math problem solving & Human soundne
 \end{tabularx}
 \end{table*}
 
+\clearpage
 \bibliography{references}
 
 \end{document}
