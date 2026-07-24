@@ -1,0 +1,1301 @@
+{
+  "generator": "overleaf-comments-bookmarklet v1.6",
+  "project": "CL soumission",
+  "url": "https://www.overleaf.com/project/6a4360d12626817eabd8de53",
+  "capturedAt": "2026-07-24T11:54:51.378Z",
+  "fileCount": 2,
+  "tabIteration": "full",
+  "threadCount": 74,
+  "messageCount": 82,
+  "trackedChangesNote": "swept top-to-bottom per file; for the authoritative set, Review > Accept in Overleaf so the text syncs via git",
+  "files": [
+    {
+      "file": "main.tex",
+      "fileSource": "editor-tab",
+      "threadCount": 74,
+      "messageCount": 82,
+      "truncatedCount": 7,
+      "panelUnchanged": false,
+      "selectorHealth": {
+        "breadcrumbs": false,
+        "editorScroller": true,
+        "threadsParsed": 74,
+        "duplicatesDropped": 0,
+        "entriesUnparsed": 0
+      },
+      "threads": [
+        {
+          "dataPos": 2477,
+          "dataTop": 2002,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 5:53 pm",
+              "text": "reformuler",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:17 pm",
+              "text": "définir claim (donner un exemple)",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 2543,
+          "dataTop": 2021,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "24 July, 8:33 am",
+              "text": "what is p ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 2554,
+          "dataTop": 2040,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 5:54 pm",
+              "text": "qu'est-ce \"p\"? c'est le \"claim\" ? tu ne le définis pas",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 2669,
+          "dataTop": 2098,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 5:55 pm",
+              "text": "je renommerai : \"creativity-êrmission\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 2702,
+          "dataTop": 2136,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "24 July, 8:39 am",
+              "text": "user ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 2996,
+          "dataTop": 2309,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 1:55 pm",
+              "text": "thought: je ne suis pas sur que ça soit pertinent de l'inclure dans l'abstract. Je préférais la version dans main_old.",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 1:56 pm",
+              "text": "Je pense qu'il faudrait plus insister sur les éléments positifs du position paper. Si on passe à un ...",
+              "possiblyTruncated": true
+            },
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:12 pm",
+              "text": "d'accord",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 2996,
+          "dataTop": 2309,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 5:57 pm",
+              "text": "reformuler, phrase incompréhensible: receives the label: \"SUP\" (supported)",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 2996,
+          "dataTop": 2309,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "24 July, 8:35 am",
+              "text": "the label abbreviations SUP, Hall, and LD are probably unnecessary. Each is introduced and then barely reused. Writing the full labels would be clearer",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 3535,
+          "dataTop": 2616,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:12 pm",
+              "text": "c'est quoi kappa ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 3661,
+          "dataTop": 2674,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "24 July, 8:34 am",
+              "text": "you define K_p as the content-permission policy but later describe permission using κ=0 and κ=2. Unless K_p and κ have different meanings, use one notation consistently",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4060,
+          "dataTop": 2942,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 1:57 pm",
+              "text": "suggestion: \"commonly called hallucinations\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4810,
+          "dataTop": 3403,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:14 pm",
+              "text": "in addition to",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6368,
+          "dataTop": 4363,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 2:00 pm",
+              "text": "suggestion: je définirais en terme courant ce que veut dire truth contract.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6384,
+          "dataTop": 4382,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 3:45 pm",
+              "text": "nitpick: pas très utile",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6608,
+          "dataTop": 4497,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:20 pm",
+              "text": "pas clair. Que sont ces instructions ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6677,
+          "dataTop": 4555,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:21 pm",
+              "text": "reformuler",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7096,
+          "dataTop": 4785,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "24 July, 8:42 am",
+              "text": "define acronyms here instead of in the abstract",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7543,
+          "dataTop": 5073,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 3:46 pm",
+              "text": "thought: c'est peut-être moi qui ai pas tout compris, mais jamais on ne dit clairement qu'on évalue \"la réponse du LLM\", même dans ta Figure. Je pense que ça vaudrait la peine de le dire explicitement.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 8005,
+          "dataTop": 5361,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "24 July, 8:43 am",
+              "text": "très bien !",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 8012,
+          "dataTop": 5361,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 5:38 pm",
+              "text": "thought: J'ai fais une contreproposition de figure (on met le prompt en haut, a réponse au milieu, et le jugement en bas ; je trouve que c'est plus logique à la lecture). Le style est pas bon mais c'est juste pour l'ordre https://claude.ai/public/artifacts/e64d74b1-ab5b-418f-8627-706536ee0231",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 8158,
+          "dataTop": 5476,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:25 pm",
+              "text": "refaire cette figure, ajouter l'oracle, mettre les prompts en haut et la réponse après",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:25 am",
+              "text": "Ecrire peut$etre un texte plus longue, le découper en claims pour introduire les définitions qui vie...",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 9570,
+          "dataTop": 6417,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:28 pm",
+              "text": "tu utilises plusieurs symboles pour le kappa: $K_p$ et $\\kappa_p$ quel est la différence?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 9932,
+          "dataTop": 6685,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 9:03 am",
+              "text": "préciser: lsisted in Appendix B",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 10037,
+          "dataTop": 6743,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:26 pm",
+              "text": "reformuler",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 10233,
+          "dataTop": 6839,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:27 pm",
+              "text": "bcp de ces notions ne sont pas introduites ou expliquées",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 10408,
+          "dataTop": 6935,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:27 pm",
+              "text": "c'est quoi le \"rule\" ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 11073,
+          "dataTop": 7357,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "24 July, 9:14 am",
+              "text": "add a short paragraph to expliain what you discuss in each section of the paper. it helps the reader a lot",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 11693,
+          "dataTop": 7799,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:45 pm",
+              "text": "cela ressemble au kappa (non) ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 12387,
+          "dataTop": 8259,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:59 pm",
+              "text": "ce O (oracle) reste un peu mistérieux, il faudra donner un pu deux exemples concrets dès le début",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 12510,
+          "dataTop": 8317,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 6:59 pm",
+              "text": "K définit la \"présentation\" ? Je ne comprends pas",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 12684,
+          "dataTop": 8490,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 7:01 pm",
+              "text": "J'ai l'impression que cela embrouille le lecteur par rapport à O_p, il faut reformuler ou contextualiser par rapport à O_p",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 13540,
+          "dataTop": 9008,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 7:02 pm",
+              "text": "je ne comprends pas le \"definitive\" ici ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 13624,
+          "dataTop": 9066,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 7:02 pm",
+              "text": "pas claire",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 13819,
+          "dataTop": 9162,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 7:03 pm",
+              "text": "cet annotation \"low usefullness\" est nouveau,  potentiellement intéressent mais il faut le détailler",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 15151,
+          "dataTop": 9968,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 7:05 pm",
+              "text": "il faut introduire SUP",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 15201,
+          "dataTop": 10006,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:42 pm",
+              "text": "?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 15201,
+          "dataTop": 10006,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 7:06 pm",
+              "text": "??",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 15730,
+          "dataTop": 10371,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 7:07 pm",
+              "text": "je lettrai ce tableau bien avant",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 15918,
+          "dataTop": 10525,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 7:07 pm",
+              "text": "il faudra dire \"prompt\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 16485,
+          "dataTop": 10889,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:49 pm",
+              "text": "issue: les parties 3.4 et 3.5 sont  compliquées. Il y a pas mal de notation mathématique. Soit simplifier mathématiquement et employer un langage plus naturel, soit introduire un glossaire clair",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 16497,
+          "dataTop": 10928,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 5:15 pm",
+              "text": "issue: je ne sais pas si c'est la 1e occurrence, mais c'est une mauvaise pratique d'utiliser \\textbf pour faire des titres de paragraphes, il faut que tu utilises \\paragraph{...}",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 16553,
+          "dataTop": 10947,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 7:09 pm",
+              "text": "et voilà, là tu parles de p comme prompt, alors que dans le tableau c'est \"task context\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 16960,
+          "dataTop": 11254,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:31 pm",
+              "text": "nitpick: Tu n'as pas de paragraphe qui défini sigma, c'est dans une partie différente",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 17486,
+          "dataTop": 11599,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:32 pm",
+              "text": "thought: est-ce que kappa = 1 ne rentre pas en collision avec rho ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 17494,
+          "dataTop": 11599,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:32 pm",
+              "text": "issue: attention kappa est proche de K majuscule, il y a un risque de confusion",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 17676,
+          "dataTop": 11715,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "23 July, 7:29 pm",
+              "text": "il faudra un exemple",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 20364,
+          "dataTop": 13346,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:16 am",
+              "text": "il faut citer ici les travaux de tâches CLEF, TREC et SemEval",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 20395,
+          "dataTop": 13404,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:35 pm",
+              "text": "thought: pourquoi tu dis ça spécifiquement pour style ? C'est pas le cas pour tous les autres paramètres ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 20645,
+          "dataTop": 13557,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:35 pm",
+              "text": "issue: en fait tu dis en substance le style n'a pas d'impact sur les hallucinations. Donc pourquoi l'inclure dans le truth contract ?",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:36 pm",
+              "text": "Et je ne suis pas sûr que ton paragraphe du dessous justifie vraiment la nécessité de sigma. Si je c...",
+              "possiblyTruncated": true
+            },
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:38 pm",
+              "text": "Et pour finir, si je réfléchis en terme d'évaluation des hallucinations/LD pur, j'ai pas besoin de s...",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 21147,
+          "dataTop": 13865,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:17 am",
+              "text": "Pas très claire",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Mathis Carlesso",
+              "time": "24 July, 10:39 am",
+              "text": "abordé dans l'état de l'art mais ca reste un pb ouvert",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 21346,
+          "dataTop": 14018,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:18 am",
+              "text": "A mon avis ce découpage est utile pour ot K (truth regime) et le gamma, pour le style un peu moins",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 21489,
+          "dataTop": 14114,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:39 pm",
+              "text": "thought: A définir avant (introduction). Tu en aurais déjà besoin pour ta figure 1. Egalement, pourquoi S et pas A (answer) ou R (response)",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 21552,
+          "dataTop": 14133,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:40 pm",
+              "text": "nitpick : en général dans les papiers, le prompt est plutôt représenté par un P majuscule",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 21630,
+          "dataTop": 14191,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:47 pm",
+              "text": "thought: a justifier",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 21940,
+          "dataTop": 14364,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:47 pm",
+              "text": "thought: cf ce que j'ai dit avant. En fait sigma prompt on s'en fiche, c'est sigma réponse qui compte",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 24279,
+          "dataTop": 15842,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:50 pm",
+              "text": "thought: je réintroduirais le terme \"anglais\" derrière gamma et rho, pour mieux comprendre intuitivement la logique derrière",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 24579,
+          "dataTop": 16149,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:28 am",
+              "text": "il faut mettre ces définitions avant",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 25027,
+          "dataTop": 16398,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:29 am",
+              "text": "wrt to O_p plutôt",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 25403,
+          "dataTop": 16648,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:30 am",
+              "text": "détailler cela. Tu n''abordez pas l'alignement de la réponse avec le prompt ...",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 26550,
+          "dataTop": 15669,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:36 am",
+              "text": "détailler un peu",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 26959,
+          "dataTop": 16283,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:31 am",
+              "text": "le prompt n'est pas un input ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 30276,
+          "dataTop": 22848,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:33 am",
+              "text": "préciser que cela n'est pas une évaluation complète de la réponse... (il manque l'alignement, le res...",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 36035,
+          "dataTop": 30660,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:53 pm",
+              "text": "thought: une raison particulière de le mettre en appendice ?",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:40 am",
+              "text": "d'accord, la description de l'appendix ici est trop longue",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 36757,
+          "dataTop": 31774,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:54 pm",
+              "text": "issue: a supprimer, ne dévalorise pas ton travail. Tu peux dire que ça a été annoté manuellement point.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 37435,
+          "dataTop": 32772,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:54 pm",
+              "text": "suggestion: Il y aurait pas moyen que tu fasse un tableau/figure cluster ou tu mets chaque dataset ? Comme ça on aurait une vision synthétique",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 38358,
+          "dataTop": 34173,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 9:00 am",
+              "text": "tu réfères à quoi ici ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 43097,
+          "dataTop": 41679,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 8:59 am",
+              "text": "je me demande si cette figure est nécessaire ...",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 43852,
+          "dataTop": 42178,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:56 pm",
+              "text": "thought: je pense que c'est une très bonne partie qui permet de bien illustrer le propos, mais je ne comprends pas bien les cas ci-dessous. Je pense qu'on gagnerait à mettre visuellement des vrais exemples plutôt que des expériences de pensées",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 46933,
+          "dataTop": 46036,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 4:58 pm",
+              "text": "issue: le research agenda vient un peu comme un cheveu sur la soupe. L'idéal est que chaque point que tu évoques en dessous ait déjà été présenté précédemment. Exemple : il faut un dataset => dans la partie dataset tu dois te plaindre qu'aucun n'est convaincant, etc.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 47154,
+          "dataTop": 46535,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 5:14 pm",
+              "text": "thought: une critique pourrait être qu'une telle annotation est très complexe",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 55225,
+          "dataTop": 58417,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "22 July, 5:09 pm",
+              "text": "issue: conclusion a revoir.\n1) Si tu commences par la définition d'hallucination, il faut dire qu'elle est partielle et pas convaincante.\n2) Je pense que la conclusion devrait être plus longue.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 55260,
+          "dataTop": 58474,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "24 July, 8:37 am",
+              "text": "maybe strat by saying something like \"in this position paper, we argued that...\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 55734,
+          "dataTop": 55979,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "24 July, 8:36 am",
+              "text": "recall the size of the sample",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 60002,
+          "dataTop": 64214,
+          "messages": [
+            {
+              "author": "elod.egyed-zsigmond",
+              "time": "24 July, 9:02 am",
+              "text": "numéroter les ressources pour voir qu'il y a 40",
+              "possiblyTruncated": false
+            }
+          ]
+        }
+      ],
+      "trackedChanges": [
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "contract"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "be a claim-level label relative to a task's \\emph{truth contrac"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "(TC), $\\TC(p)=(O_p,\\sigma_p,K_p)$."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "p"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The contract specifies reference evidence $O_p$, a requested style level $\\sigma_p$, and a content-permission policy $K_p$."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "content"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The evaluator"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "An entailed claim receives \\emph{supported} (\\SUP)."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "A contradicted or unlicensed claim receives \\emph{hallucination} (\\Hall), whereas an evidence-unknown but licensed claim receives \\emph{licensed divergence} (\\LD)."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "These labels apply to individual claims; we leave contract-aware response aggregation as an open research problem."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "We support the position with an author-coded mapping of forty evaluation resources and cases."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "In this sample, factuality benchmarks cluster around neutral language ($\\sigma=0$) and factual-only permission ($\\kappa=0$), whereas creative-writing benchmarks cluster around marked language ($\\sigma=1$ or $2$) and task-implied invention ($\\kappa=2$)."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "kappa=0$)"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\kappa=2$)."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The sampled literatures therefore cover different truth-contract profiles rather than the same task."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The main missing test is a controlled benchmark that varies requested style and content permission independently."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "facts"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "not merely"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "truth contract"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Here, a truth contract is a task-specific evaluation specification rather than an independent legal agreement"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "ncluding applicable system, user, domain, and evidence instructions."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The reference evidence $O_p$ specifies the standard of support and may include real-world or fictional-frame constraints used for adjudication."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "An unsupported claim is labeled as \\Hall\\ if it violates $K_p$; an evidence-unknown claim is labeled as  \\LD\\ if $K_p$ permits it and its presentation satisfies the contract."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "These labels apply to individual claims; assessing a complete response requires a separate aggregation step that this paper does not fix."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Figure"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\begin{figure}[t]"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "figure"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "racted from a model response:\\\\``the caf\\'e \\emph{Verdier} and its owner existed in 1920s Paris''};"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\node[decision,text width=4.2"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$K_p$"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "forty hallucination and creativity evaluation resources"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "This purposive, author-coded mapping identifies a pattern in the sample rather than estimating prevalence in the full literature"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "reference evidence, the content-permission policy, epistemic presentation, scope, and $\\sigma_p$-conditioned claim typing"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "rule"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "nput-"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$O_p$"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "presentation"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "aithfulness asks whether a claim is supported by provided evidence, whereas factuality asks whether it is correct against an external reference"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "defective"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Our distinction does not rest on value"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "low usefulness"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "SUP"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "SV\\"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "SV"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Core objects in the truth-contract framework."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "task context"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "textbf"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Reference"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\item $\\kappa_p\\in\\{0,1,2\\}$: the permission level, where $0$ is factual only, $1$ allows limited and explicitly marked divergence, and $2$ allows invention inside a declared frame;"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "kappa_p"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\Gamma_p$:"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "require empirical validation"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "This mismatch is a style-compliance error, not a hallucination."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "As a result, stylistic form can change which claims an evaluator extracts and verifies even though $\\sigma_p$ does not authorize new content."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "claim-level unit bec"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$s$"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "sigma"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Gamma_p"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\SUP\\ means \\emph{supported}: $O_p$ entails the claim."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\Hall\\ means \\emph{hallucination}: the claim is contradicted, or it is evidence-unknown without the required permission, scope, or presentation."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\LD\\"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "external world"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Usefulness"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "e write $R(y\\mid p)$ fo"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "model response"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Contract-aware span-to-claim hallucination evaluation workflow"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Appendix"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The mapping was coded in a single pass by one author, so the inferred task profiles are interpretive annotations rather than measurements reported by the original resources."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Factuality"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "five"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Conceptual task-design space."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Worked"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Research"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Conclusion"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Hallucination is a claim-level label relative to a task's reference evidence, requested style, and content-permission policy."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "purposive sample"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Factuality and faithfulness resources in the purposive mapping"
+        }
+      ]
+    },
+    {
+      "file": "references.bib",
+      "fileSource": "editor-tab",
+      "threadCount": 0,
+      "messageCount": 0,
+      "truncatedCount": 0,
+      "panelUnchanged": false,
+      "selectorHealth": {
+        "breadcrumbs": false,
+        "editorScroller": true,
+        "threadsParsed": 0,
+        "duplicatesDropped": 0,
+        "entriesUnparsed": 0
+      },
+      "threads": [],
+      "trackedChanges": []
+    }
+  ]
+}
