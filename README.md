@@ -30,6 +30,6 @@ make pdf
 - Do not invent citations, results, numbers, tables, figures, or datasets.
 - Cite only keys present in `references.bib`.
 - Use `\citetodo{...}` when evidence is missing.
-- Keep the core macros stable: `\CI`, `\TR`, `\PD`, `\Hallu`, `\Faith`, `\Acc`.
+- Keep the core macros stable: `\TC`, `\Hall`, `\LD`, `\SUP`, `\SV` (renamed from the earlier `\CI`/`\TR`/`\PD`/`\Hallu`/`\Faith`/`\Acc` set; defined in `main_position.tex` lines 25-29).
 - Keep the conference template isolated in `conference-template/`; edit `main_position.tex` for the paper content.
 - The active manuscript now uses the `clv2025` class from `conference-template/cljournal/`.
