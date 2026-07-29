@@ -1,130 +1,85 @@
-% --- Figure "prompt -> claim" (fil rouge Lyon 1918) ---
-% A inserer dans main_position.tex. Necessite, EN PLUS des styles deja definis
-% dans le preambule (input/decision/verdict/verdictH/verdictLD/arrow/edge) :
-%
-% \tikzset{
-%   oracle/.style={rectangle,rounded corners=3pt,draw=clrO!60,fill=clrO!6,
-%     font=\scriptsize,text width=4.4cm,align=left,inner sep=5pt},
-%   slot/.style={rectangle,rounded corners=2pt,draw=clrB!40,fill=bgB,
-%     font=\scriptsize,align=center,inner sep=3pt},
-%   span/.style={rectangle,rounded corners=2pt,draw=gray!50,fill=gray!6,
-%     font=\scriptsize,text width=3.05cm,align=left,inner sep=4pt},
-%   claim/.style={rectangle,rounded corners=2pt,draw=gray!45,fill=white,
-%     font=\scriptsize,text width=3.05cm,align=left,inner sep=4pt},
-%   stage/.style={font=\scriptsize\sffamily\bfseries,color=clrG,anchor=east,align=right}}
-%
-% Compile OK (pdflatex + tikz, arrows.meta/positioning/calc).
-
-\begin{figure*}[t]
+\begin{figure}[!t]
 \centering
-\resizebox{0.99\linewidth}{!}{%
+\resizebox{0.96\linewidth}{!}{%
 \begin{tikzpicture}[x=1cm,y=1cm]
-\def\cA{-5.1} \def\cB{-1.7} \def\cC{1.7} \def\cD{5.1}
-% --- band 1: prompt + oracle
-\node[decision,text width=8.8cm] (prompt) at (0,1.4)
- {\textbf{Prompt $x$:} ``Using the attached archive extract, write a short museum-panel text
-  on the 1918 influenza epidemic in Lyon. Make it vivid for a general audience.
-  Every historical statement must be faithful to the extract; where the extract is silent,
-  you may add a plausible reconstruction, but mark it explicitly as conjecture.''};
-\node[oracle,text width=4.9cm,anchor=west] (oracle) at (5.2,1.4)
- {\textbf{$O_p$ --- archive extract}\\[1pt]
-  \emph{Registre de l'H\^otel-Dieu, Lyon, Oct.\ 1918.}
-  ``412 admissions for the week of 14 October. Municipal order of 22 October
-  requires gauze masks in enclosed public spaces. Schools: no entry.''};
-\node[stage] at (-4.8,1.4) {task\\input};
-% --- band 2: contract slots (three fields; O_p is shown in band 1)
-\node[slot,text width=3.5cm] (k1) at (-4.4,-1.5)
-  {$\sigma_p=2$ \emph{requested style}\\strongly marked};
-\node[slot,text width=4.0cm] (k3) at (0.1,-1.5)
-  {$\Gamma_p$ \emph{permission scope}\\everyday life, public-health\\measures in Lyon, 1918--19};
-\node[slot,text width=3.8cm] (k4) at (4.6,-1.5)
-  {$\mu_p$ \emph{required marking}\\conjecture stated as such};
-\node[stage] at (-7.1,-1.5) {truth contract\\$\TC(p)=(O_p,\sigma_p,\Gamma_p,\mu_p)$};
-% derived summary, visually subordinate to the two permission fields
-\node[draw=gray!55,dashed,rounded corners=2pt,fill=gray!4,font=\scriptsize,
-      text width=4.6cm,align=center,anchor=west] (kap) at (7.2,-2.75)
-  {\emph{derived, not a field}\\$\kappa_p=1$: narrow scope, marking\\required --- ``limited divergence''};
-\draw[gray!55,dashed,-{Stealth[length=4pt,width=3pt]}]
-  (k3.south east) -- (kap.west);
-\draw[gray!55,dashed,-{Stealth[length=4pt,width=3pt]}]
-  (k4.south) -- (kap.west);
-% --- band 3: response
-\node[input,text width=12.8cm,font=\small] (resp) at (0,-4.3)
- {\textbf{Model response $y$:} ``Panel 3 of 6 --- Lyon, autumn 1918.
-  \textcolor{clrB}{In the week of 14 October, the H\^otel-Dieu registered 412 admissions.}
-  \textcolor{clrB}{From 22 October the city breathed through gauze.}
-  \textcolor{clrB}{Schools had probably already emptied before the order --- the register does not say.}
-  \textcolor{clrH}{Dr.\ Chapuis, the hospital's director, hid the true toll from the prefecture.}
-  The winter that would not lift.''};
-\node[stage] at (-7.1,-4.3) {response $y$};
-% --- band 4: spans
-\node[span] (p1) at (\cA,-7.1) {$s_1$ ``\dots registered 412 admissions''\\[2pt]\emph{claim-only}};
-\node[span] (p2) at (\cB,-7.1) {$s_2$ ``the city breathed through gauze''\\[2pt]\emph{mixed} ($z=1$)};
-\node[span] (p3) at (\cC,-7.1) {$s_3$ ``probably already emptied\dots''\\[2pt]\emph{claim-only}};
-\node[span] (p4) at (\cD,-7.1) {$s_4$ ``Dr.\ Chapuis hid the true toll''\\[2pt]\emph{claim-only}};
-\node[stage] at (-7.1,-7.1) {span typing};
-% --- band 5: canonical claims
-\node[claim] (c1) at (\cA,-9.6) {$c_1^*$ 412 admissions, H\^otel-Dieu, week of 14 Oct 1918};
-\node[claim] (c2) at (\cB,-9.6) {$c_2^*$ gauze masks required in enclosed public spaces from 22 Oct};
-\node[claim] (c3) at (\cC,-9.6) {$c_3^*$ schools closed before 22 Oct};
-\node[claim] (c4) at (\cD,-9.6) {$c_4^*$ the named director concealed the toll};
-\node[stage] at (-7.1,-9.6) {canonical claims\\$\mathcal C(s,p)\rightarrow c^*$};
-% --- band 6: evidence state
-\node[font=\scriptsize] (e1) at (\cA,-11.5) {\textsc{entailed}};
-\node[font=\scriptsize] (e2) at (\cB,-11.5) {\textsc{entailed}};
-\node[font=\scriptsize] (e3) at (\cC,-11.5) {\textsc{unknown}};
-\node[font=\scriptsize] (e4) at (\cD,-11.5) {\textsc{unknown}};
-\node[stage] at (-7.1,-11.5) {evidence state\\$E(c^*,O_p)$};
-% --- band 7: labels
-\node[verdict] (v1) at (\cA,-13.0) {\SUP};
-\node[verdict] (v2) at (\cB,-13.0) {\SUP\,$+$\,\SV};
-\node[verdictLD] (v3) at (\cC,-13.0) {\LD};
-\node[verdictH] (v4) at (\cD,-13.0) {\Hall};
-\node[stage] at (-7.1,-13.0) {contract label\\$V(c^*\mid p)$};
-\node[font=\scriptsize,text width=3.1cm,align=center] at (\cA,-14.0) {entailed by $O_p$};
-\node[font=\scriptsize,text width=3.1cm,align=center] at (\cB,-14.0) {entailed; the metaphor adds no commitment};
-\node[font=\scriptsize,text width=3.1cm,align=center,color=clrLD] at (\cC,-14.0) {in $\Gamma_p$, hedged as $\mu_p$ requires};
-\node[font=\scriptsize,text width=3.1cm,align=center,color=clrH] at (\cD,-14.0) {outside $\Gamma_p$ \emph{and} unmarked};
-% --- side box: non-claim spans
-\node[span,text width=4.2cm,anchor=west] (side) at (7.0,-7.1)
- {\textbf{no claim recovered}\\[2pt]
-  $s_5$ ``The winter that would not lift.'' $\rightarrow$ \emph{SV-only}\\[2pt]
-  $s_0$ ``Panel 3 of 6'' $\rightarrow$ \emph{other}};
-% --- stage annotations (two-stage pipeline)
-\draw[clrB!50,line width=1.2pt] (6.75,-6.1) -- (6.75,-10.4);
-\node[font=\scriptsize\sffamily,color=clrB,align=left,text width=4.6cm,anchor=west] at (7.0,-9.6)
- {\textbf{recovery stage}\\$\sigma_p$ acts here: on \emph{which}\\claims are recovered};
-\draw[clrB!50,line width=1.2pt] (6.75,-10.7) -- (6.75,-13.6);
-\node[font=\scriptsize\sffamily,color=clrB,align=left,text width=4.6cm,anchor=west] at (7.0,-12.5)
- {\textbf{labeling stage}\\$O_p$, $\Gamma_p$, $\mu_p$ act here: on\\\emph{which label} each claim gets};
-\node[font=\scriptsize\sffamily,color=clrO,anchor=west] at (7.0,-11.5)
- {compared with $O_p$};
-% --- arrows
-\draw[arrow] (prompt.south) -- (0,-0.55);
-\draw[arrow,color=clrO!80,dashed] (oracle.south) -- (7.6,0.0) -- (11.9,0.0)
-  -- (11.9,-11.5) -- (10.2,-11.5);
-\foreach \c in {1,2,3,4}{
-  \draw[arrow] (resp.south) -- (p\c.north);
-  \draw[arrow] (p\c) -- (c\c);
-  \draw[arrow] (c\c) -- (e\c);
-  \draw[arrow] (e\c) -- (v\c);}
-\draw[arrow] (k1.south) -- (-4.4,-2.9);
-\draw[arrow] (k3.south west) -- (-0.9,-2.9);
-\draw[arrow] (k4.south west) -- (3.6,-2.9);
-\end{tikzpicture}
+  \tikzset{
+    taskbox/.style={
+      decision,text width=4.35cm,minimum height=1.25cm,
+      font=\small,inner sep=5pt},
+    contractbox/.style={
+      decision,text width=4.35cm,minimum height=1.55cm,
+      font=\scriptsize,inner sep=5pt},
+    sharedspan/.style={
+      input,text width=7.6cm,minimum height=0.95cm,
+      font=\small,inner sep=5pt},
+    outcome/.style={
+      font=\scriptsize,align=center,text width=3.75cm}
+  }
+
+  \draw[dashed,gray!50] (0,0.8) -- (0,-5.95);
+
+  \node[taskbox] (historical) at (-3.0,0)
+    {\textbf{Historical task}\\
+     ``Using the supplied exhaustive register, did Caf\'e Verdier exist in 1920s Paris?''};
+  \node[taskbox] (fiction) at (3.0,0)
+    {\textbf{Fiction task}\\
+     ``In plain prose, write a fictional story set in 1920s Paris.''};
+
+  \node[contractbox] (tch) at (-3.0,-1.85)
+    {$O_h$: exhaustive register; no Verdier entry\\
+     $\Gamma_h=\varnothing$\\
+     $\mu_h$: not applicable\\
+     $\sigma_h=0$: plain wording};
+  \node[contractbox] (tcf) at (3.0,-1.85)
+    {$O_f$: prompt and story constraints\\
+     $\Gamma_f$: invention inside the story world\\
+     $\mu_f$: declared fictional frame\\
+     $\sigma_f=0$: plain prose};
+
+  \node[sharedspan] (span) at (0,-3.55)
+    {\textbf{\upshape Identical response wording:}\\
+     ``Caf\'e Verdier existed in 1920s Paris.''};
+
+  \node[verdictH] (hall) at (-3.0,-5.05) {\Hall};
+  \node[verdictLD] (licensed) at (3.0,-5.05) {\LD};
+  \node[outcome] at (-3.0,-5.70)
+    {contradicted real-world claim};
+  \node[outcome,text=clrLD] at (3.0,-5.70)
+    {evidence-unknown but licensed story-world claim};
+
+  \coordinate (spanlefttop) at ($(span.north)+(-1.4,0)$);
+  \coordinate (spanrighttop) at ($(span.north)+(1.4,0)$);
+  \coordinate (spanleftbot) at ($(span.south)+(-1.4,0)$);
+  \coordinate (spanrightbot) at ($(span.south)+(1.4,0)$);
+
+  \draw[arrow] (historical.south) -- (tch.north);
+  \draw[arrow] (fiction.south) -- (tcf.north);
+  \draw[arrow]
+    (tch.south) -- ++(0,-0.40)
+    -| (spanlefttop);
+  \draw[arrow]
+    (tcf.south) -- ++(0,-0.40)
+    -| (spanrighttop);
+  \draw[arrow]
+    (spanleftbot) -- ++(0,-0.48)
+    -| (hall.north);
+  \draw[arrow]
+    (spanrightbot) -- ++(0,-0.48)
+    -| (licensed.north);
+
+  \node[
+    rectangle,rounded corners=3pt,draw=clrG!45,fill=gray!4,
+    font=\scriptsize\sffamily\bfseries,align=center,
+    text width=7.7cm,inner sep=4pt
+  ] at (0,-6.45)
+    {Evidence-unknown does not automatically mean hallucination.};
+\end{tikzpicture}%
 }
-\caption{\textbf{From one prompt to four claim-level labels.}
-The task context $p$ fixes a truth contract with four fields: the archive extract $O_p$ shown top right,
-and the three shown in the second band.
-The dashed box records the derived summary $\kappa_p$, which condenses the two permission fields into
-one ordinal level for cross-resource comparison and is never consulted when a claim is labeled.
-The model response is segmented into spans; only spans carrying truth-conditional content yield
-canonical claims. Each canonical claim is compared with the archive extract $O_p$, then labeled.
-The same response yields \SUP, \SUP$+$\SV, \LD, and \Hall\ under a single contract:
-$c_3^*$ is evidence-unknown but lies inside $\Gamma_p$ and is hedged as $\mu_p$ requires, whereas
-$c_4^*$ is evidence-unknown, falls outside $\Gamma_p$, and is asserted without the required marking.
-The right-hand annotations locate the two stages at which the contract acts:
-$\sigma_p$ conditions claim recovery, $O_p$ and the permission fields condition labeling.
-The archive extract and the name ``Chapuis'' are constructed for this example.}
+\caption{\textbf{Identical wording under two truth contracts.}
+The response span yields a real-world claim in the historical task and a story-world claim in the fiction task.
+The historical claim receives \Hall\ because the task treats the register as complete and the missing entry contradicts the claim.
+The fictional claim receives \LD\ because its detail is evidence-unknown, but story-world invention lies inside $\Gamma_f$ and the declared fictional frame satisfies $\mu_f$.
+Both tasks request plain wording, so style does not explain the label difference.
+\LD\ denotes contractual permission, not a benign hallucination or a judgment of truth, quality, or safety.}
 \label{fig:prompt-to-claim}
-\end{figure*}
+\end{figure}

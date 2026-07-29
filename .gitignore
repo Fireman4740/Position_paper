@@ -14,7 +14,7 @@ build/
 %OUTDIR%/
 .texmex-temp/
 build_sub/
-
+tmp/*
 # LaTeX artifacts
 *.aux
 *.bbl

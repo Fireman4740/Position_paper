@@ -1,0 +1,182 @@
+\begin{figure*}[t]
+\centering
+\resizebox{0.98\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small,
+  every node/.style={inner sep=0pt}]
+  \definecolor{figblue}{RGB}{31,67,140}
+  \definecolor{figorange}{RGB}{176,103,42}
+  \definecolor{figgreen}{RGB}{42,118,67}
+  \definecolor{figred}{RGB}{162,54,42}
+  \tikzset{
+    fbox/.style={rectangle,rounded corners=3pt,draw=#1!55,fill=#1!5,
+      align=center,inner sep=5pt},
+    fbox/.default=black,
+    prompt/.style={fbox=figblue,text width=7.5cm,minimum height=2.70cm,
+      font=\small},
+    archive/.style={fbox=figorange,text width=4.15cm,minimum height=2.70cm,
+      align=left,font=\scriptsize},
+    contract/.style={fbox=figblue,text width=3.05cm,minimum height=1.45cm,
+      font=\scriptsize},
+    response/.style={fbox=black,text width=10.9cm,minimum height=1.78cm,
+      font=\small,align=left,inner sep=7pt},
+    span/.style={fbox=black,text width=2.55cm,minimum height=1.16cm,
+      font=\scriptsize,align=left,inner sep=5pt},
+    claim/.style={fbox=black,text width=2.55cm,minimum height=1.60cm,
+      font=\scriptsize,align=left,inner sep=5pt},
+    side/.style={fbox=black,text width=3.05cm,font=\scriptsize,
+      align=left,inner sep=5pt},
+    state/.style={font=\scriptsize\sffamily\bfseries,text=black!60,
+      align=center},
+    verdict/.style={rectangle,rounded corners=3pt,draw=#1!75,fill=#1!5,
+      minimum width=0.62cm,minimum height=0.48cm,align=center,
+      font=\small\sffamily\bfseries,text=#1,inner sep=3pt},
+    verdict/.default=black,
+    flow/.style={-{Stealth[length=4pt,width=3pt]},semithick,draw=black!55},
+    guide/.style={draw=#1!65,line width=0.9pt},
+    guide/.default=figblue,
+    lab/.style={font=\scriptsize\sffamily\bfseries,text=black!65,
+      align=right,anchor=east},
+    note/.style={font=\scriptsize,align=center,anchor=north,text width=2.75cm}
+  }
+
+  % Shared grid: all four claim pipelines use the same x coordinates.
+  \def\xone{-5.10}
+  \def\xtwo{-2.15}
+  \def\xthree{0.80}
+  \def\xfour{3.75}
+  \def\xguide{5.35}
+  \def\xright{7.30}
+  \def\xlabel{-8.15}
+
+  % Task context
+  \node[lab] at (\xlabel,7.65) {task\\input};
+  \node[prompt] (prompt) at (-0.60,7.65) {\textbf{Prompt $x$:} ``Using the attached archive extract, write a
+    short museum-panel text on the 1918 influenza epidemic
+    in Lyon. Use sustained figurative language to make it vivid
+    for a general audience. Every
+    historical statement must be faithful to the extract;
+    where the extract is silent, you may add a plausible
+    reconstruction, but mark it explicitly as conjecture.''};
+  \node[archive] (archive) at (\xright,7.65) {\textbf{$O_p$ --- archive extract}\\
+    \emph{Registre de l'H\^otel-Dieu, Lyon, Oct.\ 1918.} ``412
+    admissions for the week of 14 October. Municipal order of
+    22 October requires gauze masks in enclosed public spaces.
+    Schools: no entry.''};
+
+  % Contract fields
+  \node[lab] at (\xlabel,5.05) {$\TC(p)=(O_p,\Gamma_p,\mu_p,\sigma_p)$};
+  \node[contract] (style) at (-4.55,5.05)
+    {$\sigma_p=2$ \emph{requested style}\\strongly marked};
+  \node[contract] (scope) at (-0.30,5.05)
+    {$\Gamma_p$ \emph{permission scope}\\everyday life and public-health\\measures; excludes named persons};
+  \node[contract] (mark) at (3.85,5.05)
+    {$\mu_p$ \emph{required marking}\\conjecture stated as such};
+
+  % Prompt-to-contract bus and contract-to-response arrows.
+  \coordinate (busleft) at ($(style.north)+(0,0.28)$);
+  \coordinate (busright) at ($(mark.north)+(0,0.28)$);
+  \coordinate (busprompt) at (prompt.south |- busleft);
+  \draw[semithick,draw=black!55] (prompt.south) -- (busprompt);
+  \draw[semithick,draw=black!55] (busleft) -- (busright);
+  \foreach \field in {style,scope,mark}
+    \draw[flow] (\field.north |- busleft) -- (\field.north);
+
+  % Response
+  \node[lab] at (\xlabel,2.42) {response $y$};
+  \node[response] (response) at (-0.50,2.42) {\textbf{Model response $y$:} ``Panel 3 of 6 --- Lyon, autumn 1918.\ \textcolor{figblue}{In the week of 14
+    October, the H\^otel-Dieu registered 412 admissions. From 22 October, the city ordered enclosed public spaces to breathe through gauze masks. Schools had probably already emptied before the order --- the register does not say.}\ \textcolor{figred}{Dr. Chapuis, the hospital's director, hid the true toll from the prefecture.}\ The winter that would not lift.''};
+  \foreach \field in {style,scope,mark}
+    \draw[flow] (\field.south) -- (\field.south |- response.north);
+
+  % Span typing
+  \node[lab] at (\xlabel,0.37) {span typing};
+  \node[span] (s1) at (\xone,0.37)
+    {$s_1$ ``\ldots registered 412\\admissions''\\[-1pt]\emph{claim-only}};
+  \node[span] (s2) at (\xtwo,0.37)
+    {$s_2$ ``public spaces to breathe\\through gauze masks''\\[-1pt]\emph{claim + figurative wording}};
+  \node[span] (s3) at (\xthree,0.37)
+    {$s_3$ ``probably already\\emptied\ldots''\\[-1pt]\emph{claim-only}};
+  \node[span] (s4) at (\xfour,0.37)
+    {$s_4$ ``Dr. Chapuis hid the\\true toll''\\[-1pt]\emph{claim-only}};
+  \node[side,anchor=north] (s5) at (\xright,0.95)
+    {\textbf{no separate historical claim}\\
+     $s_5$ ``The winter that would not lift.''\\
+     $\rightarrow$ figurative closing; no label\\
+     $s_0$ ``Panel 3 of 6'' $\rightarrow$ \emph{other}};
+  \foreach \sp in {s1,s2,s3,s4}
+    \draw[flow] (response.south -| \sp.north) -- (\sp.north);
+
+  % Canonical claims
+  \node[lab] at (\xlabel,-1.55)
+    {canonical claims\\$\mathcal{C}(s,y,p)\to c^*$};
+  \node[claim] (c1) at (\xone,-1.55)
+    {$c^*_1$ 412 admissions,\\H\^otel-Dieu, week of\\14 Oct 1918};
+  \node[claim] (c2) at (\xtwo,-1.55)
+    {$c^*_2$ gauze masks\\required in enclosed\\public spaces\\from 22 Oct};
+  \node[claim] (c3) at (\xthree,-1.55)
+    {$c^*_3$ schools closed\\before 22 Oct};
+  \node[claim] (c4) at (\xfour,-1.55)
+    {$c^*_4$ the named director\\concealed the toll};
+  \foreach \sp/\cl in {s1/c1,s2/c2,s3/c3,s4/c4}
+    \draw[flow] (\sp.south) -- (\cl.north);
+
+  % Evidence state
+  \node[lab] at (\xlabel,-3.28)
+    {evidence state\\$E(c^*,O_p)$};
+  \node[state] (e1) at (\xone,-3.28) {ENTAILED};
+  \node[state] (e2) at (\xtwo,-3.28) {ENTAILED};
+  \node[state] (e3) at (\xthree,-3.28) {UNKNOWN};
+  \node[state] (e4) at (\xfour,-3.28) {UNKNOWN};
+  \foreach \cl/\ev in {c1/e1,c2/e2,c3/e3,c4/e4}
+    \draw[flow] (\cl.south) -- (\ev.north);
+
+  % Contract labels
+  \node[lab] at (\xlabel,-4.63)
+    {contract label\\$V(c^*\mid y,p)$};
+  \node[verdict=black] (v1) at (\xone,-4.63) {\SUP};
+  \node[verdict=black] (v2) at (\xtwo,-4.63) {\SUP};
+  \node[verdict=figgreen] (v3) at (\xthree,-4.63) {\LD};
+  \node[verdict=figred] (v4) at (\xfour,-4.63) {\Hall};
+  \foreach \ev/\ve in {e1/v1,e2/v2,e3/v3,e4/v4}
+    \draw[flow] (\ev.south) -- (\ve.north);
+
+  % Explanatory notes share a common top edge.
+  \node[note] at (\xone,-5.36) {entailed by $O_p$};
+  \node[note] at (\xtwo,-5.36) {entailed; the metaphor\\adds no commitment};
+  \node[note,text=figgreen] at (\xthree,-5.36)
+    {in $\Gamma_p$, hedged\\as $\mu_p$ requires};
+  \node[note,text=figred,text width=3.0cm] at (\xfour,-5.36)
+    {outside $\Gamma_p$ and unmarked};
+
+  % Right-hand stage annotations
+  \draw[guide] (\xguide,0.95) -- (\xguide,-2.38);
+  \node[font=\scriptsize\sffamily\bfseries,text=figblue,
+    align=left,anchor=west,text width=3.55cm] at (5.62,-1.62)
+    {recovery stage\\
+     \mdseries$\sigma_p$ acts here on which\\
+     \mdseries claims are recovered};
+
+  \draw[guide] (\xguide,-2.62) -- (\xguide,-5.40);
+  \node[font=\scriptsize\sffamily\bfseries,text=figblue,
+    align=left,anchor=west,text width=3.55cm] at (5.62,-4.42)
+    {labeling stage\\
+     \mdseries$O_p$, $\Gamma_p$, $\mu_p$ act here: on\\
+     \mdseries which label each claim gets};
+  \node[font=\scriptsize\sffamily,text=figorange,anchor=west,
+    fill=white,inner sep=1pt] (compare) at (5.62,-3.28)
+    {compared with $O_p$};
+
+  % Evidence path, routed outside every content box.
+  \draw[figorange!70,dashed,line width=0.9pt,-{Stealth[length=4pt,width=3pt]}]
+    (archive.east) -- (9.65,7.65) -- (9.65,-3.28) -- (compare.east);
+\end{tikzpicture}}
+\caption{\textbf{From one prompt to four claim-level decisions.}
+The task context fixes a truth contract with the attached archive extract $O_p$
+and three further fields. The model response is segmented into spans; only
+truth-conditional spans yield canonical claims. Each claim is compared with
+$O_p$, then assigned a contract label. Figurative wording is handled during
+claim recovery and does not create a fourth label. The archive extract and the name
+``Chapuis'' are constructed for this example.}
+\label{fig:prompt-to-claim-full}
+\label{fig:claim-label-annotation}
+\end{figure*}
