@@ -76,7 +76,6 @@ A canonical claim whose proposition is evidence-unknown receives licensed
 divergence only when the proposition lies inside the permission scope and its
 observed status marking satisfies the required status marking; otherwise it
 receives the hallucination label.
-Coverage, adjudication, or contract-specification failures suspend claim labeling rather than creating another label.
 A complete evaluation also records requested and observed style-marking levels separately.
 The requested level is available as context during claim recovery and supports a prompt--response style-marking alignment check, but its effect on recovery remains an empirical hypothesis and it never expands permission scope.
 We examine the distinction through a purposive mapping of forty evaluation resources and five worked cases.
@@ -145,12 +144,12 @@ A contradicted claim receives \Hall\ (hallucination) with reason
 \textsc{contradicted}.
 A canonical claim whose proposition $q^*$ is evidence-unknown receives \LD\
 (licensed divergence) only when $q^*$ lies inside $\Gamma_p$ and its observed
-status marking $\rho^*$ satisfies $\mu_p$; otherwise it receives \Hall\ with
+status marking $m^*$ satisfies $\mu_p$; otherwise it receives \Hall\ with
 reason \textsc{out-of-scope} or \textsc{marking-failure}.
 These labels apply to canonical claims.
-A complete response is represented by the structured response-level report
-$R(y\mid p)$,
-which keeps the claim trace and separate diagnostics visible.
+For a complete response, the evaluation publishes the resulting claim labels
+and reasons alongside separate diagnostics such as claim coverage, style
+alignment, severity, and usefulness, rather than a single mandatory score.
 The contract does not change what is true.
 It determines how evidence state, permission scope, and required status marking
 compose into a claim label.
@@ -182,6 +181,9 @@ The evidence state remains unknown in both tasks, but the claim receives \Hall\ 
     contractbox/.style={
       decision,text width=5.35cm,minimum height=1.55cm,
       font=\scriptsize,inner sep=4pt},
+    contextbox/.style={
+      rectangle,rounded corners=4pt,draw=clrO!60,fill=clrO!6,
+      text width=10.8cm,align=left,font=\scriptsize,inner sep=6pt},
     sharedspan/.style={
       input,text width=8.7cm,minimum height=1.25cm,
       font=\footnotesize,inner sep=5pt},
@@ -191,42 +193,60 @@ The evidence state remains unknown in both tasks, but the claim receives \Hall\ 
 
   \draw[dashed,gray!50] (0,0.95) -- (0,-7.70);
 
-  \node[taskbox] (historical) at (-3.0,0)
+  \node[taskbox] (strict) at (-3.0,0)
     {\textbf{Strict grounding task}\\
-     ``Using the archive extract, report established historical facts. Do not add hypotheses.''};
-  \node[taskbox] (fiction) at (3.0,0)
+     Literal prompt: ``Explain what a blinking red status light means and
+     how to fix it. Do not add causes that are not in the attached guide.''};
+  \node[taskbox] (hyp) at (3.0,0)
     {\textbf{Bounded hypothesis generation task}\\
-     ``Using the archive extract, report established facts and one plausible hypothesis about everyday life. Mark it as uncertain.''};
+     Literal prompt: ``Explain what a blinking red status light means and
+     how to fix it. You may add one plausible additional cause not covered
+     by the attached guide, clearly marked as a guess.''};
 
-  \node[contractbox] (tch) at (-3.0,-2.25)
-    {$\TC(p_h)=(O,\Gamma_h,\mu)$\\
-     $O$: same archive extract (no Verdier entry)\\
-     $\Gamma_h=\varnothing$: no hypotheses\\
+  \node[contextbox] (context) at (0,2.55)
+    {\textbf{Task context $p$ --- attached evidence $O$}
+     (a router troubleshooting guide, attached to the task context, not
+     part of the prompt wording above):
+     ``A blinking red status light most commonly indicates an outdated
+     firmware version. Update the firmware using the companion app.''};
+
+  \coordinate (busL) at (-3.0,1.55);
+  \coordinate (busR) at (3.0,1.55);
+  \draw[semithick,draw=black!55] (context.south) -- (0,1.55);
+  \draw[semithick,draw=black!55] (busL) -- (busR);
+  \draw[arrow] (busL) -- (strict.north);
+  \draw[arrow] (busR) -- (hyp.north);
+
+  \node[contractbox] (tc1) at (-3.0,-2.25)
+    {$\TC(p_1)=(O,\Gamma_1,\mu)$\\
+     $O$: router troubleshooting guide (above)\\
+     $\Gamma_1=\varnothing$: no additional causes\\
      $\mu$: uncertainty marked; separate $\sigma=0$};
-  \node[contractbox] (tcf) at (3.0,-2.25)
-    {$\TC(p_f)=(O,\Gamma_f,\mu)$\\
-     $O$: same archive extract (no Verdier entry)\\
-     $\Gamma_f$: plausible everyday-life hypotheses\\
+  \node[contractbox] (tc2) at (3.0,-2.25)
+    {$\TC(p_2)=(O,\Gamma_2,\mu)$\\
+     $O$: router troubleshooting guide (above)\\
+     $\Gamma_2$: plausible additional hardware causes\\
      $\mu$: uncertainty marked; separate $\sigma=0$};
 
   \node[sharedspan] (span) at (0,-4.15)
     {\textbf{\upshape Identical response span:}
-     ``Caf\'e Verdier may have existed in 1920s Paris.''\\
+     ``A blinking red light may also happen if the router is placed too
+     close to a microwave oven.''\\
      \textbf{\upshape Identical canonical claim:}
-     $q^*$: Caf\'e Verdier existed in 1920s Paris;
-     $\rho^*$: uncertainty marked by ``may''};
+     $q^*$: a nearby microwave oven can cause the blinking red light;
+     $m^*$: uncertainty marked by ``may''};
 
   \node[verdictH] (hall) at (-3.0,-5.75) {\Hall};
   \node[verdictLD] (licensed) at (3.0,-5.75) {\LD};
   \node[outcome] at (-3.0,-6.38)
-    {unknown; outside $\Gamma_h$\\reason: \textsc{out-of-scope}};
+    {unknown; outside $\Gamma_1$\\reason: \textsc{out-of-scope}};
   \node[outcome,text=clrLD] at (3.0,-6.38)
-    {unknown; inside $\Gamma_f$\\and marked as required};
+    {unknown; inside $\Gamma_2$\\and marked as required};
 
-  \draw[arrow] (historical.south) -- (tch.north);
-  \draw[arrow] (fiction.south) -- (tcf.north);
-  \draw[arrow] (tch.south) -- (span.north -| tch.south);
-  \draw[arrow] (tcf.south) -- (span.north -| tcf.south);
+  \draw[arrow] (strict.south) -- (tc1.north);
+  \draw[arrow] (hyp.south) -- (tc2.north);
+  \draw[arrow] (tc1.south) -- (span.north -| tc1.south);
+  \draw[arrow] (tc2.south) -- (span.north -| tc2.south);
   \draw[arrow] (span.south -| hall.north) -- (hall.north);
   \draw[arrow] (span.south -| licensed.north) -- (licensed.north);
 
@@ -239,6 +259,8 @@ The evidence state remains unknown in both tasks, but the claim receives \Hall\ 
 \end{tikzpicture}%
 }
 \caption{\textbf{The same evidence-unknown claim under two permission scopes.}
+The reference evidence $O$ (the troubleshooting guide) is attached to the
+task context $p$, not written into the prompt.
 The response span, canonical claim, reference evidence, required status marking, and style-marking level are fixed.
 Only the permission scope changes.
 The task with strict grounding assigns \Hall\ with reason code
@@ -279,7 +301,7 @@ Section~\ref{sec:related} compares the rule with neighboring evaluation paradigm
 Section~\ref{sec:mapping} reports the purposive mapping, and Section~\ref{sec:cases} presents the worked cases.
 Sections~\ref{sec:agenda} and~\ref{sec:discussion} present the research agenda, implications, limitations, and falsification criteria.
 
-\section{Contract-Aware Claim Labels and Structured Response-Level Reports}\label{sec:framework}
+\section{A Contract-Aware Claim Labeling Rule}\label{sec:framework}
 
 \subsection{Overview: from a response span to a claim record}
 
@@ -289,16 +311,12 @@ combination of both.
 Consider the constructed prompt ``Explain photosynthesis like a poet, but keep the science accurate.''
 Suppose the response contains the span ``In each leaf, chlorophyll is a green net for sunlight; captured light drives the reactions that build sugars.''
 The evaluator first interprets the span in this task context and recovers two contextualized claims: chlorophyll absorbs light energy, and photosynthesis uses that energy to produce sugars.
-It then canonicalizes each claim as
-\begin{equation}
-c^*=(q^*,\rho^*),
-\label{eq:canonical-claim}
-\end{equation}
-where $q^*$ is its normalized truth-conditional content and $\rho^*$ records
+It then canonicalizes each claim as $c^*=(q^*,m^*)$,
+where $q^*$ is its normalized truth-conditional content and $m^*$ records
 its observed status marking, including epistemic modality and relevant
 discourse framing.
 The evaluator compares $q^*$ with reference evidence $O_p$ and permission
-scope $\Gamma_p$, and compares $\rho^*$ with required status marking $\mu_p$.
+scope $\Gamma_p$, and compares $m^*$ with required status marking $\mu_p$.
 If the evidence entails both propositions, each canonical claim receives \SUP.
 The evaluator separately compares requested and observed style-marking levels.
 This prompt--response style-marking alignment check does not create or excuse a truth-conditional claim.
@@ -311,7 +329,7 @@ Claim labeling follows one fixed chain:
 \rightarrow \text{claim recovery}
 \rightarrow \text{contextualized claim}\\
 &\rightarrow \text{canonicalization}
-\rightarrow \text{canonical claim }c^*=(q^*,\rho^*)
+\rightarrow \text{canonical claim }c^*=(q^*,m^*)
 \rightarrow \text{evidence state}\\
 &\rightarrow \text{scope and marking tests}
 \rightarrow \text{claim label and reason code}.
@@ -322,40 +340,8 @@ procedural failure and may leave the affected response span without a stable
 canonical claim or claim label.
 When a stable canonical claim exists, a contract-specification,
 evidence-coverage, or adjudication failure leaves its claim label undefined.
-The prompt--response style-marking alignment check separately compares $\sigma_p$ with $\widehat{\sigma}(y,p)$.
-Table~\ref{tab:symbols} lists the objects used in the formal definition.
-
-\begin{table}[h!]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.08}
-\caption{\textbf{Core objects in the contract-aware framework.}}
-\label{tab:symbols}
-\begin{tabularx}{\linewidth}{@{}P{0.31\linewidth}Y@{}}
-\toprule
-\textbf{Symbol} & \textbf{Meaning}\\
-\midrule
-$x,p,y,s$ & literal prompt, task context, complete response, and response span\\
-$\TC(p)$ & truth contract $(O_p,\Gamma_p,\mu_p)$ for task context $p$\\
-$O_p,\Gamma_p,\mu_p$ & reference evidence, permission scope, and required status marking\\
-$\sigma_p,\widehat{\sigma}(y,p)$ & requested and observed style-marking levels, recorded outside $\TC(p)$\\
-$\mathcal C(s,y,p)$ & contextualized claims recovered from $s$ within $y$\\
-$c^*=(q^*,\rho^*)$ & canonical claim: normalized content and observed status marking\\
-$E(q^*,O_p)$ & evidence state of $q^*$ relative to $O_p$\\
-$L(q^*,\Gamma_p)$ & permission-scope membership test\\
-$M(\rho^*,\mu_p)$ & required-status-marking test\\
-$V(c^*\mid y,p)$ & claim label \SUP, \Hall, or \LD\\
-$r_{\Hall}(c^*\mid y,p)$ & reason code attached when $V=\Hall$\\
-$\mathcal F(y,p)$ & stage-specific procedural failures in contract specification,
-span selection, claim recovery, canonicalization, canonical-claim matching,
-observed style-marking level annotation, evidence coverage, or adjudication;
-outside the claim-label set\\
-$A_\sigma(y,p)$ & prompt--response style-marking match or mismatch\\
-$R(y\mid p)$ & structured response-level report containing the claim-label trace and separate diagnostics\\
-\bottomrule
-\end{tabularx}
-\end{table}
+The prompt--response style-marking alignment check separately compares the
+requested and observed style-marking levels.
 
 \subsection{The truth contract}
 
@@ -406,9 +392,10 @@ $\mu_p$ specifies how the response must signal an evidence-unknown claim.
 The signal may be a local hedge, a hypothesis label, a section heading, or a
 task-level fictional frame.
 Thus, ``this may be early Lyme disease, but testing is required'' satisfies the required status marking, while ``this is early Lyme disease'' does not.
-The observed status marking $\rho^*$ is recovered from the complete response and
+The observed status marking $m^*$ is recovered from the complete response and
 task context because the relevant marker may appear outside the local span.
-The test $M(\rho^*,\mu_p)$ then compares it with the required status marking.
+The evaluator then compares $m^*$ with the required status marking to decide
+whether the claim is marked as $\mu_p$ requires.
 
 \subsection{Requested and observed style-marking levels}
 
@@ -435,24 +422,16 @@ The boundaries, especially between $\sigma_p=1$ and $\sigma_p=2$, require empiri
 
 The requested style-marking level $\sigma_p$ must be distinguished from the
 observed style-marking level $\widehat{\sigma}(y,p)$.
-The prompt--response style-marking alignment check is
-\begin{equation}
-A_\sigma(y,p)=
-\begin{cases}
-\textsc{match} & \text{if }\widehat{\sigma}(y,p)=\sigma_p,\\
-\textsc{mismatch} & \text{otherwise.}
-\end{cases}
-\label{eq:style-alignment}
-\end{equation}
-Together, $\sigma_p$, $\widehat{\sigma}(y,p)$, and $A_\sigma(y,p)$ describe
-the requested style-marking level, observed style-marking level, and their
-degree-level match.
-They remain separate from reference evidence, permission scope, claim labels,
-named-style identity, source faithfulness, creativity, factuality, and general
-alignment.
+The prompt--response style-marking alignment check simply compares the two:
+it reports \textsc{match} when the observed level equals the requested level,
+and \textsc{mismatch} otherwise.
+This match or mismatch remains separate from reference evidence, permission
+scope, claim labels, named-style identity, source faithfulness, creativity,
+factuality, and general alignment.
 For example, a prompt can request $\sigma_p=2$ while the model produces neutral prose with $\widehat{\sigma}(y,p)=0$.
 The check then reports \textsc{mismatch}.
-If the evaluator cannot determine either level reliably, that difficulty is recorded in $\mathcal F(y,p)$ rather than converted into a claim label.
+If the evaluator cannot determine either level reliably, that difficulty is
+recorded as a procedural failure rather than converted into a claim label.
 
 Requested style-marking level is available as contextual input during claim
 recovery, and its effect is tested rather than assumed.
@@ -470,9 +449,9 @@ Let $s$ denote a response span.
 Interpreting $s$ within the complete response $y$ and task context $p$ yields a set of contextualized truth-conditional claims $\mathcal C(s,y,p)$.
 The same wording can therefore yield different claims in fiction, metaphor, and hypothetical language.
 
-For verification, an annotator canonicalizes each recovered claim as in Equation~\ref{eq:canonical-claim}.
+For verification, an annotator canonicalizes each recovered claim as $c^*=(q^*,m^*)$.
 The component $q^*$ records normalized truth-conditional content, including entities, predicates, negation, quantities, temporal scope, and any attribution that changes what is claimed.
-The component $\rho^*$ records observed status marking, including relevant
+The component $m^*$ records observed status marking, including relevant
 modality and fictional or hypothetical framing.
 This separation allows evidence and permission scope to be checked against
 $q^*$ without discarding the presentation information needed by $\mu_p$.
@@ -481,7 +460,7 @@ Claim recovery follows three rules.
 First, commitments that can receive different evidence states are recovered
 as separate claims.
 Second, attribution, negation, modality, temporal scope, and discourse frame
-are preserved in $q^*$ or $\rho^*$ as appropriate.
+are preserved in $q^*$ or $m^*$ as appropriate.
 Third, metaphorical wording does not create a separate claim unless the
 response makes an attributable truth-conditional commitment.
 
@@ -500,133 +479,61 @@ may differ.
 Appendix~\ref{app:diagnostics} gives the formal stability test.
 
 Span-selection, claim recovery, canonicalization, and matching errors are procedural failures.
-They may cause an evaluator to drop a recoverable claim, create a spurious canonical claim, or alter $q^*$ or $\rho^*$.
-Such errors are recorded in $\mathcal F(y,p)$ and do not themselves receive \SUP, \Hall, or \LD.
+They may cause an evaluator to drop a recoverable claim, create a spurious canonical claim, or alter $q^*$ or $m^*$.
+Such errors are recorded as procedural failures and do not themselves receive \SUP, \Hall, or \LD.
 If no stable canonical claim can be obtained, no claim label is assigned to the
 affected span.
-A failure to realize the requested style-marking level is recorded through
-$A_\sigma(y,p)$; a canonical claim that violates the truth contract is handled
-by the claim-label rule.
+A failure to realize the requested style-marking level is recorded through the
+prompt--response style-marking alignment check; a canonical claim that
+violates the truth contract is handled by the claim-label rule.
 
-\subsection{Evidence state, claim label, and structured response-level report}
+\subsection{From evidence state to claim label}
 
 A claim label is assigned only after the truth contract has been specified, a
-stable canonical claim obtained, and reference-evidence coverage and
-adjudication judged adequate.
-A claim recovery or canonicalization failure may prevent a stable $c^*$ from
-being formed; the evaluator records that failure in $\mathcal F(y,p)$ and
-assigns no claim label to the affected response span.
-If a stable $c^*$ exists but contract specification, reference-evidence
-coverage, or adjudication fails, the evaluator records that failure in
-$\mathcal F(y,p)$ and leaves $V(c^*\mid y,p)$ undefined.
+stable canonical claim has been recovered, and the reference evidence is
+adequate for adjudication. If claim recovery, contract specification, evidence
+coverage, or adjudication fails, the evaluator records the failure and leaves
+the affected span unlabeled.
 
-When these prerequisites hold, record the evidence state of each canonical
-claim $c^*=(q^*,\rho^*)$:
-\begin{equation}
-E(q^*,O_p)\in
-\{\textsc{entailed},\textsc{contradicted},\textsc{unknown}\}.
-\label{eq:evidence-state}
-\end{equation}
-The last value means that $O_p$ neither entails nor contradicts $q^*$; it is not a statement about all possible knowledge.
-Evidence state alone does not determine the claim label.
+For each canonical claim $c^*=(q^*,m^*)$, the evaluator first records
+whether $O_p$ entails, contradicts, or leaves $q^*$ unknown. Here,
+\textsc{unknown} means only that the specified reference evidence neither
+entails nor contradicts the claim; it is not a statement about all possible
+knowledge.
 
-Let $L(q^*,\Gamma_p)\in\{0,1\}$ indicate whether the evidence-unknown
-proposition lies inside the permission scope.
-Let $M(\rho^*,\mu_p)\in\{0,1\}$ indicate whether its observed status marking
-satisfies the required status marking.
-Only a claim with evidence state \textsc{unknown} proceeds to these permission and marking tests.
-Then
-\begin{equation}
-V(c^*\mid y,p)=
-\begin{cases}
-\SUP
-  & \text{if }E(q^*,O_p)=\textsc{entailed},\\[1mm]
-\LD
-  & \text{if }E(q^*,O_p)=\textsc{unknown},\ L=1,\ M=1,\\[1mm]
-\Hall
-  & \text{if }E(q^*,O_p)=\textsc{contradicted},\\[1mm]
-\Hall
-  & \text{if }E(q^*,O_p)=\textsc{unknown},\ L=0,\\[1mm]
-\Hall
-  & \text{if }E(q^*,O_p)=\textsc{unknown},\ L=1,\ M=0.
-\end{cases}
-\label{eq:claim-label}
-\end{equation}
+The claim label then follows three rules:
+\begin{description}
+  \item[\SUP.] The reference evidence entails $q^*$.
+  \item[\Hall.] The reference evidence contradicts $q^*$, or it leaves $q^*$
+        unknown and the claim falls outside $\Gamma_p$ or fails the required
+        status marking $\mu_p$. The evaluator may record
+        \textsc{contradicted}, \textsc{out-of-scope}, or
+        \textsc{marking-failure} as the reason.
+  \item[\LD.] The reference evidence leaves $q^*$ unknown, the claim lies
+        inside $\Gamma_p$, and $m^*$ satisfies $\mu_p$.
+\end{description}
+\LD\ records authorization under the task, not truth, usefulness, quality, or
+safety. A contradicted claim therefore receives \Hall\ once the procedural
+prerequisites are satisfied. In fiction or counterfactual tasks, the declared
+frame is part of the context used to recover the claim and specify $O_p$; an
+in-frame invention is not automatically a real-world assertion. An entailed
+claim that violates a separate style instruction remains \SUP, while the style
+or instruction-following evaluation records the mismatch.
 
-When $V(c^*\mid y,p)=\Hall$, attach one mutually exclusive reason code:
-\begin{equation}
-r_{\Hall}(c^*\mid y,p)=
-\begin{cases}
-\textsc{contradicted}
-  & \text{if }E(q^*,O_p)=\textsc{contradicted},\\[1mm]
-\textsc{out-of-scope}
-  & \text{if }E(q^*,O_p)=\textsc{unknown},\ L=0,\\[1mm]
-\textsc{marking-failure}
-  & \text{if }E(q^*,O_p)=\textsc{unknown},\ L=1,\ M=0.
-\end{cases}
-\label{eq:hallucination-reason}
-\end{equation}
-No hallucination reason code is attached to \SUP\ or \LD.
-The style-marking variables do not appear in either rule because they provide context during claim recovery and are assessed separately through $A_\sigma(y,p)$.
+An explicit refusal or a statement such as ``the available evidence is
+insufficient'' is evaluated as a meta-claim about the evidence. It is not
+automatically treated as asserting the embedded proposition. Treating the
+refusal or insufficiency statement as a meta-claim prevents calibrated
+abstention from being mislabeled as hallucination.
 
-\SUP\ means \emph{supported}: $O_p$ entails $q^*$.
-\Hall\ means \emph{hallucination}: $q^*$ is contradicted by $O_p$, or it is evidence-unknown and fails the permission-scope or required-status-marking test.
-\LD\ means \emph{licensed divergence}: $O_p$ leaves $q^*$ unknown, while $q^*$
-lies inside $\Gamma_p$ and $\rho^*$ satisfies $\mu_p$.
-An \LD\ label records that the permission-scope and required-status-marking
-conditions are met, not that the proposition is true relative to $O_p$.
-A \textsc{marking-failure} receives \Hall\ because the evidence-unknown claim
-is not authorized in the form in which the response presents it.
+For a complete response, the evaluation should publish the claim-level labels
+and reasons, claim coverage, and any procedural failures. Style alignment,
+severity, and task-relative usefulness remain separate diagnostics. The paper
+does not prescribe a mandatory scalar response score; any later aggregation
+must state which diagnostics it uses.
 
-A claim that contradicts $O_p$ always receives \Hall\ once the procedural prerequisites are satisfied.
-For fiction, $O_p$ includes the declared fictional-frame truth constraints; disagreement with the real world alone does not make an in-frame invention contradicted.
-If an entailed claim violates an independent hedge or style instruction, it remains \SUP\ and the separate instruction-following evaluation records the violation.
-
-An explicit refusal or a statement such as ``the available evidence is insufficient'' is evaluated as a meta-claim about the evidence.
-It is not automatically treated as asserting the embedded proposition.
-Treating the refusal or insufficiency statement as a meta-claim prevents
-calibrated abstention from being mislabeled as hallucination.
-
-Let the defined claim trace be
-\begin{equation}
-\mathcal T(y,p)
-=
-\{(c_i^*,V_i,r_i)\mid V_i\ \text{is defined}\},
-\label{eq:claim-trace}
-\end{equation}
-where $r_i=r_{\Hall}(c_i^*\mid y,p)$ when $V_i=\Hall$ and $r_i=\varnothing$ otherwise.
-Claims affected by procedural failures are omitted from $\mathcal T(y,p)$ and
-recorded in $\mathcal F(y,p)$.
-For every response, the structured response-level report is
-\begin{equation}
-R(y\mid p)=
-\left\langle
-\mathcal T(y,p),
-\mathcal F(y,p),
-\operatorname{Cov}(y,p),
-A_\sigma(y,p),
-S(y,p),
-U(y,p)
-\right\rangle ,
-\label{eq:response-record}
-\end{equation}
-where $\operatorname{Cov}(y,p)$ is the claim-coverage diagnostic, $S(y,p)$ is severity when assessed, and $U(y,p)$ is task-relative usefulness when assessed.
-$U(y,p)$ records usefulness: the assessed value of authorized content for the
-task objective, at a stated unit such as the claim or complete response.
-The structured response-level report publishes the claim trace, the
-distribution of \SUP, \Hall, and \LD, procedural failures, and claim coverage.
-When assessed, prompt--response style-marking alignment, severity, and
-usefulness remain separately named diagnostics rather than components of a
-mandatory scalar score.
-$R(y\mid p)$ is a structured response-level report, not a scalar aggregation;
-any later scalar or ranking rule must state explicitly which components it
-uses.
-
-Figure~\ref{fig:claim-label-annotation} traces the constructed example from the
-three truth-contract fields and the separate requested style-marking level
-through claim recovery, canonicalization, evidence state, and reason-coded
-claim labels; it also shows the separate prompt--response style-marking
-alignment check.
+Figure~\ref{fig:claim-label-annotation} illustrates the complete procedure on a
+constructed example.
 
 \begin{figure}[!t]
 \centering
@@ -682,14 +589,15 @@ alignment check.
   % Task context
   \node[lab] at (\xlabel,7.35) {task context};
   \node[prompt] (prompt) at (-2.15,7.35) {\textbf{Prompt $x$:} ``Using the
-    archive extract, write a vivid museum panel on Lyon's 1918 influenza
-    epidemic in sustained figurative language. Keep historical statements
-    faithful. Where the extract is silent, you may add a plausible
-    reconstruction, but mark it as conjecture.''};
-  \node[archive] (archive) at (\xright,7.35) {\textbf{$O_p$ --- archive extract}\\
-    \emph{H\^otel-Dieu register, Lyon, October 1918.} ``412 admissions,
-    week of 14 October. Municipal order, 22 October: gauze masks in enclosed
-    public spaces. Schools: no entry.''};
+    Wikipedia article on the 1918 flu pandemic in Lyon, write a vivid museum
+    panel about the outbreak in sustained figurative language. Keep
+    historical statements faithful to the article. Where the article is
+    silent, you may add a plausible reconstruction, but mark it as
+    conjecture.''};
+  \node[archive] (archive) at (\xright,7.35) {\textbf{$O_p$ --- Wikipedia excerpt}\\
+    \emph{Wikipedia, ``1918 flu pandemic in France'' (excerpt).} ``412
+    admissions, week of 14 October, H\^otel-Dieu, Lyon. Municipal order,
+    22 October: gauze masks in enclosed public spaces. Schools: no entry.''};
 
   % Truth-contract fields and separate requested style-marking level
   \node[lab] at (\xlabel,4.85)
@@ -737,21 +645,21 @@ alignment check.
 
   % Canonical claims
   \node[lab] at (\xlabel,-1.55)
-    {canonical claims\\$\mathcal{C}(s,y,p)\to c^*$};
+    {canonical claims};
   \node[claim] (c1) at (\xone,-1.55)
-    {$q^*_1$: 412 admissions,\\H\^otel-Dieu, week of\\14 Oct 1918\\$\rho^*_1$: asserted};
+    {$q^*_1$: 412 admissions,\\H\^otel-Dieu, week of\\14 Oct 1918\\$m^*_1$: asserted};
   \node[claim] (c2) at (\xtwo,-1.55)
-    {$q^*_2$: gauze masks\\required in enclosed\\public spaces from 22 Oct\\$\rho^*_2$: asserted};
+    {$q^*_2$: gauze masks\\required in enclosed\\public spaces from 22 Oct\\$m^*_2$: asserted};
   \node[claim] (c3) at (\xthree,-1.55)
-    {$q^*_3$: schools were empty\\before 22 Oct\\$\rho^*_3$: probably};
+    {$q^*_3$: schools were empty\\before 22 Oct\\$m^*_3$: probably};
   \node[claim] (c4) at (\xfour,-1.55)
-    {$q^*_4$: Dr.\ Chapuis\\concealed the toll\\$\rho^*_4$: asserted};
+    {$q^*_4$: Dr.\ Chapuis\\concealed the toll\\$m^*_4$: asserted};
   \foreach \sp/\cl in {s1/c1,s2/c2,s3/c3,s4/c4}
     \draw[flow] (\sp.south) -- (\cl.north);
 
   % Evidence state
   \node[lab] at (\xlabel,-3.28)
-    {evidence state\\$E(q^*,O_p)$};
+    {evidence state};
   \node[state] (e1) at (\xone,-3.28) {ENTAILED};
   \node[state] (e2) at (\xtwo,-3.28) {ENTAILED};
   \node[state] (e3) at (\xthree,-3.28) {UNKNOWN};
@@ -761,7 +669,7 @@ alignment check.
 
   % Claim labels
   \node[lab] at (\xlabel,-4.63)
-    {claim label\\$V(c^*\mid y,p)$};
+    {claim label};
   \node[verdict=black] (v1) at (\xone,-4.63) {\SUP};
   \node[verdict=black] (v2) at (\xtwo,-4.63) {\SUP};
   \node[verdict=figgreen] (v3) at (\xthree,-4.63) {\LD};
@@ -785,9 +693,8 @@ alignment check.
   \node[stylebox,text width=5.05cm,minimum height=0pt,anchor=north]
     (stylecheck) at (2.50,-6.05)
     {\textbf{Prompt--response style-marking alignment:}
-     annotate $\widehat{\sigma}(y,p)$, compare it with $\sigma_p$, and report
-     match/mismatch separately. Requested style-marking level is contextual
-     input whose effect on claim recovery is tested.};
+     compare the requested and observed style-marking levels and report
+     match or mismatch separately.};
 
   % Evidence path, routed outside every content box.
   \draw[figorange!70,dashed,line width=0.9pt,-{Stealth[length=4pt,width=3pt]}]
@@ -798,120 +705,24 @@ The task context fixes the truth contract
 $\TC(p)=(O_p,\Gamma_p,\mu_p)$ and separately records requested
 style-marking level $\sigma_p$.
 Claim recovery and canonicalization preserve normalized content $q^*$ and
-observed status marking $\rho^*$.
+observed status marking $m^*$.
 Reference evidence determines the evidence state; permission scope and
 required status marking then distinguish \LD\ from reason-coded \Hall\ when
 the state is unknown.
 Observed style-marking level and prompt--response style-marking alignment are
 reported separately and never create a fourth claim label.
-The archive extract and the name ``Chapuis'' are constructed for this example.}
+The Wikipedia excerpt and the name ``Chapuis'' are constructed for this example.}
 \label{fig:claim-label-annotation}
 \end{figure}
 
-\paragraph{Structured response-level report versus scalar aggregation}
-Equation~\ref{eq:response-record} keeps claim labels, procedural failures,
-coverage, prompt--response style-marking alignment, severity, and usefulness
-visible in $R(y\mid p)$.
-This report does not impose a scalar response score.
+\paragraph{Claim-level report versus scalar aggregation}
+For a complete response, the evaluation keeps claim labels, procedural
+failures, claim coverage, prompt--response style-marking alignment, severity,
+and usefulness visible, rather than collapsing them into a single score.
 Existing factuality evaluation reports both claim-aggregated scores and
 benchmark-level decisions \citep{min_factscore_2023,bayat_factbench_2024}.
 Any such aggregation answers an additional task-dependent question and should
-be reported together with the underlying structured response-level report.
-
-\subsection{Representative contracts}
-
-Table~\ref{tab:contracts} applies the rule to constructed prompts and response
-spans.
-Each canonical claim shown receives its own label; the table does not report a scalar
-response score or empirical results.
-
-\begin{table}[!t]
-\centering
-\scriptsize
-\renewcommand{\arraystretch}{1.03}
-\caption{\textbf{Constructed truth contracts and claim labels.}
-Each card specifies reference evidence $O_p$, permission scope $\Gamma_p$,
-required status marking $\mu_p$, and separate requested style-marking level
-$\sigma_p$.
-Every canonical claim shown receives one label: \SUP\ (supported), \Hall\
-(hallucination), or \LD\ (licensed divergence), with the decision basis shown
-at right.
-Observed style-marking level and prompt--response style-marking alignment are
-separate outputs and are not reported in this table.
-The examples illustrate the rule; they are not empirical findings or verdicts
-on complete responses.}
-\label{tab:contracts}
-\setlength{\fboxsep}{4pt}
-\begin{tabularx}{0.94\linewidth}{@{}YP{0.12\linewidth}P{0.30\linewidth}@{}}
-\textbf{Response span and canonical claim} & \textbf{Label} & \textbf{Decision basis}\\
-\end{tabularx}
-\vspace{2pt}
-\fcolorbox{gray!65}{gray!2}{%
-\begin{minipage}{0.94\linewidth}
-\textbf{Prompt:} ``Summarize this medical report''\\[2pt]
-\null\hfill\colorbox{gray!12}{\strut \textbf{Requested style-marking level:} $\sigma_p=0$}\\[2pt]
-\textbf{Truth contract:} $O_p=$ provided report; $\Gamma_p=\varnothing$; $\mu_p=$ not applicable because $\Gamma_p=\varnothing$.\par\vspace{2pt}
-\begin{tabularx}{\linewidth}{@{}YP{0.12\linewidth}P{0.30\linewidth}@{}}
-\textbf{Response span:} ``The patient has diabetes'' (not in the report)\newline
-\textbf{Canonical claim:} $q^*$: the patient has diabetes; $\rho^*$: asserted
-  & \textcolor{clrH}{\bfseries \Hall} & evidence-unknown; $\Gamma_p=\varnothing$ (\textsc{out-of-scope})\\
-\end{tabularx}
-\end{minipage}}
-
-\vspace{2pt}
-\fcolorbox{gray!65}{gray!2}{%
-\begin{minipage}{0.94\linewidth}
-\textbf{Prompt:} ``Explain photosynthesis like a poet, but keep the science accurate''\\[2pt]
-\null\hfill\colorbox{gray!12}{\strut \textbf{Requested style-marking level:} $\sigma_p=2$}\\[2pt]
-\textbf{Truth contract:} $O_p=$ scientific references; $\Gamma_p=\varnothing$; $\mu_p=$ not applicable because $\Gamma_p=\varnothing$.\par\vspace{2pt}
-\begin{tabularx}{\linewidth}{@{}YP{0.12\linewidth}P{0.30\linewidth}@{}}
-\textbf{Response span:} ``In each leaf, chlorophyll is a green net for sunlight; captured light drives the reactions that build sugars.''\newline
-\textbf{Canonical claim 1:} $q^*$: chlorophyll absorbs light energy; $\rho^*$: asserted
-  & {\bfseries \SUP} & entailed by $O_p$\\
-\addlinespace[3pt]
-\textbf{Canonical claim 2:} $q^*$: photosynthesis uses light energy to produce sugars; $\rho^*$: asserted
-  & {\bfseries \SUP} & entailed by $O_p$\\
-\addlinespace[3pt]
-\textbf{Response span:} ``Plants make sugar from moonlight.''\newline
-\textbf{Canonical claim:} $q^*$: plants use moonlight to produce sugar; $\rho^*$: asserted
-  & \textcolor{clrH}{\bfseries \Hall} & contradicted by $O_p$ (\textsc{contradicted}); style does not expand permission scope\\
-\end{tabularx}
-\end{minipage}}
-
-\vspace{2pt}
-\fcolorbox{gray!65}{gray!2}{%
-\begin{minipage}{0.94\linewidth}
-\textbf{Prompt:} ``Given these symptoms, list possible diagnoses and mark each unconfirmed diagnosis as uncertain''\\[2pt]
-\null\hfill\colorbox{gray!12}{\strut \textbf{Requested style-marking level:} $\sigma_p=0$}\\[2pt]
-\textbf{Truth contract:} $O_p=$ clinical evidence; $\Gamma_p=$ possible diagnoses; $\mu_p=$ explicit uncertainty marking.\par\vspace{2pt}
-\begin{tabularx}{\linewidth}{@{}YP{0.12\linewidth}P{0.30\linewidth}@{}}
-\textbf{Response span:} ``This could be early Lyme disease, but testing is required.''\newline
-\textbf{Canonical claim:} $q^*$: the patient has early Lyme disease; $\rho^*$: possible, with explicit uncertainty marking
-  & \textcolor{clrLD}{\bfseries \LD} & evidence-unknown; inside $\Gamma_p$; satisfies $\mu_p$\\
-\addlinespace[3pt]
-\textbf{Response span:} ``This is early Lyme disease.''\newline
-\textbf{Canonical claim:} $q^*$: the patient has early Lyme disease; $\rho^*$: asserted
-  & \textcolor{clrH}{\bfseries \Hall} & evidence-unknown; inside $\Gamma_p$; fails $\mu_p$ (\textsc{marking-failure})\\
-\end{tabularx}
-\end{minipage}}
-
-\vspace{2pt}
-\fcolorbox{gray!65}{gray!2}{%
-\begin{minipage}{0.94\linewidth}
-\textbf{Prompt:} ``Write a story set in 1920s Paris in neutral prose''\\[2pt]
-\null\hfill\colorbox{gray!12}{\strut \textbf{Requested style-marking level:} $\sigma_p=0$}\\[2pt]
-\textbf{Truth contract:} $O_p=$ prompt and historical constraints; $\Gamma_p=$ fictional world; $\mu_p=$ declared fictional frame.\par\vspace{2pt}
-\begin{tabularx}{\linewidth}{@{}YP{0.12\linewidth}P{0.30\linewidth}@{}}
-\textbf{Response span:} ``In the story, caf\'e Verdier opened at dawn.''\newline
-\textbf{Canonical claim:} $q^*$: caf\'e Verdier opened at dawn; $\rho^*$: inside the declared fictional frame
-  & \textcolor{clrLD}{\bfseries \LD} & evidence-unknown; inside $\Gamma_p$; fictional frame satisfies $\mu_p$\\
-\addlinespace[3pt]
-\textbf{Response span:} ``As a historical fact, a real public figure secretly owned caf\'e Verdier in 1924.'' \emph{(constructed claim template)}\newline
-\textbf{Canonical claim:} $q^*$: a real public figure owned caf\'e Verdier in 1924; $\rho^*$: asserted as real history
-  & \textcolor{clrH}{\bfseries \Hall} & evidence-unknown real-world claim outside $\Gamma_p$ (\textsc{out-of-scope})\\
-\end{tabularx}
-\end{minipage}}
-\end{table}
+be reported together with the underlying claim-level labels and diagnostics.
 
 \section{Related Evaluation Paradigms}\label{sec:related}
 
@@ -954,7 +765,7 @@ retains the context needed to attribute that commitment
 Canonicalization may add context needed to make a claim stand alone, but it
 must preserve the original meaning \citep{choi_decontextualization_2021}.
 Hedges can qualify categorical commitment \citep{hyland_hedging_1996}; their
-observed contribution is recorded in $\rho^*$.
+observed contribution is recorded in $m^*$.
 These sources motivate contextualized claims and canonicalization; they do not
 validate the proposed categories of required status marking.
 
@@ -966,7 +777,7 @@ Coverage errors omit attributable commitments, whereas atomicity errors merge
 propositions that could receive different evidence states
 \citep{metropolitansky_claimify_2025,wanner_closer_2024}.
 Decontextualization can remove attribution, modality, or discourse framing,
-and canonicalization can alter $q^*$ or $\rho^*$
+and canonicalization can alter $q^*$ or $m^*$
 \citep{wanner_closer_2024,choi_decontextualization_2021}.
 These methods supply claim-extraction machinery, but claim recovery and
 canonicalization are evaluated separately before claim labels are assigned.
@@ -1096,10 +907,11 @@ Figure~\ref{fig:profiles} reports the same coding as a schematic cluster map.
 ]
 
 % Schematic axes: the vertical positions follow the coding categories.
-\draw[axis] (0,0) -- (14.8,0);
+% Horizontal grouping only: no direction and no metric interpretation.
+\draw[thick] (0,0) -- (14.8,0);
 \node[below,align=center] at (7.4,-0.30)
-  {Nominal task profile\\[-1mm]\scriptsize strict grounding
-   $\rightarrow$ more open-ended framing};
+  {Nominal task profiles
+   (categorical; horizontal distance has no metric meaning)};
 \draw[axis] (0,0) -- (0,8.4);
 \node[anchor=west,font=\footnotesize] at (0.25,8.15)
   {Treatment of requested style-marking level};
@@ -1115,7 +927,7 @@ Figure~\ref{fig:profiles} reports the same coding as a schematic cluster map.
 
 % Missing combination targeted by the proposed benchmark.
 \node[
-  draw=red!75!black,dashed,very thick,rounded corners=8pt,fill=red!6,
+  draw=red!8,very thick,rounded corners=8pt,fill=red!6,
   text width=4.25cm,minimum height=1.65cm,align=center
 ] (gap) at (2.65,6.85)
   {\textbf{No resource identified}\\[1mm]
@@ -1227,7 +1039,7 @@ Suppose a task permits version-specific hypotheses about a tool but requires
 uncertainty to be marked when the documentation is inconclusive.
 \emph{Fixed:} $O_p$, $\Gamma_p$, $\mu_p$, the proposition that the tool
 supports several formats, and its evidence-unknown state.
-\emph{Changed:} only the observed status marking $\rho^*$.
+\emph{Changed:} only the observed status marking $m^*$.
 \emph{Outcome:} ``the tool supports several formats'' receives \Hall\
 with reason \textsc{marking-failure}, whereas ``the tool may support several
 formats, but this requires version-specific verification'' receives \LD.
@@ -1363,29 +1175,24 @@ with reproducible stage-specific error attribution, would support the
 position; no consequential diagnostic gain over end-to-end evaluation would
 weaken it.
 
-\paragraph{4. Use of the structured response-level report}
+\paragraph{4. Response-level reporting and aggregation}
 \emph{Research problem.}
-Claim labels do not determine how complete responses should be compared.
+Claim-level labels do not by themselves determine how complete responses
+should be compared.
 \emph{Why it threatens the position.}
-A single rate can hide claim coverage, the distribution of \SUP, \Hall, and
-\LD, and the difference between one severe violation and several
-low-consequence errors.
+A single hallucination rate can hide claim coverage, procedural failures,
+severity differences, and the distribution of \SUP, \Hall, and \LD.
 \emph{Study and measures.}
-Studies should first publish $R(y\mid p)$ as defined in
-Equation~\ref{eq:response-record}, then compare optional secondary aggregation
-rules such as the proportion of \Hall\ claims, worst-case aggregation,
-severity-weighted scoring, and usefulness-aware scoring.
-Every aggregate should be accompanied by the underlying claim trace, claim
-coverage, prompt--response style-marking alignment, and sensitivity to the
-aggregation rule.
-The comparison should include tasks with different consequences, because a
-medical claim labeled \Hall\ and a harmless fictional detail should not
-receive the same response-level weight.
+Studies should first publish the claim-level labels, reason codes, coverage,
+and procedural failures. When assessed, style alignment, severity, and
+task-relative usefulness should remain separately named diagnostics.
+Researchers can then compare optional aggregation rules and report whether
+model rankings or conclusions change across them.
 \emph{Result that would support or weaken the position.}
-An aggregation would support the position if it enables meaningful response
-comparisons without obscuring the claims and contract conditions that produced
-the score; sensitivity that reverses conclusions without an explicit
-task-dependent rationale would weaken it.
+Stable conclusions across transparent aggregation rules would support the
+practical usefulness of the framework. If the additional diagnostics never
+change interpretation relative to a simpler factuality-plus-compliance
+baseline, the framework would be weakened.
 
 \paragraph{5. Mitigation without suppressing licensed divergence or supported content at the requested style-marking level}
 \emph{Research problem.}
@@ -1529,7 +1336,7 @@ The truth contract $\TC(p)=(O_p,\Gamma_p,\mu_p)$ separates reference evidence,
 permission scope, and required status marking.
 A canonical claim whose proposition $q^*$ is evidence-unknown receives \LD\
 only when $q^*$ falls inside $\Gamma_p$ and its observed status marking
-$\rho^*$ satisfies $\mu_p$; otherwise it receives a reason-coded \Hall.
+$m^*$ satisfies $\mu_p$; otherwise it receives a reason-coded \Hall.
 Requested and observed style-marking levels remain separate variables for claim
 recovery and prompt--response style-marking alignment, and never authorize
 content.
@@ -1562,31 +1369,29 @@ contexts that differ only in requested style-marking level, with
 $\sigma_{p_0}=0$, $\sigma_{p_1}=1$, and $\sigma_{p_2}=2$.
 After one-to-one adjudicated canonical matching, let
 $\mathcal C^*(y_i,p_i)$ denote each set of canonical claims
-$c^*=(q^*,\rho^*)$.
+$c^*=(q^*,m^*)$.
 The responses instantiate claim-preserving style variation only if the matched
-sets contain the same $q^*$ and $\rho^*$ components; their surface strings and
+sets contain the same $q^*$ and $m^*$ components; their surface strings and
 observed style-marking levels may differ.
 With fixed $O_p$, $\Gamma_p$, and $\mu_p$, the desired stability condition is
-\[
-\mathcal C^*(y_0,p_0)=\mathcal C^*(y_1,p_1)=\mathcal C^*(y_2,p_2),
-\qquad
-V(c_j^*\mid y_0,p_0)=V(c_j^*\mid y_1,p_1)=V(c_j^*\mid y_2,p_2)
-\]
-for every matched canonical claim $c_j^*$.
+that every matched canonical claim $c_j^*$ receives the same claim label
+(\SUP, \Hall, or \LD) under $y_0,p_0$, $y_1,p_1$, and $y_2,p_2$, in addition to
+the matched-claim-set condition
+$\mathcal C^*(y_0,p_0)=\mathcal C^*(y_1,p_1)=\mathcal C^*(y_2,p_2)$.
 
 \begin{itemize}
   \item \emph{Claim recovery error}: a recoverable claim is dropped or a
         spurious claim is added during claim recovery.
   \item \emph{Canonicalization error}: canonicalization alters $q^*$ or
-        $\rho^*$.
+        $m^*$.
   \item \emph{Claim-label instability}: matched canonical claims receive
         different labels when $O_p$, $\Gamma_p$, and $\mu_p$ are fixed.
   \item \emph{Prompt--response style-marking alignment error}: the evaluator
         incorrectly classifies the match between requested and observed
         style-marking levels.
   \item \emph{Secondary aggregation sensitivity}: a response comparison
-        changes when the evaluator changes an optional rule applied to
-        $R(y\mid p)$.
+        changes when the evaluator changes an optional rule applied to the
+        claim-level labels and diagnostics.
 \end{itemize}
 
 Claim recovery and claim-label diagnostics require expert-adjudicated canonical
@@ -1598,8 +1403,8 @@ When $\Gamma_p$ or $\mu_p$ changes, the same evidence-unknown claim may
 intentionally change from \Hall\ to \LD; the evidence state remains
 \textsc{unknown}.
 
-For a complete response $y$, an evaluation should publish the structured response-level report
-$R(y\mid p)$ before applying any scalar or ranking rule.
+For a complete response $y$, an evaluation should publish the claim-level
+labels and diagnostics before applying any scalar or ranking rule.
 Comparisons should report sensitivity to plausible secondary aggregation rules
 rather than present one rule as uniquely determined.
 
