@@ -20,6 +20,7 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{placeins}
 \hypersetup{hidelinks}
 
 \newcommand{\TC}{\textsc{TC}}
@@ -65,46 +66,51 @@
 \maketitle
 
 \begin{abstract}
-Hallucination evaluation often classifies claims not entailed by reference
-evidence as errors.
+Hallucination evaluation often maps a claim's relation to reference evidence
+directly onto a final label.
 This convention suits tasks with strict grounding but is incomplete when a task
 permits bounded hypotheses or fictional invention.
-This position paper argues that non-entailment alone should not determine a claim label.
+This position paper argues that a claim the reference evidence neither entails
+nor contradicts should not automatically receive the hallucination label.
 Evaluators should instead use a task-specific \emph{truth contract} with three fields: reference evidence, permission scope, and required status marking.
-An entailed claim receives the supported label, whereas a contradicted claim receives the hallucination label.
-A canonical claim whose proposition is evidence-unknown receives licensed
-divergence only when the proposition lies inside the permission scope and its
-observed status marking satisfies the required status marking; otherwise it
+An entailed claim receives the supported label, whereas a contradicted claim
 receives the hallucination label.
+A claim that the reference evidence leaves unknown receives licensed
+divergence only when it lies inside the permission scope and its
+observed status marking satisfies the required status marking; otherwise it
+receives the hallucination label with a recorded reason code.
 A complete evaluation also records requested and observed style-marking levels separately.
-The requested level is available as context during claim recovery and supports a prompt--response style-marking alignment check, but its effect on recovery remains an empirical hypothesis and it never expands permission scope.
+The requested level is available as context during claim recovery and supports a prompt--response style-marking alignment check, but its effect on recovery remains a secondary robustness question and it never expands permission scope.
 We examine the distinction through a purposive mapping of forty evaluation resources and five worked cases.
-Within the selected sample, no resource jointly controls the three
-truth-contract fields and claim-preserving style variation.
+In our selected sample, no resource separately represents reference evidence,
+permission scope, and required status marking while also controlling
+claim-preserving style variation.
 The mapping is a diagnostic description of the selected resources, not a prevalence estimate for the broader literature.
-The proposal is unnecessary if a baseline combining factuality with
-instruction-following evaluation yields equally reliable and informative
-claim-level diagnoses.
+The proposal would be unnecessary if a combined factuality and
+instruction-following baseline matched it on claim-label agreement, reason-code
+accuracy, and identification of the pipeline stage responsible for a disputed
+label.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
 
 Large language models (LLMs) can produce fluent claims that reference evidence contradicts or leaves unknown \citep{ji_survey_2023,huang_survey_2025}.
-These errors can limit the use of LLMs in high-stakes settings.
+Such outputs can be errors in strict-grounding settings and can limit the use
+of LLMs in high-stakes applications.
 Accordingly, research spans taxonomies, benchmarks, detection, and mitigation
 \citep{ji_survey_2023,huang_survey_2025}.
 
-An evidence-unknown claim is not always an error.
+A claim that the reference evidence leaves unknown is not always an error.
 Fiction permits invention, whereas brainstorming can solicit novel suggestions
 rather than reproduction of available evidence
 \citep{franceschelli_creativity_2024,jiang_survey_2024,rick_supermind_2023}.
-A hypothesis-generation task may likewise authorize explicitly marked,
-evidence-unknown propositions.
+A hypothesis-generation task may likewise authorize explicitly marked
+propositions that the evidence leaves unknown.
 
 A medical assistant should not present an unverified diagnosis as established.
 A fiction-writing assistant must be able to invent characters and events.
-The relevant distinction is therefore whether the task permits an
-evidence-unknown claim, not merely whether the reference evidence entails it.
+The relevant distinction is therefore whether the task permits such a claim,
+not merely whether the reference evidence entails it.
 
 Current evaluation protocols do not always represent this distinction explicitly.
 Factuality and source-faithfulness evaluations compare generated claims with
@@ -113,62 +119,96 @@ external or provided reference evidence
 Creativity research commonly distinguishes novelty from usefulness or quality
 \citep{runco_standard_2012,diedrich_are_2015};
 CreativityPrism, for example, evaluates quality, novelty, and diversity
-\citep{hou_creativityprism_2025}.
+\citep{hou_creativityprism_2025}, and recent surveys and task-specific novelty
+metrics continue to refine this landscape
+\citep{ismayilzada_progress_2024,zhao_assessing_2025,namuduri_genie_2026}.
 These dimensions do not by themselves determine whether a novel factual claim
 violates a task constraint.
 Consequently, two protocols can assign different labels to identical surface wording when their prompts establish different task conditions.
 
-Claim recovery poses a separate problem when a response uses a marked style.
-Stylistic foregrounding makes linguistic form salient through devices such as deviation, parallelism, metaphor, and unusual phrasing \citep{leech_short_style_1981,vanpeer_stylistics_2020}.
-Text style-transfer work commonly treats content preservation as a separate
-objective from changing stylistic form
-\citep{jin_deep_2022,rao_dear_2018,briakou_evaluating_2021}.
-A procedure for claim recovery may nevertheless literalize a metaphor, add a spurious claim, or omit the intended one.
-Whether evaluators preserve claims under claim-preserving style variation is an empirical question.
-Protocols that do not expose style-marking level as a controlled variable
-cannot measure this possible error.
-
 \paragraph{Our position}
-We argue that non-entailment is an evidence result, not a complete claim label.
-A claim should be evaluated under the task's truth contract.
+We argue that an \textsc{unknown} evidence state should not automatically
+receive the hallucination label.
+Two of the three evidence states settle the label on their own.
+The third does not, and requires a permission-scope check and a
+required-status-marking check.
+A claim should therefore be evaluated under the task's truth contract.
 A \emph{claim} is a truth-conditional commitment attributed to the response: something the response presents as being the case and that can therefore be checked against evidence.
-A \emph{response span} $s$ is a text segment from which an evaluator recovers one or more claims.
-We use $x$ for the literal prompt and $p$ for the complete task context, including applicable system instructions, the user's request, dialogue history, domain constraints, and attached evidence.
+We write $p$ for the complete task context.
+It includes the user's request, any applicable system instructions, dialogue history, domain constraints, and attached evidence.
+
 We write the contract as $\TC(p)=(O_p,\Gamma_p,\mu_p)$.
 The reference evidence $O_p$ specifies the standard of support.
 The permission scope $\Gamma_p$ specifies which evidence-unknown content the task authorizes, and the required status marking $\mu_p$ specifies how that content must be presented.
-Requested style-marking level $\sigma_p$ is a separate task variable.
-It is available as contextual input during claim recovery and is compared with the observed style-marking level $\widehat{\sigma}(y,p)$ in a separate prompt--response style-marking alignment check.
-An entailed claim receives \SUP\ (supported).
-A contradicted claim receives \Hall\ (hallucination) with reason
-\textsc{contradicted}.
-A canonical claim whose proposition $q^*$ is evidence-unknown receives \LD\
-(licensed divergence) only when $q^*$ lies inside $\Gamma_p$ and its observed
-status marking $m^*$ satisfies $\mu_p$; otherwise it receives \Hall\ with
-reason \textsc{out-of-scope} or \textsc{marking-failure}.
-These labels apply to canonical claims.
-For a complete response, the evaluation publishes the resulting claim labels
-and reasons alongside separate diagnostics such as claim coverage, style
-alignment, severity, and usefulness, rather than a single mandatory score.
+A claim with evidence state \textsc{entailed} receives the supported label
+(\SUP).
+A claim with evidence state \textsc{contradicted} receives the hallucination
+label (\Hall) with reason code \textsc{contradicted}.
+A claim with evidence state \textsc{unknown} receives the licensed-divergence
+label (\LD) only when it lies inside $\Gamma_p$ and its observed status
+marking satisfies $\mu_p$; otherwise it receives the hallucination label with
+reason code \textsc{out-of-scope} or \textsc{marking-failure}.
+Section~\ref{sec:framework} states the normalized form in which a claim is
+represented before these comparisons are made.
 The contract does not change what is true.
 It determines how evidence state, permission scope, and required status marking
 compose into a claim label.
 
-\paragraph{Why a structured contract rather than factuality plus instruction-following evaluation?}
+Figure~\ref{fig:prompt-to-claim} isolates that composition on a constructed
+pair of tasks.
+The response wording, the recovered claim, the reference evidence, the required
+status marking, and the style-marking level are all held fixed.
+Only the permission scope differs.
+The evidence state remains \textsc{unknown} in both tasks, yet the claim
+receives the hallucination label under strict grounding and the
+licensed-divergence label under bounded hypothesis generation.
+
+Other response-level properties remain separate diagnostics, defined in
+Sections~\ref{sec:framework} and~\ref{sec:related}.
+They should be reported alongside the claim labels and reason codes rather than
+collapsed into a mandatory scalar score.
+How stylistically marked the wording is, defined below as the
+\emph{style-marking level}, is likewise a separate task variable.
+The level requested by the task is compared with the level observed in the
+response in a prompt--response style-marking alignment check.
+That check is a secondary robustness test for claim recovery, not a
+constitutive part of the truth contract.
+
+\paragraph{Why a truth contract rather than separate factuality and instruction-following judgments?}
 Evidence-based factuality and source-faithfulness methods ask whether a claim is supported by a designated external reference or input source \citep{maynez_faithfulness_2020,min_factscore_2023}.
 Instruction-following evaluation instead asks whether a response satisfies the constraints expressed by the task \citep{zhou_ifeval_2023}; intent-aware evaluation can further diagnose omitted or misinterpreted query conditions \citep{hao_faithqa_2025}.
-These objectives are complementary, and work that studies them jointly shows that instruction following and evidential faithfulness may require explicit reconciliation \citep{wu_dancing_2024}.
+These objectives are complementary, and work that studies them jointly shows that instruction following and source faithfulness may require explicit reconciliation \citep{wu_dancing_2024}.
 
 Consider a hypothesis that is not established by the reference evidence but that the task explicitly permits if it is marked as uncertain.
 The evidence judgment can report an unknown evidence state, while the instruction-following judgment can report that the response obeyed the request.
-Those two outputs do not by themselves state whether the claim should receive \Hall\ or \LD.
-A sufficiently fine-grained instruction-following rubric could encode the same distinction; the contribution of the truth contract is to make the composition rule explicit and inspectable.
+Those two outputs do not by themselves state whether the claim should receive the hallucination label or the licensed-divergence label.
+A sufficiently fine-grained instruction-following rubric could encode the same distinction. The truth contract contributes an explicit and inspectable claim-labeling rule.
 The rule covers only this claim-level decision; it is not a general alignment,
-creativity, usefulness, or quality measure.
+creativity, usefulness, or overall response quality measure.
 
-Figure~\ref{fig:prompt-to-claim} holds the response wording, canonical claim, reference evidence, required status marking, and style-marking level fixed.
-Only the permission scope changes.
-The evidence state remains unknown in both tasks, but the claim receives \Hall\ under strict grounding and \LD\ under bounded hypothesis generation.
+\paragraph{A secondary problem: claim recovery under marked style}
+Applying the rule presupposes that the evaluator recovers the right claims in
+the first place, and this becomes harder when a response uses a marked style.
+By \emph{style marking} we mean how much the wording calls attention to itself.
+Plain expository prose is minimally marked; sustained metaphor or a strong
+authorial voice is heavily marked.
+Style marking is a matter of degree, not the identity of a named style, and it
+is not by itself evidence of factual error.
+Stylistics describes such departures as foregrounding, which makes linguistic form salient through devices such as deviation, parallelism, metaphor, and unusual phrasing \citep{leech_short_style_1981,vanpeer_stylistics_2020}.
+Text style-transfer work commonly treats content preservation as a separate
+objective from changing stylistic form
+\citep{jin_deep_2022,rao_dear_2018,briakou_evaluating_2021}.
+A procedure for claim recovery may nevertheless literalize a metaphor, add a spurious claim, or omit the intended one.
+We call surface realizations that express the same claims
+\emph{claim-preserving style variation}.
+We make this notion precise in Section~\ref{subsec:unit} and state its
+operational test in Appendix~\ref{app:diagnostics}.
+Whether claim recovery remains stable across such realizations is an empirical
+question.
+Protocols that do not expose style-marking level as a controlled variable
+cannot measure this possible error.
+Figure~\ref{fig:prompt-to-claim} holds that level fixed across both tasks for
+exactly this reason: it plays no part in either label.
 
 \begin{figure}[!t]
 \centering
@@ -177,13 +217,13 @@ The evidence state remains unknown in both tasks, but the claim receives \Hall\ 
   \tikzset{
     taskbox/.style={
       decision,text width=5.35cm,minimum height=2.15cm,
-      font=\small,inner sep=5pt},
+      font=\footnotesize,inner sep=5pt},
     contractbox/.style={
       decision,text width=5.35cm,minimum height=1.55cm,
       font=\scriptsize,inner sep=4pt},
     contextbox/.style={
       rectangle,rounded corners=4pt,draw=clrO!60,fill=clrO!6,
-      text width=10.8cm,align=left,font=\scriptsize,inner sep=6pt},
+      text width=10.8cm,align=left,font=\scriptsize,inner sep=5pt},
     sharedspan/.style={
       input,text width=8.7cm,minimum height=1.25cm,
       font=\footnotesize,inner sep=5pt},
@@ -191,17 +231,18 @@ The evidence state remains unknown in both tasks, but the claim receives \Hall\ 
       font=\scriptsize,align=center,text width=3.75cm}
   }
 
-  \draw[dashed,gray!50] (0,0.95) -- (0,-7.70);
+  \draw[dashed,gray!50] (0,0.95) -- (0,-9.10);
 
   \node[taskbox] (strict) at (-3.0,0)
     {\textbf{Strict grounding task}\\
      Literal prompt: ``Explain what a blinking red status light means and
-     how to fix it. Do not add causes that are not in the attached guide.''};
+     how to fix it. Use only causes stated in the attached guide.
+     Mark any uncertainty explicitly.''};
   \node[taskbox] (hyp) at (3.0,0)
     {\textbf{Bounded hypothesis generation task}\\
      Literal prompt: ``Explain what a blinking red status light means and
      how to fix it. You may add one plausible additional cause not covered
-     by the attached guide, clearly marked as a guess.''};
+     by the attached guide. Mark any uncertainty explicitly.''};
 
   \node[contextbox] (context) at (0,2.55)
     {\textbf{Task context $p$ --- attached evidence $O$}
@@ -210,38 +251,53 @@ The evidence state remains unknown in both tasks, but the claim receives \Hall\ 
      ``A blinking red status light most commonly indicates an outdated
      firmware version. Update the firmware using the companion app.''};
 
-  \coordinate (busL) at (-3.0,1.55);
-  \coordinate (busR) at (3.0,1.55);
-  \draw[semithick,draw=black!55] (context.south) -- (0,1.55);
-  \draw[semithick,draw=black!55] (busL) -- (busR);
-  \draw[arrow] (busL) -- (strict.north);
-  \draw[arrow] (busR) -- (hyp.north);
+  \coordinate (branch) at ($(context.south)+(0,-0.30)$);
+\coordinate (strictAbove) at ($(strict.north)+(0,0.25)$);
+\coordinate (hypAbove)    at ($(hyp.north)+(0,0.25)$);
 
-  \node[contractbox] (tc1) at (-3.0,-2.25)
+\draw[semithick,draw=black!55]
+  (context.south) -- (branch);
+
+\draw[arrow]
+  (branch) -| (strictAbove)
+  -- (strict.north);
+
+\draw[arrow]
+  (branch) -| (hypAbove)
+  -- (hyp.north);
+
+  \node[contractbox] (tc1) at (-3.0,-2.85)
     {$\TC(p_1)=(O,\Gamma_1,\mu)$\\
      $O$: router troubleshooting guide (above)\\
      $\Gamma_1=\varnothing$: no additional causes\\
-     $\mu$: uncertainty marked; separate $\sigma=0$};
-  \node[contractbox] (tc2) at (3.0,-2.25)
+     $\mu$: uncertainty marked explicitly};
+  \node[contractbox] (tc2) at (3.0,-2.85)
     {$\TC(p_2)=(O,\Gamma_2,\mu)$\\
      $O$: router troubleshooting guide (above)\\
-     $\Gamma_2$: plausible additional hardware causes\\
-     $\mu$: uncertainty marked; separate $\sigma=0$};
+     $\Gamma_2$: plausible additional environmental\\or hardware causes\\
+     $\mu$: uncertainty marked explicitly};
 
-  \node[sharedspan] (span) at (0,-4.15)
+  \node[
+    rectangle,rounded corners=3pt,draw=clrG!45,fill=gray!4,
+    font=\scriptsize,align=center,text width=5.0cm,inner sep=3pt
+  ] (sharedstyle) at (0,-4.35)
+    {Shared requested style-marking level: minimally marked
+     (outside the truth contract)};
+
+  \node[sharedspan] (span) at (0,-5.55)
     {\textbf{\upshape Identical response span:}
      ``A blinking red light may also happen if the router is placed too
      close to a microwave oven.''\\
-     \textbf{\upshape Identical canonical claim:}
-     $q^*$: a nearby microwave oven can cause the blinking red light;
-     $m^*$: uncertainty marked by ``may''};
+     \textbf{\upshape Identical claim content:} a nearby microwave oven can
+     cause the blinking red light;
+     \textbf{\upshape observed status marking:} uncertainty marked by ``may''};
 
-  \node[verdictH] (hall) at (-3.0,-5.75) {\Hall};
-  \node[verdictLD] (licensed) at (3.0,-5.75) {\LD};
-  \node[outcome] at (-3.0,-6.38)
-    {unknown; outside $\Gamma_1$\\reason: \textsc{out-of-scope}};
-  \node[outcome,text=clrLD] at (3.0,-6.38)
-    {unknown; inside $\Gamma_2$\\and marked as required};
+  \node[verdictH] (hall) at (-3.0,-7.15) {\Hall};
+  \node[verdictLD] (licensed) at (3.0,-7.15) {\LD};
+  \node[outcome] at (-3.0,-7.78)
+    {\textsc{unknown}; outside $\Gamma_1$\\reason code: \textsc{out-of-scope}};
+  \node[outcome,text=clrLD] at (3.0,-7.78)
+    {\textsc{unknown}; inside $\Gamma_2$\\and marked as required};
 
   \draw[arrow] (strict.south) -- (tc1.north);
   \draw[arrow] (hyp.south) -- (tc2.north);
@@ -254,20 +310,21 @@ The evidence state remains unknown in both tasks, but the claim receives \Hall\ 
     rectangle,rounded corners=3pt,draw=clrG!45,fill=gray!4,
     font=\scriptsize\sffamily\bfseries,align=center,
     text width=7.7cm,inner sep=4pt
-  ] at (0,-7.35)
+  ] at (0,-8.75)
     {Only the permission scope changes the claim label.};
 \end{tikzpicture}%
 }
 \caption{\textbf{The same evidence-unknown claim under two permission scopes.}
 The reference evidence $O$ (the troubleshooting guide) is attached to the
 task context $p$, not written into the prompt.
-The response span, canonical claim, reference evidence, required status marking, and style-marking level are fixed.
-Only the permission scope changes.
-The task with strict grounding assigns \Hall\ with reason code
-\textsc{out-of-scope}; the task permitting bounded hypothesis generation
-assigns \LD.
-\LD\ records that the permission-scope and required-status-marking conditions
-are met, not truth, usefulness, quality, or safety.}
+The response span, claim content, observed status marking, reference evidence, required status marking, and requested style-marking level are held fixed; only the permission scope changes.
+Both prompts impose the same explicit uncertainty-marking requirement, so
+$\mu$ is identical across the two tasks.
+The task with strict grounding assigns the hallucination label (\Hall) with
+reason code \textsc{out-of-scope}; the task permitting bounded hypothesis
+generation assigns the licensed-divergence label (\LD).
+That label records only that the permission-scope and required-status-marking
+conditions are met, not truth, usefulness, quality, or safety.}
 \label{fig:prompt-to-claim}
 \end{figure}
 
@@ -289,9 +346,9 @@ questions.
 
 \paragraph{Contributions}
 This position paper makes three contributions.
-First, it introduces the truth contract $\TC(p)=(O_p,\Gamma_p,\mu_p)$ and a claim-label rule that separates evidence state, permission scope, and required status marking.
-Second, it keeps style-marking level as a separate variable for claim recovery and prompt--response style-marking alignment, then uses a purposive mapping to identify where claim-preserving style variation and claim-level factuality checks remain separated in the selected sample.
-Third, it proposes a research agenda for contract-aware benchmarks and mitigation methods that reduce \Hall\ without suppressing \LD\ or supported content at the requested style-marking level.
+First, it introduces the truth contract $\TC(p)=(O_p,\Gamma_p,\mu_p)$ and a claim-labeling rule that separates evidence state, permission scope, and required status marking.
+Second, it treats requested style-marking level as a separate variable and maps whether selected resources test claim-preserving style variation together with claim-level factuality.
+Third, it proposes a research agenda for contract-aware benchmarks and mitigation methods that reduce hallucination-labeled claims without suppressing licensed-divergence or supported claims at the requested style-marking level.
 
 \paragraph{Organization}
 Section~\ref{sec:framework} defines the truth contract, claim recovery,
@@ -300,10 +357,23 @@ alignment check.
 Section~\ref{sec:related} compares the rule with neighboring evaluation paradigms.
 Section~\ref{sec:mapping} reports the purposive mapping, and Section~\ref{sec:cases} presents the worked cases.
 Sections~\ref{sec:agenda} and~\ref{sec:discussion} present the research agenda, implications, limitations, and falsification criteria.
+Section~\ref{sec:conclusion} restates the position and the immediate empirical
+test.
+Appendix~\ref{app:diagnostics} gives the additional diagnostics and the
+claim-preserving style-variation test, and Appendix~\ref{app:mapping} reports
+the resource-level coding behind the mapping.
+
+\FloatBarrier
 
 \section{A Contract-Aware Claim Labeling Rule}\label{sec:framework}
 
-\subsection{Overview: from a response span to a claim record}
+The position stated above assigns three different roles to evidence,
+authorization, and presentation.
+Those roles are usable only if each is specified precisely enough for two
+evaluators to apply them to the same response.
+This section gives that specification.
+
+\subsection{Overview: from a response span to a claim label}
 
 The object of evaluation is a model response $y$ produced under task context $p$.
 The \emph{evaluator} may be a human annotator, an automated pipeline, or a
@@ -317,31 +387,22 @@ its observed status marking, including epistemic modality and relevant
 discourse framing.
 The evaluator compares $q^*$ with reference evidence $O_p$ and permission
 scope $\Gamma_p$, and compares $m^*$ with required status marking $\mu_p$.
-If the evidence entails both propositions, each canonical claim receives \SUP.
+If the evidence entails both propositions, each canonical claim receives the supported label.
 The evaluator separately compares requested and observed style-marking levels.
 This prompt--response style-marking alignment check does not create or excuse a truth-conditional claim.
 
-Claim labeling follows one fixed chain:
-\[
-\begin{aligned}
-\text{response}
-&\rightarrow \text{response span}
-\rightarrow \text{claim recovery}
-\rightarrow \text{contextualized claim}\\
-&\rightarrow \text{canonicalization}
-\rightarrow \text{canonical claim }c^*=(q^*,m^*)
-\rightarrow \text{evidence state}\\
-&\rightarrow \text{scope and marking tests}
-\rightarrow \text{claim label and reason code}.
-\end{aligned}
-\]
-A span-selection, claim recovery, or canonicalization failure is recorded as a
-procedural failure and may leave the affected response span without a stable
-canonical claim or claim label.
-When a stable canonical claim exists, a contract-specification,
-evidence-coverage, or adjudication failure leaves its claim label undefined.
-The prompt--response style-marking alignment check separately compares the
-requested and observed style-marking levels.
+Claim labeling follows one fixed chain of seven steps:
+\begin{enumerate}
+  \item select a response span within the response;
+  \item recover the contextualized claims that the span commits to;
+  \item canonicalize each claim as $c^*=(q^*,m^*)$;
+  \item record the evidence state of $q^*$ against $O_p$;
+  \item apply the permission-scope check to $q^*$;
+  \item apply the required-status-marking check to $m^*$;
+  \item assign the claim label and, for a violation, the reason code.
+\end{enumerate}
+Steps~1--4 can fail, in which case the span is left without a claim label.
+Section~\ref{subsec:failures} defines those failures.
 
 \subsection{The truth contract}
 
@@ -351,16 +412,15 @@ For a task context $p$, the truth contract is
   \TC(p)=(O_p,\Gamma_p,\mu_p).
 \label{eq:truth-contract}
 \end{equation}
-The three fields answer different questions: against which evidence a
-proposition is assessed, which evidence-unknown content the task permits, and
-how that content must be marked.
+The three fields answer separate questions. What evidence is used? What
+content may extend beyond that evidence? How must such content be marked?
 Here, $p$ denotes the relevant task context rather than only the literal prompt $x$.
 We drop the subscript $p$ when the task context is clear.
 Requested and observed style-marking levels are not truth-contract fields.
 The requested level is a task variable used during claim recovery; the
 observed level is a response-level measurement used in prompt--response
 style-marking alignment.
-Only $O_p$, $\Gamma_p$, and $\mu_p$ enter the claim-label rule.
+Only $O_p$, $\Gamma_p$, and $\mu_p$ enter the claim-labeling rule.
 
 When instructions conflict, the evaluator must state how system instructions
 and applicable safety, legal, and domain constraints bound the permission
@@ -370,7 +430,7 @@ evidence or permission scope.
 
 \paragraph{Reference evidence ($O_p$)}
 $O_p$ is the reference evidence against which $q^*$ is evaluated, such as a source document, retrieval set, database, gold labels, a specified external reference, or declared fictional-frame truth constraints.
-For reproducible evaluation, it also specifies which sources constitute reference evidence and how coverage, temporal validity, and source conflicts are adjudicated.
+For reproducible evaluation, it also specifies which sources constitute reference evidence and how adequacy, temporal validity, and source conflicts are adjudicated.
 Existing surveys use different notions of source, context, fact, and world
 knowledge \citep{ji_survey_2023,bang_hallulens_2025}.
 Reproducible evaluation therefore requires a concrete reference-evidence
@@ -397,57 +457,21 @@ task context because the relevant marker may appear outside the local span.
 The evaluator then compares $m^*$ with the required status marking to decide
 whether the claim is marked as $\mu_p$ requires.
 
-\subsection{Requested and observed style-marking levels}
-
-The requested style-marking level $\sigma_p\in\{0,1,2\}$ records the degree
-of style marking requested by the task.
-It is a separate task variable available as contextual input during claim
-recovery:
-\begin{itemize}
-  \item $\sigma_p=0$ (neutral/literal): minimal rhetorical transformation and no salient authorial voice;
-  \item $\sigma_p=1$ (moderately marked): local metaphor, register shift, or a light stylistic voice without sustained transformation of the response;
-  \item $\sigma_p=2$ (strongly marked): sustained figurative language, a salient voice, or substantial stylistic transformation.
-\end{itemize}
-The levels rank the degree of style marking.
-They do not encode the complete qualitative identity of named styles, rank creativity or factuality, or expand permission scope.
-Here, \emph{style marking} means a noticeable departure from neutral wording
-through deviation or repetition; this operational definition draws on
-foregrounding in stylistics
-\citep{leech_short_style_1981,vanpeer_stylistics_2020}.
-Metaphor is one form of style marking, which may also be lexical, syntactic,
-phonological, or discourse-level.
-Surface unexpectedness is therefore not, by itself, evidence of factual error.
-Style is multi-dimensional, so this three-level scheme is a working discretization rather than a validated universal scale \citep{kang_style_2021,jin_deep_2022}.
-The boundaries, especially between $\sigma_p=1$ and $\sigma_p=2$, require empirical validation.
-
-The requested style-marking level $\sigma_p$ must be distinguished from the
-observed style-marking level $\widehat{\sigma}(y,p)$.
-The prompt--response style-marking alignment check simply compares the two:
-it reports \textsc{match} when the observed level equals the requested level,
-and \textsc{mismatch} otherwise.
-This match or mismatch remains separate from reference evidence, permission
-scope, claim labels, named-style identity, source faithfulness, creativity,
-factuality, and general alignment.
-For example, a prompt can request $\sigma_p=2$ while the model produces neutral prose with $\widehat{\sigma}(y,p)=0$.
-The check then reports \textsc{mismatch}.
-If the evaluator cannot determine either level reliably, that difficulty is
-recorded as a procedural failure rather than converted into a claim label.
-
-Requested style-marking level is available as contextual input during claim
-recovery, and its effect is tested rather than assumed.
-Every recovered claim must remain warranted by linguistic evidence in the produced response, and $\widehat{\sigma}(y,p)$ records the marking actually produced.
-Existing evaluators use claim decomposition, natural-language inference, or semantic similarity \citep{min_factscore_2023,chen_menli_2023,aynetdinov_semscore_2024}, while model-based judges used in alignment benchmarking can prioritize style over factuality and safety \citep{feuer_style_2025}.
-Whether figurative realization changes which factual claims an evaluator
-recovers is therefore a testable hypothesis, not an established result.
-
-\subsection{Unit of analysis, claim recovery, and canonicalization}
+\subsection{Unit of analysis, claim recovery, and canonicalization}\label{subsec:unit}
 
 We use a claim-level unit because long responses may contain multiple checkable
 propositions alongside material that is not independently verifiable
 \citep{min_factscore_2023,song_veriscore_2024}.
 Let $s$ denote a response span.
-Interpreting $s$ within the complete response $y$ and task context $p$ yields a set of contextualized truth-conditional claims $\mathcal C(s,y,p)$.
+Interpreting a response span within the complete response and task context
+yields one or more contextualized truth-conditional claims.
 The same wording can therefore yield different claims in fiction, metaphor, and hypothetical language.
+We reserve two terms for two different operations.
+\emph{Claim extraction} refers to existing methods that segment a response into
+checkable units; Section~\ref{subsec:extraction} reviews them.
+\emph{Claim recovery} refers to the broader, context-sensitive step that
+attributes claims to the response before canonicalization, and it is the step
+this rule relies on.
 
 For verification, an annotator canonicalizes each recovered claim as $c^*=(q^*,m^*)$.
 The component $q^*$ records normalized truth-conditional content, including entities, predicates, negation, quantities, temporal scope, and any attribution that changes what is claimed.
@@ -464,8 +488,10 @@ are preserved in $q^*$ or $m^*$ as appropriate.
 Third, metaphorical wording does not create a separate claim unless the
 response makes an attributable truth-conditional commitment.
 
-If a span yields no truth-conditional claim, it receives no claim label and is
-not a procedural failure.
+Some spans yield no truth-conditional claim at all.
+Such a span receives no claim label, and the absence of a label is a normal
+outcome rather than one of the failures defined in
+Section~\ref{subsec:failures}.
 Figurative language is interpreted in the complete response and task context rather than literalized automatically.
 Every truth-conditional commitment recovered from the span is canonicalized
 before verification.
@@ -478,47 +504,130 @@ Only their surface realization and requested or observed style-marking levels
 may differ.
 Appendix~\ref{app:diagnostics} gives the formal stability test.
 
-Span-selection, claim recovery, canonicalization, and matching errors are procedural failures.
+\subsection{Procedural prerequisites and failure modes}\label{subsec:failures}
+
+A \emph{procedural failure} is a breakdown in the evaluation procedure itself
+rather than in the response.
+It is recorded in place of a claim label, and the affected span is left
+unlabeled; it never receives \SUP, \Hall, or \LD.
+Two conditions must hold before any claim label can be assigned: the evaluator
+must obtain a stable canonical claim, and the task context must determine the
+three contract fields.
+Each condition can fail in a distinct way.
+
+\paragraph{Failures of claim recovery}
+The evaluator may be unable to obtain a stable canonical claim.
+Span-selection, claim recovery, canonicalization, and matching errors all have
+this effect.
 They may cause an evaluator to drop a recoverable claim, create a spurious canonical claim, or alter $q^*$ or $m^*$.
-Such errors are recorded as procedural failures and do not themselves receive \SUP, \Hall, or \LD.
 If no stable canonical claim can be obtained, no claim label is assigned to the
 affected span.
-A failure to realize the requested style-marking level is recorded through the
-prompt--response style-marking alignment check; a canonical claim that
-violates the truth contract is handled by the claim-label rule.
 
-\subsection{From evidence state to claim label}
+\paragraph{Failures of the contract or the evidence}
+The evaluator may instead be unable to apply the contract to a claim it has
+recovered.
+A \emph{contract-specification failure} occurs when the task context does not
+determine $O_p$, $\Gamma_p$, and $\mu_p$.
+A \emph{reference-evidence-adequacy failure} occurs when the specified evidence
+is too incomplete, outdated, or internally conflicting to settle the claim.
+An \emph{adjudication failure} occurs when the evaluator cannot resolve the
+evidence into a single state.
+In each case the evaluator records the failure and leaves the affected span
+unlabeled.
+Recent fact-verification work shows both failure types are easy to conflate in
+practice: how an unknown-evidence condition is constructed shapes what a
+verifier learns and can hide genuine adjudication difficulty
+\citep{qiu_evidence_2026}, and single global faithfulness labels can mask
+sentence-level adjudication disagreement through an averaging bias
+\citep{zhang_averaging_2026}.
 
-A claim label is assigned only after the truth contract has been specified, a
-stable canonical claim has been recovered, and the reference evidence is
-adequate for adjudication. If claim recovery, contract specification, evidence
-coverage, or adjudication fails, the evaluator records the failure and leaves
-the affected span unlabeled.
+\paragraph{An example}
+Suppose two annotators read the closing span of a museum panel, ``the winter
+that would not lift''.
+One recovers a claim about the severity of that winter; the other recovers no
+truth-conditional claim at all.
+The two annotators disagree about which claim the span commits to, not about
+which label a shared claim deserves.
+The evaluation therefore records a claim-recovery failure for that span instead
+of a label disagreement.
+
+A response that does not realize the requested style-marking level is not a
+procedural failure.
+That mismatch is recorded through the prompt--response style-marking alignment
+check, whereas a canonical claim that violates the truth contract is handled by
+the claim-labeling rule below.
+
+\subsection{From evidence state to claim label}\label{subsec:rule}
+
+Once a stable canonical claim has been obtained and the three contract fields
+are fixed, the evaluator can compare the two. That comparison is not uniform
+across evidence states, which is where the proposed rule departs from current
+practice.
+For an \textsc{entailed} or a \textsc{contradicted} claim, the evidence state
+alone determines the label.
+For an \textsc{unknown} claim it does not.
+The permission-scope and required-status-marking checks then decide.
+We reserve \textsc{entailed}, \textsc{contradicted}, and \textsc{unknown} for
+evidence states.
+The three claim labels are supported, hallucination, and licensed divergence.
+We abbreviate them as \SUP, \Hall, and \LD\ in the rule below, in figures, and
+in tables, and use the full names in running text.
 
 For each canonical claim $c^*=(q^*,m^*)$, the evaluator first records
 whether $O_p$ entails, contradicts, or leaves $q^*$ unknown. Here,
 \textsc{unknown} means only that the specified reference evidence neither
 entails nor contradicts the claim; it is not a statement about all possible
 knowledge.
+We call a claim with evidence state \textsc{unknown} an
+\emph{\textup{\textsc{unknown}} claim}.
 
 The claim label then follows three rules:
 \begin{description}
   \item[\SUP.] The reference evidence entails $q^*$.
   \item[\Hall.] The reference evidence contradicts $q^*$, or it leaves $q^*$
         unknown and the claim falls outside $\Gamma_p$ or fails the required
-        status marking $\mu_p$. The evaluator may record
-        \textsc{contradicted}, \textsc{out-of-scope}, or
-        \textsc{marking-failure} as the reason.
+        status marking $\mu_p$. The evaluator records exactly one reason code,
+        applying the following precedence:
+        \begin{enumerate}
+          \item if $O_p$ contradicts $q^*$, record \textsc{contradicted};
+          \item otherwise, if the evidence state is \textsc{unknown} and $q^*$
+                falls outside $\Gamma_p$, record \textsc{out-of-scope};
+          \item otherwise, if $q^*$ lies inside $\Gamma_p$ but $m^*$ fails
+                $\mu_p$, record \textsc{marking-failure}.
+        \end{enumerate}
   \item[\LD.] The reference evidence leaves $q^*$ unknown, the claim lies
         inside $\Gamma_p$, and $m^*$ satisfies $\mu_p$.
 \end{description}
-\LD\ records authorization under the task, not truth, usefulness, quality, or
-safety. A contradicted claim therefore receives \Hall\ once the procedural
-prerequisites are satisfied. In fiction or counterfactual tasks, the declared
-frame is part of the context used to recover the claim and specify $O_p$; an
-in-frame invention is not automatically a real-world assertion. An entailed
-claim that violates a separate style instruction remains \SUP, while the style
-or instruction-following evaluation records the mismatch.
+The licensed-divergence label records authorization under the task, not truth,
+usefulness, overall response quality, or safety. A contradicted claim
+therefore receives the hallucination label once the procedural prerequisites
+are satisfied. In fiction or counterfactual
+tasks, the declared frame is part of the context used to recover the claim and
+specify $O_p$; an in-frame invention is not automatically a real-world
+assertion. An entailed claim that violates a separate style instruction remains
+supported, while the style or instruction-following evaluation records the
+mismatch.
+
+The hallucination label is the single top-level label for every truth-contract
+violation. The kind of violation is recorded by the mandatory reason code, not
+by a separate label.
+
+A claim that lies inside the permission scope but fails the required status
+marking therefore receives the hallucination label with reason code
+\textsc{marking-failure}. The task authorized the content only under a marking
+the response did not supply. Presented as established rather than as a
+hypothesis, the claim asserts more than the contract permits.
+
+Splitting these cases into separate top-level labels would obscure that all
+three are failures of the same contract, whereas the reason code preserves the
+distinction for diagnosis and mitigation.
+The reason code identifies the first contract condition that fails, so a claim
+that is both outside $\Gamma_p$ and asserted without the required hedge
+receives \textsc{out-of-scope}: the marking check applies only to claims the
+task permits.
+
+Severity measures the potential consequence of a hallucination-labeled claim after
+labeling. It does not determine the claim label.
 
 An explicit refusal or a statement such as ``the available evidence is
 insufficient'' is evaluated as a meta-claim about the evidence. It is not
@@ -526,14 +635,17 @@ automatically treated as asserting the embedded proposition. Treating the
 refusal or insufficiency statement as a meta-claim prevents calibrated
 abstention from being mislabeled as hallucination.
 
-For a complete response, the evaluation should publish the claim-level labels
-and reasons, claim coverage, and any procedural failures. Style alignment,
-severity, and task-relative usefulness remain separate diagnostics. The paper
-does not prescribe a mandatory scalar response score; any later aggregation
-must state which diagnostics it uses.
+What an evaluation should publish once the labels are assigned is stated in
+Section~\ref{subsec:reporting}.
 
-Figure~\ref{fig:claim-label-annotation} illustrates the complete procedure on a
-constructed example.
+Figure~\ref{fig:claim-label-annotation} applies the rule to a single response
+that yields four claims.
+All four share one truth contract and one reference evidence set, yet they
+receive three different labels.
+The figure shows which comparison produces each difference: the reference
+evidence separates the two \textsc{entailed} claims from the two
+\textsc{unknown} ones, and the permission scope then separates the two
+\textsc{unknown} claims from each other.
 
 \begin{figure}[!t]
 \centering
@@ -590,20 +702,19 @@ constructed example.
   \node[lab] at (\xlabel,7.35) {task context};
   \node[prompt] (prompt) at (-2.15,7.35) {\textbf{Prompt $x$:} ``Using the
     Wikipedia article on the 1918 flu pandemic in Lyon, write a vivid museum
-    panel about the outbreak in sustained figurative language. Keep
-    historical statements faithful to the article. Where the article is
-    silent, you may add a plausible reconstruction, but mark it as
-    conjecture.''};
+    panel in figurative language. Keep historical statements faithful to the
+    article. Where it is silent, you may add a plausible reconstruction,
+    marked as conjecture.''};
   \node[archive] (archive) at (\xright,7.35) {\textbf{$O_p$ --- Wikipedia excerpt}\\
-    \emph{Wikipedia, ``1918 flu pandemic in France'' (excerpt).} ``412
-    admissions, week of 14 October, H\^otel-Dieu, Lyon. Municipal order,
-    22 October: gauze masks in enclosed public spaces. Schools: no entry.''};
+    ``412 admissions, week of 14 October, H\^otel-Dieu, Lyon. Municipal
+    order, 22 October: gauze masks in enclosed public spaces. Schools: no
+    entry.''};
 
   % Truth-contract fields and separate requested style-marking level
   \node[lab] at (\xlabel,4.85)
     {truth contract\\and style input};
   \node[stylebox] (style) at (-4.55,4.85)
-    {$\sigma_p=2$ \emph{requested}\\\emph{style-marking level}\\strongly marked};
+    {$\sigma_p=2$ \emph{requested}\\\emph{style-marking level}\\sustained marked style};
   \node[contract] (scope) at (-0.30,4.85)
     {$\Gamma_p$ \emph{permission scope}\\everyday life and public-health\\measures; excludes named persons};
   \node[contract] (mark) at (3.85,4.85)
@@ -624,9 +735,8 @@ constructed example.
     ``Panel 3 of 6 --- Lyon, autumn 1918.\ The H\^otel-Dieu registered 412
     admissions in the week of 14 October. From 22 October, enclosed public
     spaces breathed through gauze masks. Schools had probably already emptied
-    before the order.\ Dr.\ Chapuis, the
-    hospital's director, hid the true toll from the prefecture.\ The winter
-    that would not lift.''};
+    before the order.\ Dr.\ Chapuis, its director, hid the true toll.\
+    The winter that would not lift.''};
   \foreach \field in {style,scope,mark}
     \draw[flow] (\field.south) -- (\field.south |- response.north);
 
@@ -697,32 +807,116 @@ constructed example.
      match or mismatch separately.};
 
   % Evidence path, routed outside every content box.
-  \draw[figorange!70,dashed,line width=0.9pt,-{Stealth[length=4pt,width=3pt]}]
-    (archive.east) -- (5.70,7.35) -- (5.70,-3.28);
+  \draw[
+  figorange!70,
+  dashed,
+  line width=0.9pt,
+  -{Stealth[length=4pt,width=3pt]}
+]
+  (archive.east)
+  -- (5.70,7.35)
+  -- (5.70,-3.28)
+  -- (4.35,-3.28);
 \end{tikzpicture}}
 \caption{\textbf{From one prompt to four claim-label decisions.}
 The task context fixes the truth contract
 $\TC(p)=(O_p,\Gamma_p,\mu_p)$ and separately records requested
 style-marking level $\sigma_p$.
-Claim recovery and canonicalization preserve normalized content $q^*$ and
+Claim recovery and canonicalization represent normalized content $q^*$ and
 observed status marking $m^*$.
 Reference evidence determines the evidence state; permission scope and
-required status marking then distinguish \LD\ from reason-coded \Hall\ when
-the state is unknown.
+required status marking then distinguish the licensed-divergence label (\LD)
+from the hallucination label (\Hall) and its reason code when the state is
+\textsc{unknown}.
 Observed style-marking level and prompt--response style-marking alignment are
 reported separately and never create a fourth claim label.
 The Wikipedia excerpt and the name ``Chapuis'' are constructed for this example.}
 \label{fig:claim-label-annotation}
 \end{figure}
 
-\paragraph{Claim-level report versus scalar aggregation}
-For a complete response, the evaluation keeps claim labels, procedural
-failures, claim coverage, prompt--response style-marking alignment, severity,
-and usefulness visible, rather than collapsing them into a single score.
+\subsection{Requested and observed style-marking levels}
+
+Having stated the claim-labeling rule, we now isolate a separate variable that
+may affect claim recovery but never changes what content the task permits.
+Required status marking concerns the epistemic or discourse status of an
+\textsc{unknown} claim. Style-marking level concerns rhetorical form.
+The two variables are evaluated separately.
+
+Style marking, introduced in Section~\ref{sec:intro}, is the degree to which
+the wording of a response departs from plain expository prose.
+The departure may be lexical, syntactic, phonological, or discourse-level, and
+it may be produced by devices such as deviation, parallelism, repetition, or
+metaphor.
+Style marking is a matter of degree; it is not the identity of a named style,
+and it is not evidence of factual error.
+Case~E in Section~\ref{sec:cases} gives a minimal pair: two realizations of one
+canonical claim, one minimally marked and one marked.
+
+The requested style-marking level $\sigma_p\in\{0,1,2\}$ records the degree
+of style marking requested by the task.
+It is a separate task variable available as contextual input during claim
+recovery:
+\begin{itemize}
+  \item $\sigma_p=0$ (minimally marked): plain expository prose, with minimal rhetorical transformation and no salient authorial voice;
+  \item $\sigma_p=1$ (locally marked): local metaphor, register shift, or a light stylistic voice without sustained transformation of the response;
+  \item $\sigma_p=2$ (sustained marked style): sustained figurative language, a salient voice, or substantial stylistic transformation.
+\end{itemize}
+The levels rank only the degree of style marking. They do not represent the
+identity of a named style, creativity, factuality, or permission scope.
+
+Because style is multi-dimensional, the three levels form a working
+discretization rather than a validated universal scale
+\citep{kang_style_2021,jin_deep_2022}.
+The boundaries, especially between levels 1 and 2, require empirical
+validation.
+
+The requested style-marking level $\sigma_p$ must be distinguished from the
+observed style-marking level $\widehat{\sigma}(y,p)$.
+The \emph{prompt--response style-marking alignment} check, abbreviated below to
+style-marking alignment, simply compares the two:
+it reports \textsc{match} when the observed level equals the requested level,
+and \textsc{mismatch} otherwise.
+This match or mismatch remains separate from reference evidence, permission
+scope, claim labels, named-style identity, source faithfulness, creativity,
+factuality, and general alignment.
+For example, a prompt can request $\sigma_p=2$ while the model produces neutral prose with $\widehat{\sigma}(y,p)=0$.
+The check then reports \textsc{mismatch}.
+This exact categorical correspondence is a provisional working rule.
+Because the levels are ordered, later studies may instead report an ordinal
+distance or allow a tolerance between adjacent levels.
+If the evaluator cannot determine either level reliably, that difficulty is
+recorded as a procedural failure rather than converted into a claim label.
+
+Requested style-marking level is available as contextual input during claim
+recovery, and its effect is tested rather than assumed.
+Every recovered claim must remain warranted by linguistic evidence in the produced response, and $\widehat{\sigma}(y,p)$ records the marking actually produced.
+Existing evaluators use claim decomposition, natural-language inference, or semantic similarity \citep{min_factscore_2023,chen_menli_2023,aynetdinov_semscore_2024}, while model-based judges used in alignment benchmarking can prioritize style over factuality and safety \citep{feuer_style_2025}.
+LLM judges of creativity likewise apply a narrower and model-specific subset of the standards human raters use, converging with humans on novelty but diverging on contextual criteria \citep{lyu_converge_2026}.
+Whether figurative realization changes which factual claims an evaluator
+recovers is therefore a testable hypothesis, not an established result.
+
+\subsection{Claim-level reporting and separate diagnostics}\label{subsec:reporting}
+For a complete response, the evaluation should publish the claim-level labels
+and reason codes, claim-recovery coverage, and any procedural failures.
+\emph{Claim-recovery coverage} is the proportion of the response's
+truth-conditional commitments that claim recovery actually recovered and
+canonicalized. Estimating this proportion requires an independently
+adjudicated set of attributable commitments.
+Style-marking alignment, severity, and usefulness remain separate diagnostics
+and stay visible rather than being collapsed into a single score.
+In this paper, \emph{usefulness} is the task-relative value of a permitted
+claim or response for the stated user goal. Its unit of analysis must be
+reported explicitly as the claim or the complete response.
+Overall response quality is broader and is not used as a synonym for
+usefulness.
 Existing factuality evaluation reports both claim-aggregated scores and
 benchmark-level decisions \citep{min_factscore_2023,bayat_factbench_2024}.
-Any such aggregation answers an additional task-dependent question and should
-be reported together with the underlying claim-level labels and diagnostics.
+This paper prescribes no mandatory scalar response score.
+Any such aggregation answers an additional task-dependent question, must state
+which diagnostics it uses, and should be reported together with the underlying
+claim-level labels and diagnostics.
+
+\FloatBarrier
 
 \section{Related Evaluation Paradigms}\label{sec:related}
 
@@ -732,8 +926,8 @@ evaluation represents broader task constraints; creativity research supplies
 separate usefulness criteria; and claim-level evaluation supplies the unit of
 analysis.
 The truth contract addresses the decision that follows an \textsc{unknown}
-evidence state: whether permission scope and required status marking yield
-\LD\ or \Hall.
+evidence state: whether permission scope and required status marking yield the
+licensed-divergence label or the hallucination label.
 
 \subsection{Hallucination taxonomies and claim labels}
 
@@ -745,18 +939,22 @@ Other reviews organize causes across the model lifecycle or examine factuality a
 From a creativity perspective, \citet{jiang_survey_2024} distinguish divergent generation from convergent evaluation.
 
 These surveys classify mismatches by their evidence relation, inconsistency type, source, cause, or evaluation setting.
-The truth contract addresses a different decision: whether an evidence-unknown
+The truth contract addresses a different decision: whether an \textsc{unknown}
 claim falls inside $\Gamma_p$ and satisfies $\mu_p$.
 The resulting claim label should therefore remain distinct from the
 descriptive taxonomy.
 
 \subsection{Evidence relations}
+If the claim label is not fixed by the descriptive taxonomy, the next question
+is what fixes the evidence relation on which it partly depends.
 Source faithfulness asks whether a claim is supported by provided evidence, whereas factuality checks it against an external reference \citep{maynez_faithfulness_2020,kryscinski_evaluating_2020}.
 Both instantiate the evidence relation under different choices of $O_p$.
 Permission scope and required status marking instead determine whether an
-evidence-unknown claim in a response is authorized and marked as required.
+\textsc{unknown} claim in a response is authorized and marked as required.
 
 \subsection{Assertion, commitment, and contextualization}
+Fixing the reference evidence does not yet determine which propositions the
+response commits to. The next step is therefore to recover claims in context.
 Assertion is treated here as a public commitment to propositional content
 \citep{stalnaker_assertion_1978}.
 Because interpretation depends on conversational context, claim recovery
@@ -769,10 +967,16 @@ observed contribution is recorded in $m^*$.
 These sources motivate contextualized claims and canonicalization; they do not
 validate the proposed categories of required status marking.
 
-\subsection{Claim extraction methods and claim recovery}
+\subsection{Claim extraction methods and claim recovery}\label{subsec:extraction}
+Operationalizing contextual commitment requires a reliable unit of
+verification, which motivates claim extraction and recovery.
 External claim-extraction methods decompose responses into checkable units
 before verification
 \citep{min_factscore_2023,song_veriscore_2024,metropolitansky_claimify_2025}.
+Some verification pipelines further adapt verification effort to claim-level
+uncertainty rather than applying one policy to every claim
+\citep{hassan_factor_2026}; our rule instead varies the label itself with
+permission scope, independently of such uncertainty-based effort allocation.
 Coverage errors omit attributable commitments, whereas atomicity errors merge
 propositions that could receive different evidence states
 \citep{metropolitansky_claimify_2025,wanner_closer_2024}.
@@ -780,40 +984,58 @@ Decontextualization can remove attribution, modality, or discourse framing,
 and canonicalization can alter $q^*$ or $m^*$
 \citep{wanner_closer_2024,choi_decontextualization_2021}.
 These methods supply claim-extraction machinery, but claim recovery and
-canonicalization are evaluated separately before claim labels are assigned.
+canonicalization, as distinguished in Section~\ref{subsec:unit}, are evaluated
+separately before claim labels are assigned.
 
 \subsection{Intent, instruction-following evaluation, and usefulness}
+Claim extraction settles what is being evaluated, but not what the task
+allowed. That second question belongs to instruction-following and intent-aware
+evaluation.
 Intent-aware evaluation checks whether a response satisfies query constraints
 \citep{hao_faithqa_2025}.
-The contract rule isolates the reference-evidence, permission-scope, and
+The claim-labeling rule isolates the reference-evidence, permission-scope, and
 required-status-marking decisions at claim level; it does not replace broader
 instruction-following evaluation.
-Safety, usefulness, and overall response quality remain separate assessments.
+Safety, usefulness as defined in Section~\ref{subsec:reporting}, and overall
+response quality remain separate assessments.
 
-Recent work distinguishes potentially valuable or ``intelligent'' hallucinations from defective ones \citep{jiang_survey_2024,sui_confabulation_2024,yang_hicbench_2025}.
+Recent work distinguishes potentially valuable or ``intelligent'' hallucinations from defective ones \citep{jiang_survey_2024,sui_confabulation_2024,yang_hicbench_2025}, including bounded uses of confabulation for archival gap-filling \citep{sui_critical_2025} and composite metrics that try to separate pedagogical narrative reformulation from factual error in AI-generated science stories \citep{argese_storyscore_2026}.
 Our distinction does not rest on value.
 Permission scope and usefulness answer different questions.
-Permission scope is evaluated first: an ingenious fabricated medical fact remains \Hall, whereas an unhelpful but in-frame fictional invention remains \LD\ with low usefulness.
+Permission scope is evaluated first: an ingenious fabricated medical fact still receives the hallucination label, whereas an unhelpful but in-frame fictional invention still receives the licensed-divergence label, with low usefulness.
 
 \subsection{Claim-preserving style variation}
+The paradigms reviewed so far concern what a claim commits to and what a task
+permits. A last body of work concerns how the same commitment can be worded in
+different ways.
 Stylistics and style-transfer research examine changes in linguistic form
 intended to preserve content
 \citep{leech_short_style_1981,vanpeer_stylistics_2020,pavlick_empirical_2016,rao_dear_2018,briakou_evaluating_2021}.
+That literature measures whether content survives a change of form, but it does
+not ask whether an evaluator still recovers the same claims from the changed
+form.
 Hallucination surveys and benchmarks, by contrast, primarily organize evidence
 relations such as support, contradiction, or unverifiability
 \citep{ji_survey_2023,huang_survey_2025,bang_hallulens_2025}.
-We therefore propose a controlled test for hallucination evaluation: vary
-requested style-marking level while holding canonical claims and reference
-evidence fixed, then test whether claim recovery and claim labels remain
-stable.
-The purposive mapping in Section~\ref{sec:mapping} records whether the selected
-resources support this test.
+They hold form constant and vary the evidence relation, which is the mirror
+image of the style-transfer setting.
+Neither literature therefore tests claim recovery across matched realizations
+of one canonical claim.
+That gap motivates the controlled test defined in
+Section~\ref{sec:framework} and is what the mapping below looks for.
 
 \section{Purposive Mapping of Evaluation Resources}\label{sec:mapping}
 
-We purposively selected forty evaluation resources for conceptual coverage
+The unit of analysis is the evaluation resource.
+We use \emph{evaluation resource} as an umbrella term for a benchmark,
+dataset, or evaluation protocol with an identifiable evaluation design;
+FEVER enters the mapping as a benchmark and dataset, and WritingBench as a
+benchmark with an associated evaluation protocol.
+We purposively selected forty such resources for conceptual coverage
 across factual question answering, grounded generation, intent evaluation,
 creative writing, divergent thinking, and constrained problem solving.
+One author coded each resource using the closed vocabulary reported in
+Appendix~\ref{app:mapping}.
 The resulting purposive mapping is an inspectable description of these
 resources, not a systematic review, representative sample, or prevalence
 estimate.
@@ -827,22 +1049,35 @@ For each resource, we recorded seven questions:
 \begin{enumerate}
   \item What reference evidence $O$, if any, is specified for assessing claim support?
   \item What quality or task-success criterion, if any, is used separately from reference evidence?
-  \item Does the protocol vary or score requested style-marking level $\sigma$ while controlling claim content?
+  \item Does the protocol control or score requested style-marking level
+        $\sigma$ while holding target claim content fixed?
   \item Which nominal task profile best describes it: strict grounding, intent
         evaluation, declared-frame invention and ideation, constrained solution
         search, or heterogeneous suites and tool use?
   \item How does the protocol represent permission scope $\Gamma$?
   \item Does it score required status marking $\mu$ separately?
-  \item Does it test whether claim-preserving style variation changes claim
-        recovery or claim labels?
+  \item Across such controlled variants, does the protocol compare recovered
+        claims or claim labels?
 \end{enumerate}
+
+Question~4 uses a term that requires definition.
+A \emph{nominal task profile} is a categorical label that we assign to each
+resource to summarize the kind of task it evaluates.
+Profiles are descriptive groupings introduced for this mapping.
+They are not claimed by the original resources, they are not ordered, and they
+never enter the claim-labeling rule.
+FEVER, for example, is coded as strict grounding because its claims are
+verified against Wikipedia and no unattested content is authorized;
+LitBench is coded as declared-frame invention and ideation because it evaluates
+stories written under a story frame rather than against documentary evidence;
+and ToolQA is coded as heterogeneous suites and tool use because its reference
+evidence is an environment state rather than a document.
 
 Appendix~\ref{app:mapping} reports the resource-level coding using a closed
 vocabulary defined before the tables.
 Reference evidence is kept separate from quality, preference, feasibility,
 correctness, and test-based success criteria: the latter are not treated as
 $O$ unless the protocol uses them to establish or contradict a factual claim.
-The profiles are nominal descriptions and never enter the claim-label rule.
 
 \subsection{Observed pattern in the sample}
 
@@ -854,9 +1089,9 @@ Among the twenty-one resources assigned to the strict grounding profile in our
 coding, reference evidence is generally specified, requested style-marking
 level is not separately controlled, permission scope is coded as inferred
 empty, and required status marking is not separately scored.
-The selected resource assigned to intent evaluation scores satisfaction of
-query constraints, but does not separately represent permission scope or
-required status marking.
+The only selected resource in the intent-evaluation profile scores
+satisfaction of query constraints, but does not separately represent
+permission scope or required status marking.
 
 \paragraph{Declared-frame invention and ideation; constrained solution search}
 Within the selected creative-writing resources, general writing quality,
@@ -871,13 +1106,12 @@ correctness, specifications, tests, or task-specific creativity criteria as
 task-success criteria; these criteria are reported separately from reference
 evidence.
 
-\paragraph{Coverage pattern in the selected sample}
-In our coding of this selected sample, no resource independently varies
-reference evidence, requested style-marking level, permission scope, and
-required status marking.
-No selected resource jointly evaluates claim recovery under
-claim-preserving style variation, prompt--response style-marking alignment, and
-downstream claim labels.
+\paragraph{Missing combination in the selected sample}
+In our selected sample, no resource separately represents reference evidence,
+permission scope, and required status marking while also controlling
+claim-preserving style variation.
+The coding records whether each field is separately represented in the
+evaluation design, not whether the protocol manipulates it experimentally.
 The selected factuality and faithfulness resources also do not test whether
 claim-preserving style variation changes claim recovery or claim labels.
 Thus, the selected sample contains no strict grounding resource with
@@ -886,9 +1120,11 @@ A controlled benchmark would allow this possible failure mode to be measured
 directly; whether the selected verifiers exhibit it remains an open
 question.
 
-Figure~\ref{fig:profiles} reports the same coding as a schematic cluster map.
+The missing combination is therefore not an empty region on an ordinal scale,
+but an absent categorical design in the selected sample.
+Figure~\ref{fig:profiles} summarizes this pattern.
 
-\begin{figure}[t]
+\begin{figure}[!ht]
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
@@ -927,10 +1163,10 @@ Figure~\ref{fig:profiles} reports the same coding as a schematic cluster map.
 
 % Missing combination targeted by the proposed benchmark.
 \node[
-  draw=red!8,very thick,rounded corners=8pt,fill=red!6,
+  draw=red!70,very thick,rounded corners=8pt,fill=red!6,
   text width=4.25cm,minimum height=1.65cm,align=center
 ] (gap) at (2.65,6.85)
-  {\textbf{No resource identified}\\[1mm]
+  {\textbf{No selected resource}\\[1mm]
    \footnotesize strict grounding claims\\
    \footnotesize + controlled claim-preserving style variation};
 
@@ -981,29 +1217,48 @@ Figure~\ref{fig:profiles} reports the same coding as a schematic cluster map.
   \footnotesize \textit{NeoCoder, Math Creativity} [36--40]
 };
 
+% Vertical link: the empty region sits directly above the strict grounding
+% cluster, in the same profile column.
+\draw[densely dashed,red!55,line width=0.7pt]
+  (gap.south) -- (gap.south |- strict.north);
+
 \node[note,text width=13.5cm] at (7.40,-1.62) {
 \textbf{Reading guide.}
 The horizontal placement groups nominal task profiles; it is not an ordinal
 permission scale.
 The vertical placement follows the reported treatment of requested
 style-marking level.
+Box color indicates the nominal task profile only.
+The dashed line connects the strict grounding resources to the empty region
+directly above them, in the same profile column.
 Bracketed numbers identify the resource rows in
 Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}.
 };
 \end{tikzpicture}%
 }
 
-\caption{\textbf{Schematic coverage of the selected resources by nominal task
-profile and treatment of requested style-marking level.}
-The cluster-map design makes the main missing combination visible while
-preserving the categorical coding in Appendix~\ref{app:mapping}.
-The dashed region denotes the absence, within the selected sample, of a
-strict grounding resource that explicitly manipulates requested
-style-marking level while holding canonical claim content fixed.
+\caption{\textbf{Selected resources by nominal task profile and treatment of
+requested style-marking level.}
+Each box groups resources that share a task profile (horizontal) and a
+treatment of requested style-marking level (vertical).
+No selected strict grounding resource manipulates requested style-marking
+level while holding canonical claim content fixed; the empty region at the top
+left marks that absence, and the dashed line links it to the strict grounding
+resources below.
+The broader observation---that no selected resource separately represents all
+three truth-contract fields while also controlling claim-preserving style
+variation---is established by the coding in Appendix~\ref{app:mapping}, not by
+this figure.
+Box color indicates the nominal task profile only.
 Positions, box sizes, colors, and overlaps do not encode measured distance,
 prevalence, model performance, or an ordinal permission scale.}
 \label{fig:profiles}
 \end{figure}
+\FloatBarrier
+
+The mapping identifies a design gap but does not show how the proposed rule
+behaves at its boundaries. The worked cases below make those predicted label
+changes explicit.
 
 \section{Worked Cases}\label{sec:cases}
 
@@ -1017,51 +1272,58 @@ empirical coverage, or superiority to simpler baselines.
 \paragraph{Case A: changing the reference evidence}
 In XSum, a summary statement may be absent from the source document while
 remaining correct against external evidence \citep{maynez_faithfulness_2020}.
-\emph{Fixed:} the response span, canonical claim, and empty permission scope.
-\emph{Changed:} $O_p$ is either the source document or an external evidence set.
-\emph{Outcome:} the claim receives \Hall\ with reason
-\textsc{out-of-scope} when it is evidence-unknown relative to the source under
-$\Gamma_p=\varnothing$, and \SUP\ when the external evidence entails it.
+\textbf{Fixed.} The response span, canonical claim, and empty permission scope.
+\par\textbf{Changed.} $O_p$ is either the source document or an external evidence set.
+\par\textbf{Predicted result.} The claim receives the hallucination label with
+reason code \textsc{out-of-scope} when it is \textsc{unknown} relative to the
+source under $\Gamma_p=\varnothing$, and the supported label when the external
+evidence entails it.
 
 \paragraph{Case B: changing the discourse frame}
-\emph{Fixed:} the constructed string ``Caf\'e Verdier existed in 1920s Paris.''
-\emph{Changed:} the historical task treats a register with no Verdier entry as
+\textbf{Fixed.} The constructed string ``Caf\'e Verdier existed in 1920s Paris.''
+\par\textbf{Changed.} The historical task treats a register with no Verdier entry as
 exhaustive, whereas the fiction task uses declared story-world constraints;
 the discourse frame, $O_p$, and $\Gamma_p$ therefore change.
-\emph{Outcome:} the historical task yields a real-world canonical
-claim labeled \Hall\ with reason \textsc{contradicted}, whereas the fiction
-task yields an evidence-unknown story-world canonical claim labeled \LD.
+\par\textbf{Predicted result.} The historical task yields a real-world canonical
+claim that receives the hallucination label with reason code
+\textsc{contradicted}, whereas the fiction task yields an \textsc{unknown}
+story-world canonical claim that receives the licensed-divergence label.
 The comparison demonstrates that identical strings need not express identical
 contextualized claims.
 
 \paragraph{Case C: changing the required status marking}
 Suppose a task permits version-specific hypotheses about a tool but requires
 uncertainty to be marked when the documentation is inconclusive.
-\emph{Fixed:} $O_p$, $\Gamma_p$, $\mu_p$, the proposition that the tool
-supports several formats, and its evidence-unknown state.
-\emph{Changed:} only the observed status marking $m^*$.
-\emph{Outcome:} ``the tool supports several formats'' receives \Hall\
-with reason \textsc{marking-failure}, whereas ``the tool may support several
-formats, but this requires version-specific verification'' receives \LD.
+\textbf{Fixed.} $O_p$, $\Gamma_p$, $\mu_p$, the proposition that the tool
+supports several formats, and its \textsc{unknown} evidence state.
+\par\textbf{Changed.} Only the observed status marking $m^*$.
+\par\textbf{Predicted result.} ``The tool supports several formats'' receives the
+hallucination label with reason code \textsc{marking-failure}, whereas ``the tool
+may support several formats, but this requires version-specific verification''
+receives the licensed-divergence label.
 
 \paragraph{Case D: testing a scope boundary}
-\emph{Fixed:} a task context that permits invention inside a declared fictional
+\textbf{Fixed.} A task context that permits invention inside a declared fictional
 frame and satisfies the frame-level required status marking.
-\emph{Changed:} the claim concerns either a fictional entity or a named real
+\par\textbf{Changed.} The claim concerns either a fictional entity or a named real
 person presented as real history.
-\emph{Outcome:} the in-frame fictional claim can receive \LD, whereas
-the real-world claim falls outside $\Gamma_p$ and receives \Hall\ with reason
+\par\textbf{Predicted result.} The in-frame fictional claim can receive the
+licensed-divergence label, whereas the real-world claim falls outside
+$\Gamma_p$ and receives the hallucination label with reason code
 \textsc{out-of-scope}.
 
 \paragraph{Case E: changing surface realization with a fixed claim}
-\emph{Fixed:} $O_p$, $\Gamma_p$, $\mu_p$, and the canonical claim that
+\textbf{Fixed.} $O_p$, $\Gamma_p$, $\mu_p$, and the canonical claim that
 photosynthesis uses light energy to produce sugars.
-\emph{Changed:} only requested style-marking level $\sigma_p$ and surface
+\par\textbf{Changed.} Only requested style-marking level $\sigma_p$ and surface
 realization; the two responses are designed as a claim-preserving style
 variation.
-\emph{Outcome:} both variants recover the same canonical claim and
-receive \SUP\ when $O_p$ entails it; $\widehat{\sigma}(y,p)$ and
-prompt--response style-marking alignment are reported separately.
+Neutral realization: ``Photosynthesis uses light energy to produce sugars.''
+Marked realization: ``Leaves catch sunlight and use that energy to build
+sugars.''
+\par\textbf{Predicted result.} Both variants recover the same canonical claim and
+receive the supported label when $O_p$ entails it; the observed style-marking
+level and the style-marking alignment result are reported separately.
 A difference in recovered claims or labels would mean that the evaluator
 failed this claim-preserving style-variation test.
 It would not, by itself, establish that style generally changes claim recovery.
@@ -1078,53 +1340,61 @@ and used to diagnose pipeline errors.
 Priorities~4 and~5 examine response-level evaluation and mitigation, and
 Priority~6 tests external validity.
 Priority~7 examines temporal updates and agentic action.
-Across Priorities~1--7, contract-aware evaluation should be compared with a
-baseline that combines factuality and instruction-following evaluation.
+Across Priorities~1--7, studies should compare contract-aware evaluation with a
+combined factuality and instruction-following baseline.
+The comparison should measure claim-label agreement, reason-code accuracy, and
+error localization.
+\emph{Error localization} identifies the pipeline stage or truth-contract field
+responsible for a disputed claim label.
 To avoid circular evaluation, studies should use independently adjudicated
 gold claim labels, apply the same claim recovery procedure and reference
 evidence to the contract-aware method and its baseline, and specify decision
 thresholds before evaluation.
 
 \paragraph{1. Contract annotation, inference, and reliability}
-\emph{Research problem.}
-The first unresolved question is whether evaluators can identify $O_p$,
+\par\nobreak
+\noindent\textbf{Research problem.}\par
+\noindent The first unresolved question is whether evaluators can identify $O_p$,
 $\Gamma_p$, and $\mu_p$ consistently from the task context and annotate
 $\sigma_p$ separately.
-\emph{Why it threatens the position.}
-This matters because disagreement over a claim label may reflect
-incompatible readings of the task rather than a substantive difference in
-reference evidence or permission scope.
-\emph{Study and measures.}
-A public codebook should define contextualized claims, evidence states,
+\par\smallskip
+\noindent\textbf{Why it matters.}\par
+\noindent Disagreement over a claim label may reflect incompatible readings of the task
+rather than a substantive difference in reference evidence or permission
+scope.
+\par\smallskip
+\noindent\textbf{Study and measures.}\par
+\noindent A public codebook should define contextualized claims, evidence states,
 permission scope, required status marking, requested and observed
 style-marking levels, and claim-preserving style variation.
 Pilot studies should annotate each field separately, preserve genuine
 disagreement, and report agreement by field and label, adjudication rate,
 annotation time, and disagreement sources.
-Contract-inference studies should also document how user requests, system
+Contract-inference studies should document how user requests, system
 instructions, domain constraints, and safety or legal rules are reconciled,
-and how clarifications or corrections update the contract in multi-turn
-interaction.
+and how clarifications update the contract in multi-turn interaction.
 Because $O_p$, $\Gamma_p$, and $\mu_p$ are specified at task-context level,
-their annotation cost can be amortized across responses evaluated under the
-same task context.
-Claim recovery, canonicalization, and evidence adjudication remain
-per-response costs.
-\emph{Result that would support or weaken the position.}
-Reliable field-level annotations at a feasible cost would support the
+their annotation cost amortizes across responses evaluated under the same task
+context, whereas claim recovery, canonicalization, and evidence adjudication
+remain per-response costs.
+\par\smallskip
+\noindent\textbf{Falsification criterion.}\par
+\noindent Reliable field-level annotations at a feasible cost would support the
 position; persistent disagreement or disproportionate cost would weaken it.
 
 \paragraph{2. Factorial benchmark design}
-\emph{Research problem.}
-Naturally occurring evaluation data often change reference evidence, permission
+\par\nobreak
+\noindent\textbf{Research problem.}\par
+\noindent Naturally occurring evaluation data often change reference evidence, permission
 scope, required status marking, and surface realization together, which
 prevents attribution of a claim-label change to one field.
-\emph{Why it threatens the position.}
-Without controlled contrasts, the proposed composition rule cannot be
-distinguished from a baseline combining factuality and instruction-following
-evaluation.
-\emph{Study and measures.}
-A controlled factorial benchmark should therefore vary one of $O_p$,
+\par\smallskip
+\noindent\textbf{Why it matters.}\par
+\noindent Without controlled contrasts, the proposed claim-labeling rule cannot be
+distinguished from a combined factuality and instruction-following baseline.
+\par\smallskip
+\noindent\textbf{Study and measures.}\par
+\noindent A controlled factorial benchmark should therefore vary one of $O_p$,
 $\Gamma_p$, or $\mu_p$ while holding the remaining fields and target claim
 fixed.
 Separate claim-preserving style variation pairs should realize matched
@@ -1134,141 +1404,168 @@ These contrasts test a hypothesis about claim recovery; they do not assume
 that style changes the recovered claim set.
 Evaluation should report claim-set equivalence, evidence state, claim label,
 accuracy of observed style-marking level annotation, prompt--response
-style-marking alignment, and performance of the baseline combining factuality
-and instruction-following evaluation.
+style-marking alignment,
+and performance of the combined factuality and instruction-following baseline.
 Gold claim labels should be adjudicated independently, both methods should use
-the same claim recovery procedure and reference evidence, and calibration and
-decision thresholds should be fixed before evaluation.
-\emph{Result that would support or weaken the position.}
-Predictable claim-label changes when
+the same claim recovery procedure and reference evidence, and decision
+thresholds should be fixed before evaluation.
+\par\smallskip
+\noindent\textbf{Falsification criterion.}\par
+\noindent Predictable claim-label changes when
 $O_p$, $\Gamma_p$, or $\mu_p$ changes, together with stable labels for
 claim-preserving style variation, would support the position.
-Failure to preserve factual commitment across variants, or equal diagnostic
-stability from the baseline, would weaken it.
+Failure to preserve factual commitment across variants, or a baseline that
+matches contract-aware evaluation on the predefined baseline criteria, would
+weaken it.
 
-\paragraph{3. Style-robust claim recovery and stage-specific diagnosis}
-\emph{Research problem.}
-An incorrect claim label may originate in span selection, claim recovery,
+\paragraph{3. Style-robust claim recovery and error localization}
+\par\nobreak
+\noindent\textbf{Research problem.}\par
+\noindent An incorrect claim label may originate in span selection, claim recovery,
 canonicalization, observed style-marking level annotation, evidence assessment,
 or application of $\Gamma_p$ and $\mu_p$.
-\emph{Why it threatens the position.}
-An end-to-end hallucination score cannot identify which stage produced the
+\par\smallskip
+\noindent\textbf{Why it matters.}\par
+\noindent An end-to-end hallucination score cannot identify which stage produced the
 error, so an apparent advantage may arise from a different upstream
 claim recovery decision.
-\emph{Study and measures.}
-Claim recovery and verification pipelines should therefore be tested on
-matched variants at requested style-marking levels $0$, $1$, and $2$
-containing metaphor, irony, analogy, narrative voice, hypotheses, or declared
-fiction.
-For each response, the evaluation trace should record span type, canonical
-claims, evidence states, scope and marking decisions, claim labels, observed
-style-marking level, and prompt--response style-marking alignment.
+\par\smallskip
+\noindent\textbf{Study and measures.}\par
+\noindent Claim recovery and verification pipelines should be tested on matched variants
+at requested style-marking levels $0$, $1$, and $2$ containing metaphor,
+irony, analogy, narrative voice, hypotheses, or declared fiction.
+For each response, the evaluation trace should record the recovered canonical
+claims, evidence states, scope and marking decisions, claim labels, reason
+codes, observed style-marking level, and prompt--response style-marking
+alignment.
 Comparisons among claim extraction, natural-language inference, retrieval, and
-model-judge pipelines should report stage-specific accuracy and calibration at
-each requested style-marking level.
+model-judge pipelines should report per-stage accuracy and calibration at
+each level.
 The same claim recovery procedure should also be tested with and without
-access to the requested style-marking level while the response, reference
-evidence, permission scope, and required status marking remain fixed.
-\emph{Result that would support or weaken the position.}
-Stable evidence states and claim labels for matched canonical claims, together
-with reproducible stage-specific error attribution, would support the
+access to the requested style-marking level while the response and the three
+contract fields remain fixed.
+\par\smallskip
+\noindent\textbf{Falsification criterion.}\par
+\noindent Stable evidence states and claim labels for matched canonical claims, together
+with reproducible error localization, would support the
 position; no consequential diagnostic gain over end-to-end evaluation would
 weaken it.
 
 \paragraph{4. Response-level reporting and aggregation}
-\emph{Research problem.}
-Claim-level labels do not by themselves determine how complete responses
+\par\nobreak
+\noindent\textbf{Research problem.}\par
+\noindent Claim-level labels do not by themselves determine how complete responses
 should be compared.
-\emph{Why it threatens the position.}
-A single hallucination rate can hide claim coverage, procedural failures,
-severity differences, and the distribution of \SUP, \Hall, and \LD.
-\emph{Study and measures.}
-Studies should first publish the claim-level labels, reason codes, coverage,
-and procedural failures. When assessed, style alignment, severity, and
-task-relative usefulness should remain separately named diagnostics.
+\par\smallskip
+\noindent\textbf{Why it matters.}\par
+\noindent A single hallucination rate can hide claim-recovery coverage, procedural failures,
+severity differences, and the distribution of the three claim labels.
+\par\smallskip
+\noindent\textbf{Study and measures.}\par
+\noindent Studies should first publish the claim-level labels, reason codes,
+claim-recovery coverage, and procedural failures. When assessed, style
+alignment, severity, and usefulness should remain separately named
+diagnostics.
 Researchers can then compare optional aggregation rules and report whether
 model rankings or conclusions change across them.
-\emph{Result that would support or weaken the position.}
-Stable conclusions across transparent aggregation rules would support the
-practical usefulness of the framework. If the additional diagnostics never
-change interpretation relative to a simpler factuality-plus-compliance
-baseline, the framework would be weakened.
+\par\smallskip
+\noindent\textbf{Falsification criterion.}\par
+\noindent Stable conclusions across transparent aggregation rules would support the
+practical value of the framework. If the additional diagnostics never
+change interpretation relative to a combined factuality and
+instruction-following baseline, the framework would be weakened.
 
-\paragraph{5. Mitigation without suppressing licensed divergence or supported content at the requested style-marking level}
-\emph{Research problem.}
-A mitigation method can lower a conventional hallucination rate by increasing
+\paragraph{5. Mitigation without indiscriminate suppression}
+\par\nobreak
+\noindent\textbf{Research problem.}\par
+\noindent A mitigation method can lower a conventional hallucination rate by increasing
 abstention, avoiding figurative language, or suppressing evidence-unknown
 content indiscriminately.
-\emph{Why it threatens the position.}
-Such a reduction would not show whether reliability improved or the model
+\par\smallskip
+\noindent\textbf{Why it matters.}\par
+\noindent Such a reduction would not show whether reliability improved or the model
 merely became more conservative.
-\emph{Study and measures.}
-Retrieval, verification, abstention, and constrained decoding should therefore
-be evaluated on three outcomes: reduction of \Hall\ under grounded contracts,
-preservation of useful \LD\ under permissive contracts, and preservation of
-supported content at $\sigma_p=1$ or $2$.
-Because usefulness is one criterion in creativity judgments and creative-text
-judgments vary across readers, usefulness should remain a separate score and
-report uncertainty \citep{diedrich_are_2015,marco_reader_2025}.
+\par\smallskip
+\noindent\textbf{Study and measures.}\par
+\noindent Retrieval, verification, abstention, and constrained decoding should be
+evaluated on three outcomes: reduction of hallucination-labeled claims under
+grounded contracts, preservation of useful licensed-divergence claims under
+permissive contracts, and preservation of supported claims at requested
+style-marking level $1$ or $2$.
+Because creative-text judgments vary across readers, usefulness should remain a
+separate score reporting uncertainty
+\citep{diedrich_are_2015,marco_reader_2025}.
 Per-contract reporting or Pareto comparisons should expose trade-offs among
 the three outcomes.
-\emph{Result that would support or weaken the position.}
-A mitigation would support the position if it reduces claims labeled \Hall\
-without systematically removing claims labeled \LD\ or supported content at
-the requested style-marking level; indiscriminate suppression would weaken it.
+\par\smallskip
+\noindent\textbf{Falsification criterion.}\par
+\noindent A mitigation would support the position if it reduces hallucination-labeled
+claims without systematically removing licensed-divergence or supported claims
+at the requested style-marking level; indiscriminate suppression would weaken
+it.
 
 \paragraph{6. Generalization across domains and languages}
-\emph{Research problem.}
-The contract fields and three-level style-marking scale may work in the
+\par\nobreak
+\noindent\textbf{Research problem.}\par
+\noindent The contract fields and three-level style-marking scale may work in the
 constructed examples yet fail when evidence standards, hedging conventions,
 genres, or instruction hierarchies change.
-\emph{Why it threatens the position.}
-Systematic domain- or language-specific disagreement would limit the claimed
+\par\smallskip
+\noindent\textbf{Why it matters.}\par
+\noindent Systematic domain- or language-specific disagreement would limit the claimed
 generality of the framework.
-\emph{Study and measures.}
-The annotation and contrast protocols should therefore be tested in
+\par\smallskip
+\noindent\textbf{Study and measures.}\par
+\noindent The annotation and contrast protocols should therefore be tested in
 high-stakes factual domains, education, journalism, scientific communication,
 brainstorming, and fiction.
 Multilingual studies should examine whether style marking, epistemic
 hedges, and genre conventions support comparable annotations across languages
 and cultures.
-\emph{Result that would support or weaken the position.}
-Interpretable contract fields and stable diagnoses beyond the single-turn
+\par\smallskip
+\noindent\textbf{Falsification criterion.}\par
+\noindent Interpretable contract fields and stable diagnoses beyond the single-turn
 English examples would support the position; systematic disagreement would
 weaken it and identify where the formulation requires revision.
 
 \paragraph{7. Temporal truth-contract updates and agentic action}
-\emph{Research problem.}
-In multi-step interaction, reference evidence and applicable instructions may
+\par\nobreak
+\noindent\textbf{Research problem.}\par
+\noindent In multi-step interaction, reference evidence and applicable instructions may
 change over time, while later actions may consume earlier claims.
-\emph{Why it threatens the position.}
-A static truth contract cannot represent an update to $O_t$ or show how a
+\par\smallskip
+\noindent\textbf{Why it matters.}\par
+\noindent A static truth contract cannot represent an update to $O_t$ or show how a
 \textsc{marking-failure} propagates from a claim into an action.
-\emph{Study and measures.}
-Agentic studies should model time-indexed reference evidence $O_t$, assign a
-task-level subcontract to each subtask, and trace claim labels and reason codes
-into downstream actions.
-Here, a task-level subcontract is the truth contract associated with one
-subtask.
+\par\smallskip
+\noindent\textbf{Study and measures.}\par
+\noindent Agentic studies should model time-indexed reference evidence $O_t$, assign a
+subtask-specific truth contract to each subtask, and trace claim labels and
+reason codes into downstream actions.
 They should measure update accuracy, cross-subtask error propagation, and
 whether an action relies on a claim that failed required status marking.
-\emph{Result that would support or weaken the position.}
-Reproducible traces that localize when a truth-contract update or claim-level
+\par\smallskip
+\noindent\textbf{Falsification criterion.}\par
+\noindent Reproducible traces that localize when a truth-contract update or claim-level
 failure changes an action would support the position; failure to obtain such
 traces would weaken it.
 
+
+Together, these studies test the framework from annotation reliability to
+downstream action. Until such evidence is available, the implications of the
+position must remain limited to the distinctions stated below.
 
 \section{Discussion}\label{sec:discussion}
 
 \subsection{Evaluation implications}
 
-A response can contain no \Hall\ yet have low usefulness or fail
-prompt--response style-marking alignment.
-Conversely, usefulness and prompt--response style-marking alignment do not
+A response can contain no hallucination-labeled claim yet have low usefulness
+or fail style-marking alignment.
+Conversely, usefulness and style-marking alignment do not
 change a claim label.
 
 Severity also remains distinct from the claim label.
-A false drug dose and an incorrect trivia date can both receive \Hall, although
+A false drug dose and an incorrect trivia date can both receive the hallucination label, although
 their consequences differ.
 Severity may therefore weight a violation after labeling, but it does not
 determine whether the violation occurred.
@@ -1285,14 +1582,16 @@ These results rely on different assumptions; none alone implies a constant
 deployment error rate or precludes statistically negligible rates in a
 specified setting
 \citep{suzuki_negligible_2025}.
-Suppressing every departure from the reference evidence would also suppress
-hypotheses and in-frame invention.
+
+These limits do not imply that every departure from reference evidence should
+be suppressed. Such suppression would also remove permitted hypotheses and
+in-frame invention.
 Empirical and conceptual work reports possible trade-offs between hallucination
 mitigation and creativity
-\citep{banerjee_does_2025,sun_hallucinating_2024,he_shakespearean_2025}.
-Evaluation should therefore report reductions in \Hall, preservation of \LD,
-and retention of supported content at the requested style-marking level
-separately.
+\citep{banerjee_does_2025,sun_hallucinating_2024,he_shakespearean_2025}, including evidence that alignment strategies which reduce hallucination can also lower the output uncertainty associated with literary quality \citep{sui_uncertainty_2026}.
+Evaluation should therefore report reductions in hallucination-labeled claims,
+preservation of licensed-divergence claims, and retention of supported claims
+at the requested style-marking level separately.
 
 \subsection{Limitations and safeguards}
 
@@ -1303,10 +1602,11 @@ The evaluator must state the precedence of system and user instructions and
 applicable safety, legal, and domain constraints; otherwise it records a
 contract-specification failure and leaves the affected claim label undefined.
 
-Second, incomplete reference-evidence coverage or unresolved source conflict
+Second, inadequate reference evidence or unresolved source conflict
 may make the evidence state unreliable.
-The safeguard is a coverage or adjudication failure, not an automatic
-\textsc{unknown} evidence state.
+The evaluator should record a reference-evidence-adequacy or adjudication
+failure rather than automatically assigning the \textsc{unknown} evidence
+state.
 
 Third, span selection, claim recovery, and canonicalization require judgment.
 Validation therefore requires independently adjudicated canonical claims and
@@ -1314,7 +1614,7 @@ separate reporting of procedural failures.
 
 Fourth, permission scope must be specified from the task context before claim
 labeling and cannot be widened after inspecting a response to turn a
-fabrication into \LD.
+fabrication into licensed divergence.
 User-specified permission scope also remains bounded by applicable safety, legal, and
 domain constraints.
 
@@ -1327,28 +1627,32 @@ resources.
 It has no documented independent recoding and cannot establish prevalence
 across the broader literature.
 
+These safeguards delimit the proposal: it is a claim-labeling rule for
+task-relative evaluation, not a universal measure of truth, quality,
+usefulness, or safety.
+
 
 \section{Conclusion}\label{sec:conclusion}
 
-This position paper argues that non-entailment alone should not determine a
-hallucination claim label.
-The truth contract $\TC(p)=(O_p,\Gamma_p,\mu_p)$ separates reference evidence,
-permission scope, and required status marking.
-A canonical claim whose proposition $q^*$ is evidence-unknown receives \LD\
-only when $q^*$ falls inside $\Gamma_p$ and its observed status marking
-$m^*$ satisfies $\mu_p$; otherwise it receives a reason-coded \Hall.
-Requested and observed style-marking levels remain separate variables for claim
-recovery and prompt--response style-marking alignment, and never authorize
-content.
-Procedural failures, usefulness, and severity remain separate diagnostics
-within the structured response-level report.
+This position paper argues that a claim with evidence state
+\textsc{unknown} should not automatically receive the hallucination label.
+The truth contract $\TC(p)=(O_p,\Gamma_p,\mu_p)$ makes explicit the reference
+evidence, permission scope, and required status marking used by the
+claim-labeling rule. An \textsc{entailed} claim receives the supported label,
+and a \textsc{contradicted} claim receives the hallucination label. A claim
+with evidence state \textsc{unknown} receives the licensed-divergence label
+only when it falls within the permission scope and is marked as required;
+otherwise it receives the hallucination label with a reason code.
+Requested style-marking level remains outside the truth contract and never
+authorizes content. Claim-recovery failures, prompt--response style-marking
+alignment,
+usefulness, and severity remain separate diagnostics.
 
-Within the purposive mapping, no selected factuality or creativity resource
-jointly controls the three truth-contract fields and requested style-marking
-level.
-The immediate test is whether contract-aware annotation improves agreement or
-diagnostic stability over a baseline combining factuality and
-instruction-following evaluation on matched claims.
+In our selected sample, no resource separately represents all three
+truth-contract fields while also controlling claim-preserving style
+variation. The immediate empirical test is whether contract-aware annotation
+improves claim-label agreement, reason-code accuracy, or error localization
+over a combined factuality and instruction-following baseline.
 
 \clearpage
 
@@ -1359,7 +1663,7 @@ instruction-following evaluation on matched claims.
 \makeatletter\def\@currentlabel{A}\makeatother\label{app:diagnostics}
 
 Section~\ref{sec:framework} defines the truth contract, claim recovery,
-canonicalization, claim-label rule, and prompt--response style-marking
+canonicalization, claim-labeling rule, and prompt--response style-marking
 alignment check.
 This appendix records the additional diagnostics needed for an empirical implementation.
 
@@ -1386,7 +1690,7 @@ $\mathcal C^*(y_0,p_0)=\mathcal C^*(y_1,p_1)=\mathcal C^*(y_2,p_2)$.
         $m^*$.
   \item \emph{Claim-label instability}: matched canonical claims receive
         different labels when $O_p$, $\Gamma_p$, and $\mu_p$ are fixed.
-  \item \emph{Prompt--response style-marking alignment error}: the evaluator
+  \item \emph{Style-marking alignment error}: the evaluator
         incorrectly classifies the match between requested and observed
         style-marking levels.
   \item \emph{Secondary aggregation sensitivity}: a response comparison
@@ -1396,17 +1700,16 @@ $\mathcal C^*(y_0,p_0)=\mathcal C^*(y_1,p_1)=\mathcal C^*(y_2,p_2)$.
 
 Claim recovery and claim-label diagnostics require expert-adjudicated canonical
 claim matches.
-Prompt--response style-marking alignment errors require an independently
+Style-marking alignment errors require an independently
 adjudicated comparison between requested and observed style-marking levels.
 Claim-label instability is an error only when $O_p$, $\Gamma_p$, and $\mu_p$ remain fixed.
-When $\Gamma_p$ or $\mu_p$ changes, the same evidence-unknown claim may
-intentionally change from \Hall\ to \LD; the evidence state remains
-\textsc{unknown}.
+When $\Gamma_p$ or $\mu_p$ changes, the same \textsc{unknown} claim may
+intentionally change from the hallucination label to the licensed-divergence
+label; the evidence state remains \textsc{unknown}.
 
-For a complete response $y$, an evaluation should publish the claim-level
-labels and diagnostics before applying any scalar or ranking rule.
-Comparisons should report sensitivity to plausible secondary aggregation rules
-rather than present one rule as uniquely determined.
+Reporting requirements are stated in Section~\ref{subsec:reporting}.
+Comparisons should additionally report sensitivity to plausible secondary
+aggregation rules rather than present one rule as uniquely determined.
 
 \appendixsection{Resource Mapping}%
 \phantomsection
@@ -1423,7 +1726,6 @@ used in Figure~\ref{fig:profiles}.
 Every coded field uses one value from the following vocabulary; parenthetical
 text may retain a task-specific qualifier but does not create an additional
 code.
-Coding status is the row-level summary defined below.
 
 \begin{description}
   \item[Nominal task profile.]
@@ -1438,7 +1740,7 @@ Coding status is the row-level summary defined below.
   \emph{specified prompt or story constraints};
   \emph{specified environment or tool state};
   \emph{task-dependent or mixed};
-  \emph{none identified}.
+  \emph{none identified in our coding}.
   This field records evidence usable for claim support, not a general quality
   or task-success criterion.
 
@@ -1465,17 +1767,6 @@ Coding status is the row-level summary defined below.
   \emph{not separately represented}.
   A specification, test, or query constraint is not coded as permission scope
   unless the protocol uses it to authorize evidence-unknown content.
-
-  \item[Coding status.]
-  Each resource name carries one superscript from a closed vocabulary:
-  \textsuperscript{X} (\emph{explicit in the source}),
-  \textsuperscript{I} (\emph{inferred from task design}),
-  \textsuperscript{P} (\emph{partial}), or
-  \textsuperscript{H} (\emph{heterogeneous}).
-  The superscript is a row-level summary of the resource's evaluation setup,
-  not a provenance marker for every table cell.
-  A cell explicitly described as \emph{inferred} remains an inference even
-  when the resource-level superscript is \textsuperscript{X}.
 
   \item[Required status marking $\mu$.]
   \emph{not scored} means that required status marking is not evaluated as a
@@ -1512,19 +1803,19 @@ independently fixed.}
 & \textbf{$\Gamma$ / $\mu$}\\
 \midrule
 \multicolumn{5}{l}{\textbf{Nominal profile: strict grounding}}\\
-1.~FEVER \citep{thorne_fever_2018}\textsuperscript{X} & Fact checking\newline $O$: specified documentary or world evidence (Wikipedia) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-2.~TruthfulQA \citep{lin_truthfulqa_2022}\textsuperscript{X} & Factual QA\newline $O$: specified documentary or world evidence (external reference) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-3.~PopQA \citep{mallen_when_2023}\textsuperscript{X} & Long-tail QA\newline $O$: specified documentary or world evidence (Wikidata) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-4.~SimpleQA \citep{wei_measuring_2024}\textsuperscript{X} & Factual QA\newline $O$: specified documentary or world evidence (external reference) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-5.~TriviaQA \citep{joshi_triviaqa_2017}\textsuperscript{X} & Reading QA\newline $O$: specified documentary or world evidence (evidence documents) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-6.~DefAn \citep{rahman_defan_2024}\textsuperscript{P} & Factual QA\newline $O$: specified documentary or world evidence (external reference) & mixed (factuality, prompt alignment, and response consistency) & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-7.~HaluEval \citep{li_halueval_2023}\textsuperscript{P} & QA and summarization\newline $O$: specified documentary or world evidence (world/reference context) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-8.~FactBench \citep{bayat_factbench_2024}\textsuperscript{X} & Open-ended factuality evaluation\newline $O$: specified documentary or world evidence (Web-retrieved evidence) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-9.~HalluLens \citep{bang_hallulens_2025}\textsuperscript{P} & Hallucination benchmark\newline $O$: task-dependent or mixed & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-10.~FRANK \citep{pagnoni_understanding_2021}\textsuperscript{X} & Summarization\newline $O$: specified documentary or world evidence (source documents) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-11.~QAGS \citep{wang_asking_2020}\textsuperscript{X} & Summarization\newline $O$: specified documentary or world evidence (source documents) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-12.~SummEval \citep{fabbri_summeval_2021}\textsuperscript{P} & Summarization\newline $O$: specified documentary or world evidence (source documents) & mixed (automatic metrics and human summarization-quality judgments) & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-13.~XSum \citep{narayan_xsum_2018}\textsuperscript{I} & Summarization\newline $O$: specified documentary or world evidence (BBC source) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+1.~FEVER \citep{thorne_fever_2018} & Fact checking\newline $O$: specified documentary or world evidence (Wikipedia) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+2.~TruthfulQA \citep{lin_truthfulqa_2022} & Factual QA\newline $O$: specified documentary or world evidence (external reference) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+3.~PopQA \citep{mallen_when_2023} & Long-tail QA\newline $O$: specified documentary or world evidence (Wikidata) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+4.~SimpleQA \citep{wei_measuring_2024} & Factual QA\newline $O$: specified documentary or world evidence (external reference) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+5.~TriviaQA \citep{joshi_triviaqa_2017} & Reading QA\newline $O$: specified documentary or world evidence (evidence documents) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+6.~DefAn \citep{rahman_defan_2024} & Factual QA\newline $O$: specified documentary or world evidence (external reference) & mixed (factuality, prompt alignment, and response consistency) & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+7.~HaluEval \citep{li_halueval_2023} & QA and summarization\newline $O$: specified documentary or world evidence (world/reference context) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+8.~FactBench \citep{bayat_factbench_2024} & Open-ended factuality evaluation\newline $O$: specified documentary or world evidence (Web-retrieved evidence) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+9.~HalluLens \citep{bang_hallulens_2025} & Hallucination benchmark\newline $O$: task-dependent or mixed & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+10.~FRANK \citep{pagnoni_understanding_2021} & Summarization\newline $O$: specified documentary or world evidence (source documents) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+11.~QAGS \citep{wang_asking_2020} & Summarization\newline $O$: specified documentary or world evidence (source documents) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+12.~SummEval \citep{fabbri_summeval_2021} & Summarization\newline $O$: specified documentary or world evidence (source documents) & mixed (automatic metrics and human summarization-quality judgments) & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+13.~XSum \citep{narayan_xsum_2018} & Summarization\newline $O$: specified documentary or world evidence (BBC source) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
 \bottomrule
 \end{tabularx}
 \end{table*}
@@ -1553,23 +1844,23 @@ scale.}
 & \textbf{$\Gamma$ / $\mu$}\\
 \midrule
 \multicolumn{5}{l}{\textbf{Nominal profile: strict grounding (continued)}}\\
-14.~CNN/DailyMail \citep{hermann_teaching_2015,wang_asking_2020}\textsuperscript{I} & News corpus used in summarization evaluation\newline $O$: specified documentary or world evidence (news source) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-15.~DelucionQA \citep{sadat_delucionqa_2023}\textsuperscript{X} & Domain QA\newline $O$: specified documentary or world evidence (manuals) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-16.~HalluQA \citep{cheng_evaluating_2023}\textsuperscript{X} & Long-form QA\newline $O$: specified documentary or world evidence (external reference) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-17.~CR-LLM \citep{li_cr-llm_2024}\textsuperscript{P} & Concept reasoning\newline $O$: specified documentary or world evidence (gold concepts/context) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-18.~HotpotQA \citep{yang_hotpotqa_2018}\textsuperscript{X} & Multi-hop QA\newline $O$: specified documentary or world evidence (Wikipedia) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-19.~HalluRAG \citep{ridder_hallurag_2025}\textsuperscript{X} & RAG QA\newline $O$: specified documentary or world evidence (retrieved Wikipedia) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-20.~RealTime QA \citep{kasai_realtime_2024}\textsuperscript{X} & Real-time QA\newline $O$: specified documentary or world evidence (current evidence) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
-21.~HypoTermQA \citep{uluoglakci_hypotermqa_2024}\textsuperscript{P} & Hallucination evaluation on hypothetical terms\newline $O$: specified documentary or world evidence (Web search and Wikipedia) & feasibility or correctness criterion (accept, refuse, or unknown) & not controlled & $\Gamma$: inferred empty\newline $\mu$: not separated\\
+14.~CNN/DailyMail \citep{hermann_teaching_2015,wang_asking_2020} & News corpus used in summarization evaluation\newline $O$: specified documentary or world evidence (news source) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+15.~DelucionQA \citep{sadat_delucionqa_2023} & Domain QA\newline $O$: specified documentary or world evidence (manuals) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+16.~HalluQA \citep{cheng_evaluating_2023} & Long-form QA\newline $O$: specified documentary or world evidence (external reference) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+17.~CR-LLM \citep{li_cr-llm_2024} & Concept reasoning\newline $O$: specified documentary or world evidence (gold concepts/context) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+18.~HotpotQA \citep{yang_hotpotqa_2018} & Multi-hop QA\newline $O$: specified documentary or world evidence (Wikipedia) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+19.~HalluRAG \citep{ridder_hallurag_2025} & RAG QA\newline $O$: specified documentary or world evidence (retrieved Wikipedia) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+20.~RealTime QA \citep{kasai_realtime_2024} & Real-time QA\newline $O$: specified documentary or world evidence (current evidence) & not separately represented & not controlled & $\Gamma$: inferred empty\newline $\mu$: not scored\\
+21.~HypoTermQA \citep{uluoglakci_hypotermqa_2024} & Hallucination evaluation on hypothetical terms\newline $O$: specified documentary or world evidence (Web search and Wikipedia) & feasibility or correctness criterion (accept, refuse, or unknown) & not controlled & $\Gamma$: inferred empty\newline $\mu$: not separated\\
 \midrule
 \multicolumn{5}{l}{\textbf{Nominal profile: intent evaluation}}\\
-22.~FaithQA \citep{hao_faithqa_2025}\textsuperscript{P} & Intent verification (query-only and RAG)\newline $O$: task-dependent or mixed (none identified in query-only; retrieved context in RAG) & specification or tests (query-constraint satisfaction) & not controlled & $\Gamma$: not separately represented\newline $\mu$: not scored\\
+22.~FaithQA \citep{hao_faithqa_2025} & Intent verification (query-only and RAG)\newline $O$: task-dependent or mixed (none identified in query-only; retrieved context in RAG) & specification or tests (query-constraint satisfaction) & not controlled & $\Gamma$: not separately represented\newline $\mu$: not scored\\
 \midrule
 \multicolumn{5}{l}{\textbf{Nominal profile: heterogeneous suites and tool use}}\\
-23.~BIG-Bench \citep{srivastava_beyond_2023}\textsuperscript{H} & Multi-task reasoning\newline $O$: task-dependent or mixed & not separately represented & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
-24.~BIG-Bench Hard \citep{suzgun_challenging_2023}\textsuperscript{H} & Reasoning suite\newline $O$: task-dependent or mixed & not separately represented & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
-25.~ToolQA \citep{zhuang_toolqa_2023}\textsuperscript{H} & Tool-use QA\newline $O$: specified environment or tool state (tools and APIs) & not separately represented & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
-26.~HIC-Bench \citep{yang_hicbench_2025}\textsuperscript{H} & Hallucination typing\newline $O$: task-dependent or mixed & not separately represented & not controlled & $\Gamma$: not separately represented\newline $\mu$: not scored\\
+23.~BIG-Bench \citep{srivastava_beyond_2023} & Multi-task reasoning\newline $O$: task-dependent or mixed & not separately represented & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
+24.~BIG-Bench Hard \citep{suzgun_challenging_2023} & Reasoning suite\newline $O$: task-dependent or mixed & not separately represented & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
+25.~ToolQA \citep{zhuang_toolqa_2023} & Tool-use QA\newline $O$: specified environment or tool state (tools and APIs) & not separately represented & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
+26.~HIC-Bench \citep{yang_hicbench_2025} & Hallucination typing\newline $O$: task-dependent or mixed & not separately represented & not controlled & $\Gamma$: not separately represented\newline $\mu$: not scored\\
 \bottomrule
 \end{tabularx}
 \end{table*}
@@ -1602,22 +1893,22 @@ No selected protocol separately scores $\mu$ in our coding.}
 & \textbf{$\Gamma$ / $\mu$}\\
 \midrule
 \multicolumn{5}{l}{\textbf{Nominal profile: declared-frame invention and ideation}}\\
-27.~CreativityPrism \citep{hou_creativityprism_2025}\textsuperscript{I} & Multi-task creativity\newline $O$: none identified & mixed (task-specific rubrics) & not controlled & $\Gamma$: implicit frame (task)\newline $\mu$: not separated\\
-28.~LitBench \citep{fein_litbench_2025}\textsuperscript{I} & Story evaluation\newline $O$: none identified & quality or preference rubric (human preferences) & not controlled & $\Gamma$: implicit frame (story)\newline $\mu$: not separated\\
-29.~Short Story \citep{ismayilzada_evaluating_2025}\textsuperscript{I} & Story generation\newline $O$: none identified & quality or preference rubric (semantic/human criteria) & not controlled & $\Gamma$: implicit frame (story)\newline $\mu$: not separated\\
-30.~WritingBench \citep{wu_writingbench_2025}\textsuperscript{P} & Creative writing\newline $O$: none identified & quality or preference rubric (writing rubric) & scored, not claim-controlled & $\Gamma$: implicit frame (task)\newline $\mu$: not separated\\
-31.~Art-or-Artifice / TTCW \citep{chakrabarty_art_2024}\textsuperscript{I} & Creative writing\newline $O$: none identified & quality or preference rubric (expert rubric) & not controlled & $\Gamma$: implicit frame (story)\newline $\mu$: not separated\\
-32.~Automated DT scoring \citep{organisciak_beyond_2023}\textsuperscript{I} & Divergent thinking\newline $O$: none identified & novelty or divergent-thinking rubric & not controlled & $\Gamma$: implicit frame (ideation)\newline $\mu$: not separated\\
-33.~Verbal Creativity \citep{dinu_testing_2025}\textsuperscript{I} & Divergent thinking\newline $O$: none identified & novelty or divergent-thinking rubric (TTCT criteria) & not controlled & $\Gamma$: implicit frame (ideation)\newline $\mu$: not separated\\
-34.~Automated Creativity \citep{li_automated_2025}\textsuperscript{I} & Creative writing\newline $O$: none identified & quality or preference rubric (reference-text quality anchor) & not controlled & $\Gamma$: implicit frame (task)\newline $\mu$: not separated\\
-35.~Hallucinating Narratives \citep{sun_hallucinating_2024}\textsuperscript{P} & Controlled story/reasoning\newline $O$: task-dependent or mixed & mixed & not controlled & $\Gamma$: partial (mixed frame)\newline $\mu$: not separated\\
+27.~CreativityPrism \citep{hou_creativityprism_2025} & Multi-task creativity\newline $O$: none identified & mixed (task-specific rubrics) & not controlled & $\Gamma$: implicit frame (task)\newline $\mu$: not separated\\
+28.~LitBench \citep{fein_litbench_2025} & Story evaluation\newline $O$: none identified & quality or preference rubric (human preferences) & not controlled & $\Gamma$: implicit frame (story)\newline $\mu$: not separated\\
+29.~Short Story \citep{ismayilzada_evaluating_2025} & Story generation\newline $O$: none identified & quality or preference rubric (semantic/human criteria) & not controlled & $\Gamma$: implicit frame (story)\newline $\mu$: not separated\\
+30.~WritingBench \citep{wu_writingbench_2025} & Creative writing\newline $O$: none identified & quality or preference rubric (writing rubric) & scored, not claim-controlled & $\Gamma$: implicit frame (task)\newline $\mu$: not separated\\
+31.~Art-or-Artifice / TTCW \citep{chakrabarty_art_2024} & Creative writing\newline $O$: none identified & quality or preference rubric (expert rubric) & not controlled & $\Gamma$: implicit frame (story)\newline $\mu$: not separated\\
+32.~Automated DT scoring \citep{organisciak_beyond_2023} & Divergent thinking\newline $O$: none identified & novelty or divergent-thinking rubric & not controlled & $\Gamma$: implicit frame (ideation)\newline $\mu$: not separated\\
+33.~Verbal Creativity \citep{dinu_testing_2025} & Divergent thinking\newline $O$: none identified & novelty or divergent-thinking rubric (TTCT criteria) & not controlled & $\Gamma$: implicit frame (ideation)\newline $\mu$: not separated\\
+34.~Automated Creativity \citep{li_automated_2025} & Creative writing\newline $O$: none identified & quality or preference rubric (reference-text quality anchor) & not controlled & $\Gamma$: implicit frame (task)\newline $\mu$: not separated\\
+35.~Hallucinating Narratives \citep{sun_hallucinating_2024} & Controlled story/reasoning\newline $O$: task-dependent or mixed & mixed & not controlled & $\Gamma$: partial (mixed frame)\newline $\mu$: not separated\\
 \midrule
 \multicolumn{5}{l}{\textbf{Nominal profile: constrained solution search}}\\
-36.~MacGyver \citep{tian_macgyver_2025}\textsuperscript{P} & Problem solving\newline $O$: none identified & feasibility or correctness criterion (human feasibility) & not controlled & $\Gamma$: not separately represented\newline $\mu$: not scored\\
-37.~EscapeBench \citep{qian_escapebench_2025}\textsuperscript{X} & Agent puzzles\newline $O$: specified environment or tool state & feasibility or correctness criterion & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
-38.~CreativEval \citep{delorenzo_creativeval_2024}\textsuperscript{X} & Code generation\newline $O$: none identified & novelty or divergent-thinking rubric (fluency, flexibility, originality, elaboration) & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
-39.~NeoCoder \citep{lu_benchmarking_2025}\textsuperscript{X} & Code generation\newline $O$: none identified & mixed (convergent and divergent creativity) & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
-40.~Math Creativity \citep{ye_assessing_2024}\textsuperscript{P} & Math problem solving\newline $O$: none identified & feasibility or correctness criterion (human soundness) & not controlled & $\Gamma$: not separately represented\newline $\mu$: not scored\\
+36.~MacGyver \citep{tian_macgyver_2025} & Problem solving\newline $O$: none identified & feasibility or correctness criterion (human feasibility) & not controlled & $\Gamma$: not separately represented\newline $\mu$: not scored\\
+37.~EscapeBench \citep{qian_escapebench_2025} & Agent puzzles\newline $O$: specified environment or tool state & feasibility or correctness criterion & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
+38.~CreativEval \citep{delorenzo_creativeval_2024} & Code generation\newline $O$: none identified & novelty or divergent-thinking rubric (fluency, flexibility, originality, elaboration) & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
+39.~NeoCoder \citep{lu_benchmarking_2025} & Code generation\newline $O$: none identified & mixed (convergent and divergent creativity) & not controlled or not applicable & $\Gamma$: not separately represented\newline $\mu$: not scored\\
+40.~Math Creativity \citep{ye_assessing_2024} & Math problem solving\newline $O$: none identified & feasibility or correctness criterion (human soundness) & not controlled & $\Gamma$: not separately represented\newline $\mu$: not scored\\
 \bottomrule
 \end{tabularx}
 \end{table*}

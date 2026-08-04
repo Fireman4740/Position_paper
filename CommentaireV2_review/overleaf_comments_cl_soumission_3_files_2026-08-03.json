@@ -1,0 +1,295 @@
+{
+  "generator": "overleaf-comments-bookmarklet v1.6",
+  "project": "CL soumission",
+  "url": "https://www.overleaf.com/project/6a4360d12626817eabd8de53",
+  "capturedAt": "2026-08-03T19:58:21.196Z",
+  "fileCount": 3,
+  "tabIteration": "full",
+  "trackedChangesNote": "swept top-to-bottom per file; for the authoritative set, Review > Accept in Overleaf so the text syncs via git",
+  "files": [
+    {
+      "file": "main.tex",
+      "fileSource": "editor-tab",
+      "threadCount": 15,
+      "messageCount": 15,
+      "truncatedCount": 0,
+      "panelUnchanged": false,
+      "selectorHealth": {
+        "breadcrumbs": false,
+        "editorScroller": true,
+        "threadsParsed": 15,
+        "duplicatesDropped": 0,
+        "entriesUnparsed": 0
+      },
+      "threads": [
+        {
+          "dataPos": 2250,
+          "dataTop": 1484,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 3:47 pm",
+              "text": "thought:\n- Dans l'ensemble il y a de bonnes idées. Si je fais des critiques :\n- Je trouve que ça manque un peu d'accroche, d'éléments motivants\n- Tu mets pas assez en avant ta proposition. Notamment il y a beaucoup de tournures impersonnelles présentes (An entailed claim receives the supported label) => on a l'impression que c'est pas vraiment toi qui l'a fait.\nDans l'abstract et plus généralement dans le papier, je conseillerais d'utiliser \"We propose/argue, etc.\" (exemple d'un bon papier : https://arxiv.org/pdf/1706.03762)",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4175,
+          "dataTop": 2367,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 4:04 pm",
+              "text": "thought: cf mon commentaire en-dessous.\nJe trouve que l'introduction est est peut-être un peu trop technique et \"froide\". Je pense que ça peut nous desservir.\nQuand je lis l'introduction d'un papier je veux comprendre :\n- pourquoi c'est un sujet pertinent : regardez comme c'est pas bien/incomplet ce qu'ont fait les gens d'avant.\n- Qu'est-ce qu'on fait nous pour corriger/améliorer/aller plus loin\n- Regardez les bons résultats qu'on obtient.\n- Le plan du papier\n\nJe t'invite à regarder des papiers \"reconnus\" qui ont souvent de bonnes introductions. Par exemple :\n- BERT : https://aclanthology.org/N19-1423.pdf\n- JEPA (LeCun) : https://openreview.net/pdf?id=BZ5a1r-kVsf (intéressant car c'est un position paper)",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4216,
+          "dataTop": 2405,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 3:54 pm",
+              "text": "thought: le paragraphe est intéressant mais je trouve que tu ne mets pas en avant clairement qu'avant c'est pas bien et que nous on va combler ces problèmes :\n- aujourd'hui dans la littérature : faits non supportés = hallucinations = mauvais = à minimiser.\n- OR/MAIS/CEPENDANT (je pense qu'il faut vraiment que ces mots apparaissent pour faire comprendre le contraste qui est vraiment le point de départ de notre position) tous les faits non supportés ne sont pas mauvais en soi (justifié par les exemples que tu cites après)",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4704,
+          "dataTop": 2635,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 3:53 pm",
+              "text": "\"and\" ? (au lieu de whereas qui indique une opposition ?)",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 5365,
+          "dataTop": 3000,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 3:57 pm",
+              "text": "issue: je pense que tu ne devrais pas te contenter d'une description le dataset X contient ça, je traiterais \"il définit ça **mais il lui manque ça**\".",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6066,
+          "dataTop": 3365,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 3:57 pm",
+              "text": "issue: tu n'as pas défini \"evidence state\" ni \"unknown\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6387,
+          "dataTop": 3480,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 3:58 pm",
+              "text": "issue: non défini",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6756,
+          "dataTop": 3672,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 4:00 pm",
+              "text": "thought: si j'étais toi je mettrais des définitions en langage de la vie courante pour bien faire saisir le principe qui se cache derrière.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6855,
+          "dataTop": 3691,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 3:59 pm",
+              "text": "?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7058,
+          "dataTop": 3768,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 4:02 pm",
+              "text": "thiought: SUP/Hallucination/licensed-divergence me semblent être la même chose que ENTAILED/CONTRADICTED/UNKNOWN ? on pourrait peut-être garder qu'un des 2 vocabulaire ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 10091,
+          "dataTop": 5111,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 4:49 pm",
+              "text": "thought: du coup tu dis qu'on n'a pas besoin du truth contract, non ? J'imagine qu'il faut supprimer cette assertion qui contredit notre papier.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 10620,
+          "dataTop": 5323,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 4:49 pm",
+              "text": "issue: référence requise",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 16908,
+          "dataTop": 8509,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "31 July, 1:37 pm",
+              "text": "praise : je trouve que c'est un exemple convaincant ! A la rigueur je remontrais cette figure sur la page 2 tout en haut. Souvent on aime bien avoir un résumé visuel.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 19860,
+          "dataTop": 9891,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 4:57 pm",
+              "text": "pourquoi parler d'évaluateur ? je comprends pas",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 43329,
+          "dataTop": 20353,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "3 August, 5:02 pm",
+              "text": "thought : c'est pas mu au lieu de sigma ?",
+              "possiblyTruncated": false
+            }
+          ]
+        }
+      ],
+      "trackedChanges": [
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Requested"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\begin{abstract}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "section"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "arge"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "whereas"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Factuality"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "We"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "truth"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "standard of support"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "claim"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "A sufficiently fine-grained instruction-following rubric could encode the same distinction."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "style"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "label"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The position stated above assigns three different roles to evidence,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "authorization, and presentation."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Those roles are usable only if each is specified precisely enough for two"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "evaluators to apply them to the same response."
+        }
+      ]
+    },
+    {
+      "file": "references.bib",
+      "fileSource": "editor-tab",
+      "threadCount": 0,
+      "messageCount": 0,
+      "truncatedCount": 0,
+      "panelUnchanged": false,
+      "selectorHealth": {
+        "breadcrumbs": false,
+        "editorScroller": true,
+        "threadsParsed": 0,
+        "duplicatesDropped": 0,
+        "entriesUnparsed": 0
+      },
+      "threads": [],
+      "trackedChanges": []
+    }
+  ]
+}
