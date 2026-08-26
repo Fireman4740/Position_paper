@@ -1,0 +1,474 @@
+\documentclass[10pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[american]{babel}
+\usepackage[a4paper,textwidth=32pc,top=10mm,bottom=13mm]{geometry}
+\usepackage{natbib}
+\bibliographystyle{compling}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage[hidelinks]{hyperref}
+
+\makeatletter
+\setlength{\@fptop}{0pt}
+\makeatother
+
+\hypersetup{
+  pdftitle={Ten Dataset-Anchored Historical Running-Example Proposals},
+  pdfsubject={Factual and creative historical tasks under two truth contracts}
+}
+
+\newcommand{\TC}{\textsc{TC}}
+\newcommand{\LD}{\textsc{LD}}
+\newcommand{\Hall}{\textsc{H}}
+\newcommand{\SUP}{\textsc{SUP}}
+
+\definecolor{clrH}{RGB}{155,18,18}
+\definecolor{clrLD}{RGB}{22,98,48}
+\definecolor{clrB}{RGB}{22,52,125}
+\definecolor{clrP}{RGB}{92,61,145}
+\definecolor{clrO}{RGB}{170,91,24}
+\definecolor{clrG}{RGB}{65,65,65}
+\definecolor{bgB}{RGB}{245,247,254}
+
+\tikzset{
+  input/.style={rectangle,rounded corners=4pt,draw=gray!55,fill=gray!8,
+    font=\small\itshape,text width=5.0cm,align=center,inner sep=6pt},
+  decision/.style={rectangle,rounded corners=3pt,draw=clrB!55,fill=bgB,
+    font=\small,text width=5.2cm,align=center,inner sep=6pt},
+  verdict/.style={rectangle,rounded corners=3pt,draw=clrG,fill=gray!8,
+    font=\small\bfseries\sffamily,inner xsep=7pt,inner ysep=4pt},
+  verdictH/.style={verdict,draw=clrH,text=clrH,fill=clrH!7},
+  verdictLD/.style={verdict,draw=clrLD,text=clrLD,fill=clrLD!7},
+  arrow/.style={-{Stealth[length=5pt,width=3.5pt]},thick,color=gray!70!black}
+}
+
+% Every proposal separates its benchmark anchor from the author-constructed
+% contract contrast.  SimpleQA questions are lightly paraphrased to keep the
+% catalogue compact; their official zero-based CSV row is reported.  For
+% FActScore, the entity and prompt-list position are dataset-derived, whereas
+% the bounded fact card is constructed for this specification check.
+
+\newcommand{\RenderProposal}{%
+\begin{figure}[!t]
+\centering
+\resizebox{0.86\linewidth}{!}{%
+\begin{tikzpicture}
+  \tikzset{
+    contextbox/.style={
+      rectangle,rounded corners=4pt,draw=clrO!65,fill=clrO!7,
+      text width=10.8cm,align=left,font=\footnotesize,inner sep=5pt},
+    taskbox/.style={
+      decision,text width=5.15cm,minimum height=2.25cm,
+      font=\footnotesize,inner sep=5pt},
+    contractbox/.style={
+      decision,text width=5.15cm,minimum height=1.60cm,
+      font=\scriptsize,inner sep=4pt},
+    stylebox/.style={
+      rectangle,rounded corners=3pt,draw=clrG!45,fill=gray!4,
+      font=\scriptsize,align=center,text width=6.5cm,inner sep=3pt},
+    sharedspan/.style={
+      input,text width=9.4cm,minimum height=1.55cm,
+      font=\footnotesize,inner sep=5pt},
+    outcome/.style={font=\scriptsize,align=center,text width=3.75cm},
+    takeaway/.style={
+      rectangle,rounded corners=3pt,draw=clrG!45,fill=gray!4,
+      font=\scriptsize\sffamily\bfseries,align=center,
+      text width=8.2cm,inner sep=4pt}
+  }
+
+  \node[contextbox] (context) at (0,0)
+    {\textbf{Benchmark anchor.} \BenchmarkAnchor\\[-1pt]
+     \textbf{Source item.} \SourceItem\\[-1pt]
+     \textbf{Bounded task oracle $O$.} \OracleText};
+
+  \node[taskbox,below=0.75cm of context.south,xshift=-3.0cm,anchor=north]
+    (strict)
+    {\textbf{\SharedTaskName}\\
+     Literal prompt: ``\StrictPrompt''};
+  \node[taskbox,below=0.75cm of context.south,xshift=3.0cm,anchor=north]
+    (creative)
+    {\textbf{\SharedTaskName}\\
+     Literal prompt: ``\CreativePrompt''};
+
+  \coordinate (branch) at ($(context.south)+(0,-0.28)$);
+  \draw[semithick,draw=black!55] (context.south) -- (branch);
+  \draw[arrow] (branch) -| (strict.north);
+  \draw[arrow] (branch) -| (creative.north);
+
+  \node[contractbox,below=0.42cm of strict] (tc1)
+    {$\TC(p_1)=(O,\Gamma_1,\mu)$\\
+     $O$: \OracleShort\\
+     $\Gamma_1=\varnothing$: no evidence-unknown historical additions\\
+     $\mu$: speculation marked explicitly};
+  \node[contractbox,below=0.42cm of creative] (tc2)
+    {$\TC(p_2)=(O,\Gamma_2,\mu)$\\
+     $O$: \OracleShort\\
+     $\Gamma_2$: one plausible, evidence-unknown micro-scene\\
+     $\mu$: speculation marked explicitly};
+
+  \node[stylebox,below=0.46cm of $(tc1.south)!0.5!(tc2.south)$]
+    (sharedstyle)
+    {Shared requested style-marking level: plain-language historical
+     vignette (outside the truth contract)};
+
+  \node[sharedspan,below=0.42cm of sharedstyle] (span)
+    {\textbf{\upshape Shared supported content:}
+     ``\SupportedSpan'' (\SUP).\\
+     \textbf{\upshape Identical target span:}
+     ``\ResponseSpan''\\
+     \textbf{\upshape Target claim $q^*$:} \ClaimContent;
+     \textbf{\upshape status marking:} ``\Marker''};
+
+  \node[verdictH,below=0.52cm of span.south,xshift=-3.0cm,anchor=north]
+    (hall) {HALLUCINATION (H)};
+  \node[verdictLD,below=0.52cm of span.south,xshift=3.0cm,anchor=north]
+    (licensed) {LICENSED DIVERGENCE (LD)};
+  \node[outcome,below=0.10cm of hall] (outH)
+    {\textsc{unknown} relative to $O$; outside $\Gamma_1$\\
+     reason code: \textsc{out-of-scope}};
+  \node[outcome,text=clrLD,below=0.10cm of licensed] (outLD)
+    {\textsc{unknown} relative to $O$; inside $\Gamma_2$\\
+     and marked as required};
+
+  \draw[arrow] (strict.south) -- (tc1.north);
+  \draw[arrow] (creative.south) -- (tc2.north);
+  \draw[arrow] (tc1.south) -- (span.north -| tc1.south);
+  \draw[arrow] (tc2.south) -- (span.north -| tc2.south);
+  \draw[arrow] (span.south -| hall.north) -- (hall.north);
+  \draw[arrow] (span.south -| licensed.north) -- (licensed.north);
+
+  \node[takeaway,below=0.48cm of $(outH.south)!0.5!(outLD.south)$]
+    {The benchmark anchor and target claim are fixed; only the permission
+     scope changes the target claim's label.};
+\end{tikzpicture}%
+}
+\caption{\textbf{Proposal \ProposalNumber: \ProposalTitle.}
+The supported content and target claim are identical in both outputs.  The
+target claim is \textsc{unknown} relative to the same bounded oracle; only
+the permission scope changes.  The factual task therefore assigns
+hallucination (\Hall) with reason code \textsc{out-of-scope}, whereas the
+creative task assigns licensed divergence (\LD).  The latter records
+authorization and adequate marking, not historical truth, probability, or
+creative quality.  \SourceNote}
+\label{fig:\ProposalLabel}
+\end{figure}
+}
+
+\begin{document}
+
+% Proposal 1 ---------------------------------------------------------------
+\begingroup
+\def\ProposalNumber{1}
+\def\ProposalTitle{A Micro-Scene at the Taj Mahal Workshop}
+\def\ProposalLabel{dataset-taj-mahal}
+\def\BenchmarkAnchor{SimpleQA official CSV, zero-based row 142.}
+\def\SourceItem{Paraphrased question: Whom did Shah Jahan commemorate by
+building the Taj Mahal? Gold answer: \textbf{Mumtaz Mahal}.}
+\def\OracleText{The source-item record above. It contains no account of
+individual workshop actions during construction.}
+\def\SharedTaskName{Two-sentence museum-answer task}
+\def\StrictPrompt{Write a two-sentence museum caption that answers the source question. Mark every uncertainty explicitly. Do not add events absent from the packet.}
+\def\CreativePrompt{Write a two-sentence museum caption that answers the source question. Mark every uncertainty explicitly. You may add one plausible but unrecorded micro-scene.}
+\def\OracleShort{SimpleQA item record above}
+\def\SupportedSpan{The Taj Mahal was built in memory of Mumtaz Mahal.}
+\def\ResponseSpan{One explicitly speculative reconstruction is that a marble carver compared a floral motif with a paper sketch.}
+\def\ClaimContent{a marble carver compared a floral motif with a paper sketch}
+\def\Marker{One explicitly speculative reconstruction is that}
+\def\SourceNote{The question subject and gold answer are adapted from the
+official SimpleQA item \citep{wei_measuring_2024}. The two prompts, bounded
+oracle, micro-scene, and labels are author-constructed, not native SimpleQA
+fields or sampled model outputs.}
+\RenderProposal
+\endgroup
+\clearpage
+
+% Proposal 2 ---------------------------------------------------------------
+\begingroup
+\def\ProposalNumber{2}
+\def\ProposalTitle{Preparing an Early Surgical X-Ray}
+\def\ProposalLabel{dataset-xray}
+\def\BenchmarkAnchor{SimpleQA official CSV, zero-based row 1015.}
+\def\SourceItem{Paraphrased question: On what date did Hall-Edwards first use
+X-rays in a surgical operation? Gold answer: \textbf{14 February 1896}.}
+\def\OracleText{The source-item record above. It records neither the room
+preparation nor the actions of any assistant.}
+\def\SharedTaskName{Two-sentence museum-answer task}
+\def\StrictPrompt{Write a two-sentence museum caption that answers the source question. Mark every uncertainty explicitly. Do not add events absent from the packet.}
+\def\CreativePrompt{Write a two-sentence museum caption that answers the source question. Mark every uncertainty explicitly. You may add one plausible but unrecorded micro-scene.}
+\def\OracleShort{SimpleQA item record above}
+\def\SupportedSpan{Hall-Edwards first used X-rays in a surgical operation on 14 February 1896.}
+\def\ResponseSpan{One explicitly speculative reconstruction is that an assistant darkened the room before the image was examined.}
+\def\ClaimContent{an assistant darkened the room before the image was examined}
+\def\Marker{One explicitly speculative reconstruction is that}
+\def\SourceNote{The question subject and gold answer are adapted from the
+official SimpleQA item \citep{wei_measuring_2024}. The paired tasks and
+reconstruction are author-constructed; SimpleQA does not provide this
+creative branch or an \LD{} label.}
+\RenderProposal
+\endgroup
+\clearpage
+
+% Proposal 3 ---------------------------------------------------------------
+\begingroup
+\def\ProposalNumber{3}
+\def\ProposalTitle{An Early Edison Telegraph Test}
+\def\ProposalLabel{dataset-edison}
+\def\BenchmarkAnchor{SimpleQA official CSV, zero-based row 2700.}
+\def\SourceItem{Paraphrased question: What telegraph system did Thomas Edison
+begin developing in 1874? Gold answer: \textbf{a multiplex telegraphic system}.}
+\def\OracleText{The source-item record above. It contains no description of
+the workbench or preparations for an early test.}
+\def\SharedTaskName{Two-sentence museum-answer task}
+\def\StrictPrompt{Write a two-sentence museum caption that answers the source question. Mark every uncertainty explicitly. Do not add events absent from the packet.}
+\def\CreativePrompt{Write a two-sentence museum caption that answers the source question. Mark every uncertainty explicitly. You may add one plausible but unrecorded micro-scene.}
+\def\OracleShort{SimpleQA item record above}
+\def\SupportedSpan{In 1874, Edison began developing a multiplex telegraphic system.}
+\def\ResponseSpan{One explicitly speculative reconstruction is that a technician laid spare wire beside the test bench before an early trial.}
+\def\ClaimContent{a technician laid spare wire beside the test bench before an early trial}
+\def\Marker{One explicitly speculative reconstruction is that}
+\def\SourceNote{The question subject and gold answer are adapted from the
+official SimpleQA item \citep{wei_measuring_2024}. The historical micro-scene
+and the contract-aware comparison are author-constructed and are not evidence
+reported by the benchmark.}
+\RenderProposal
+\endgroup
+\clearpage
+
+% Proposal 4 ---------------------------------------------------------------
+\begingroup
+\def\ProposalNumber{4}
+\def\ProposalTitle{A Response after Austerlitz}
+\def\ProposalLabel{dataset-austerlitz}
+\def\BenchmarkAnchor{SimpleQA official CSV, zero-based row 3172.}
+\def\SourceItem{Paraphrased question: After which battle did Napoleon tell
+his soldiers that he was pleased with them? Gold answer: \textbf{the Battle of Austerlitz}.}
+\def\OracleText{The source-item record above. It reports no response from the
+soldiers who heard the address.}
+\def\SharedTaskName{Two-sentence museum-answer task}
+\def\StrictPrompt{Write a two-sentence museum caption that answers the source question. Mark every uncertainty explicitly. Do not add events absent from the packet.}
+\def\CreativePrompt{Write a two-sentence museum caption that answers the source question. Mark every uncertainty explicitly. You may add one plausible but unrecorded micro-scene.}
+\def\OracleShort{SimpleQA item record above}
+\def\SupportedSpan{Napoleon's quoted address followed the Battle of Austerlitz.}
+\def\ResponseSpan{One explicitly speculative reconstruction is that nearby soldiers answered with a brief cheer.}
+\def\ClaimContent{nearby soldiers answered with a brief cheer}
+\def\Marker{One explicitly speculative reconstruction is that}
+\def\SourceNote{The historical question and gold answer are adapted from the
+official SimpleQA item \citep{wei_measuring_2024}. The soldiers' response,
+paired prompts, and labels are author-constructed and should not be read as a
+historical finding.}
+\RenderProposal
+\endgroup
+\clearpage
+
+% Proposal 5 ---------------------------------------------------------------
+\begingroup
+\def\ProposalNumber{5}
+\def\ProposalTitle{Engraving Lagrange on the Eiffel Tower}
+\def\ProposalLabel{dataset-eiffel}
+\def\BenchmarkAnchor{SimpleQA official CSV, zero-based row 4197.}
+\def\SourceItem{Paraphrased question: Which mathematician's surname appears
+at Eiffel Tower position NW06? Gold answer: \textbf{LAGRANGE}.}
+\def\OracleText{The source-item record above. It says nothing about how the
+engraver checked the spelling.}
+\def\SharedTaskName{Two-sentence museum-answer task}
+\def\StrictPrompt{Write a two-sentence museum caption that answers the source question. Mark every uncertainty explicitly. Do not add events absent from the packet.}
+\def\CreativePrompt{Write a two-sentence museum caption that answers the source question. Mark every uncertainty explicitly. You may add one plausible but unrecorded micro-scene.}
+\def\OracleShort{SimpleQA item record above}
+\def\SupportedSpan{The surname engraved at position NW06 is LAGRANGE.}
+\def\ResponseSpan{One explicitly speculative reconstruction is that an engraver checked the spelling against a handwritten list.}
+\def\ClaimContent{an engraver checked the spelling against a handwritten list}
+\def\Marker{One explicitly speculative reconstruction is that}
+\def\SourceNote{The question subject and gold answer are adapted from the
+official SimpleQA item \citep{wei_measuring_2024}. The workshop detail is an
+author-constructed unknown claim used only to expose the effect of the
+permission scope.}
+\RenderProposal
+\endgroup
+\clearpage
+
+% Proposal 6 ---------------------------------------------------------------
+\begingroup
+\def\ProposalNumber{6}
+\def\ProposalTitle{A Preflight Moment with Amelia Earhart}
+\def\ProposalLabel{dataset-earhart}
+\def\BenchmarkAnchor{FActScore official \texttt{unlabeled/prompt\_entities.txt},
+one-based line 87: \textbf{Amelia Earhart}.}
+\def\SourceItem{FActScore biography topic: Amelia Earhart.}
+\def\OracleText{Author-bounded FActScore-aligned fact card: ``In 1932,
+Earhart became the first woman to fly solo nonstop across the Atlantic.'' It
+contains no preflight micro-scene.}
+\def\SharedTaskName{Two-sentence biographical-vignette task}
+\def\StrictPrompt{Write a two-sentence biographical vignette about Amelia Earhart using the packet. Mark every uncertainty explicitly. Do not add unrecorded events.}
+\def\CreativePrompt{Write a two-sentence biographical vignette about Amelia Earhart using the packet. Mark every uncertainty explicitly. You may add one plausible but unrecorded micro-scene.}
+\def\OracleShort{bounded biographical fact card above}
+\def\SupportedSpan{In 1932, Earhart became the first woman to fly solo nonstop across the Atlantic.}
+\def\ResponseSpan{One explicitly speculative reconstruction is that, before departing, Earhart unfolded her route map once more.}
+\def\ClaimContent{before departing, Earhart unfolded her route map once more}
+\def\Marker{One explicitly speculative reconstruction is that}
+\def\SourceNote{The entity and base biography setting come from FActScore
+\citep{min_factscore_2023}. The bounded fact card, paired prompts,
+speculative span, contracts, and labels are author-constructed; they are not
+an original FActScore item or model output.}
+\RenderProposal
+\endgroup
+\clearpage
+
+% Proposal 7 ---------------------------------------------------------------
+\begingroup
+\def\ProposalNumber{7}
+\def\ProposalTitle{A Diplomatic Audience with Cleopatra}
+\def\ProposalLabel{dataset-cleopatra}
+\def\BenchmarkAnchor{FActScore official \texttt{unlabeled/prompt\_entities.txt},
+one-based line 345: \textbf{Cleopatra}.}
+\def\SourceItem{FActScore biography topic: Cleopatra.}
+\def\OracleText{Author-bounded FActScore-aligned fact card: ``Cleopatra VII
+ruled Egypt from 51 to 30 BCE.'' It contains no material detail about a
+diplomatic audience.}
+\def\SharedTaskName{Two-sentence biographical-vignette task}
+\def\StrictPrompt{Write a two-sentence biographical vignette about Cleopatra using the packet. Mark every uncertainty explicitly. Do not add unrecorded events.}
+\def\CreativePrompt{Write a two-sentence biographical vignette about Cleopatra using the packet. Mark every uncertainty explicitly. You may add one plausible but unrecorded micro-scene.}
+\def\OracleShort{bounded biographical fact card above}
+\def\SupportedSpan{Cleopatra VII ruled Egypt from 51 to 30 BCE.}
+\def\ResponseSpan{One explicitly speculative reconstruction is that, before a diplomatic audience, Cleopatra rearranged two wax tablets on a table.}
+\def\ClaimContent{before a diplomatic audience, Cleopatra rearranged two wax tablets on a table}
+\def\Marker{One explicitly speculative reconstruction is that}
+\def\SourceNote{The biography entity is present in the official FActScore
+prompt list \citep{min_factscore_2023}. The fact card and micro-scene are
+author-constructed for this contrast and do not assert a newly discovered
+historical event.}
+\RenderProposal
+\endgroup
+\clearpage
+
+% Proposal 8 ---------------------------------------------------------------
+\begingroup
+\def\ProposalNumber{8}
+\def\ProposalTitle{Drafting Treasure Island}
+\def\ProposalLabel{dataset-stevenson}
+\def\BenchmarkAnchor{FActScore official \texttt{labeled/prompt\_entities.txt},
+one-based line 134: \textbf{Robert Louis Stevenson}.}
+\def\SourceItem{FActScore biography topic: Robert Louis Stevenson.}
+\def\OracleText{Author-bounded FActScore-aligned fact card: ``Robert Louis
+Stevenson's \emph{Treasure Island} was published in book form in 1883.'' It
+does not record the proposed drafting micro-scene.}
+\def\SharedTaskName{Two-sentence biographical-vignette task}
+\def\StrictPrompt{Write a two-sentence biographical vignette about Robert Louis Stevenson using the packet. Mark every uncertainty explicitly. Do not add unrecorded events.}
+\def\CreativePrompt{Write a two-sentence biographical vignette about Robert Louis Stevenson using the packet. Mark every uncertainty explicitly. You may add one plausible but unrecorded micro-scene.}
+\def\OracleShort{bounded biographical fact card above}
+\def\SupportedSpan{Robert Louis Stevenson's Treasure Island was published in book form in 1883.}
+\def\ResponseSpan{One explicitly speculative reconstruction is that, while drafting, Stevenson moved a lamp closer to his hand-drawn map.}
+\def\ClaimContent{while drafting, Stevenson moved a lamp closer to his hand-drawn map}
+\def\Marker{One explicitly speculative reconstruction is that}
+\def\SourceNote{The entity belongs to FActScore's human-labeled entity list
+\citep{min_factscore_2023}. The evidence packet, scene, and two contracts are
+author-constructed and are not part of the benchmark annotation.}
+\RenderProposal
+\endgroup
+\clearpage
+
+% Proposal 9 ---------------------------------------------------------------
+\begingroup
+\def\ProposalNumber{9}
+\def\ProposalTitle{Revising a Mandela Speech}
+\def\ProposalLabel{dataset-mandela}
+\def\BenchmarkAnchor{FActScore official \texttt{unlabeled/prompt\_entities.txt},
+one-based line 62: \textbf{Nelson Mandela}.}
+\def\SourceItem{FActScore biography topic: Nelson Mandela.}
+\def\OracleText{Author-bounded FActScore-aligned fact card: ``Nelson Mandela
+served as President of South Africa from 1994 to 1999.'' It records no
+speech-drafting micro-scene.}
+\def\SharedTaskName{Two-sentence biographical-vignette task}
+\def\StrictPrompt{Write a two-sentence biographical vignette about Nelson Mandela using the packet. Mark every uncertainty explicitly. Do not add unrecorded events.}
+\def\CreativePrompt{Write a two-sentence biographical vignette about Nelson Mandela using the packet. Mark every uncertainty explicitly. You may add one plausible but unrecorded micro-scene.}
+\def\OracleShort{bounded biographical fact card above}
+\def\SupportedSpan{Nelson Mandela served as President of South Africa from 1994 to 1999.}
+\def\ResponseSpan{One explicitly speculative reconstruction is that, during a late drafting session, Mandela crossed out and rewrote a speech's opening line.}
+\def\ClaimContent{during a late drafting session, Mandela crossed out and rewrote a speech's opening line}
+\def\Marker{One explicitly speculative reconstruction is that}
+\def\SourceNote{The biography entity is drawn from the official FActScore
+prompt list \citep{min_factscore_2023}. The packet and micro-scene are
+author-constructed; licensed divergence would not make that scene a factual
+biographical claim.}
+\RenderProposal
+\endgroup
+\clearpage
+
+% Proposal 10 --------------------------------------------------------------
+\begingroup
+\def\ProposalNumber{10}
+\def\ProposalTitle{Arranging Storyboards for Psycho}
+\def\ProposalLabel{dataset-hitchcock}
+\def\BenchmarkAnchor{FActScore official \texttt{unlabeled/prompt\_entities.txt},
+one-based line 85: \textbf{Alfred Hitchcock}.}
+\def\SourceItem{FActScore biography topic: Alfred Hitchcock.}
+\def\OracleText{Author-bounded FActScore-aligned fact card: ``Alfred
+Hitchcock directed \emph{Psycho}, released in 1960.'' It records no action
+before a production meeting.}
+\def\SharedTaskName{Two-sentence biographical-vignette task}
+\def\StrictPrompt{Write a two-sentence biographical vignette about Alfred Hitchcock using the packet. Mark every uncertainty explicitly. Do not add unrecorded events.}
+\def\CreativePrompt{Write a two-sentence biographical vignette about Alfred Hitchcock using the packet. Mark every uncertainty explicitly. You may add one plausible but unrecorded micro-scene.}
+\def\OracleShort{bounded biographical fact card above}
+\def\SupportedSpan{Alfred Hitchcock directed Psycho, released in 1960.}
+\def\ResponseSpan{One explicitly speculative reconstruction is that, before a production meeting, Hitchcock rearranged three storyboard cards.}
+\def\ClaimContent{before a production meeting, Hitchcock rearranged three storyboard cards}
+\def\Marker{One explicitly speculative reconstruction is that}
+\def\SourceNote{The biography entity is drawn from the official FActScore
+prompt list \citep{min_factscore_2023}. The packet, reconstruction, paired
+prompts, and labels are author-constructed and are not benchmark outputs.}
+\RenderProposal
+\endgroup
+\clearpage
+
+\section*{What these proposals add to the benchmark anchors}
+
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{2.2cm}
+  >{\raggedright\arraybackslash}p{3.3cm}X}
+\toprule
+\textbf{Evaluation setting} & \textbf{Native unit or decision} &
+\textbf{Role in this catalogue} \\
+\midrule
+SimpleQA \citep{wei_measuring_2024} & Short answer graded correct,
+incorrect, or not attempted & Supplies a traceable historical question and
+gold answer. The catalogue adds a longer response, explicit permission scope,
+required marking, and a claim-level distinction between \Hall{} and \LD. \\
+FActScore \citep{min_factscore_2023} & Atomic factual precision of long-form
+biographical generation relative to a knowledge source & Supplies a traceable
+biographical topic and the factuality baseline. The catalogue makes the task
+oracle bounded, then contrasts a factual biography with an explicitly licensed
+historical reconstruction. \\
+Contract-aware proposal & Evidence relation plus $\Gamma$ and $\mu$ for each
+recovered claim & Holds $O$, $q^*$, the response span, marking, and style fixed.
+An evidence-unknown claim is \Hall{} when out of scope and \LD{} when within
+scope and marked as required. \\
+\bottomrule
+\end{tabularx}
+
+\medskip
+\noindent\textit{Scope note.} These ten figures are author-constructed
+specification checks, not sampled model outputs and not an empirical estimate
+of benchmark coverage.  They show what information a contract-aware extension
+would represent beyond the native factuality decisions of the two source
+benchmarks.
+
+\medskip
+\noindent\textit{Reproducibility note.} SimpleQA row numbers are zero-based
+positions in the
+\href{https://openaipublic.blob.core.windows.net/simple-evals/simple_qa_test_set.csv}{official evaluation CSV};
+FActScore line numbers are one-based positions in the prompt-entity files from
+the \href{https://github.com/shmsw25/FActScore}{official repository's data
+archive}.  The catalogue paraphrases the SimpleQA questions but preserves their
+subjects and gold answers.
+
+\bibliography{references}
+
+\end{document}
