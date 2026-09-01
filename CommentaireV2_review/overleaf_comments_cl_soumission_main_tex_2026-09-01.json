@@ -1,0 +1,1206 @@
+{
+  "generator": "overleaf-comments-bookmarklet v1.6",
+  "project": "CL soumission",
+  "url": "https://www.overleaf.com/project/6a4360d12626817eabd8de53",
+  "capturedAt": "2026-09-01T14:52:52.264Z",
+  "fileCount": 1,
+  "tabIteration": "single",
+  "threadCount": 31,
+  "messageCount": 32,
+  "trackedChangesNote": "swept top-to-bottom per file; for the authoritative set, Review > Accept in Overleaf so the text syncs via git",
+  "files": [
+    {
+      "file": "main.tex",
+      "fileSource": "editor-tab",
+      "threadCount": 31,
+      "messageCount": 32,
+      "truncatedCount": 1,
+      "panelUnchanged": false,
+      "selectorHealth": {
+        "breadcrumbs": false,
+        "editorScroller": true,
+        "threadsParsed": 31,
+        "duplicatesDropped": 0,
+        "entriesUnparsed": 0
+      },
+      "threads": [
+        {
+          "dataPos": 23506,
+          "dataTop": 12847,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:35 pm",
+              "text": "Mieux expliquer q*",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 23634,
+          "dataTop": 12905,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 2:41 pm",
+              "text": "expliquer avec des mots simple au exemple de concept est pas introduit.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 32023,
+          "dataTop": 17416,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:13 pm",
+              "text": "reformule simplement n'utilise pas le nor",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 32308,
+          "dataTop": 17531,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:15 pm",
+              "text": "Explique comment il observe de statu marking, exemple",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 32582,
+          "dataTop": 17723,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:16 pm",
+              "text": "Pourquoi empty ? expliquer . donne exemple de strict-grounding mot simple",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 32837,
+          "dataTop": 17838,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:17 pm",
+              "text": "Reformule supprime l'utilisation de \"nor\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 33312,
+          "dataTop": 18126,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:18 pm",
+              "text": "raccroche a l'exemple figure 2",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 33717,
+          "dataTop": 18337,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:23 pm",
+              "text": "Ajoute des exemples dériver de l'exemple de la pierre de rosette entre parenthèse. pour q* qui tombe dans gamma et m* dans mu",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 35406,
+          "dataTop": 19316,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:26 pm",
+              "text": "préciser et reformule pas claire de ce qui cela veut dire",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 35635,
+          "dataTop": 19412,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:26 pm",
+              "text": "quelles contraintes ? préciser",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 37468,
+          "dataTop": 20487,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:29 pm",
+              "text": "réutiliser l'exemple de la pierre de rosette",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 38839,
+          "dataTop": 21197,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:30 pm",
+              "text": "sépration entre quoi et quoi préciser",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 39155,
+          "dataTop": 21389,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:31 pm",
+              "text": "Utilise l'exemple de pierre de rosette au lieux de l'exemple médicale",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 40143,
+          "dataTop": 21946,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:33 pm",
+              "text": "préciser plus la différence entre les deux",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 40510,
+          "dataTop": 22138,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:38 pm",
+              "text": "Faire un rappel plus court et simple avec les meme mots de la définition  q* et m* line 450 - 460",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 42047,
+          "dataTop": 23001,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 3:40 pm",
+              "text": "Rexpliquer simplement avec un exemple pour bien que le lecteur ce qu'est un span et le problème",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 44493,
+          "dataTop": 24364,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:08 pm",
+              "text": "explique cela dés la première a parisiton de \"an evidence\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 47973,
+          "dataTop": 26265,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:12 pm",
+              "text": "Comprend ce passage il faut mieux expliquer et détailler",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 50429,
+          "dataTop": 27589,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:17 pm",
+              "text": "Je pense que l'on devrait mieux argumenter son utilité et son lien avec LD ou dans métaphore peuvent etre des LD dans certain de claims extraction. Le but de se paramètre aussi d'evaluer les hallucination failfulness et que l'on montre dans les ressources que la fontrière entre fact et fiction est fin et qu'il faut un paramètre pour le déterminer pour pouvoir calibre nos système de détection des hallucination en fonction du style",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 52448,
+          "dataTop": 28702,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:19 pm",
+              "text": "Il y a un problème avec les taches qui nessaice de la factialité et de la creativté qui sont des caractéristiques etudier séparément alors qu'elle sont lier par essence",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 76416,
+          "dataTop": 41679,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:24 pm",
+              "text": "Il faut réduire le texte dans la caption et reading guide faire plus simple et direct",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 90258,
+          "dataTop": 49107,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:28 pm",
+              "text": "reprendre exemple pierre de rosette",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 91680,
+          "dataTop": 49837,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:27 pm",
+              "text": "reutiliser plutot l'exemple de la pierre de rosette",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 92673,
+          "dataTop": 50355,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:28 pm",
+              "text": "reutiliser plutot l'exemple de la pierre de rosette si possible",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 95191,
+          "dataTop": 51660,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:29 pm",
+              "text": "ajoute un transition vers l'agenda de recherche",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 107746,
+          "dataTop": 58570,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:41 pm",
+              "text": "raccourcir ce passage",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 108932,
+          "dataTop": 59223,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:41 pm",
+              "text": "il faut source et explication",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 109114,
+          "dataTop": 59300,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:42 pm",
+              "text": "Pas besoin d'autant détailler",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 109497,
+          "dataTop": 59511,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:43 pm",
+              "text": "nunance ce n'ai qu'une observation simplifier le texte et raccourcir",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 110650,
+          "dataTop": 60144,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:44 pm",
+              "text": "Je sais pas si cette partie est vraiment nessaire et doit etre aussi long",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 113095,
+          "dataTop": 61469,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:45 pm",
+              "text": "reduire au miniun les limites pour ne pas dénigrer notre travaille",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Mathis Carlesso",
+              "time": "1 September, 4:45 pm",
+              "text": "Montrer les limites de l'état actuelle de la recherche bien faire les différences entre nos potentie...",
+              "possiblyTruncated": true
+            }
+          ]
+        }
+      ],
+      "trackedChanges": [
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\subsection{Limitations and Safeguards}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The normalized"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "content $q^*$ records what is claimed, including entities, predicates,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "negation, quantities, and temporal scope."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The observed status marking $m^*$"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "records how the response presents the claim, including epistemic modality and"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "relevant discourse framing. Here, $m^*$ records that the placement is offered"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "as possible rather than asserted as established."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The excerpt neither"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "entails nor contradicts the placement, so the evidence state is"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\textsc{unknown}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "ts observed status marking also"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "satisfies the requirement to present that reconstruction as conjecture"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "permission scope is empty"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "tyle neither creates nor excuses a"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "truth-conditional claim."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Each"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "claim is then canonicalized into normalized content $q^*$ and observed"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "status marking $m^*$."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "whether"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$q^*$ falls inside $\\Gamma$ and, if it does, whether $m^*$ satisfies"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\mu$. The evaluator then assigns the claim label and, for a"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "violation, its reason code."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "When instructions conflict, the evaluator must state the precedence of system"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "and user instructions and how applicable safety, legal, and domain constraints"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "bound the permission scope from outside."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "those constraints"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Return to the clinical assistant of Section~\\ref{sec:intro}, now asked to list"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "candidate explanations of a patient's symptoms. The task lets the response"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "raise a possible diagnosis the record does not establish, and forbids it to"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "supply a drug dose the record does not contain. Both are claims the evidence"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "leaves unknown; only one is authorized."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "situates this separation against creativity"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "evaluation, which scores value on its own terms."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "n the clinical task above, ``this may be early Lyme disease, but serology is"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "required'' satisfies the required status marking, while ``this is early Lyme"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "disease'' does not."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "We reserve two terms for two different operations."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\emph{Claim extraction} refers to existing methods that segment a response into"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "checkable units; Section~\\ref{subsec:extraction} reviews them."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\emph{Claim recovery} refers to the broader, context-sensitive step that"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "attributes claims to the response before canonicalization, and it is the step"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "this rule relies on."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Before claim verification, the evaluator canonicalizes each recovered claim"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "into two components, $q^*$ and $m^*$."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The component $q^*$ records normalized truth-conditional content. This content"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "includes entities, predicates, negation, quantities, temporal scope, and any"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "attribution that changes what is claimed."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The component $m^*$ records observed status marking, including relevant"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "modality and fictional or hypothetical framing."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "This separation allows $q^*$ to be checked against the task oracle and"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "permission scope without discarding the presentation information needed by"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\mu$."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Some spans yield no truth-conditional claim at all."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Such a span receives no claim label, and the absence of a label is a normal"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "outcome rather than one of the failures defined in"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Appendix~\\ref{app:diagnostics}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "An evidence state describes the relation between a claim and the task oracle; a"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "claim label describes the standing of that claim under the task."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "An explicit refusal or a statement such as ``the available evidence is"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "insufficient'' is evaluated as a meta-claim about the evidence. It is not"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "automatically treated as asserting the embedded proposition. Treating the"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "refusal or insufficiency statement as a meta-claim prevents calibrated"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "abstention from being mislabeled as hallucination."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Because style is multi-dimensional, the three levels form a working"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "discretization rather than a validated universal scale"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\citep{kang_style_2021,jin_deep_2022}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The boundaries, especially between levels 1 and 2, require empirical"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "validation."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The requested level is specified by the task; the observed level is realized"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "by the response. Their \\emph{prompt--response style-marking alignment} is"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\textsc{match}, \\textsc{mismatch}, or \\textsc{not applicable} when the task"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "specifies no target. This provisional categorical rule may later be replaced"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "by ordinal distance or tolerance. If either level cannot be adjudicated"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "reliably, the component is withheld and a procedural failure is reported."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Style-marking alignment is neither a claim label, a creativity score, nor a"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "measure of model alignment."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Requested style-marking level is available as contextual input during claim"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "recovery, and its effect is tested rather than assumed."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Every recovered claim must remain warranted by linguistic evidence in the"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "produced response, and the observed level records the marking actually"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "produced."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Existing evaluators use claim decomposition, natural-language inference, or"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "semantic similarity, while model-based judges may prioritize style or apply a"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "narrower subset of human criteria"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\citep{min_factscore_2023,chen_menli_2023,aynetdinov_semscore_2024,feuer_style_2025,lyu_converge_2026}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The cited work does not hold a canonical claim fixed while wording varies;"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "whether current pipelines recover the same claims across matched style variants"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "remains an open empirical question."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The truth contract addresses the remaining question for a claim that the task"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "oracle leaves \\textsc{unknown}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "For such a claim, permission scope and required status marking determine whether"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "the label is licensed divergence or hallucination."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\textbf{Reading guide.}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The horizontal placement groups nominal task profiles; it is not an ordinal"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "permission scale."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Vertical offsets prevent overlap and do not define ordered categories; the box"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "text reports each resource group's treatment of requested style marking."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Only WritingBench scores requested style, and no selected resource holds"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "canonical claim content fixed while manipulating it."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Task-oracle type is reported in Appendix~\\ref{app:mapping} and is not encoded"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "by horizontal distance."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Box color indicates the nominal task profile only."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The dashed line connects the strict grounding resources to the empty region"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "directly above them, in the same profile column."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Row numbers identify the resources in"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Tables~\\ref{tab:full-mapping-factual-a}--\\ref{tab:full-mapping-creative}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "};"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\end{tikzpicture}%"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\caption{\\textbf{Selected resources by nominal task profile and treatment of"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "requested style-marking level.}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Horizontal placement groups nominal task profiles, while vertical offsets are"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "schematic and prevent overlap; the box text reports treatment of requested"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "style marking."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "WritingBench is the only selected resource that scores requested style, but it"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "does not hold canonical claim content fixed. The remaining resources do not"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "control requested style for a claim-preserving comparison. No selected resource"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "manipulates it while holding canonical claim content fixed."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The empty region at the top left highlights this absence for strict grounding,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "and the dashed line links it to the strict grounding resources below."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "In our selected sample, no resource separately represents the task oracle,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "permission scope, and required status marking while also controlling"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "claim-preserving style variation."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "This broader result is established by the coding in"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Appendix~\\ref{app:mapping}, not by the geometry of this figure."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Positions, box sizes, colors, and overlaps do not encode measured distance,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "prevalence, model performance, or an ordinal permission scale.}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\label{fig:profiles}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\paragraph{Case B (multi-factor): a contextualization boundary across historical"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "and fictional frames}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "This case is not a single-factor contrast: changing the discourse frame also"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "changes the task oracle, the permission scope, and the contextualized claim."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\textbf{Purpose.} To test that the recovered claim itself depends on the"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "discourse frame, so that identical strings need not express identical claims."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\par\\textbf{Fixed.} The constructed string ``Caf\\'e Verdier existed in 1920s Paris.''"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\par\\textbf{Changed.} The historical task uses a register that is declared"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "exhaustive and contains no Verdier entry. The fiction task instead uses declared"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "story-world constraints. Changing the frame therefore changes the task oracle"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$O$, the permission scope $\\Gamma$, and the contextualized claim. Because the"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "historical register is declared exhaustive, its silence entails the claim's"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "negation. A bounded but non-exhaustive oracle would instead leave the claim"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\textsc{unknown}, as in Figure~\\ref{fig:prompt-to-claim}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\par\\textbf{Predicted result.} In the historical task, the recovered claim"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "concerns the real world and receives the hallucination label with reason code"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\textsc{contradicted}. In the fiction task, the recovered story-world claim is"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\textsc{unknown} and receives the licensed-divergence label. This constructed"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "comparison illustrates why identical strings need not express identical"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "contextualized claims."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\paragraph{Case C: changing the observed status marking}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "This controlled contrast restates the clinical pair from"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Section~\\ref{subsec:contract}. The permission scope allows a candidate"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "diagnosis. The required status marking requires an unconfirmed diagnosis to be"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "hedged."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\textbf{Purpose.} To test that permission alone is not enough: presentation is"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "part of the contract."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\par\\textbf{Fixed.} The task oracle $O$, $\\Gamma$, $\\mu$, the proposition"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "that the patient has early Lyme disease, and its \\textsc{unknown} evidence"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "state."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\par\\textbf{Changed.} Only the observed status marking $m^*$."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\par\\textbf{Predicted result.} ``This is early Lyme disease'' receives the"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "hallucination label with reason code \\textsc{marking-failure}, whereas ``this may"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "be early Lyme disease, but serology is required'' receives the"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "licensed-divergence label. The proposition, the evidence state, and all three"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "contract fields are identical across the pair; only the wording that signals"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "epistemic status differs."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\paragraph{Case D: testing a scope boundary}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "This case continues the fiction task of Case~B, where the declared story-world"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "frame already licenses invention."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\textbf{Purpose.} To test that a permission scope has a boundary, and that the"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Together, the cases isolate changes in the task oracle, discourse frame,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "observed status marking, permission scope, and surface realization."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Their predictions define tests for the annotation and benchmark studies below."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "he truth of a proposition is not task-relative, but its classification as a"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "contract violation can be."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The task oracle determines whether the proposition is entailed, contradicted,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "or unknown; permission scope and required status marking determine how an"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "unknown claim is labeled."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The truth contract therefore changes the evaluation label, not what is true."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "A licensed-divergence label records permission and compliant presentation; it"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "does not establish the truth of the claim."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "These lower bounds concern what is unavoidable in principle; they do not"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "describe current deployment error rates. Scale and recency are also not"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "sufficient proxies for those rates."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "A-Omniscience tests closed-book factual"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "reliability by asking models to answer when confident and abstain otherwise. Its"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Omniscience Index subtracts incorrect from correct answers across all items. It"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "also reports a benchmark-specific hallucination rate: the share of non-correct"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "answers that are confidently wrong rather than partial or declined"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\citep{jackson_aaomniscience_2025}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Its launch analysis found that contemporaneous overall capability did not"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "reliably predict a low hallucination rate and that larger open-weight models did"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "not consistently hallucinate less. An August 2026 leaderboard snapshot likewise"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "shows wide dispersion across disclosed parameter counts and release dates"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "(Appendix~\\ref{app:omniscience}). We draw only this conclusion: scale, general"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "capability, and recency are not sufficient proxies for factual reliability."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The question of how an evaluation should treat evidence-unknown content"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "therefore does not disappear as models improve."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\subsection{Response-Level Interpretation}"
+        }
+      ]
+    }
+  ]
+}

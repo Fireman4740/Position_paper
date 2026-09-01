@@ -199,19 +199,22 @@ any designated tool or environment state.
 Evaluating a claim takes two distinct steps. First, claim verification assigns
 one of three \emph{evidence states} relative to the standard the task uses to
 settle claims, which we call its \emph{task oracle}: \textsc{entailed},
-\textsc{contradicted}, or \textsc{unknown}. Here, \textsc{unknown} means only
-that the task oracle neither entails nor contradicts the claim; it is not a
+\textsc{contradicted}, or \textsc{unknown}. An evidence state records only the
+relation between the claim and that oracle. Here, \textsc{unknown} means that
+the oracle does not establish the claim and does not rule it out; it is not a
 statement about all possible knowledge.
 
 Second, the framework maps that evidence state to one of three \emph{claim
 labels}: grounded, hallucination, or licensed divergence. Entailed claims are
 grounded and contradicted claims are hallucinations; only \textsc{unknown}
-claims need the permission-scope and required-status-marking checks.
+claims need the permission-scope and required-status-marking checks. A claim
+label therefore records the claim's standing under the complete task, not only
+its relation to the oracle.
 
 Figure~\ref{fig:prompt-to-claim} makes this distinction concrete. The claim
-that the complete Rosetta Stone stood near a temple entrance is neither
-entailed nor contradicted by the frozen excerpt, so its evidence state is
-\textsc{unknown} in both tasks. The factual prompt $p_1$ forbids an added
+that the complete Rosetta Stone stood near a temple entrance is not established
+by the frozen excerpt, and the excerpt does not rule it out. Its evidence state
+is therefore \textsc{unknown} in both tasks. The factual prompt $p_1$ forbids an added
 reconstruction and therefore labels the claim hallucination; the creative
 prompt $p_2$ permits one clearly marked reconstruction and therefore labels the
 same claim licensed divergence. Figure~\ref{fig:profiles} shows the broader
@@ -310,7 +313,7 @@ required status marking $\mu$ specifies how that content must be presented.
      \textbf{One possible reconstruction places the complete stele near a
      temple entrance, like a public noticeboard carved in stone.}''\\[2pt]
      \textbf{\upshape Claim checked:} the complete stele stood near a temple
-     entrance. The excerpt neither confirms nor rejects it.};
+     entrance. The excerpt does not confirm or reject it.};
 
   \coordinate (result-row-top) at ([yshift=-0.60cm]span.south);
   \node[resultH,anchor=north east] (hall)
@@ -447,12 +450,13 @@ complete stele near a temple entrance.''
 The evaluator first interprets the span in this task context. It recovers one
 contextualized claim: the complete stele stood near a temple entrance.
 
-The evaluator then canonicalizes the claim into two components. The normalized
-content $q^*$ records what is claimed, including entities, predicates,
-negation, quantities, and temporal scope. The observed status marking $m^*$
-records how the response presents the claim, including epistemic modality and
-relevant discourse framing. Here, $m^*$ records that the placement is offered
-as possible rather than asserted as established.
+The evaluator then canonicalizes the claim into two components. The content
+component $q^*$ states, in normalized form, what the response claims: here, that
+the complete stele stood near a temple entrance. It preserves details that
+change that content, such as negation, quantity, and time. The observed status
+marking $m^*$ records how the response presents the claim. Here, the words
+``One possible reconstruction'' mark the placement as a possibility rather
+than as an established fact.
 \begin{figure}[!t]
 \centering
 \resizebox{\textwidth}{!}{%
@@ -514,7 +518,7 @@ as possible rather than asserted as established.
     you may add one plausible reconstruction, marked as conjecture.''};
 
   % All three truth-contract fields share one visual row.
-  \node[lab] at (-7.75,4.85)
+  \node[lab] at (-8.55,4.85)
     {truth contract};
   \node[archive,anchor=east] (archive) at (-1.50,4.85)
     {\textbf{Task oracle $O$}\\
@@ -525,7 +529,7 @@ as possible rather than asserted as established.
     temple.''};
   \node[contract,text width=2.90cm,minimum height=2.25cm]
     (scope) at (0.35,4.85)
-    {$\Gamma$ \emph{permission scope}\\Rosetta Stone facts and one\\marked historical reconstruction};
+    {$\Gamma$ \emph{permission scope}\\one plausible historical\\reconstruction};
   \node[contract,text width=2.90cm,minimum height=2.25cm]
     (mark) at (3.75,4.85)
     {$\mu$ \emph{required status marking}\\conjecture stated as such};
@@ -629,21 +633,23 @@ entrance placement and the incorrect date are constructed test claims.}
 \end{figure}
 \FloatBarrier
 
-Next, the evaluator compares $q^*$ with the task oracle $O$. The excerpt neither
-entails nor contradicts the placement, so the evidence state is
-\textsc{unknown}. Because the oracle leaves the claim unknown, the evaluator
-checks the remaining contract fields. The claim falls inside the permission
-scope, which allows one marked reconstruction. Its observed status marking also
-satisfies the requirement to present that reconstruction as conjecture. The
-claim therefore receives the licensed-divergence label rather than the
-hallucination label.
+Next, the evaluator compares $q^*$ with the task oracle $O$. The excerpt does
+not establish this placement, and it does not rule the placement out. Its
+evidence state is therefore \textsc{unknown}. An evidence state records only the
+relation between $q^*$ and $O$; the claim label will also take the remaining
+contract fields into account. The prompt allows one plausible reconstruction,
+so this $q^*$ lies inside the permission scope. The words ``One possible
+reconstruction'' provide the observed status marking $m^*$ and present the
+claim as conjecture, as $\mu$ requires. The claim therefore receives the
+licensed-divergence label rather than the hallucination label.
 
 Under the strict-grounding task in Figure~\ref{fig:prompt-to-claim}, the
-permission scope is empty. The same claim would therefore receive the
-hallucination label with reason code \textsc{out-of-scope}, even though its
-evidence state would remain \textsc{unknown}. Requested and observed writing
-style are compared separately. Style neither creates nor excuses a
-truth-conditional claim.
+permission scope is empty: the task permits no claim that $O$ leaves unknown.
+The same temple-entrance claim would therefore receive the hallucination label
+with reason code \textsc{out-of-scope}, even if the response called it
+``possible.'' Requested and observed writing style are evaluated separately.
+A stylistic choice does not create a truth-conditional claim and cannot make an
+unauthorized claim permissible.
 
 Claim labeling has two phases. The first prepares the claim. The second assigns
 its label and branches exactly once.
@@ -651,17 +657,21 @@ its label and branches exactly once.
 \begin{description}
   \item[Preparation.] The evaluator selects a \emph{response span}, that is, a
         contiguous stretch of the response treated as one unit of
-        interpretation, typically a clause or a sentence.
-        It recovers the contextualized claims to which the span commits. Each
-        claim is then canonicalized into normalized content $q^*$ and observed
-        status marking $m^*$.
+        interpretation, typically a clause or a sentence. In
+        Figure~\ref{fig:claim-label-annotation}, the selected span is ``One
+        possible reconstruction places the complete stele near a temple
+        entrance.'' Reading it in the task context recovers the claim that the
+        complete stele stood near a temple entrance, then separates its content
+        $q^*$ from its observed status marking $m^*$.
   \item[Decision.] The evaluator compares $q^*$ with $O$ and records its
         evidence state. For an \textsc{entailed} or \textsc{contradicted}
         claim, the evidence state determines the label, and no further check
         applies. An \textsc{unknown} claim proceeds to two checks: whether
         $q^*$ falls inside $\Gamma$ and, if it does, whether $m^*$ satisfies
-        $\mu$. The evaluator then assigns the claim label and, for a
-        violation, its reason code.
+        $\mu$. In the Rosetta Stone example, the temple-entrance reconstruction
+        lies inside $\Gamma$, and the word ``possible'' makes $m^*$ satisfy
+        $\mu$. The evaluator then assigns the claim label and, for a violation,
+        its reason code.
 \end{description}
 
 The evidence state directly settles the label for \textsc{entailed} and
@@ -692,11 +702,13 @@ observed level is a response-level measurement used in prompt--response
 style-marking alignment.
 Only $O$, $\Gamma$, and $\mu$ enter the claim-labeling rule.
 
-When instructions conflict, the evaluator must state the precedence of system
-and user instructions and how applicable safety, legal, and domain constraints
-bound the permission scope from outside.
-A user request cannot override those constraints by redefining the task oracle
-or permission scope.
+When a task context contains conflicting instructions, the evaluator first
+identifies the applicable instructions and records their precedence. It also
+records any external limits that apply to the task, such as a governing safety
+policy, a legal restriction, or a domain-specific professional rule. The
+evaluator then specifies $O$, $\Gamma$, and $\mu$ from that resolved context. A
+user instruction cannot override an applicable external limit by redefining the
+task oracle or widening the permission scope.
 
 \paragraph{Task oracle ($O$)}
 The task oracle is the standard a task uses to determine whether a claim is
@@ -730,13 +742,16 @@ Appendix~\ref{app:diagnostics} records such implementation failures rather than
 converting them into claim labels.
 
 \paragraph{Permission scope ($\Gamma$)}
-Return to the clinical assistant of Section~\ref{sec:intro}, now asked to list
-candidate explanations of a patient's symptoms. The task lets the response
-raise a possible diagnosis the record does not establish, and forbids it to
-supply a drug dose the record does not contain. Both are claims the evidence
-leaves unknown; only one is authorized.
-$\Gamma$ records that difference. It specifies the topics, entities, claim
-types, or fictional world in which evidence-unknown content may be introduced.
+Return to the Rosetta Stone task. The excerpt does not establish the exact
+placement of the complete stele, but the prompt permits one plausible
+historical reconstruction. The constructed claim that the stele stood near a
+temple entrance can therefore fall inside $\Gamma$. By contrast, the
+constructed prediction that the stone will be returned to Egypt next year is
+also left unknown by the excerpt, but it is a future prediction rather than the
+historical reconstruction the prompt authorizes. $\Gamma$ records this
+difference. It specifies the topics,
+entities, claim types, or fictional world in which evidence-unknown content may
+be introduced.
 A factual-only task has an empty permission scope: every truth-conditional
 claim must be entailed by the task oracle $O$.
 Searle's account of fictional discourse provides indirect support for
@@ -746,22 +761,23 @@ We operationalize that distinction through permission scope, which may
 include invented characters and events while excluding claims about named
 real people.
 
-Permission scope records authorization, not value.
-The check therefore asks what the task allows, not what is worth saying: a
-carefully reasoned but invented drug dose still receives the hallucination
-label, whereas an unhelpful but in-frame fictional invention still receives the
-licensed-divergence label and a low score on whatever usefulness criterion the
-task defines.
-Section~\ref{subsec:creativity} situates this separation against creativity
-evaluation, which scores value on its own terms.
+Permission scope records authorization, whereas creativity or usefulness
+criteria record value. The scope check therefore asks what the task allows, not
+whether the content is useful or well written. An authorized but unhelpful
+Rosetta Stone reconstruction can receive the licensed-divergence label and a
+low usefulness score. A compelling invention about a later event still
+receives the hallucination label when it falls outside $\Gamma$.
+Section~\ref{subsec:creativity} relates this separation between authorization
+and value to creativity evaluation, which scores value on its own terms.
 
 \paragraph{Required status marking ($\mu$)}
 $\mu$ specifies how the response must signal an evidence-unknown claim.
 The signal may be a local hedge, a hypothesis label, a section heading, or a
 task-level fictional frame.
-In the clinical task above, ``this may be early Lyme disease, but serology is
-required'' satisfies the required status marking, while ``this is early Lyme
-disease'' does not.
+In the Rosetta Stone task, ``One possible reconstruction places the complete
+stele near a temple entrance'' satisfies the required status marking. ``The
+complete stele stood near a temple entrance'' presents the same content as
+established and does not satisfy it.
 The observed status marking $m^*$ is recovered from the complete response and
 task context because the relevant marker may appear outside the local span.
 The evaluator then compares $m^*$ with the required status marking to decide
@@ -777,23 +793,21 @@ complete response and task context yields one or more contextualized
 truth-conditional claims.
 The same wording can therefore yield different claims in fiction, metaphor, and
 hypothetical language.
-We reserve two terms for two different operations.
-\emph{Claim extraction} refers to existing methods that segment a response into
-checkable units; Section~\ref{subsec:extraction} reviews them.
-\emph{Claim recovery} refers to the broader, context-sensitive step that
-attributes claims to the response before canonicalization, and it is the step
-this rule relies on.
+We reserve two terms for different operations. \emph{Claim extraction} locates
+candidate text units that may be checked; Section~\ref{subsec:extraction}
+reviews existing extraction methods. \emph{Claim recovery} interprets each unit
+in the complete response and task context to determine what the response
+commits to. In the running example, extraction selects ``One possible
+reconstruction places the complete stele near a temple entrance.'' Recovery
+attributes the temple-entrance claim to the response while preserving that it
+is presented as conjecture.
 
-Before claim verification, the evaluator canonicalizes each recovered claim
-into two components, $q^*$ and $m^*$.
-The component $q^*$ records normalized truth-conditional content. This content
-includes entities, predicates, negation, quantities, temporal scope, and any
-attribution that changes what is claimed.
-The component $m^*$ records observed status marking, including relevant
-modality and fictional or hypothetical framing.
-This separation allows $q^*$ to be checked against the task oracle and
-permission scope without discarding the presentation information needed by
-$\mu$.
+Before verification, each recovered claim is again represented by $q^*$, what
+the response claims, and $m^*$, how the response presents that claim's status.
+For the running example, $q^*$ is the temple-entrance placement and $m^*$ marks
+that placement as possible. This separation lets the evaluator check the
+content against $O$ and $\Gamma$ while retaining the presentation information
+needed for $\mu$.
 
 Claim recovery follows three rules.
 First, commitments that can receive different evidence states are recovered
@@ -814,10 +828,11 @@ adding new content.
 Evaluation should therefore measure both directions against an independently
 adjudicated claim set.
 
-Some spans yield no truth-conditional claim at all.
-Such a span receives no claim label, and the absence of a label is a normal
-outcome rather than one of the failures defined in
-Appendix~\ref{app:diagnostics}.
+A span is only a contiguous fragment selected for interpretation; it need not
+assert a proposition. For example, ``Now imagine the scene'' is a response span
+but an instruction to the reader, not a truth-conditional claim. Such a span
+receives no claim label. This absence is a normal outcome rather than one of the
+failures defined in Appendix~\ref{app:diagnostics}.
 Figurative language is interpreted in the complete response and task context
 rather than literalized automatically.
 Every truth-conditional commitment recovered from the span is canonicalized
@@ -860,13 +875,13 @@ The three claim labels are grounded, hallucination, and licensed divergence.
 We abbreviate them as \Grd, \Hall, and \LD\ in the rule below, in figures, and
 in tables, and use the full names in running text.
 
-The two vocabularies are not redundant.
-An evidence state describes the relation between a claim and the task oracle; a
-claim label describes the standing of that claim under the task.
-Two of the three evidence states map onto a label one to one, but the
-hallucination label does not map back: it is reached from
-\textsc{contradicted}, and also from \textsc{unknown} by two different routes.
-That is why a claim label carries a reason code and an evidence state does not.
+The distinction introduced in the framework overview matters here. An evidence
+state describes only the relation between a claim and the task oracle; a claim
+label records that evidence state together with the applicable contract checks.
+\textsc{Entailed} maps to grounded and \textsc{contradicted} maps to
+hallucination. An \textsc{unknown} claim can instead map to licensed divergence
+or to hallucination, depending on $\Gamma$ and $\mu$. Claim labels therefore
+carry reason codes, whereas evidence states do not.
 We write \emph{grounded} rather than \emph{supported} for this label because
 fact-verification resources such as FEVER \citep{thorne_fever_2018} use
 \textsc{supported} for an evidence state, namely for what we call
@@ -923,11 +938,13 @@ that is both outside $\Gamma$ and asserted without the required hedge
 receives \textsc{out-of-scope}: the marking check applies only to claims the
 task permits.
 
-An explicit refusal or a statement such as ``the available evidence is
-insufficient'' is evaluated as a meta-claim about the evidence. It is not
-automatically treated as asserting the embedded proposition. Treating the
-refusal or insufficiency statement as a meta-claim prevents calibrated
-abstention from being mislabeled as hallucination.
+A refusal or an insufficiency statement can make a claim about the evidence
+without asserting the proposition under discussion. For example, ``The excerpt
+does not establish that the stele stood near a temple entrance'' says that $O$
+is insufficient for that placement; it does not assert that the placement
+occurred. The evaluator labels the recovered meta-claim unless the wider
+response also commits to the placement itself. This distinction prevents a
+calibrated refusal or abstention from being mislabeled as hallucination.
 
 \FloatBarrier
 
@@ -965,6 +982,17 @@ Where a study needs to index the three values, we write
 $\sigma\in\{0,1,2\}$; Section~\ref{sec:agenda} and
 Appendix~\ref{app:diagnostics} use that indexing to state factorial designs.
 
+This variable makes a specific robustness question testable: when the truth
+contract and canonical claim content remain fixed, does a change from plain
+exposition to metaphor or sustained voice change the claims that an evaluator
+recovers? Metaphorical wording is not licensed divergence by itself. The
+evaluator still recovers $q^*$, compares it with $O$ and $\Gamma$, and checks
+$m^*$ against $\mu$. An evidence-unknown claim expressed through metaphor can
+receive the licensed-divergence label only when it satisfies the same rule as
+any other claim. Recording style separately therefore tests whether a
+factuality or faithfulness pipeline mistakes rhetorical form for a change in
+commitment. It does not assume that such an error occurs.
+
 Because style is multi-dimensional, the three levels form a working
 discretization rather than a validated universal scale
 \citep{kang_style_2021,jin_deep_2022}.
@@ -977,8 +1005,8 @@ by the response. Their \emph{prompt--response style-marking alignment} is
 specifies no target. This provisional categorical rule may later be replaced
 by ordinal distance or tolerance. If either level cannot be adjudicated
 reliably, the component is withheld and a procedural failure is reported.
-Style-marking alignment is neither a claim label, a creativity score, nor a
-measure of model alignment.
+Style-marking alignment is not a claim label, a creativity score, or a measure
+of model alignment.
 
 Requested style-marking level is available as contextual input during claim
 recovery, and its effect is tested rather than assumed.
@@ -996,17 +1024,18 @@ remains an open empirical question.
 
 \section{Related Work}\label{sec:related}
 
-Each neighboring tradition contributes one part of the broader evaluation, but
-none makes the claim-labeling decision proposed here.
-Factuality and source-faithfulness evaluation relate claims to evidence.
-Claim-level evaluation defines the unit of analysis.
-Instruction-following evaluation represents task constraints.
-Creativity research separately evaluates novelty, usefulness, and response
-quality.
-The truth contract addresses the remaining question for a claim that the task
-oracle leaves \textsc{unknown}.
-For such a claim, permission scope and required status marking determine whether
-the label is licensed divergence or hallucination.
+Factuality and source-faithfulness evaluation relate claims to evidence, while
+creativity research evaluates properties such as novelty, usefulness, and
+response quality. These traditions answer different questions, but their
+targets intersect when a task asks for hypotheses, fictional detail, or other
+content that its evidence does not establish. A factuality judgment alone does
+not say whether that content was authorized, and a creativity score does not
+say whether it respected the task boundary. Claim-level evaluation supplies the
+unit of analysis, and instruction-following evaluation represents task
+constraints. The truth contract combines these inputs for the remaining
+claim-labeling decision: when $O$ leaves a claim \textsc{unknown}, $\Gamma$ and
+$\mu$ determine whether it is licensed divergence or hallucination. Its
+creative value remains a separate judgment.
 
 \subsection{Hallucination Taxonomies}
 
@@ -1170,7 +1199,7 @@ controllable trade-off rather than a single objective
 Usefulness and factual support therefore come apart empirically, not only
 conceptually.
 
-Neither creativity evaluation nor factuality--informativeness research supplies
+Creativity evaluation and factuality--informativeness research do not supply
 the decision our rule makes.
 Value is a property of the content that an evaluator scores after the fact.
 Permission scope is a property of the task that must be fixed before the
@@ -1364,87 +1393,6 @@ The task oracle is kept separate from quality, preference, novelty,
 feasibility, correctness, and general task-success criteria. Such criteria are
 not treated as $O$ unless the protocol uses them to establish or contradict the
 claim being adjudicated.
-
-\subsection{What the Coding Shows}\label{sec:mapping}
-
-The complete coding of the selected sample appears in Appendix
-Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}.
-The tables record whether each field is separately represented in an evaluation
-design, not whether the protocol manipulates that field experimentally.
-We report the three contract fields in turn, then the treatment of requested
-style-marking level.
-
-\paragraph{Task oracle}
-Thirty-five of the forty-one selected resources make an adjudication standard
-available, and our coding assigns each standard a type.
-The most common types are mixed or task-dependent (fifteen resources), source
-document (eight), and gold labels (six).
-The remaining types are environment or tool state (three), retrieval set (one),
-structured knowledge base (one), and specified human procedure (one).
-The other six resources are coded \emph{none identifiable} because their
-protocols provide no standard that can establish or contradict response claims.
-All six belong to the declared-frame invention and ideation profile.
-Thus, in the selected sample, the task oracle is the only contract field that
-most resources already represent separately.
-
-Quality, preference, novelty, feasibility, and correctness criteria are coded
-separately throughout.
-For example, the five constrained solution search resources use feasibility,
-tests, or specifications as task-success criteria. Their protocols do not use
-those criteria to establish or contradict an evaluated claim.
-
-\paragraph{Permission scope}
-No selected resource declares a permission scope.
-In all forty-one cases, our coding had to infer the scope from the task rather
-than read it from the protocol. The inferred values fall into three groups.
-All twenty-two resources of the strict grounding profile are coded
-\emph{inferred empty}: the design admits no evidence-unknown content, but no
-part of the protocol says so.
-Among the declared-frame resources, eight are coded \emph{implicit frame} and
-one is coded \emph{partial}. A story, task, or ideation frame licenses
-invention, but the design does not state its boundary. Nothing in the protocol
-therefore separates an in-frame invention from an out-of-frame one.
-The remaining ten are coded \emph{not separately represented}: the
-intent-evaluation resource, four resources in heterogeneous suites and tool use,
-and five constrained solution search resources.
-
-\paragraph{Required status marking}
-No selected resource scores required status marking as a separate dimension.
-Twenty-six are coded \emph{not scored}, and fifteen \emph{not separated},
-meaning that a relevant marking criterion is absorbed into a broader task or
-rubric rather than assessed on its own.
-Nothing in the selected designs therefore distinguishes a permitted claim that
-was hedged as the task required from the same claim asserted as established.
-AA-Omniscience is the closest case. It explicitly permits abstention but folds
-abstention into its reliability metrics rather than representing it as licensed
-evidence-unknown content
-\citep{jackson_aaomniscience_2025}.
-
-\paragraph{Requested style-marking level}
-One resource, WritingBench \citep{wu_writingbench_2025}, scores a requested
-style constraint; the other forty leave the requested style-marking level
-uncontrolled.
-No selected resource, including WritingBench, holds canonical claim content
-fixed while manipulating that level.
-Question~7 is therefore uniformly \emph{not applicable} in the selected sample
-and is not repeated as a separate column in Appendix~\ref{app:mapping}.
-General writing quality, creativity, or linguistic complexity is evaluated in
-several creative-writing resources, but scoring those properties is not the
-same as controlling the requested level with the claim held constant.
-Consequently, the selected factuality and faithfulness resources do not test
-whether claim-preserving style variation changes claim recovery or claim
-labels. Whether their verifiers are sensitive to such variation remains an open
-question.
-
-\paragraph{The missing combination}
-In our selected sample, no resource separately represents the task oracle,
-permission scope, and required status marking while also controlling
-claim-preserving style variation.
-This absence is not a low value on a scale. It is a combination of design
-features that no selected protocol implements.
-Figure~\ref{fig:profiles} summarizes the pattern by nominal task profile and
-treatment of requested style-marking level.
-
 \begin{figure}[!ht]
 \centering
 \resizebox{\textwidth}{!}{%
@@ -1545,45 +1493,108 @@ treatment of requested style-marking level.
 
 \node[note,text width=13.5cm] at (7.40,-1.62) {
 \textbf{Reading guide.}
-The horizontal placement groups nominal task profiles; it is not an ordinal
-permission scale.
-Vertical offsets prevent overlap and do not define ordered categories; the box
-text reports each resource group's treatment of requested style marking.
-Only WritingBench scores requested style, and no selected resource holds
-canonical claim content fixed while manipulating it.
-Task-oracle type is reported in Appendix~\ref{app:mapping} and is not encoded
-by horizontal distance.
-Box color indicates the nominal task profile only.
-The dashed line connects the strict grounding resources to the empty region
-directly above them, in the same profile column.
-Row numbers identify the resources in
-Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}.
+Horizontal position and color indicate nominal task profile; vertical offsets
+only prevent overlap. Box text reports treatment of requested style marking,
+and the dashed line links the strict-grounding resources to the missing
+combination above them. Row numbers refer to
+Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}; no
+geometry encodes distance, order, prevalence, or performance.
 };
 \end{tikzpicture}%
 }
 
 \caption{\textbf{Selected resources by nominal task profile and treatment of
 requested style-marking level.}
-Horizontal placement groups nominal task profiles, while vertical offsets are
-schematic and prevent overlap; the box text reports treatment of requested
-style marking.
 WritingBench is the only selected resource that scores requested style, but it
 does not hold canonical claim content fixed. The remaining resources do not
-control requested style for a claim-preserving comparison. No selected resource
-manipulates it while holding canonical claim content fixed.
-The empty region at the top left highlights this absence for strict grounding,
-and the dashed line links it to the strict grounding resources below.
-In our selected sample, no resource separately represents the task oracle,
-permission scope, and required status marking while also controlling
-claim-preserving style variation.
-This broader result is established by the coding in
-Appendix~\ref{app:mapping}, not by the geometry of this figure.
-Box color indicates the nominal task profile only.
-Positions, box sizes, colors, and overlaps do not encode measured distance,
-prevalence, model performance, or an ordinal permission scale.}
+control requested style in a claim-preserving comparison. The empty top-left
+region marks this missing combination for strict grounding. The coding in
+Appendix~\ref{app:mapping}, rather than the figure geometry, supports the
+broader result that no selected resource represents all three truth-contract
+fields while controlling claim-preserving style variation.}
 \label{fig:profiles}
 \end{figure}
 \FloatBarrier
+\subsection{What the Coding Shows}\label{sec:mapping}
+
+The complete coding of the selected sample appears in Appendix
+Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}.
+The tables record whether each field is separately represented in an evaluation
+design, not whether the protocol manipulates that field experimentally.
+We report the three contract fields in turn, then the treatment of requested
+style-marking level.
+
+\paragraph{Task oracle}
+Thirty-five of the forty-one selected resources make an adjudication standard
+available, and our coding assigns each standard a type.
+The most common types are mixed or task-dependent (fifteen resources), source
+document (eight), and gold labels (six).
+The remaining types are environment or tool state (three), retrieval set (one),
+structured knowledge base (one), and specified human procedure (one).
+The other six resources are coded \emph{none identifiable} because their
+protocols provide no standard that can establish or contradict response claims.
+All six belong to the declared-frame invention and ideation profile.
+Thus, in the selected sample, the task oracle is the only contract field that
+most resources already represent separately.
+
+Quality, preference, novelty, feasibility, and correctness criteria are coded
+separately throughout.
+For example, the five constrained solution search resources use feasibility,
+tests, or specifications as task-success criteria. Their protocols do not use
+those criteria to establish or contradict an evaluated claim.
+
+\paragraph{Permission scope}
+No selected resource declares a permission scope.
+In all forty-one cases, our coding had to infer the scope from the task rather
+than read it from the protocol. The inferred values fall into three groups.
+All twenty-two resources of the strict grounding profile are coded
+\emph{inferred empty}: the design admits no evidence-unknown content, but no
+part of the protocol says so.
+Among the declared-frame resources, eight are coded \emph{implicit frame} and
+one is coded \emph{partial}. A story, task, or ideation frame licenses
+invention, but the design does not state its boundary. Nothing in the protocol
+therefore separates an in-frame invention from an out-of-frame one.
+The remaining ten are coded \emph{not separately represented}: the
+intent-evaluation resource, four resources in heterogeneous suites and tool use,
+and five constrained solution search resources.
+
+\paragraph{Required status marking}
+No selected resource scores required status marking as a separate dimension.
+Twenty-six are coded \emph{not scored}, and fifteen \emph{not separated},
+meaning that a relevant marking criterion is absorbed into a broader task or
+rubric rather than assessed on its own.
+Nothing in the selected designs therefore distinguishes a permitted claim that
+was hedged as the task required from the same claim asserted as established.
+AA-Omniscience is the closest case. It explicitly permits abstention but folds
+abstention into its reliability metrics rather than representing it as licensed
+evidence-unknown content
+\citep{jackson_aaomniscience_2025}.
+
+\paragraph{Requested style-marking level}
+One resource, WritingBench \citep{wu_writingbench_2025}, scores a requested
+style constraint; the other forty leave the requested style-marking level
+uncontrolled.
+No selected resource, including WritingBench, holds canonical claim content
+fixed while manipulating that level.
+Question~7 is therefore uniformly \emph{not applicable} in the selected sample
+and is not repeated as a separate column in Appendix~\ref{app:mapping}.
+General writing quality, creativity, or linguistic complexity is evaluated in
+several creative-writing resources, but scoring those properties is not the
+same as controlling the requested level with the claim held constant.
+Consequently, the selected factuality and faithfulness resources do not test
+whether claim-preserving style variation changes claim recovery or claim
+labels. Whether their verifiers are sensitive to such variation remains an open
+question.
+
+\paragraph{The missing combination}
+In our selected sample, no resource separately represents the task oracle,
+permission scope, and required status marking while also controlling
+claim-preserving style variation.
+This absence is not a low value on a scale. It is a combination of design
+features that no selected protocol implements.
+Figure~\ref{fig:profiles} summarizes the pattern by nominal task profile and
+treatment of requested style-marking level.
+
 
 These results identify a design gap but do not show how the rule behaves at
 its boundaries. The worked cases below make the predicted outcomes explicit,
@@ -1662,12 +1673,12 @@ are developed below.
   \node[condition] (b-before) at (5.70,-1.55)
     {Historical frame};
   \node[condition] (b-after) at (10.00,-1.55)
-    {Fictional frame; therefore $O$, $\Gamma$, and $q^*$ also change};
+    {Declared fictional frame; contract and contextualized claim change};
   \draw[transition] (b-before.east) --
     node[transitionlabel,above] {frame changes} (b-after.west);
   \node[outcome] (b-result) at (14.55,-1.55)
-    {\textbf{Evidence:} \textsc{contradicted} $\to$ \textsc{unknown}\\
-     \textbf{Label:} \textcolor{casered}{\Hall{} (\textsc{contradicted})}
+    {\textbf{Evidence:} \textsc{unknown} $\to$ \textsc{unknown}\\
+     \textbf{Label:} \textcolor{casered}{\Hall{} (\textsc{out-of-scope})}
      $\to$ \textcolor{casegreen}{\LD}};
   \draw[transition] (b-after.east) --
     node[transitionlabel,above] {evaluate} (b-result.west);
@@ -1692,11 +1703,11 @@ are developed below.
   % Case D
   \node[caselabel] at (0,-4.65) {D};
   \node[fixed] (d-fixed) at (2.00,-4.65)
-    {Fiction task context:\\$O$, $\Gamma$, and $\mu$};
+    {Rosetta task context:\\$O$, $\Gamma$, $\mu$, and $m^*$};
   \node[condition] (d-before) at (5.70,-4.65)
-    {Claim content $q^*$:\\invented establishment};
+    {Claim content $q^*$:\\historical reconstruction};
   \node[condition] (d-after) at (10.00,-4.65)
-    {Claim content $q^*$:\\attribution to a real person};
+    {Claim content $q^*$:\\future transfer prediction};
   \draw[transition] (d-before.east) --
     node[transitionlabel,above] {content crosses scope} (d-after.west);
   \node[outcome] (d-result) at (14.55,-4.65)
@@ -1713,7 +1724,7 @@ are developed below.
   \node[condition] (e-before) at (5.70,-6.20)
     {$\sigma$: neutral;\\surface: neutral};
   \node[condition] (e-after) at (10.00,-6.20)
-    {$\sigma$: marked;\\surface: marked};
+    {style level$\sigma$: marked;\\surface: marked};
   \draw[transition] (e-before.east) --
     node[transitionlabel,above] {style only} (e-after.west);
   \node[outcome] (e-result) at (14.55,-6.20)
@@ -1752,56 +1763,57 @@ This case is not a single-factor contrast: changing the discourse frame also
 changes the task oracle, the permission scope, and the contextualized claim.
 \textbf{Purpose.} To test that the recovered claim itself depends on the
 discourse frame, so that identical strings need not express identical claims.
-\par\textbf{Fixed.} The constructed string ``Caf\'e Verdier existed in 1920s Paris.''
-\par\textbf{Changed.} The historical task uses a register that is declared
-exhaustive and contains no Verdier entry. The fiction task instead uses declared
-story-world constraints. Changing the frame therefore changes the task oracle
-$O$, the permission scope $\Gamma$, and the contextualized claim. Because the
-historical register is declared exhaustive, its silence entails the claim's
-negation. A bounded but non-exhaustive oracle would instead leave the claim
-\textsc{unknown}, as in Figure~\ref{fig:prompt-to-claim}.
-\par\textbf{Predicted result.} In the historical task, the recovered claim
-concerns the real world and receives the hallucination label with reason code
-\textsc{contradicted}. In the fiction task, the recovered story-world claim is
-\textsc{unknown} and receives the licensed-divergence label. This constructed
-comparison illustrates why identical strings need not express identical
-contextualized claims.
+\par\textbf{Fixed.} The constructed string ``The complete stele stood near a
+temple entrance.''
+\par\textbf{Changed.} The historical condition asks for a strictly grounded
+museum label based on the bounded Rosetta Stone excerpt. The fictional
+condition places the same sentence inside a declared alternate-history story.
+Changing the frame therefore changes $O$, $\Gamma$, the required frame-level
+marking, and the contextualized claim.
+\par\textbf{Predicted result.} In the historical condition, the sentence makes
+a real-world claim that the excerpt leaves \textsc{unknown}; because
+$\Gamma=\varnothing$, it receives the hallucination label with reason code
+\textsc{out-of-scope}. In the fictional condition, it makes a story-world claim
+that is \textsc{unknown}, lies inside the fictional permission scope, and is
+marked by the declared frame. It therefore receives the licensed-divergence
+label. The comparison shows why unchanged wording need not express the same
+contextualized claim.
 
 \paragraph{Case C: changing the observed status marking}
-This controlled contrast restates the clinical pair from
-Section~\ref{subsec:contract}. The permission scope allows a candidate
-diagnosis. The required status marking requires an unconfirmed diagnosis to be
-hedged.
+This controlled contrast reuses the Rosetta Stone reconstruction from
+Section~\ref{subsec:contract}. The permission scope allows one plausible
+placement, and the required status marking requires it to be presented as
+conjecture.
 \textbf{Purpose.} To test that permission alone is not enough: presentation is
 part of the contract.
-\par\textbf{Fixed.} The task oracle $O$, $\Gamma$, $\mu$, the proposition
-that the patient has early Lyme disease, and its \textsc{unknown} evidence
-state.
+\par\textbf{Fixed.} The task oracle $O$, $\Gamma$, $\mu$, the content $q^*$
+that the complete stele stood near a temple entrance, and its \textsc{unknown}
+evidence state.
 \par\textbf{Changed.} Only the observed status marking $m^*$.
-\par\textbf{Predicted result.} ``This is early Lyme disease'' receives the
-hallucination label with reason code \textsc{marking-failure}, whereas ``this may
-be early Lyme disease, but serology is required'' receives the
-licensed-divergence label. The proposition, the evidence state, and all three
-contract fields are identical across the pair; only the wording that signals
-epistemic status differs.
+\par\textbf{Predicted result.} ``The complete stele stood near a temple
+entrance'' receives the hallucination label with reason code
+\textsc{marking-failure}. ``One possible reconstruction places the complete
+stele near a temple entrance'' receives the licensed-divergence label. The
+content, evidence state, and all three contract fields are identical; only the
+wording that signals epistemic status differs.
 
 \paragraph{Case D: testing a scope boundary}
-This case continues the fiction task of Case~B, where the declared story-world
-frame already licenses invention.
+This case returns to the Rosetta Stone museum-label task, whose permission scope
+allows one marked historical reconstruction.
 \textbf{Purpose.} To test that a permission scope has a boundary, and that the
 boundary is drawn around content rather than around the frame.
-\par\textbf{Fixed.} The fiction task context of Case~B: its task oracle specifies
-the story-world frame, its permission scope permits invention inside that frame,
-and its frame-level required status marking is satisfied.
-\par\textbf{Changed.} The claim concerns either the invented establishment or a
-named real person presented as real history: ``Caf\'e Verdier stood on the rue
-de Seine'' against ``Ernest Hemingway drank at Caf\'e Verdier.''
-\par\textbf{Predicted result.} The in-frame claim about the invented
-establishment can receive the licensed-divergence label. The claim about the
-named real person asserts something about the actual world, falls outside
-$\Gamma$, and receives the hallucination label with reason code
-\textsc{out-of-scope}. The declared frame licenses invention within the story;
-it does not license real-world attribution.
+\par\textbf{Fixed.} The task oracle $O$, $\Gamma$, $\mu$, the \textsc{unknown}
+evidence state, and conjectural observed marking $m^*$.
+\par\textbf{Changed.} Only the content $q^*$: ``One possible reconstruction
+places the complete stele near a temple entrance'' versus the constructed
+prediction ``One possibility is that the stone will be returned to Egypt next
+year.''
+\par\textbf{Predicted result.} The historical reconstruction lies inside
+$\Gamma$ and receives the licensed-divergence label. The future transfer
+prediction is also \textsc{unknown} and marked as a possibility, but it is not
+the historical reconstruction that the task permits. It falls outside
+$\Gamma$ and receives the hallucination label with reason code
+\textsc{out-of-scope}.
 
 \paragraph{Case E: changing surface realization with a fixed claim}
 This case isolates a change in stylistic realization while holding both
@@ -1828,8 +1840,11 @@ failed this claim-preserving style-variation test.
 It would not, by itself, establish that style generally changes claim recovery.
 
 Together, the cases isolate changes in the task oracle, discourse frame,
-observed status marking, permission scope, and surface realization.
-Their predictions define tests for the annotation and benchmark studies below.
+observed status marking, permission scope, and surface realization. Their
+predicted transitions and invariances become the annotation and benchmark
+hypotheses in the research agenda: the first studies test whether the relevant
+fields can be recovered reliably, then whether controlled changes produce the
+labels predicted here.
 
 \section{Research Agenda}\label{sec:agenda}
 
@@ -2048,15 +2063,12 @@ position must remain limited to the distinctions stated below.
 
 \subsection{What Is Relative and What Is Not}\label{subsec:relative}
 
-The term \emph{relative} has a restricted evaluative meaning in this paper.
-The truth of a proposition is not task-relative, but its classification as a
-contract violation can be.
-The task oracle determines whether the proposition is entailed, contradicted,
-or unknown; permission scope and required status marking determine how an
-unknown claim is labeled.
-The truth contract therefore changes the evaluation label, not what is true.
-A licensed-divergence label records permission and compliant presentation; it
-does not establish the truth of the claim.
+In this paper, relativity applies to the evaluation label, not to the truth of a
+proposition. The task oracle determines whether $q^*$ is entailed,
+contradicted, or unknown; for an unknown claim, permission scope and required
+status marking determine whether the label is licensed divergence or
+hallucination. Licensed divergence therefore records authorization and
+compliant presentation, not established truth.
 
 This distinction also limits what follows from theoretical lower bounds.
 \citet{kalai_calibrated_2024} derive a statistical lower bound for
@@ -2070,22 +2082,19 @@ These results rely on different assumptions; none alone implies a constant
 deployment error rate or precludes statistically negligible rates in a
 specified setting \citep{suzuki_negligible_2025}.
 
-These lower bounds concern what is unavoidable in principle; they do not
-describe current deployment error rates. Scale and recency are also not
-sufficient proxies for those rates. AA-Omniscience tests closed-book factual
-reliability by asking models to answer when confident and abstain otherwise. Its
-Omniscience Index subtracts incorrect from correct answers across all items. It
-also reports a benchmark-specific hallucination rate: the share of non-correct
-answers that are confidently wrong rather than partial or declined
-\citep{jackson_aaomniscience_2025}.
-Its launch analysis found that contemporaneous overall capability did not
-reliably predict a low hallucination rate and that larger open-weight models did
-not consistently hallucinate less. An August 2026 leaderboard snapshot likewise
-shows wide dispersion across disclosed parameter counts and release dates
-(Appendix~\ref{app:omniscience}). We draw only this conclusion: scale, general
-capability, and recency are not sufficient proxies for factual reliability.
-The question of how an evaluation should treat evidence-unknown content
-therefore does not disappear as models improve.
+These lower bounds concern unavoidable risk under stated assumptions; they do
+not estimate current deployment error rates. AA-Omniscience provides a narrower
+empirical illustration. It tests closed-book factual reliability under an
+answer-or-abstain protocol and reports a benchmark-specific hallucination rate
+\citep{jackson_aaomniscience_2025}. Its launch analysis finds that larger
+open-weight models do not consistently achieve lower hallucination rates. The
+August 26, 2026 leaderboard snapshot in Appendix~\ref{app:omniscience} likewise
+shows dispersion across disclosed parameter counts and release dates
+\citep{artificialanalysis_omniscience_leaderboard_2026}. This cross-sectional
+pattern is not a causal scaling law or a longitudinal trend. It shows only that,
+among the displayed configurations, scale and recency alone do not order
+factual reliability on this benchmark. The separate question of how evaluation
+should treat evidence-unknown content therefore remains.
 
 The theoretical lower bounds also do not imply that every claim left unknown by
 the task oracle should be suppressed.
@@ -2102,91 +2111,48 @@ quality \citep{sui_uncertainty_2026}.
 
 Appendix~\ref{app:diagnostics} defines the ordered content-verdict rule and the
 two additional components of the response-level record: style-marking alignment
-and creative-task success. This subsection states what that record does
-\emph{not} establish, because readers might otherwise overinterpret it.
+and creative-task success. Three cautions govern its interpretation.
 
-\textsc{Contract-compliant} is a weaker guarantee than it sounds. It does not
-mean the response is true. A response containing only licensed-divergence
-claims is contract-compliant even if every claim is false. In that case, the
-licensed-divergence labels record that the task authorized the divergence and
-that the response marked it as required. They do not record truth. A compliance
-rate would therefore be misleading if read as a reliability score in the tasks
-for which the framework was designed.
+First, \textsc{contract-compliant} does not mean true. A response containing
+only licensed-divergence claims may be compliant even when those claims are
+false, because the label records authorization and required marking rather than
+truth. A compliance rate is therefore not a factual-reliability score.
 
-\textsc{Indeterminate} is an evaluation outcome, not a missing value. It means
-that the evaluation could not be completed reliably. The failure lies in the
-evaluation procedure, not necessarily in the response. A benchmark that
-discards indeterminate items or folds them into another verdict converts a
-measurement failure into a claim about the model. Claim-recovery coverage
-requires an independently adjudicated set of commitments. The rate of
-indeterminate verdicts therefore also reflects how well the benchmark was
-constructed and should be reported as such.
+Second, \textsc{indeterminate} means that the evaluation could not be completed
+reliably; it does not by itself identify a response failure. Benchmarks should
+report this outcome rather than discard it or fold it into another verdict.
 
-Severity sits outside the rule for a different reason than the two reported
-components: it is not a competing dimension but a weight applied afterwards.
-An invented drug dose in the clinical task and an incorrect date on the museum
-label both receive the hallucination label although their consequences differ.
-Severity may order violations for triage or mitigation.
-It must not decide whether a violation occurred.
-If it did, the label would depend on the evaluator's estimate of harm rather
-than on the contract, and two evaluators with different risk models would
-disagree about a matter of fact.
-
-The response-level record should therefore accompany the claim trace. Any
-scalar derived from it answers a further, task-dependent question. Comparisons
-based on such a score should report their sensitivity to the chosen aggregation
-policy. The evaluation target remains text that is grounded where the task
-requires grounding, transparent where divergence is permitted, and aligned
-with the requested style-marking level.
+Third, severity may rank violations for later triage, but it must not determine
+whether a truth-contract violation occurred. The response-level record should
+therefore accompany the claim trace. Any scalar aggregation answers an
+additional, task-dependent question and should be reported with its aggregation
+policy.
 
 \subsection{Limitations and Safeguards}
 
-The proposal has seven immediate limitations.
-First, claim-level labels do not establish response-level validity, coherence,
-completeness, or relevance. A favorable distribution of claim labels therefore
-supports no conclusion about the response as a whole. Each property requires a
-separate test (Priority~4), as Section~\ref{subsec:global} explains.
+The proposal has three current boundaries. First, its claim labels do not
+measure response-level coherence, completeness, relevance, or global validity;
+those properties require separate tests (Priority~4), as
+Section~\ref{subsec:global} explains.
 
-Second, an ambiguous or inconsistent task context may prevent stable
-truth-contract specification.
-Priority~1 turns this limitation into an annotation question. The evaluator
-must state how system and user instructions are prioritized and which safety,
-legal, and domain constraints apply. Otherwise, it records a truth-contract
-specification failure and leaves the affected claim unlabeled.
+Second, implementation depends on a sufficiently specified task context, an
+adjudicable task oracle, and reliable claim recovery. Evaluators must resolve
+instruction precedence and applicable external constraints, specify $\Gamma$
+before inspecting the response, and report specification, adjudication, or
+recovery failures instead of assigning a default label (Priorities~1 and~3).
 
-Third, the task oracle is idealized as the adjudication standard that should be
-applied, but a concrete implementation may be incomplete, outdated,
-inaccessible, or internally conflicting.
-The evaluator should record a task-oracle adequacy or adjudication failure
-rather than automatically assigning the \textsc{unknown} evidence state
-(Priority~1).
+Third, the evidence base remains to be extended. The three-level style-marking
+scale is a working discretization whose effect on claim recovery is testable,
+and the purposive mapping describes only the selected resources. Independent
+reannotation and broader sampling are needed to assess reliability and
+prevalence beyond that sample. Appendix~\ref{app:mapping} provides the coding
+needed for those studies.
 
-Fourth, span selection, claim recovery, and canonicalization require judgment.
-Validation therefore requires independently adjudicated canonical claims and
-separate reporting of procedural failures and claim-recovery coverage
-(Priority~3).
-
-Fifth, permission scope must be specified from the task context before claim
-labeling and cannot be widened after inspecting a response to turn a
-fabrication into licensed divergence.
-Applicable safety, legal, and domain constraints also limit any permission scope
-specified by the user.
-
-Sixth, the three-level style-marking scale is not a validated universal model
-of style. Whether style affects claim recovery remains a testable hypothesis
-(Priorities~2 and~3). Style-marking alignment alone is not a measure of
-creativity.
-
-Seventh, the purposive mapping reports our own coding of the selected
-resources and is scoped to them by design.
-Future work could independently recode these resources or estimate the
-prevalence of the identified pattern in the broader literature. The published
-resource-level coding in Appendix~\ref{app:mapping} makes both extensions
-possible.
-
-The framework is a claim-centered evaluation procedure with a structured
-response-level interpretation; it is not a universal measure of truth,
-reasoning, creativity, usefulness, or safety.
+The first two boundaries concern the scope and implementation of the proposal;
+the third concerns the present state of validation. They constrain the claims
+that can be drawn without changing the paper's central distinction. The
+framework remains a claim-centered evaluation procedure, not a universal
+measure of truth, reasoning, creativity, usefulness, or safety.
 
 
 \section{Conclusion}\label{sec:conclusion}
@@ -2343,7 +2309,7 @@ recovered. Four failures have this effect.
 In each case the evaluator records the failure and leaves the affected span
 unlabeled.
 Silence is not one of these failures: a correctly instantiated bounded task
-oracle that neither entails nor contradicts a claim yields the
+oracle that does not entail or contradict a claim yields the
 \textsc{unknown} evidence state, which the contract is designed to handle.
 A blocking procedural failure produces an \textsc{indeterminate} content
 verdict rather than an automatic \textsc{unknown} evidence state.
