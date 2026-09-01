@@ -83,40 +83,149 @@ Evaluating LLM Divergence under Truth Contracts}
 \maketitle
 
 \begin{abstract}
-Language models can produce statements that are factually inexact without necessarily making an error. For example, a problem-solving answer may introduce a hypothetical step, and an explanation may use an analogy or metaphor that is not literally true; neither is necessarily a hallucination if the task permits it. A strict-grounding brief that asks only for supported facts would treat the same addition as a hallucination. The claim and its relation to the evidence are unchanged; only the task's authorization differs. An evidence-only evaluation calls the addition unknown and misses why the same output can receive different labels. Our purposive mapping of forty-one selected evaluation resources finds that thirty-five provide an identifiable adjudication standard. Yet the selected resources evaluate answers mainly against the evidence; none explicitly represents what the task allows beyond the evidence or how such additions should be marked. These findings characterize the selected designs, not the pattern's prevalence in the wider literature. We address this gap with a task's \emph{truth contract}, a simple way to judge an answer against both the available evidence and the task's instructions. Claims supported by the evidence remain supported, and claims that contradict it remain hallucinations. The framework separates claims that violate the task from departures that go beyond the evidence but are allowed and clearly marked. We call the latter \emph{licensed divergence}: task-compliant departures from the evidence, not claims that the evidence makes true. The rule is claim-level and does not assess reasoning, coherence, completeness, or relevance. Five worked cases illustrate its predictions, but this position paper does not test models; the framework remains to be evaluated empirically.
+The same sentence can be a hallucination in one task and an acceptable
+hypothesis in another. Evidence alone cannot explain this difference: the
+source and the claim may be unchanged while the instructions differ. Even as
+models become larger and more capable, hallucinations persist; this
+suggests that evaluations should distinguish harmful errors from clearly marked
+departures that may be useful in creative tasks. We propose the
+\emph{truth contract}, which states what evidence counts, what the
+task allows beyond it, and how uncertainty must be marked. At claim level, it
+separates grounded claims and hallucinations from \emph{licensed
+divergence} (content that goes beyond the evidence but is allowed and clearly
+marked). In a purposive mapping of current evaluation resources, the selected
+designs leave two aspects disconnected: factuality and faithfulness datasets
+check claims against evidence without asking whether a task permits useful
+divergence, whereas literary-creativity, problem-solving, and code-generation
+datasets focus on novelty, quality, feasibility, or task success without
+explicitly representing which claims must remain factually true. None explicitly
+combines permission beyond the evidence with a requirement to mark such
+divergence. This finding concerns only the selected resources. The paper
+does not evaluate models; empirical validation remains future work.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
 
-Large language models (LLMs) can produce fluent claims that are contradicted by
-the available evidence or cannot be verified from it
-\citep{ji_survey_2023,huang_survey_2025}.
-Such outputs can be errors in strict-grounding settings and can limit the use
-of LLMs in high-stakes applications.
-Research has therefore defined types of hallucination, built benchmarks to
-measure them, developed detection methods, and proposed mitigation strategies
-\citep{ji_survey_2023,huang_survey_2025}.
-Yet larger models do not reliably solve this problem: AA-Omniscience reports
-that larger open-weight models did not consistently hallucinate less
-\citep{jackson_aaomniscience_2025}.
+Large language models (LLMs) are used for tasks that range from knowledge-intensive
+question answering and document summarization to explanation, brainstorming, and
+creative writing. Across these uses, fluency is not enough: a response must make
+appropriate factual commitments, communicate uncertainty when needed, and serve
+the purpose of the task. Hallucination evaluation is therefore a reliability
+problem, but also a question of what should count as an error in context.
 
-A claim that the available evidence neither supports nor contradicts is not
-always an error.
-Fiction permits invention, and brainstorming can solicit novel suggestions
-rather than reproduction of available evidence
+LLMs can produce fluent claims that are contradicted by the available evidence
+or cannot be verified from it
+\citep{ji_survey_2023,huang_survey_2025}.
+Such outputs can mislead users and can limit the use of LLMs in high-stakes
+applications. Research has therefore defined types of hallucination, built
+benchmarks to measure them, developed detection methods, and proposed
+mitigation strategies
+\citep{ji_survey_2023,huang_survey_2025}.
+Even as newer models improve on general capabilities, AA-Omniscience shows that
+they still hallucinate and that larger open-weight models do not consistently
+hallucinate less \citep{jackson_aaomniscience_2025}.
+
+That conclusion matters because LLM deployments do not all ask for the same kind
+of response. In factual question answering or source-grounded summarization,
+unsupported content is normally an error. In an explanation, however, an
+analogy may be useful without being literally true; brainstorming and fiction
+may invite invention; and hypothesis generation may ask for possibilities that
+the available evidence leaves unsettled
 \citep{franceschelli_creativity_2024,jiang_survey_2024,rick_supermind_2023}.
-A hypothesis-generation task may likewise authorize explicitly marked
-propositions that the evidence leaves unknown.
-A clinical assistant asked what a patient's symptoms might indicate should be
-able to raise early Lyme disease as a possibility, but must not present it as
-established.
+Creativity research commonly distinguishes novelty from usefulness or quality
+\citep{runco_standard_2012,diedrich_are_2015}, while style-transfer research
+treats the form of a response as a separate, controllable property
+\citep{kang_style_2021}. A metaphor may therefore be valuable precisely because
+it is not a literal restatement of the source, while a factually correct answer
+may still fail a requested style. Factuality, source faithfulness, creativity,
+and response style consequently answer different evaluation questions.
 
-These tasks require two judgments. First, does the available information settle
-the claim? Second, if it does not, did the task authorize the response to
+An evidence-unknown claim is therefore not automatically an error. A clinical
+assistant asked what a patient's symptoms might indicate may raise early Lyme
+disease as a possibility, but must not present it as established. The crucial
+distinction is between introducing a possibility within the task's scope and
+asserting it as a fact.
+
+These settings require two judgments. First, does the available information
+settle the claim? Second, if it does not, did the task authorize the response to
 introduce that claim? We argue that hallucination judgments need both, whereas
 many evidence-based protocols operationalize only the first.
 Figure~\ref{fig:prompt-to-claim} illustrates the contrast with the museum-label
 task used throughout the paper.
+
+
+
+The museum example does not make factuality or source-faithfulness evaluation
+unnecessary; it clarifies their scope. Some tasks ask a model to reproduce facts
+from external knowledge, whereas others ask it to stay faithful to a supplied
+document. Still others ask it to solve a problem, explain an idea with an
+analogy, or write in a particular style. A statement that is not literally
+supported by the source may be useful in the latter tasks but erroneous in the
+former. We therefore treat factuality, source faithfulness, creativity, and
+response style as related but distinct requirements.
+
+Factuality evaluation compares generated claims with external knowledge
+sources, whereas source-faithfulness evaluation compares them with a provided
+source document
+\citep{maynez_faithfulness_2020,kryscinski_evaluating_2020,min_factscore_2023}.
+In the framework developed below, these resources instantiate the task oracle.
+
+Creativity research commonly distinguishes novelty from usefulness or quality
+\citep{runco_standard_2012,diedrich_are_2015};
+CreativityPrism, for example, evaluates quality, novelty, and diversity
+\citep{hou_creativityprism_2025}, and recent surveys and task-specific novelty
+metrics continue to refine these criteria
+\citep{ismayilzada_progress_2024,zhao_assessing_2025,namuduri_genie_2026}.
+These dimensions do not by themselves determine whether a novel factual claim
+violates a task constraint.
+Two protocols can therefore assign different labels to identical wording when
+their prompts establish different task conditions.
+
+\paragraph{Our position}
+We propose a claim-level evaluation rule under which the hallucination label is
+relative to the task's truth contract. By \emph{relative}, we mean that the
+evaluation label depends on the contract; the truth value of the underlying
+proposition does not.
+
+A \emph{claim} is a truth-conditional commitment attributed to the response:
+something the response presents as being the case and that can therefore be
+checked against evidence. An \emph{evaluator}, which may be a human annotator,
+an automated pipeline, or both, identifies these commitments.
+
+We write $p$ for the complete task context. It includes the prompt, applicable
+system instructions, dialogue history, domain constraints, attached data, and
+any designated tool or environment state.
+
+Evaluating a claim takes two distinct steps. First, claim verification assigns
+one of three \emph{evidence states} relative to the standard the task uses to
+settle claims, which we call its \emph{task oracle}: \textsc{entailed},
+\textsc{contradicted}, or \textsc{unknown}. Here, \textsc{unknown} means only
+that the task oracle neither entails nor contradicts the claim; it is not a
+statement about all possible knowledge.
+
+Second, the framework maps that evidence state to one of three \emph{claim
+labels}: grounded, hallucination, or licensed divergence. Entailed claims are
+grounded and contradicted claims are hallucinations; only \textsc{unknown}
+claims need the permission-scope and required-status-marking checks.
+
+Figure~\ref{fig:prompt-to-claim} makes this distinction concrete. The claim
+that the complete Rosetta Stone stood near a temple entrance is neither
+entailed nor contradicted by the frozen excerpt, so its evidence state is
+\textsc{unknown} in both tasks. The factual prompt $p_1$ forbids an added
+reconstruction and therefore labels the claim hallucination; the creative
+prompt $p_2$ permits one clearly marked reconstruction and therefore labels the
+same claim licensed divergence. Figure~\ref{fig:profiles} shows the broader
+design implication: the selected strict-grounding resources and creative suites
+are different nominal task profiles, while the highlighted gap is the absence
+of a selected resource that combines explicit contract fields with
+claim-preserving style variation. The evidence state stays the same; only the
+task-level label changes.
+
+We write the contract as $\TC=(O,\Gamma,\mu)$. Its three fields have separate
+roles. The task oracle $O$ settles the evidence state. The permission scope
+$\Gamma$ specifies which evidence-unknown content the task authorizes. The
+required status marking $\mu$ specifies how that content must be presented.
+\FloatBarrier
 
 \FloatBarrier
 \begin{figure}[!t]
@@ -238,89 +347,26 @@ label. Licensed divergence records permission and adequate marking, not truth.}
 \label{fig:prompt-to-claim}
 \end{figure}
 
-That example also shows why the surrounding evaluation literature matters.
-Some tasks ask a model to reproduce facts from external knowledge; others ask
-it to stay faithful to a supplied document. Still others ask it to solve a
-problem, explain an idea with an analogy, or write in a particular style. A
-statement that is not literally supported by the source may be useful in the
-latter tasks but erroneous in the former. We therefore need to see factuality,
-source faithfulness, creativity, and response style as related but distinct
-requirements.
+The evaluator also checks how the response presents each claim. In the Rosetta
+Stone example, the phrase ``One possible reconstructionldots'' presents the
+claim as a possibility, rather than as an established fact. This is the
+response's \emph{observed status marking}: a claim can be presented as
+established, hedged, or explicitly hypothetical. The evaluator compares this
+observed marking with the marking required by the task, $\mu$. If the response
+breaks either the task's permission or its marking requirement, a
+\emph{reason code} records why.
 
-Factuality evaluation compares generated claims with external knowledge
-sources, whereas source-faithfulness evaluation compares them with a provided
-source document
-\citep{maynez_faithfulness_2020,kryscinski_evaluating_2020,min_factscore_2023}.
-In the framework developed below, these resources instantiate the task oracle.
-
-Creativity research commonly distinguishes novelty from usefulness or quality
-\citep{runco_standard_2012,diedrich_are_2015};
-CreativityPrism, for example, evaluates quality, novelty, and diversity
-\citep{hou_creativityprism_2025}, and recent surveys and task-specific novelty
-metrics continue to refine these criteria
-\citep{ismayilzada_progress_2024,zhao_assessing_2025,namuduri_genie_2026}.
-These dimensions do not by themselves determine whether a novel factual claim
-violates a task constraint.
-Two protocols can therefore assign different labels to identical wording when
-their prompts establish different task conditions.
-
-\paragraph{Our position}
-We propose a claim-level evaluation rule under which the hallucination label is
-relative to the task's truth contract. By \emph{relative}, we mean that the
-evaluation label depends on the contract; the truth value of the underlying
-proposition does not.
-
-A \emph{claim} is a truth-conditional commitment attributed to the response:
-something the response presents as being the case and that can therefore be
-checked against evidence. An \emph{evaluator}, which may be a human annotator,
-an automated pipeline, or both, identifies these commitments.
-
-We write $p$ for the complete task context. It includes the prompt, applicable
-system instructions, dialogue history, domain constraints, attached data, and
-any designated tool or environment state.
-
-Evaluating a claim takes two distinct steps. First, claim verification assigns
-one of three \emph{evidence states} relative to the standard the task uses to
-settle claims, which we call its \emph{task oracle}: \textsc{entailed},
-\textsc{contradicted}, or \textsc{unknown}. Here, \textsc{unknown} means only
-that the task oracle neither entails nor contradicts the claim; it is not a
-statement about all possible knowledge.
-
-Second, the framework maps that evidence state to one of three \emph{claim
-labels}: grounded, hallucination, or licensed divergence. Entailed claims are
-grounded and contradicted claims are hallucinations; only \textsc{unknown}
-claims need the permission-scope and required-status-marking checks.
-
-Figure~\ref{fig:prompt-to-claim} makes this distinction concrete. The claim
-that the complete Rosetta Stone stood near a temple entrance is neither
-entailed nor contradicted by the frozen excerpt, so its evidence state is
-\textsc{unknown} in both tasks. The factual prompt $p_1$ forbids an added
-reconstruction and therefore labels the claim hallucination; the creative
-prompt $p_2$ permits one clearly marked reconstruction and therefore labels the
-same claim licensed divergence. Figure~\ref{fig:profiles} shows the broader
-design implication: the selected strict-grounding resources and creative suites
-are different nominal task profiles, while the highlighted gap is the absence
-of a selected resource that combines explicit contract fields with
-claim-preserving style variation. The evidence state stays the same; only the
-task-level label changes.
-
-We write the contract as $\TC=(O,\Gamma,\mu)$. Its three fields have separate
-roles. The task oracle $O$ settles the evidence state. The permission scope
-$\Gamma$ specifies which evidence-unknown content the task authorizes. The
-required status marking $\mu$ specifies how that content must be presented.
-\FloatBarrier
-
-The response's \emph{observed status marking} records whether it presents a
-claim as established, hedged, or explicitly hypothetical. The evaluator
-compares this observed marking with $\mu$. When a claim violates the contract, a
-\emph{reason code} records which condition failed.
-
-An \textsc{entailed} claim receives the grounded label (\Grd). A
-\textsc{contradicted} claim receives the hallucination label (\Hall) with
-reason code \textsc{contradicted}. An \textsc{unknown} claim receives the
-licensed-divergence label (\LD) only when it lies inside $\Gamma$ and its
-observed status marking satisfies $\mu$. A contract-violating unknown claim
-receives \Hall{} with reason code \textsc{out-of-scope} or
+The labels can then be read directly from the example. A claim that the source
+entails receives the grounded label (\Grd); a claim that contradicts the source
+receives the hallucination label (\Hall), with reason code
+\textsc{contradicted}. If the source is silent, the evaluator asks whether the
+claim was allowed. In the factual museum-label task, the reconstruction is not
+allowed, so the claim receives \Hall{} with reason code
+\textsc{out-of-scope}. In the creative task, one reconstruction is allowed,
+and ``One possible reconstructionldots'' marks it clearly, so the claim
+receives licensed divergence (\LD). If the response instead stated ``The
+complete stele stood near a temple entrance'' as a fact, it would fail the
+marking requirement and receive \Hall{} with reason code
 \textsc{marking-failure}. Figure~\ref{fig:prompt-to-claim} illustrates this
 \textsc{unknown} branch. Section~\ref{sec:framework} defines the normalized
 claim representation and the complete rule.
@@ -386,9 +432,8 @@ the leaderboard measurements cited in Section~\ref{sec:discussion}.
 \section{Framework}\label{sec:framework}
 
 The framework assigns separate roles to evidence, authorization, and
-presentation. For two evaluators to apply these roles consistently to the same
-response, each role must be specified precisely. This section provides that
-specification.
+presentation. Different evaluators should reach the same judgment when applying the framework to the same response. This section therefore defines the roles of evidence, authorization, and presentation precisely.
+
 
 \subsection{Framework Overview}
 
@@ -408,61 +453,6 @@ negation, quantities, and temporal scope. The observed status marking $m^*$
 records how the response presents the claim, including epistemic modality and
 relevant discourse framing. Here, $m^*$ records that the placement is offered
 as possible rather than asserted as established.
-
-Next, the evaluator compares $q^*$ with the task oracle $O$. The excerpt neither
-entails nor contradicts the placement, so the evidence state is
-\textsc{unknown}. Because the oracle leaves the claim unknown, the evaluator
-checks the remaining contract fields. The claim falls inside the permission
-scope, which allows one marked reconstruction. Its observed status marking also
-satisfies the requirement to present that reconstruction as conjecture. The
-claim therefore receives the licensed-divergence label rather than the
-hallucination label.
-
-Under the strict-grounding task in Figure~\ref{fig:prompt-to-claim}, the
-permission scope is empty. The same claim would therefore receive the
-hallucination label with reason code \textsc{out-of-scope}, even though its
-evidence state would remain \textsc{unknown}. Requested and observed writing
-style are compared separately. Style neither creates nor excuses a
-truth-conditional claim.
-
-Claim labeling has two phases. The first prepares the claim. The second assigns
-its label and branches exactly once.
-
-\begin{description}
-  \item[Preparation.] The evaluator selects a \emph{response span}, that is, a
-        contiguous stretch of the response treated as one unit of
-        interpretation, typically a clause or a sentence.
-        It recovers the contextualized claims to which the span commits. Each
-        claim is then canonicalized into normalized content $q^*$ and observed
-        status marking $m^*$.
-  \item[Decision.] The evaluator compares $q^*$ with $O$ and records its
-        evidence state. For an \textsc{entailed} or \textsc{contradicted}
-        claim, the evidence state determines the label, and no further check
-        applies. An \textsc{unknown} claim proceeds to two checks: whether
-        $q^*$ falls inside $\Gamma$ and, if it does, whether $m^*$ satisfies
-        $\mu$. The evaluator then assigns the claim label and, for a
-        violation, its reason code.
-\end{description}
-
-The evidence state directly settles the label for \textsc{entailed} and
-\textsc{contradicted} claims. Only an \textsc{unknown} claim proceeds to the
-remaining contract checks, $\Gamma$ and $\mu$.
-If preparation or adjudication fails, the span remains unlabeled rather than
-receiving a default label. The claim trace, which preserves the claim-level
-decisions, is the primary output.
-Appendix~\ref{app:diagnostics} defines the response-level record and the
-procedural failures reported instead of a label.
-
-\subsection{The Truth Contract and Task Oracle}\label{subsec:contract}
-
-\paragraph{Truth contract}
-A truth contract specifies what the task treats as established, what the
-response may introduce beyond it, and how such content must be presented.
-For a task context $p$, it is the triple $\TC=(O,\Gamma,\mu)$.
-The three fields answer separate questions: What task-specific standard decides
-the evidence state? What content may extend beyond what that standard
-establishes? How must that content be marked? The contract is therefore indexed
-by the complete task context rather than by the literal prompt alone.
 \begin{figure}[!t]
 \centering
 \resizebox{\textwidth}{!}{%
@@ -638,6 +628,62 @@ entrance placement and the incorrect date are constructed test claims.}
 \label{fig:claim-label-annotation}
 \end{figure}
 \FloatBarrier
+
+Next, the evaluator compares $q^*$ with the task oracle $O$. The excerpt neither
+entails nor contradicts the placement, so the evidence state is
+\textsc{unknown}. Because the oracle leaves the claim unknown, the evaluator
+checks the remaining contract fields. The claim falls inside the permission
+scope, which allows one marked reconstruction. Its observed status marking also
+satisfies the requirement to present that reconstruction as conjecture. The
+claim therefore receives the licensed-divergence label rather than the
+hallucination label.
+
+Under the strict-grounding task in Figure~\ref{fig:prompt-to-claim}, the
+permission scope is empty. The same claim would therefore receive the
+hallucination label with reason code \textsc{out-of-scope}, even though its
+evidence state would remain \textsc{unknown}. Requested and observed writing
+style are compared separately. Style neither creates nor excuses a
+truth-conditional claim.
+
+Claim labeling has two phases. The first prepares the claim. The second assigns
+its label and branches exactly once.
+
+\begin{description}
+  \item[Preparation.] The evaluator selects a \emph{response span}, that is, a
+        contiguous stretch of the response treated as one unit of
+        interpretation, typically a clause or a sentence.
+        It recovers the contextualized claims to which the span commits. Each
+        claim is then canonicalized into normalized content $q^*$ and observed
+        status marking $m^*$.
+  \item[Decision.] The evaluator compares $q^*$ with $O$ and records its
+        evidence state. For an \textsc{entailed} or \textsc{contradicted}
+        claim, the evidence state determines the label, and no further check
+        applies. An \textsc{unknown} claim proceeds to two checks: whether
+        $q^*$ falls inside $\Gamma$ and, if it does, whether $m^*$ satisfies
+        $\mu$. The evaluator then assigns the claim label and, for a
+        violation, its reason code.
+\end{description}
+
+The evidence state directly settles the label for \textsc{entailed} and
+\textsc{contradicted} claims. Only an \textsc{unknown} claim proceeds to the
+remaining contract checks, $\Gamma$ and $\mu$.
+If preparation or adjudication fails, the span remains unlabeled rather than
+receiving a default label. The claim trace, which preserves the claim-level
+decisions, is the primary output.
+Appendix~\ref{app:diagnostics} defines the response-level record and the
+procedural failures reported instead of a label.
+
+\subsection{The Truth Contract and Task Oracle}\label{subsec:contract}
+
+\paragraph{Truth contract}
+A truth contract specifies what the task treats as established, what the
+response may introduce beyond it, and how such content must be presented.
+For a task context $p$, it is the triple $\TC=(O,\Gamma,\mu)$.
+The three fields answer separate questions: What task-specific standard decides
+the evidence state? What content may extend beyond what that standard
+establishes? How must that content be marked? The contract is therefore indexed
+by the complete task context rather than by the literal prompt alone.
+
 
 We drop the subscript $p$ when the task context is clear.
 Requested and observed style-marking levels are not truth-contract fields.
@@ -1612,7 +1658,7 @@ are developed below.
   % Case B
   \node[caselabel] at (0,-1.55) {B};
   \node[fixed] (b-fixed) at (2.00,-1.55)
-    {Surface string};
+    {Response wording (unchanged)};
   \node[condition] (b-before) at (5.70,-1.55)
     {Historical frame};
   \node[condition] (b-after) at (10.00,-1.55)
