@@ -196,25 +196,22 @@ We write $p$ for the complete task context. It includes the prompt, applicable
 system instructions, dialogue history, domain constraints, attached data, and
 any designated tool or environment state.
 
-Evaluating a claim takes two distinct steps. First, claim verification assigns
-one of three \emph{evidence states} relative to the standard the task uses to
-settle claims, which we call its \emph{task oracle}: \textsc{entailed},
-\textsc{contradicted}, or \textsc{unknown}. An evidence state records only the
-relation between the claim and that oracle. Here, \textsc{unknown} means that
-the oracle does not establish the claim and does not rule it out; it is not a
-statement about all possible knowledge.
+ A \emph{task oracle (O)}  is a system that can classify a claim into the following \emph{evidence states}:  \textsc{entailed},
+\textsc{contradicted} or \textsc{unknown}. We consider it as a black box, based on a knowledge repository, for example a text. The state, \textsc{unknown} means that
+the oracle doesn't have the knowledge to verify the claim; it is not an absolute
+statement about external general knowledge.
 
-Second, the framework maps that evidence state to one of three \emph{claim
-labels}: grounded, hallucination, or licensed divergence. Entailed claims are
-grounded and contradicted claims are hallucinations; only \textsc{unknown}
-claims need the permission-scope and required-status-marking checks. A claim
-label therefore records the claim's standing under the complete task, not only
-its relation to the oracle.
+Evaluating a claim takes two distinct steps. First, a claim is classified into an \emph{evidence state} with regard to a \emph{task oracle}.   % First, claim verification assigns one of three \emph{evidence states} relative to the standard the task uses to settle claims, which we call its \emph{task oracle}: \textsc{entailed}, \textsc{contradicted}, or \textsc{unknown}. An evidence state records only the relation between the claim and that oracle.
+%Here, \textsc{unknown} means that the oracle does not establish the claim and does not rule it out; it is not a statement about all possible knowledge.
+Second, the framework maps the evidence state of each claim to one of three \emph{claim
+labels}: grounded (G), hallucination (H), or licensed divergenc (LD). Entailed claims are labeled as
+grounded (G) and contradicted claims as hallucinations (H) while \textsc{unknown}
+claims need prompt and task context based labeling. %the permission-scope and required-status-marking checks. 
+A claim label therefore records the claim's standing under the complete task, not only its relation to the oracle.
 
 Figure~\ref{fig:prompt-to-claim} makes this distinction concrete. The claim
-that the complete Rosetta Stone stood near a temple entrance is not established
-by the frozen excerpt, and the excerpt does not rule it out. Its evidence state
-is therefore \textsc{unknown} in both tasks. The factual prompt $p_1$ forbids an added
+that the complete Rosetta Stone stood near a temple entrance is not established explicitly by the oracle. %established by the frozen excerpt, and the excerpt does not rule it out. 
+Its evidence state is therefore \textsc{unknown} in both tasks. The factual prompt $p_1$ forbids an added
 reconstruction and therefore labels the claim hallucination; the creative
 prompt $p_2$ permits one clearly marked reconstruction and therefore labels the
 same claim licensed divergence. Figure~\ref{fig:profiles} shows the broader
@@ -319,11 +316,13 @@ required status marking $\mu$ specifies how that content must be presented.
   \node[resultH,anchor=north east] (hall)
     at ([xshift=-0.20cm]result-row-top)
     {\textbf{\mbox{HALLUCINATION (\Hall)}}\\[1pt]
-     The source is silent and this task allows no invention.};
+     The oracle labels the claim as \textsc{unknown} %source is silent 
+     and this task allows no invention.};
   \node[resultLD,anchor=north west] (licensed)
     at ([xshift=0.20cm]result-row-top)
     {\textbf{\mbox{LICENSED DIVERGENCE} (\LD)}\\[1pt]
-     The source is silent, but one marked invention is allowed.};
+     The oracle labels the claim as \textsc{unknown}%The source is silent
+     , but one marked invention is allowed.};
 
   \draw[figure-arrow] (strict.south) -- (tc1.north);
   \draw[figure-arrow] (creative.south) -- (tc2.north);
@@ -351,7 +350,7 @@ label. Licensed divergence records permission and adequate marking, not truth.}
 \end{figure}
 
 The evaluator also checks how the response presents each claim. In the Rosetta
-Stone example, the phrase ``One possible reconstructionldots'' presents the
+Stone example, the phrase ``One possible reconstruction`` presents the
 claim as a possibility, rather than as an established fact. This is the
 response's \emph{observed status marking}: a claim can be presented as
 established, hedged, or explicitly hypothetical. The evaluator compares this
@@ -415,14 +414,17 @@ Appendix~\ref{app:diagnostics} gives the stability test.
 
 
 \paragraph{Mapping and worked cases}
-The purposive mapping codes forty-one resources for the three contract fields
-and for whether they vary requested style marking while holding canonical claim
-content fixed. It identifies patterns and missing combinations within the
-selected sample, not their prevalence in the wider literature. Five worked
-cases state what is fixed, what changes, and whether the rule predicts a change
-or stability in claim recovery and labeling. These cases are specification
-checks rather than an annotation study. Section~\ref{sec:agenda} turns that
-limitation into empirical questions.
+Section~\ref{sec:methodology} presents a purposive mapping of forty-one
+evaluation resources, with the complete resource-level coding reported in
+Appendix~\ref{app:mapping}. The mapping records the three truth-contract fields
+and whether each resource varies requested style marking while holding
+canonical claim content fixed. It identifies patterns and missing combinations
+within the selected sample, not their prevalence in the wider literature.
+Section~\ref{sec:cases} then presents five worked cases that state what remains
+fixed, what changes, and whether the rule predicts a change or stability in
+claim recovery and labeling. These cases are specification checks rather than
+an annotation study. Section~\ref{sec:agenda} turns these limitations into
+empirical questions.
 
 \paragraph{Organization}
 Sections~\ref{sec:framework} and~\ref{sec:related} define the framework and
@@ -711,20 +713,17 @@ user instruction cannot override an applicable external limit by redefining the
 task oracle or widening the permission scope.
 
 \paragraph{Task oracle ($O$)}
-The task oracle is the standard a task uses to determine whether a claim is
+The task oracle is a system a task uses to determine whether a claim is
 entailed, contradicted, or unknown.
-It specifies which information sources are admissible, their temporal scope,
-their relative authority, and the procedure used to resolve conflicts.
-Existing surveys use different notions of source, context, fact, and world
-knowledge \citep{ji_survey_2023,bang_hallulens_2025}; reproducible evaluation
-therefore requires a concrete task-oracle specification or an explicit
+It is based on a knowledge resource it uses to evaluate a claim.
+%It specifies which information sources are admissible, their temporal scope,their relative authority, and the procedure used to resolve conflicts.
+Existing surveys use different notions of source, context, fact, and world knowledge \citep{ji_survey_2023,bang_hallulens_2025}; reproducible evaluation therefore requires a concrete task-oracle specification or an explicit
 adjudication procedure.
 A task oracle may comprise a source document, a retrieval set, a database,
-gold labels, an environment or tool state, a human adjudication procedure, the
-declared constraints of a fictional world, or a combination of these sources.
-For example, a supplied article can instantiate the task oracle for a
-source-faithfulness task, execution tests can instantiate it for a code task,
-and declared story-world constraints can instantiate it for in-frame claims.
+gold labels, the
+declared constraints of a fictional world, or a combination of these sources and a program or a human adjudication procedure.
+For example, based on the text of a scientific paper, an NLP program can classify  a claim, an oracle can be a unity test evaluation program that can evaluate a generated code snippet.% supplied article can instantiate the task oracle for asource-faithfulness task, execution tests can instantiate it for a code task,
+%and declared story-world constraints can instantiate it for in-frame claims.
 
 The task oracle does not represent whatever the user would like to be true.
 It records what the evaluation treats as established or authoritative for the

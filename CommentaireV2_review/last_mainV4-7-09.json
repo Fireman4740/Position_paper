@@ -1,0 +1,837 @@
+{
+  "generator": "overleaf-comments-bookmarklet v1.6",
+  "project": "CL soumission",
+  "url": "https://www.overleaf.com/project/6a4360d12626817eabd8de53",
+  "capturedAt": "2026-09-07T13:14:53.455Z",
+  "fileCount": 2,
+  "tabIteration": "full",
+  "threadCount": 100,
+  "messageCount": 107,
+  "trackedChangesNote": "swept top-to-bottom per file; for the authoritative set, Review > Accept in Overleaf so the text syncs via git",
+  "files": [
+    {
+      "file": "main.tex",
+      "fileSource": "editor-tab",
+      "threadCount": 47,
+      "messageCount": 49,
+      "truncatedCount": 2,
+      "panelUnchanged": false,
+      "selectorHealth": {
+        "breadcrumbs": false,
+        "editorScroller": true,
+        "threadsParsed": 47,
+        "duplicatesDropped": 0,
+        "entriesUnparsed": 0
+      },
+      "threads": [
+        {
+          "dataPos": 3151,
+          "dataTop": 2098,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 8:57 am",
+              "text": "thought: (qui n'engage que moi) Pas super convaincu par l'abstract.\nCe que je pense qu'il faudrait rajouter :\n- Une accroche motivante\n- Amener notre position plus doucement que la 1e phrase de l'abstract\n- Pourquoi se concentrer quasi exclusivement sur les dataset (50% de l'abstract) ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 3168,
+          "dataTop": 2117,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 8:53 am",
+              "text": "thought: peut-être ajouter une \"accroche\" pour motiver notre position",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 3453,
+          "dataTop": 2251,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 8:54 am",
+              "text": "thought: pas sûr de la conséquence logique. Pour moi on pourrait aussi dire que les modèles ne sont pas optimisés dans cette direction.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4487,
+          "dataTop": 2770,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 8:57 am",
+              "text": "issue: ne pas évoquer un point négatif dans l'abstract.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4622,
+          "dataTop": 2904,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 8:58 am",
+              "text": "thought: je mentionnerais quand même le code qui est une grande application",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4973,
+          "dataTop": 2962,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 8:58 am",
+              "text": "issue: définir ce qu'est une \"hallucination\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 5753,
+          "dataTop": 3403,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:00 am",
+              "text": "quelle conclusion ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6786,
+          "dataTop": 3825,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:02 am",
+              "text": "thought: \"Therefore we argue that ...\"",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:05 am",
+              "text": "Et je mettrais vraiment notre position en avant. Ce que je ferais :\n- Décrire notre position en 1-2 ...",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 7419,
+          "dataTop": 4171,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:03 am",
+              "text": "Présente textuellement l'exemple du musée.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 8007,
+          "dataTop": 4478,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:32 am",
+              "text": "issue: définir chaque terme",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 8129,
+          "dataTop": 4555,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:32 am",
+              "text": "thought: je sais pas si c'est nécessaire dans l'intro",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 8455,
+          "dataTop": 4747,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:33 am",
+              "text": "thought: pas très clair que tu essaies de critiquer les datasets existants",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 9084,
+          "dataTop": 5054,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:39 am",
+              "text": "issue: je trouve les définitions trop techniques, ça me fait pas \"ressentir\" ce que c'est",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 9109,
+          "dataTop": 5073,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:34 am",
+              "text": "issue: pour moi c'est pas notre position.\nNotre position c'est \"On a besoin d'un truth contract\"\nEt une conséquence est le changement de l'évaluation.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 9384,
+          "dataTop": 5227,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:40 am",
+              "text": "issue: j'ai toujours du mal à comprendre ce terme. qu'est-ce que \"truth-conditional\" ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 9659,
+          "dataTop": 5342,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 3:27 pm",
+              "text": "thought: pas sûr de la pertinence d'introduire toutes ces termes mathématiques dans l'introduction. Je mentionnerais juste le truth contract avec ses 3 éléments décris \"en français\" avec des termes non mathématiques",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 10279,
+          "dataTop": 5668,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "3 September, 1:12 pm",
+              "text": "simplifier l'explication",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 11091,
+          "dataTop": 5956,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:46 am",
+              "text": "thought: tu es sûr ? Quid d'une fiction sur un personnage politique par exemple ?",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:16 pm",
+              "text": "(en fait je sais que c'est lié au fait que l'oracle contient toute la vérité autorisée, mais c'est p...",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 11382,
+          "dataTop": 6129,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:46 am",
+              "text": "praise: très bien le paragraphe explicatif",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 12305,
+          "dataTop": 6589,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:47 am",
+              "text": "thought: Vraiment à mettre en avant, c'est la formule centrale du papier.\nQuand aux éléments, peut-être faire une liste à point, plus facile à lire et à revenir",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 12390,
+          "dataTop": 6628,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:49 am",
+              "text": "issue: j'ai du mal à comprendre les définitions",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 12399,
+          "dataTop": 6628,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:17 pm",
+              "text": "issue: il faudrait d'ailleurs dire clairement que l'oracle contient tout ce qui est vrai (et qu'on ne doit pas falsifier)",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 12639,
+          "dataTop": 6801,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 9:48 am",
+              "text": "issue: je trouve l'image toujours un peu difficile à comprendre. Encore plus au début de l'intro. Je la formatterais et reformulerais un peu différemment : https://alteca-my.sharepoint.com/:i:/g/personal/pygenest_alteca_fr/IQCGieu7py5gSarpUMKdEJSQAcXAUeBeMUpJ-5O5G7hhzhg?e=xGAypd",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 16816,
+          "dataTop": 7991,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "3 September, 1:30 pm",
+              "text": "trouver une autre formulation",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 20851,
+          "dataTop": 9603,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 3:29 pm",
+              "text": "je comprends pas la 2e contribution",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 21076,
+          "dataTop": 9718,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "3 September, 1:47 pm",
+              "text": "reformuler pas clair  supprime \"falsifiable\" de papier et reformuler les phrase qui l'utilise",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 21116,
+          "dataTop": 9718,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 3:30 pm",
+              "text": "?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 21157,
+          "dataTop": 9776,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 3:45 pm",
+              "text": "thought: c'est pas clair que tu est en train de dire que c'est moins bien que le truth-conract qu'on propose. Et je comprends pas tout à fait ce que ça fait là.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 21959,
+          "dataTop": 10217,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 3:45 pm",
+              "text": "thought: est-ce nécessaire en intro ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 22363,
+          "dataTop": 12982,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 3:46 pm",
+              "text": "thought: est-ce nécessaire en intro ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 23468,
+          "dataTop": 10716,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 3:48 pm",
+              "text": "issue: ne pas mentionner. Les appendices sont du contenu supplémentaire non essentiel au papier.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 23641,
+          "dataTop": 10832,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:57 pm",
+              "text": "Remarques générales sur la section :\n- Il faudrait un glossaire pour mieux s'y retrouver\n- Dans l'ensemble c'est plus clair qu'avant\n- Mais je pense qu'on est encore trop compliqué/sur-ingénieré. A mon avis on peut raconter la même chose mais avec moins de notation, plus simplement.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 23714,
+          "dataTop": 10870,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:10 pm",
+              "text": "issue: a définir ici. Je comprends pas ce que c'est",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 23954,
+          "dataTop": 10985,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:13 pm",
+              "text": "thougt:\n- je me demande s'il ne faudrait pas re-présenter/re-définir le truth-contract ici.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 25103,
+          "dataTop": 14498,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:17 pm",
+              "text": "praise: là encore, bonne figure illustrative",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 33917,
+          "dataTop": 19738,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:18 pm",
+              "text": "issue: vue que permission scope est pas défini proprement \"permission scope is empty\" n'est pas clair",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 35671,
+          "dataTop": 20660,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:19 pm",
+              "text": "?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 36203,
+          "dataTop": 20986,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:23 pm",
+              "text": "thought: je le positionnerais avant. Il me semble que les définitions sont centrales ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 36825,
+          "dataTop": 21370,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:24 pm",
+              "text": "issue: tu l'utilises pas avant non ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 36894,
+          "dataTop": 21408,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:36 pm",
+              "text": "thought: réintroduire la lettre \"m\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 38690,
+          "dataTop": 22349,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:38 pm",
+              "text": "thought: dans ce cas c'est pas suffisant non ? il faut aussi la méthode pour comparer l'article aux claims ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 41891,
+          "dataTop": 24134,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:42 pm",
+              "text": "issue: Pourquoi m et pas mu ?\nD'aillerus en général pour les valeurs observées/prédites on préfère plutôt \\hat{}",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 44033,
+          "dataTop": 25363,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:44 pm",
+              "text": "thought: mériterait une citation/référence",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 47626,
+          "dataTop": 27378,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 4:55 pm",
+              "text": "issue: pas introduits avant, disponible seulement en Annexe",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 51277,
+          "dataTop": 29470,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 5:03 pm",
+              "text": "thought: je me pose la question de la pertinence du positionnement de cette partie. D'un côté elle est importante pour expliquer certains comportement. De l'autre en lisant rapidement, on pourrait croire que ça fait partie du truth-contract.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 56066,
+          "dataTop": 32138,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 5:12 pm",
+              "text": "thought: je vois pas trop l'intérêt de mettre ça là",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 58073,
+          "dataTop": 33252,
+          "messages": [
+            {
+              "author": "Pierre-Yves Genest",
+              "time": "2 September, 5:19 pm",
+              "text": "issue: 2 références seulement, ça me paraît un peu léger ?",
+              "possiblyTruncated": false
+            }
+          ]
+        }
+      ],
+      "trackedChanges": [
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "paragraph"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\begin{abstract}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "this"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "suggests"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The paper"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "does not evaluate models; empirical validation remains future work."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Large"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Hallucination"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "conclusion"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "An"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Figure"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "We therefore treat factuality, source faithfulness, creativity, and"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "response style as related but distinct requirements."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Factuality"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Creativity"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\paragraph{Our position}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "We propose a claim-level evaluation rule under which the"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "truth-conditional"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "We"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Evaluating a claim takes two distinct steps. First, a claim is classified into an \\emph{evidence state} with regard to a \\emph{task oracle}.   % First, claim verification assigns one of three \\emph{evidence states} relative to the standard the task uses to settle claims, which we call its \\emph{task oracle}: \\textsc{entailed}, \\textsc{contradicted}, or \\textsc{unknown}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "ontradicted claims as hallucinations"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Figure~\\ref{fig:prompt-to-claim}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The task oracle $O$ settles the evidence state. The permission scope"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "oracle"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\Gamma$ specifies which evidence-unknown content the task authorizes. The"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "required status marking $\\mu$ specifies how that content must be presented."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\begin{figure}[!t]"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The oracle labels the claim as \\textsc{unknown} %source is silent"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Second"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "evaluation combinations and to derive a falsifiable research agenda."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "falsifiable"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Truth"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The appendices"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Framework"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "evidence, authorization, and"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "presentation"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "permission scope is empty"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "code"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "subsection"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "subscript"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "style-marking levels"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "supplied article"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "m"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Claim recovery can fail in two directions"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "reason codes"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Style"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "A factuality judgment alone does"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "not say whether that content was authorized, and a creativity score does not"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "say whether it respected the task boundary. Claim-level evaluation supplies the"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "unit of analysis, and instruction-following evaluation represents task"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "constraints. The truth contract combines these inputs for the remaining"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "claim-labeling decision: when $O$ leaves a claim \\textsc{unknown}, $\\Gamma$ and"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\mu$ determine whether it is licensed divergence or hallucination. Its"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "creative value remains a separate judgment."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Task Oracles in Factuality and Faithfulness Evaluation"
+        }
+      ]
+    }
+    
+  ]
+}
