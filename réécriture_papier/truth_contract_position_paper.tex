@@ -133,11 +133,6 @@ establish \citep{franceschelli_creativity_2024,jiang_survey_2024}.
 A factual summary may reject an unsupported explanation,
  whereas a hypothesis-generation task may allow it.
 
-% Replacement for the complete figure environment labelled fig:prompt-to-claim.
-% Required in the preamble (already present in main_position.tex):
-% \usepackage{graphicx,xcolor,tikz}
-% \usetikzlibrary{arrows.meta,positioning,calc}
-% This is an illustrative evaluation, not a reported model experiment.
 \begin{figure}[!t]
 \centering
 \begingroup
@@ -178,29 +173,30 @@ A factual summary may reject an unsupported explanation,
   plausible reconstruction.''
 };
 
-% The same reference and marking requirement; only permission differs.
+% Both tasks use the same source and require clear uncertainty marking.
+% Only what the response may add changes.
 \node[fone contract] (contract-factual) at (0,-4.45) {
-  \textbf{Extracted truth contract}\\[7pt]
-  \textbf{Reference evidence:} source excerpt (right)\\[3pt]
-  \textbf{Permission scope:} no reconstruction beyond the reference\\[3pt]
-  \textbf{Required status marking:} uncertainty stated clearly
+  \textbf{Truth contract}\\[7pt]
+  \textbf{Source:} source excerpt (right)\\[3pt]
+  \textbf{The response may add:} nothing beyond the source\\[3pt]
+  \textbf{The response must:} mark uncertainty clearly
 };
 \node[fone contract] (contract-creative) at (8.10,-4.45) {
-  \textbf{Extracted truth contract}\\[7pt]
-  \textbf{Reference evidence:} source excerpt (right)\\[3pt]
-  \textbf{Permission scope:} one plausible reconstruction\\[3pt]
-  \textbf{Required status marking:} uncertainty stated clearly
+  \textbf{Truth contract}\\[7pt]
+  \textbf{Source:} source excerpt (right)\\[3pt]
+  \textbf{The response may add:} one plausible reconstruction\\[3pt]
+  \textbf{The response must:} mark uncertainty clearly
 };
 
 % Source document: a custom wavy outline needs no extra TikZ library.
 \node[anchor=north west,align=left,text width=4.05cm,inner sep=8pt]
   (reference) at (14.80,-4.05) {
   \textbf{Source excerpt}\\[5pt]
-  Wikipedia article ``Rosetta Stone''\\[7pt]
+  Wikipedia article ``Rosetta Stone''---illustrative input\\[7pt]
   ``A stele found near Rosetta in 1799 bears a decree from 196 BCE
   in hieroglyphic, Demotic, and Greek. It is a fragment of a larger
   stele probably once displayed in a temple.''\\[7pt]
-  \emph{Illustrative input; this excerpt alone defines the reference.}
+  \emph{Only this excerpt is used as the source.}
 };
 % Paint the source outline behind its text.
 \begin{pgfonlayer}{fonebackground}
@@ -262,18 +258,19 @@ A factual summary may reject an unsupported explanation,
 \draw[fone flow] (llm-label.south) -- (response.north -| llm-label.south);
 
 \node[fone evaluation] (eval-factual) at (0,-12.65) {
-  \textbf{Evaluation: factual task}\\[7pt]
-  \textbf{Claim checked:} the complete stele stood near a temple entrance.
-  The excerpt does not confirm or reject it.\\[8pt]
+  \textbf{Factual task}\\[7pt]
+  \textbf{Claim:} the complete stele stood near a temple entrance.\\[5pt]
+  The source does not confirm or deny this claim.\\[8pt]
   {\color{fOneRed}\bfseries HALLUCINATION (H)}\\[4pt]
-  The reference is silent, and this task allows no reconstruction.
+  The task allows only facts from the source.
 };
 \node[fone evaluation] (eval-creative) at (7.70,-12.65) {
-  \textbf{Evaluation: creative task}\\[7pt]
-  \textbf{Claim checked:} the complete stele stood near a temple entrance.
-  The excerpt does not confirm or reject it.\\[8pt]
+  \textbf{Creative task}\\[7pt]
+  \textbf{Claim:} the complete stele stood near a temple entrance.\\[5pt]
+  The source does not confirm or deny this claim.\\[8pt]
   {\color{fOneGreen}\bfseries LICENSED DIVERGENCE (LD)}\\[4pt]
-  The reference is silent, but one marked reconstruction is allowed.
+  The task allows one plausible reconstruction, and the response presents
+  it as a possibility.
 };
 \coordinate (response-bus) at (6.90,-12.15);
 \draw[fone line] (response.south) -- (response.south |- response-bus);
@@ -299,28 +296,22 @@ A factual summary may reject an unsupported explanation,
 \coordinate (evaluation-bottom) at ($(eval-factual.south)!0.5!(eval-creative.south)$);
 \node[anchor=north,align=center,text width=13.65cm,inner sep=3pt]
   at ([yshift=-.55cm]evaluation-bottom) {
-  \textbf{Only what the task permits changes inside the truth contract;}\\
-  \textbf{requested writing style is evaluated separately.}\\[4pt]
-  Licensed divergence records permission and adequate marking, not truth.
+  \textbf{The same claim can receive a different label when the task changes}\\
+  \textbf{what the response may add.}\\[4pt]
+  Requested writing style is evaluated separately.
 };
 \end{tikzpicture}%
 }
 \endgroup
-\caption{\textbf{Same source and claim, different permissions.}
-Both truth contracts use the same task oracle (the frozen source), response,
-and required status marking. Only the permission differs. The
-oracle leaves the claim \textsc{unknown} in both tasks. The factual task permits
-no reconstruction and therefore assigns the hallucination label (\Hall). The
-creative task permits one clearly marked reconstruction and therefore assigns
-the licensed-divergence label (\LD). The prompts also request different writing
-styles, but requested style is evaluated separately and does not affect either
-label. Licensed divergence records permission and adequate marking, not truth.
-For this constructed evaluation, the displayed excerpt alone defines the
-reference; no additional Wikipedia content is used. The excerpt is an
-illustrative input, not a documented verbatim quotation of a versioned article.}
+\caption{\textbf{Same source and response, different task instructions.}
+The source does not confirm or deny the reconstruction. The factual task
+classifies it as a hallucination because it allows only facts from the source;
+the creative task classifies it as licensed divergence because it allows one
+plausible reconstruction presented as a possibility. Licensed divergence does
+not mean that the claim is true, and requested writing style is evaluated
+separately.}
 \label{fig:prompt-to-claim}
 \end{figure}
-
 
 Labeling every such statement as an error would penalize outputs that the task permits.
 
