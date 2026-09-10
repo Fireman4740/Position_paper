@@ -1,0 +1,85 @@
+COMPUTATIONAL LINGUISTICS — SUBMISSION METADATA
+(separate text file required by the "Original Submissions" checklist, submissions.cljournal.org)
+
+--------------------------------------------------------------------
+CATEGORY
+--------------------------------------------------------------------
+Position Paper
+
+--------------------------------------------------------------------
+TITLE
+--------------------------------------------------------------------
+Hallucination Evaluation Should Be Contract-Aware: Reference Evidence, Permission Scope, and Licensed Divergence
+
+--------------------------------------------------------------------
+AUTHORS (full first + last names, no initials)
+--------------------------------------------------------------------
+Mathis Carlesso        — affiliations 1, 2
+Martino Lovisetto      — affiliation 2
+Elöd Egyed-Zsigmond    — affiliation 1
+Pierre-Yves Genest     — affiliation 2
+Stefan Duffner         — affiliation 1
+
+--------------------------------------------------------------------
+AFFILIATIONS
+--------------------------------------------------------------------
+1. INSA Lyon, CNRS, LIRIS, UMR5205, Université Claude Bernard Lyon 1,
+   69621 Villeurbanne, France
+2. Alteca, 69100 Villeurbanne, France
+
+--------------------------------------------------------------------
+CONTACT AUTHOR
+--------------------------------------------------------------------
+Mathis Carlesso — mathis.carlesso@insa-lyon.fr
+
+--------------------------------------------------------------------
+ABSTRACT
+--------------------------------------------------------------------
+Hallucination evaluation often classifies claims not entailed by reference
+evidence as errors. This convention suits tasks with strict grounding but is incomplete
+when a task permits bounded hypotheses or fictional invention. This position paper
+argues that non-entailment alone should not determine a claim label. Evaluators
+should instead use a task-specific truth contract with three fields: reference
+evidence, permission scope, and required status marking. An entailed claim receives
+the supported label, whereas a contradicted claim receives the hallucination label.
+A canonical claim whose proposition is evidence-unknown receives licensed
+divergence only when the proposition lies inside the permission scope and its
+observed status marking satisfies the required status marking; otherwise it receives
+the hallucination label. Coverage, adjudication, or contract-specification failures
+suspend claim labeling rather than creating another label. A complete evaluation
+also records requested and observed style-marking levels separately. The requested
+level is available as context during claim recovery and supports a prompt--response
+style-marking alignment check, but its effect on recovery remains an empirical
+hypothesis and it never expands permission scope. We examine the distinction
+through a purposive mapping of forty evaluation resources and five worked cases. Within the
+selected sample, no resource jointly controls the three truth-contract fields and
+claim-preserving style variation. The mapping is a diagnostic description of the
+selected resources, not a prevalence estimate for the broader literature. The
+proposal is unnecessary if a baseline combining factuality with
+instruction-following evaluation yields equally reliable and informative
+claim-level diagnoses.
+
+--------------------------------------------------------------------
+KEYWORDS (for "Comments to the Editor")
+--------------------------------------------------------------------
+hallucination; evaluation of large language models; factuality and faithfulness;
+truth contract; licensed divergence; claim recovery; style-marking level;
+instruction-following evaluation
+
+--------------------------------------------------------------------
+DECLARATIONS (for "Comments to the Editor")
+--------------------------------------------------------------------
+1. This work has not been published elsewhere and is not currently under review at
+   any other archival venue.
+2. This work has not previously appeared in conference or workshop proceedings.
+3. This work is not subject to any non-disclosure agreement or other restriction that
+   would prevent its publication.
+
+--------------------------------------------------------------------
+REVIEW / FORMAT NOTES
+--------------------------------------------------------------------
+- Single-blind review: author names and affiliations appear on the first page of the
+  PDF (do NOT anonymize).
+- PDF built with the clv2025 class; verify rendering against COLI-manual.pdf.
+- Enter all five authors in the "Contributors" section of the submission form.
+- Copyright: assignment to the ACL only if accepted — nothing to do at submission time.

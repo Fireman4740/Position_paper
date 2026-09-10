@@ -1,0 +1,624 @@
+{
+  "generator": "overleaf-comments-bookmarklet v1.6",
+  "project": "CL soumission",
+  "url": "https://www.overleaf.com/project/6a4360d12626817eabd8de53",
+  "capturedAt": "2026-09-08T16:56:40.877Z",
+  "fileCount": 1,
+  "tabIteration": "single",
+  "threadCount": 25,
+  "messageCount": 31,
+  "trackedChangesNote": "swept top-to-bottom per file; for the authoritative set, Review > Accept in Overleaf so the text syncs via git",
+  "files": [
+    {
+      "file": "main.tex",
+      "fileSource": "editor-tab",
+      "threadCount": 25,
+      "messageCount": 31,
+      "truncatedCount": 0,
+      "panelUnchanged": false,
+      "selectorHealth": {
+        "breadcrumbs": false,
+        "editorScroller": true,
+        "threadsParsed": 25,
+        "duplicatesDropped": 0,
+        "entriesUnparsed": 0
+      },
+      "threads": [
+        {
+          "dataPos": 4581,
+          "dataTop": 3729,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:32 am",
+              "text": "Large language models (LLMs) sometimes state things that are not true.\nThe community calls these errors \\emph{hallucinations}: the model produces fluent, confident text that is not supported by evidence or contradicts known facts \\citep{ji_survey_2023, huang_survey_2025}.\nHallucination is widely regarded as the central reliability barrier for deploying LLMs in high-stakes settings such as medicine, law, and education \\citep{lin_truthfulqa_2022}.\nConsequently, a large body of work aims to detect, measure, and reduce hallucination \\citep{li_halueval_2023, wei_measuring_2024, thorne_fever_2018, chen_menli_2023}.",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:33 am",
+              "text": "Voir papier précedent",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4621,
+          "dataTop": 3768,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:35 am",
+              "text": "\\citep{ji_survey_2023,huang_survey_2025}.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4888,
+          "dataTop": 3960,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:29 am",
+              "text": "synonyme, simplifier",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:29 am",
+              "text": "response must be facutual enough",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4973,
+          "dataTop": 4037,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:30 am",
+              "text": "pas introduit",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 4998,
+          "dataTop": 4037,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:34 am",
+              "text": "Trop tot le claim du papier",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 5612,
+          "dataTop": 4536,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:44 am",
+              "text": "Benchmark ref",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 5677,
+          "dataTop": 4593,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:46 am",
+              "text": "expliquer pourquoi parler seulement de open weight",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:47 am",
+              "text": "car on connait pas nb les paramètre proprio",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 5770,
+          "dataTop": 4708,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:48 am",
+              "text": "supprimier",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 5864,
+          "dataTop": 4766,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:51 am",
+              "text": "trop tot et ajourer un phrase d'introduction du sujet",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6275,
+          "dataTop": 4593,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:05 am",
+              "text": "retirer sans oublier que le style et metaphore un problème dans la présentation de faits",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:05 am",
+              "text": "mettre un exmeple de bransto créatif",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6537,
+          "dataTop": 4766,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:07 am",
+              "text": "pas une concéquence",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 6692,
+          "dataTop": 4881,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:08 am",
+              "text": "pas claire. hallucination may  depend of the task",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7030,
+          "dataTop": 5150,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:12 am",
+              "text": "Add phrase d'intro un autre aspect de fait possible et la facon de présenter les faits",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:13 am",
+              "text": "liaison logiqye explicite",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7144,
+          "dataTop": 5265,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:18 am",
+              "text": "pour clarifier l'evaluation des hallucinations il faudrait se poser 2 questions au lieu  d'une.",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7220,
+          "dataTop": 5323,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:18 am",
+              "text": "support",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7351,
+          "dataTop": 5399,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:19 am",
+              "text": "expliquer pourquoi judgement et pas evaluation",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7410,
+          "dataTop": 5457,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:21 am",
+              "text": "implemente",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7490,
+          "dataTop": 5495,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:22 am",
+              "text": "this concept/arguments",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7515,
+          "dataTop": 5515,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:23 am",
+              "text": "exemple task",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 7556,
+          "dataTop": 5611,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:25 am",
+              "text": "supprimer",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 8151,
+          "dataTop": 4977,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:31 am",
+              "text": "mettre après claim et clarifier",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 9106,
+          "dataTop": 5745,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:35 am",
+              "text": "Ajouter phrase de liaison",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 9106,
+          "dataTop": 5745,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:37 am",
+              "text": "reduire notre positon a une explication simple et courte",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 9223,
+          "dataTop": 5822,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 10:35 am",
+              "text": "expliquer",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 41514,
+          "dataTop": 34077,
+          "messages": [
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:26 am",
+              "text": "Supprimier et clarifer cette partie",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Mathis Carlesso",
+              "time": "8 September, 9:26 am",
+              "text": "Concept pas claire",
+              "possiblyTruncated": false
+            }
+          ]
+        }
+      ],
+      "trackedChanges": [
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\section{Introduction}\\label{sec:intro}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Large language models (LLMs) are used for tasks that range from knowledge-intensive"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "question answering and document summarization to explanation, brainstorming, and"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "creative writing. Across these uses, fluency is not enough: a response must make"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "commitments"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Hallucination evaluation"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "is therefore a reliability"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "problem, but also a question of what should count as an error in context"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "AA-Omniscience"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "open-weight models"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "That conclusion matters because LLM deployments do not all ask for the same kind"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "of response."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "In factual question answering or source-grounded summarization,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "unsupported content is normally an error. In an explanation, however, an"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "analogy may be useful without being literally true; brainstorming and fiction"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "may invite invention; and hypothesis generation may ask for possibilities that"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "the available evidence leaves unsettled"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\citep{franceschelli_creativity_2024,jiang_survey_2024,rick_supermind_2023}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Creativity research commonly distinguishes novelty from usefulness or quality"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\citep{runco_standard_2012,diedrich_are_2015}, while style-transfer research"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "treats the form of a response as a separate, controllable property"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\citep{kang_style_2021}. A metaphor may therefore be valuable precisely because"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "therefore"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "it is not a literal restatement of the source, while a factually correct answer"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "may still fail a requested style. Factuality, source faithfulness, creativity,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "actuality, source faithfulness, creativity,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "and response style consequently answer different evaluation questions."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "and response style consequently answer different evaluation questions"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The crucial"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "distinction is between introducing a possibility within the task's scope and"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "asserting it as a fact."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "These settings require two judgments"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "settle"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "judgments"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "operationalize"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "contrast"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "label"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "task"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The museum example does not make factuality or source-faithfulness evaluation"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "unnecessary; it clarifies their scope. Some tasks ask a model to reproduce facts"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "from external knowledge, whereas others ask it to stay faithful to a supplied"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "document. Still others ask it to solve a problem, explain an idea with an"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "analogy, or write in a particular style. A statement that is not literally"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "supported by the source may be useful in the latter tasks but erroneous in the"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "former. We therefore treat factuality, source faithfulness, creativity, and"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "response style as related but distinct requirements."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Factuality evaluation compares generated claims with external knowledge"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "sources, whereas source-faithfulness evaluation compares them with a provided"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "source document"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\citep{maynez_faithfulness_2020,kryscinski_evaluating_2020,min_factscore_2023}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "In the framework developed below, these resources instantiate the task oracle."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\citep{runco_standard_2012,diedrich_are_2015};"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "CreativityPrism, for example, evaluates quality, novelty, and diversity"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\citep{hou_creativityprism_2025}, and recent surveys and task-specific novelty"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "metrics continue to refine these criteria"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\citep{ismayilzada_progress_2024,zhao_assessing_2025,namuduri_genie_2026}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "These dimensions do not by themselves determine whether a novel factual claim"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "violates a task constraint."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Two protocols can therefore assign different labels to identical wording when"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "their prompts establish different task conditions."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\paragraph{Our position}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "the task's truth contract"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The signal may be a local hedge, a hypothesis label, a section heading, or a"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "task-level fictional frame."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+% Replacement for the complete figure environment labelled fig:prompt-to-claim.
+% Required in the preamble (already present in main_position.tex):
+% \usepackage{graphicx,xcolor,tikz}
+% \usetikzlibrary{arrows.meta,positioning,calc}
+% This is an illustrative evaluation, not a reported model experiment.
+\begin{figure}[!t]
+\centering
+\begingroup
+\definecolor{fOneBlue}{RGB}{65,119,191}
+\definecolor{fOneOrange}{RGB}{204,132,31}
+\definecolor{fOneRed}{RGB}{155,18,18}
+\definecolor{fOneGreen}{RGB}{22,98,48}
+\pgfdeclarelayer{fonebackground}
+\pgfsetlayers{fonebackground,main}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,
+  font=\sffamily\fontsize{10}{12}\selectfont,
+  fone prompt/.style={draw=black!80,fill=white,rounded corners=7pt,
+    line width=.7pt,text width=5.65cm,minimum height=3.35cm,
+    align=center,inner sep=8pt,anchor=north west},
+  fone contract/.style={draw=fOneBlue,dashed,fill=fOneBlue!13,
+    line width=.7pt,text width=5.25cm,minimum height=3.85cm,
+    align=left,inner sep=7pt,anchor=north west},
+  fone evaluation/.style={fone contract,text width=5.85cm,
+    minimum height=4.15cm},
+  fone flow/.style={-{Stealth[length=5pt,width=4pt]},
+    draw=black!85,line width=.7pt},
+  fone contract flow/.style={fone flow,draw=fOneBlue},
+  fone reference flow/.style={fone flow,draw=fOneOrange},
+  fone line/.style={draw=black!85,line width=.7pt}
+]
+
+% Prompts: the marking instruction is explicit in both tasks.
+\node[fone prompt] (factual) at (0,0) {
+  \textbf{Factual prompt ($p_1$)}\\[8pt]
+  ``Write a short factual museum label for a general audience.
+  Use only facts from the source. Mark uncertainty clearly.''
+};
+\node[fone prompt] (creative) at (7.70,0) {
+  \textbf{Creative prompt ($p_2$)}\\[8pt]
+  ``Write a short museum label for children, in a curious and
+  imaginative voice. Mark uncertainty clearly. You may add one
+  plausible reconstruction.''
+};
+
+% Both tasks use the same source and require clear uncertainty marking.
+% Only what the response may add changes.
+\node[fone contract] (contract-factual) at (0,-4.45) {
+  \textbf{Truth contract}\\[7pt]
+  \textbf{Source:} source excerpt (right)\\[3pt]
+  \textbf{The response may add:} nothing beyond the source\\[3pt]
+  \textbf{The response must:} mark uncertainty clearly
+};
+\node[fone contract] (contract-creative) at (8.10,-4.45) {
+  \textbf{Truth contract}\\[7pt]
+  \textbf{Source:} source excerpt (right)\\[3pt]
+  \textbf{The response may add:} one plausible reconstruction\\[3pt]
+  \textbf{The response must:} mark uncertainty clearly
+};
+
+% Source document: a custom wavy outline needs no extra TikZ library.
+\node[anchor=north west,align=left,text width=4.05cm,inner sep=8pt]
+  (reference) at (14.80,-4.05) {
+  \textbf{Source excerpt}\\[5pt]
+  Wikipedia article ``Rosetta Stone''---illustrative input\\[7pt]
+  ``A stele found near Rosetta in 1799 bears a decree from 196 BCE
+  in hieroglyphic, Demotic, and Greek. It is a fragment of a larger
+  stele probably once displayed in a temple.''\\[7pt]
+  \emph{Only this excerpt is used as the source.}
+};
+% Paint the source outline behind its text.
+\begin{pgfonlayer}{fonebackground}
+\path[draw=fOneOrange,fill=fOneOrange!15,line width=.7pt]
+  (reference.north west) -- (reference.north east)
+  -- ([yshift=-.12cm]reference.south east)
+  .. controls ([xshift=-1.30cm,yshift=.35cm]reference.south east)
+    and ([xshift=1.30cm,yshift=-.55cm]reference.south west)
+  .. ([yshift=-.12cm]reference.south west) -- cycle;
+\end{pgfonlayer}
+
+% Minimal robot icon, drawn entirely in TikZ (no image or icon dependency).
+\begin{scope}[shift={(6.90,-5.65)},line width=1.3pt,
+  draw=black,fill=white]
+  \draw[rounded corners=3pt] (-.46,-.31) rectangle (.46,.31);
+  \draw (-.46,.10) -- (-.58,.10) -- (-.58,-.12) -- (-.46,-.12);
+  \draw (.46,.10) -- (.58,.10) -- (.58,-.12) -- (.46,-.12);
+  \draw (0,.31) -- (0,.59);
+  \draw (0,.69) circle (.10);
+  \draw (-.21,.04) circle (.07);
+  \draw (.21,.04) circle (.07);
+  \draw (-.18,-.17) -- (.18,-.17);
+\end{scope}
+\node[align=center,anchor=north,text width=1.85cm,inner sep=2pt]
+  (llm-label) at (6.90,-6.08) {\textbf{LLM}\\[3pt]
+  Same response\\in both tasks};
+
+% Each prompt defines its own contract. The centre depicts alternative runs.
+\draw[fone contract flow] ([xshift=-.50cm]factual.south)
+  to[out=-90,in=90] (contract-factual.north);
+\draw[fone contract flow] ([xshift=.50cm]creative.south)
+  to[out=-90,in=90] (contract-creative.north);
+\coordinate (prompt-bus) at (6.90,-3.69);
+\draw[fone line] (factual.south) -- (factual.south |- prompt-bus)
+  -- (creative.south |- prompt-bus) -- (creative.south);
+\draw[fone flow] (prompt-bus) -- (6.90,-4.82);
+
+% The reference reaches both contracts above their top edges.
+\coordinate (reference-bus) at (14.35,-4.05);
+\draw[draw=fOneOrange,line width=.7pt]
+  ([yshift=-.85cm]reference.north west) -| (reference-bus);
+\draw[fone reference flow] (reference-bus)
+  -- (contract-factual.north |- reference-bus)
+  -- (contract-factual.north);
+\draw[fone reference flow] (reference-bus)
+  -- (contract-creative.north |- reference-bus)
+  -- (contract-creative.north);
+
+% Route the contract-to-evaluation arrows outside the response box.
+\node[draw=black!80,fill=white,rounded corners=7pt,line width=.7pt,
+  anchor=north west,align=center,text width=13.35cm,inner sep=8pt,
+  minimum height=2.40cm] (response) at (0,-9.15) {
+  \textbf{Identical response in both tasks}\\[8pt]
+  ``Think of the Rosetta Stone as the same message written three ways:
+  in hieroglyphic, Demotic, and Greek.
+  \textbf{One possible reconstruction places the complete stele near a
+  temple entrance, like a public noticeboard carved in stone.}''
+};
+\draw[fone flow] (llm-label.south) -- (response.north -| llm-label.south);
+
+\node[fone evaluation] (eval-factual) at (0,-12.65) {
+  \textbf{Factual task}\\[7pt]
+  \textbf{Claim:} the complete stele stood near a temple entrance.\\[5pt]
+  The source does not confirm or deny this claim.\\[8pt]
+  {\color{fOneRed}\bfseries HALLUCINATION (H)}\\[4pt]
+  The task allows only facts from the source.
+};
+\node[fone evaluation] (eval-creative) at (7.70,-12.65) {
+  \textbf{Creative task}\\[7pt]
+  \textbf{Claim:} the complete stele stood near a temple entrance.\\[5pt]
+  The source does not confirm or deny this claim.\\[8pt]
+  {\color{fOneGreen}\bfseries LICENSED DIVERGENCE (LD)}\\[4pt]
+  The task allows one plausible reconstruction, and the response presents
+  it as a possibility.
+};
+\coordinate (response-bus) at (6.90,-12.15);
+\draw[fone line] (response.south) -- (response.south |- response-bus);
+\draw[fone flow] (response.south |- response-bus)
+  -- (eval-factual.north |- response-bus) -- (eval-factual.north);
+\draw[fone flow] (response.south |- response-bus)
+  -- (eval-creative.north |- response-bus) -- (eval-creative.north);
+% Draw the routed paths without an arrowhead; add a short vertical arrow
+% separately so its direction is unambiguous in the compiled figure.
+\draw[draw=fOneBlue,line width=.7pt,rounded corners=9pt]
+  (contract-factual.west) -- (-.42,-6.38)
+  -- (-.42,-12.37) -- ([xshift=-1.35cm,yshift=.58cm]eval-factual.north);
+\draw[fone contract flow]
+  ([xshift=-1.35cm,yshift=.58cm]eval-factual.north)
+  -- ([xshift=-1.35cm,yshift=-.06cm]eval-factual.north);
+\draw[draw=fOneBlue,line width=.7pt,rounded corners=9pt]
+  (contract-creative.east) -- (14.30,-6.38)
+  -- (14.30,-12.37) -- ([xshift=1.35cm,yshift=.58cm]eval-creative.north);
+\draw[fone contract flow]
+  ([xshift=1.35cm,yshift=.58cm]eval-creative.north)
+  -- ([xshift=1.35cm,yshift=-.06cm]eval-creative.north);
+
+\coordinate (evaluation-bottom) at ($(eval-factual.south)!0.5!(eval-creative.south)$);
+\node[anchor=north,align=center,text width=13.65cm,inner sep=3pt]
+  at ([yshift=-.55cm]evaluation-bottom) {
+  \textbf{The same claim can receive a different label when the task changes}\\
+  \textbf{what the response may add.}\\[4pt]
+  Requested writing style is evaluated separately.
+};
+\end{tikzpicture}%
+}
+\endgroup
+\caption{\textbf{Same source and response, different task instructions.}
+The source does not confirm or deny the reconstruction. The factual task
+classifies it as a hallucination because it allows only facts from the source;
+the creative task classifies it as licensed divergence because it allows one
+plausible reconstruction presented as a possibility. Licensed divergence does
+not mean that the claim is true, and requested writing style is evaluated
+separately.}
+\label{fig:prompt-to-claim}
+\end{figure}

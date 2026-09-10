@@ -1,0 +1,147 @@
+# Réécriture à modifications minimales — 7 septembre 2026
+
+Fichier modifié : `main_position.tex` uniquement (849 insertions, 950 suppressions).
+`references.bib`, les figures, la classe et le `.bst` sont inchangés.
+Version de départ : `Claude outputs/main_position_AVANT_2026-09-07.tex` (= git HEAD 733bb5e).
+PDF : `main_position.pdf` et `Claude outputs/main_position-reecriture-minimale-2026-09-07.pdf`, 41 pages.
+
+Commentaires source : `CommentaireV2_review/last_mainV4-7-09.json`, 47 fils sur `main.tex`.
+Les positions `dataPos` de l'export correspondent exactement aux offsets caractère de
+`main_position.tex` : chaque commentaire a donc pu être localisé au caractère près dans la
+version de départ, sans reconstruction.
+
+---
+
+## 1. Le seul changement scientifique de fond
+
+La consigne « l'oracle est totalement indépendant du prompt, mais spécialisé suivant le
+domaine » rendait l'ancienne règle intenable. Si l'oracle ne bouge pas avec le prompt,
+une fiction qui déplace une date produit un claim CONTRADICTED, et l'ancienne règle le
+classait automatiquement H. C'était exactement l'objection de C18 (fiction sur un
+personnage réel).
+
+**Ancienne règle** : ENTAILED → G ; CONTRADICTED → H ; UNKNOWN → Γ et μ décident.
+
+**Nouvelle règle**, une phrase : *un claim établi par la référence est grounded ; un claim
+qui s'écarte de la référence est licensed divergence si le contrat autorise cet écart et
+si la réponse le marque, et hallucination sinon.*
+
+| État de preuve E | Autorisé et marqué | Sinon |
+|---|---|---|
+| ENTAILED | G | G |
+| UNKNOWN | LD | H |
+| CONTRADICTED | LD | H |
+
+Une seule case du tableau change par rapport à l'ancienne version : CONTRADICTED n'est
+plus câblé sur H. Trois garde-fous sont écrits explicitement dans le papier (§3.3) :
+
+- **Vrai ne devient jamais faux.** La ligne ENTAILED ne se ramifie pas. Un claim établi
+  reste G même sous une tâche qui aurait préféré le silence ; c'est un sujet
+  d'instruction-following, pas une hallucination. Le problème de la version longue
+  précédente (H appliqué à du contenu entailed) n'existe donc pas ici.
+- **La permission ne réécrit pas l'oracle.** Dans la fiction, la date reste CONTRADICTED.
+  Le contrat change l'étiquette, pas l'état de preuve, et le trace garde les deux.
+- **Le marquage ne crée pas de permission.** μ n'est vérifié que pour du contenu déjà
+  dans Γ.
+
+Conséquence sur les reason codes : ils passent de trois à deux, OUT-OF-SCOPE et
+MARKING-FAILURE, dans cet ordre de précédence. CONTRADICTED n'est plus un code : c'est un
+état de preuve, consigné à côté du code.
+
+---
+
+## 2. Ce qui a bougé dans la structure
+
+1. **Ordre demandé appliqué** : Introduction → §2 Related Work → §3 Framework → mapping →
+   cas → agenda → discussion. L'état de l'art a été déplacé tel quel devant le framework,
+   et toutes ses références en avant à O, Γ, μ, m*, H ont été réécrites en langage
+   ordinaire, puisqu'elles précèdent maintenant les définitions.
+2. **Zéro notation mathématique dans l'introduction**, figure 1 comprise : les encarts de
+   la figure disaient `TC(p1)=(O,Γ1,μ)`, ils disent maintenant « May add » / « Must mark ».
+3. **§3 réorganisé définitions d'abord** (C38) : 3.1 Le contrat (avec glossaire), 3.2 Les
+   claims, 3.3 La règle et l'exemple travaillé, 3.4 Le style, hors contrat.
+4. **Sections conservées** : le mapping des 41 ressources, les cinq cas travaillés,
+   l'agenda, les trois annexes. Rien n'a été supprimé du périmètre du papier.
+
+## 3. Ce qui a été supprimé
+
+- La justification terminologique « grounded plutôt que supported, parce que FEVER
+  utilise SUPPORTED » (§3.4 de l'ancienne version). FEVER reste cité dans le mapping,
+  où c'est une ressource codée : la retirer là fausserait la table.
+- Le mot « falsifiable » et les phrases qui l'utilisaient.
+- L'annonce détaillée du plan et des annexes en fin d'introduction.
+- La déduction AA-Omniscience → « il faut donc notre framework » en introduction. Le
+  paragraphe AA-Omniscience reste en discussion, où il est déjà prudent.
+- Le développement sur les datasets qui occupait la moitié de l'abstract.
+
+## 4. Suivi des 47 commentaires
+
+| # | Objet | Statut |
+|---|---|---|
+| C01, C02, C04 | abstract : accroche, position amenée, pas de point négatif | Appliqué. Nouvel abstract : « A factual summary and a fictional retelling should not be judged by the same rule », plus de mapping de datasets, réserve reformulée en positif (« the studies that would test it »). |
+| C03 | conséquence logique non démontrée | Appliqué. La déduction est supprimée ; l'intro repose sur deux tâches concrètes. |
+| C05 | mentionner le code | Remplacé par la consigne du 7 sept. Le code est nommé comme problème d'oracle hors périmètre (intro §Scope, §3.1). |
+| C06 | définir « hallucination » | Appliqué, p. 2 : claim que la tâche n'autorisait pas, ou que la réponse n'a pas présenté comme exigé. |
+| C07 | quelle conclusion ? | Appliqué : « Neither reports whether the task allowed the response to go beyond the reference. » |
+| C08, C14 | mettre la position en avant ; la position c'est le contrat | Appliqué. §Our position énonce le besoin du contrat ; « Changing the evaluation labels is a consequence of this position, not the position itself ». Le second message de C08 est tronqué dans l'export, non reconstitué. |
+| C09 | présenter l'exemple du musée textuellement | Appliqué : le papier s'ouvre dessus, avant toute figure. |
+| C10, C13, C21 | définir chaque terme, trop technique, on ne « ressent » pas | Appliqué. Trois questions en français simple dans l'intro, puis §3.1 avec un exemple concret par champ (ajouter un détail vs modifier une date connue vs prédire l'avenir). |
+| C11, C29, C30 | est-ce nécessaire en intro ? | Appliqué. Extraction, style et procédures sortis de l'intro. |
+| C12 | pas clair qu'on critique les datasets | Traité. §2 annonce ce qu'il fait ; le mapping garde ses réserves de portée mais ne sert plus d'argument principal. |
+| C15 | qu'est-ce que « truth-conditional » ? | Appliqué, §3.2 : contenu dont on peut dire vrai ou faux dans son contexte, avec le test pratique « is that so ? » et un contre-exemple. |
+| C16 | pas de maths dans l'intro | Appliqué, y compris dans la figure 1. La notation revient en §3.1. |
+| C17 | simplifier l'explication | Appliqué. Le framework s'ouvre sur une phrase de règle, puis le détail. |
+| C18 | quid d'une fiction sur un personnage réel ? | Appliqué via le changement de règle ci-dessus. Le cas B du papier est maintenant exactement ce cas. Second message tronqué, non reconstitué. |
+| C19, C35 | praise sur un paragraphe et une figure | Fonction conservée, texte réécrit pour la nouvelle règle. |
+| C20 | mettre la formule centrale en avant, liste à points | Appliqué. Équation (1) pour le contrat, liste à puces des trois champs, équation (2) pour la règle, table 2 exhaustive. |
+| C22 | dire que l'oracle contient tout ce qui est vrai | Non appliqué, remplacé par la consigne du 7 sept. §3.1 dit l'inverse : référence bornée, spécialisée par domaine, « not a repository of all truths ». |
+| C23 | figure 1 difficile, encore plus en début d'intro | Partiellement appliqué. Encarts reformulés en langage ordinaire, légende réécrite, flottement libéré. **L'image SharePoint n'a pas pu être consultée** : la conformité au modèle proposé n'est pas vérifiée. |
+| C24 | trouver une autre formulation | Appliqué : les encarts H et LD de la figure 1 sont reformulés. |
+| C25, C27 | 2e contribution incompréhensible / « ? » | Appliqué. Deux contributions : la règle, et le programme empirique. C27 se limite à « ? » : la zone a été refondue, l'objection précise reste indéterminée. |
+| C26 | reformuler, supprimer « falsifiable » | Appliqué. |
+| C28 | pas clair qu'on dit que c'est moins bien | Appliqué : « We are not claiming that this literature performs worse […] We are locating a decision it does not currently make. » |
+| C31 | ne pas mentionner les annexes | Appliqué. |
+| C32 | glossaire, encore trop de notation | Partiellement appliqué. Table 1 est un glossaire complet des dix symboles. La notation a été réduite : `TC` supprimé, `m*` supprimé, trois reason codes ramenés à deux. Elle n'a pas été supprimée, conformément à la demande de garder les notations utiles. |
+| C33, C41 | définir l'oracle ; une liste de documents ne suffit pas | Appliqué. §3.1 : textes désignés **plus** procédure (coupure temporelle, autorité, résolution des conflits), avec l'argument que les deux moitiés sont nécessaires. |
+| C34 | redéfinir le truth contract ici | Appliqué : §3.1 lui est entièrement consacrée et vient avant tout le reste. |
+| C36 | « permission scope is empty » pas clair | Appliqué. Γ est défini comme l'ensemble des écarts autorisés (couples contenu, état de preuve) ; Γ = ∅ est alors lisible. |
+| C37 | « ? » | Traité, intention indéterminée. La zone (états de preuve et motifs d'échec) est réécrite. |
+| C38 | positionner les définitions avant | Appliqué. |
+| C39 | l'indice p n'est pas utilisé avant | Appliqué. L'indice est introduit dans l'équation (1) et utilisé ; la convention d'abandon est explicite. |
+| C40, C42 | réintroduire m ; préférer le chapeau | Appliqué avec un arbitrage. `m*` disparaît au profit de `μ̂`, cohérent avec `σ̂` : μ = exigé, μ̂ = observé. C'est la réponse à C42, plus tardif et plus explicite que C40. |
+| C43 | mériterait une citation | Appliqué. Le choix de l'unité claim est justifié et rattaché à FActScore et VeriScore, à la fois en intro et en §3.2. |
+| C44 | reason codes seulement en annexe | Appliqué. Les deux codes sont définis dans le corps, §3.3. |
+| C45 | le style peut passer pour un champ du contrat | Appliqué. La sous-section s'appelle « Style, Outside the Contract » et s'ouvre sur « Writing style is not a fourth contract field. » |
+| C46 | intérêt de ce paragraphe | Appliqué. Nouvelle ouverture de §2 : quatre traditions, ce que chacune tranche, ce qu'aucune ne tranche. |
+| C47 | 2 références, c'est léger | Appliqué. La sous-section passe de 2 à 8 références, avec quatre entrées déjà présentes dans la bibliographie et jusque-là inutilisées : WiCE, SAFE (Wei et al.), RealTime QA, DelucionQA. Aucune clé BibTeX n'a été inventée. |
+
+## 5. Difficultés restantes
+
+| Difficulté | Où on en est | Ce qui manque |
+|---|---|---|
+| Autoriser une contradiction en fiction | Règle et cas B écrits ; garde-fous explicites | Accord des annotateurs sur ce point : c'est le test décisif ajouté en priorité 2 de l'agenda |
+| Oracle indépendant du prompt | Posé en §2.2 et §3.1, cas A reformulé pour distinguer « varier O entre deux protocoles » et « O fixe à l'intérieur d'un protocole » | Choix et versionnement des sources par domaine |
+| Déduire Γ d'un prompt ambigu | Contrat fixé avant lecture de la réponse ; échec de spécification consigné | Fiabilité et coût de cette annotation |
+| Portée des marqueurs | μ̂ lu sur la réponse complète, un cadre peut couvrir plusieurs phrases | Règles de portée testées |
+| Périmètre texte seulement | Assumé et argumenté en intro et §3.1 | Rien à faire si le périmètre est accepté ; sinon il faut un oracle par domaine |
+| Mapping des 41 ressources | Conservé, avec ses réserves de portée | Vérifier avec les coauteurs si ce volume reste souhaité pour le format visé |
+| Validation empirique | Agenda inchangé, plus un test décisif sur le contenu contredit | Aucun accord inter-annotateurs ni score mesuré ici |
+
+## 6. Vérifications faites
+
+- Compilation `latexmk -pdf -bibtex` : **0 erreur, 0 avertissement LaTeX, 0 citation ou
+  référence non résolue, 0 Overfull**. Seul avertissement restant : `pdfpagelabels`
+  désactivé par l'ordre de chargement du gabarit.
+- 103 clés citées, toutes présentes dans `references.bib`, aucune ajoutée ni inventée.
+- Inspection visuelle des pages 1–4, 8–16, 18–21 et 24–26 du PDF : abstract, introduction,
+  figures 1 et 2, tables 1 à 3, équations (1) et (2), cas travaillés, discussion,
+  conclusion.
+- `git diff --check` : aucun problème d'espaces.
+- Contrôle des termes retirés : plus de `falsifiable`, plus de justification FEVER/SUPPORTED,
+  plus de `m^*`, plus de macro `\TC`.
+- La compilation dans `build/` du dossier monté produit des `.aux` corrompus (le montage
+  ne tronque pas les fichiers à la réécriture). Le PDF livré a été produit dans un
+  répertoire de travail hors montage, à partir des mêmes sources, puis recopié. Un
+  `make pdf` local depuis le Mac fonctionne normalement.
+- Il s'agit d'une vérification éditoriale et technique, pas d'une relecture scientifique
+  indépendante.
