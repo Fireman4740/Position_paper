@@ -94,9 +94,10 @@ what the task permits beyond it, and how such content must be presented.
 We specify a claim-level rule that distinguishes grounded claims,
 hallucinations, and \emph{licensed divergence}. Licensed divergence records
 permission and adequate marking for unknown or contradicted content, not established
-truth or creative value. A separate response-level record reports the content
-verdict, style-marking alignment, and creative-task success, with evaluation
-failures and recovery coverage made visible. A descriptive mapping of
+truth or creative value. A claim trace records these decisions, evaluation
+failures, and recovery coverage. How to summarize it as a global response
+verdict remains a research question; style and creative-task success require
+separate assessment. A descriptive mapping of
 forty-one resources examines how existing designs represent these distinctions,
 and five constructed cases illustrate the rule's consequences. The resulting
 research agenda identifies tests of annotation reliability, robustness to
@@ -107,13 +108,11 @@ contract representation.
 \section{Introduction}\label{sec:intro}
 
 Large language models (LLMs) can produce fluent statements that contradict
-available evidence or cannot be verified from it, commonly discussed as
-\emph{hallucinations} (\Hall) \citep{ji_survey_2023,huang_survey_2025}.
-Although LLMs have become increasingly capable of performing complex tasks,
-these gains have not resolved hallucination. Open-weight models have grown in
-parameter count as the sizes of proprietary systems but cannot be sure besause 
-the don't have access to their models. Across successive generations, newer and larger models do not
-consistently exhibit lower hallucination rates. AA-Omniscience reports
+available evidence or cannot be verified from it. 
+Such statements are commonly discussed as hallucinations in factuality and source-faithfulness evaluations \citep{ji_survey_2023,huang_survey_2025}.
+Although LLMs can handle increasingly complex tasks, hallucinations remain a problem.
+Across successive generations, newer and larger models do not
+consistently exhibit lower hallucination rates. Results from AA-Omniscience benchmarks show
 persistent weaknesses in factual accuracy and abstention, and its August 26,
 2026 leaderboard snapshot shows no consistent decrease in hallucination rate
 with open-weight model size
@@ -122,16 +121,12 @@ Hallucination therefore remains an unresolved challenge. Moreover, Banerjee
 et al.\ argue that hallucination is inherent to the mathematical and logical
 structure of LLMs, such that scaling and architectural improvements alone
 cannot eliminate it \citep{banerjee_llms_2024}.
-
-Factuality and source-faithfulness evaluations address this need by checking
-generated content against a evidence source: external knowledge or a supplied source
-\citep{maynez_faithfulness_2020,kryscinski_evaluating_2020,min_factscore_2023}.
+Factuality and source-faithfulness evaluations check generated content against external references or supplied documents \citep{maynez_faithfulness_2020,kryscinski_evaluating_2020,min_factscore_2023}.
 These checks are essential when a task requires factual accuracy.
-Yet LLMs are also used for brainstorming, hypothesis generation, and fiction,
+Yet LLMs are also used for brainstorming, hypothesis generation,  fiction and other creative tasks
 where users may explicitly request content that existing evidence does not
-establish \citep{franceschelli_creativity_2024,jiang_survey_2024}.
-A factual summary may reject an unsupported explanation,
- whereas a hypothesis-generation task may allow it.
+support \citep{franceschelli_creativity_2024,jiang_survey_2024}.
+A factual summarization task may reject an unsupported explanation, whereas a hypothesis-generation task may allow it.
 
 \begin{figure}[!t]
 \centering
@@ -194,8 +189,8 @@ A factual summary may reject an unsupported explanation,
   \textbf{Source excerpt}\\[5pt]
   Wikipedia article ``Rosetta Stone''---illustrative input\\[7pt]
   ``A stele found near Rosetta in 1799 bears a decree from 196 BCE
-  in hieroglyphic, Demotic, and Greek. It is a fragment of a larger
-  stele probably once displayed in a temple.''\\[7pt]
+  in hieroglyphic, Demotic, and Greek. The stone is a fragment of a l
+  arger stele that was probably once displayed in a temple.''\\[7pt]
   \emph{Only this excerpt is used as the source.}
 };
 % Paint the source outline behind its text.
@@ -303,80 +298,70 @@ A factual summary may reject an unsupported explanation,
 \end{tikzpicture}%
 }
 \endgroup
-\caption{\textbf{Same source and response, different task instructions.}
-The source does not confirm or deny the reconstruction. The factual task
-classifies it as a hallucination because it allows only facts from the source;
-the creative task classifies it as licensed divergence because it allows one
-plausible reconstruction presented as a possibility. Licensed divergence does
-not mean that the claim is true, and requested writing style is evaluated
-separately.}
+\caption{\textbf{Example evaluation flow for one generated text with two different prompts. %Same source and response, different task instructions.
+}
+The generated response contains a proposed reconstruction that the source neither confirms nor contradicts. The factual task
+classifies it as a hallucination because it allows only facts from the source.
+The creative task labels the same claim as licensed divergence because it permits this reconstruction and the response presents it as a possibility. Licensed divergence does
+not mean that the claim is true. The requested writing style is evaluated separately.}
 \label{fig:prompt-to-claim}
 \end{figure}
 
-Labeling every such statement as an error would penalize outputs that the task permits.
-
-Creative expression also need not introduce new factual content.
-A metaphor can explain source-supported information through a comparison
+Treating every creative generated claim beyond the available evidence as a
+hallucination would penalize licensed divergence that some tasks allow or even require.
+Under our proposed definition, even a true statement can receive the hallucination label when the task explicitly requires invented content and excludes that statement. %Creative addition also need not introduce new factual content.
+Moreover, a metaphor can explain source-supported information through a comparison
 rather than a literal restatement.
-For example, describing an inscription as ``a message across centuries''
-need not assert that it literally communicates across time.
-An evaluator that reads the wording too literally may assume that 
-the response makes something the response does not say
+For example, describing an inscription on an old sculpture as ``a message across centuries''
+does not necessarily assert that it literally communicates across time.
+%An evaluator that reads the wording too literally may assume that the response makes something the response does not say
 A metaphor may therefore be useful without repeating what the source says,
-while a factually correct answer may still fail a requested style.
+while a factually correct answer may still fail to match the requested style.
 These possibilities require separate assessments of what a response says
-and how it says it.
-A request for imaginative language does not, by itself, authorize factual
-invention.
+and how it says.
+A request for imaginative language does not, by itself, authorize factual invention.
 
 The opposite problem occurs when evaluation focuses on creativity.
 Creativity evaluations look at metrics such as novelty, usefulness, and
 task-specific quality
 \citep{runco_standard_2012,hou_creativityprism_2025,zhao_assessing_2025}.
 These metrics alone do not show whether the information in a response is
-supported by available evidence or whether the task permits unsupported
+supported by available sources or whether the task permits unsupported
 content.
 Many creativity evaluations in the existing literature measure creative
 performance without checking at the same time whether the information is
-supported by available evidence (Section~\ref{sec:methodology}).
-A high creativity score does not show that the information is supported by
-available evidence.
+supported by available sources (Section~\ref{sec:methodology}).
+%A high creativity score does not show that the information is supported by available evidence.
 A response can be creative but contain unsupported
-information. Conversely, it can be factually accurate but fail to meet the
-creative goal.
+information. Conversely, it can be factually accurate but fail to meet the creative goal.
 
-An engaging response may add creative content beyond the available evidence,
-provided that the task permits this content and that it is clearly marked as
-invented or speculative. Conversely, a response may be factually accurate but
-still fail to achieve the task's creative goal.
+%An engaging response may add creative content beyond the available evidence, provided that the task permits this content and that it is clearly marked as invented or speculative. Conversely, a response may be factually accurate but still fail to achieve the task's creative goal.
 
 The distinction is simple: the same sentence can be acceptable in one task and
-a hallucination in another. Consider two museum labels based on the same
-source. Both might say: ``One possible reconstruction places the complete
-stele near a temple entrance.'' The source does not confirm or deny this
+a hallucination in another. For example, consider two museum labeling tasks with different prompts based on the same
+source that yield the same response from an LLM as illustrated in Figure~\ref{fig:prompt-to-claim}. 
+The response contains the following text: ``One possible reconstruction places the complete
+stele near a temple entrance.'' The source does not confirm or deny the claim in this 
 sentence.
-
-For a factual task, this is a hallucination because the task may require the use of only
-facts from the source. For a more créative task, it can be a licensed divergence
+For a factual task, this is a hallucination because the task may require only
+facts supported by the source. In a creative task, it can be a licensed divergence
 if the task allows this kind of addition and the response clearly presents it
 as a possibility.
-If the response presents this possibility as a fact, it becomes a hallucination
+Therefore, if the response presents this possibility as a fact, it becomes a hallucination
 because the source does not support it.
-Figure~\ref{fig:prompt-to-claim} illustrates this difference.
+
 
 
 
 \paragraph{Our position}
 We argue that hallucination evaluation should consider both the available
 evidence and the task instructions. We call this combination a \emph{truth
-contract}. It answers three questions: What reference evidences hould be used to check
-the response? What may the response add or change? How must the response
-present such content? These questions are answered from the task context
+contract}. It answers three questions: What reference evidence and checking procedure should be used to check the response? What content does the task permit or exclude beyond the reference evidence? How must the response present such content? 
+These questions should be answered from the task context
 before the response is evaluated.
-
-The truth contract makes the evaluation rule explicit. Content supported by the reference is grounded. Content that goes beyond the
-reference is \emph{licensed divergence} (\LD) only when the task allows it and the
-response presents it as required. Otherwise, it is classified as a
+The truth contract makes evaluation rules explicit. Content supported by the reference receives the grounded label unless the task explicitly excludes it.
+By contrast, content that goes beyond or contradicts the reference receives the \emph{licensed divergence} (\LD) label only when the task permits it and the response presents it as required.
+Otherwise, this content is classified as a
 hallucination. Licensed divergence therefore indicates
 that unsupported content was both permitted and clearly presented as such. It
 does not indicate that the content is true. Our position is that the available evidence and the task instructions should
@@ -384,22 +369,19 @@ be evaluated together.
 
 \paragraph{Contributions}
 This position paper makes three contributions. First, we introduce the
-\emph{truth contract}. It states what evidence should be used, what the task
+\emph{truth contract} for evaluating hallucinations in LLM-generated text. It states what evidence should be used, what the task
 allows beyond that evidence, and how such content should be presented. This
 contract helps distinguish grounded content, hallucinations, and licensed
 divergence (Section~\ref{sec:framework}).
 
-Second, we propose a clear way to evaluate a complete response. We assess
-separately whether its content follows the truth contract, whether it uses the
-requested style, and whether it achieves the creative goal. We also report when
-parts of the response cannot be evaluated.
+Second, we propose rules for labeling individual claims based on the \emph{truth contract}.
+How to combine these labels into an overall assessment of the response remains a research question. 
+Creative-task success is assessed separately, and evaluation failures are reported.
 
 Third, we compare forty-one selected evaluation resources and illustrate the
-framework with five constructed cases
-(Sections~\ref{sec:methodology} and~\ref{sec:cases}). This comparison and these
-cases explain how the framework can be used, but they do not yet prove that it
-is reliable or useful in practice. These questions are addressed in the
-research agenda in Section~\ref{sec:agenda}.
+framework with five examples %constructed cases
+(Sections~\ref{sec:methodology} and~\ref{sec:cases}). %This comparison and these examples explain how the framework can be used, but they do not yet prove that it is reliable or useful in practice. 
+The research agenda in Section~\ref{sec:agenda} asks whether the framework can be applied reliably and improves evaluation.
 
 Section~\ref{sec:framework} presents the framework, and
 Section~\ref{sec:related} compares it with existing work.
@@ -409,126 +391,155 @@ present future research questions and discuss the scope of the framework.
 
 \section{Framework}\label{sec:framework}
 
-The framework separates what the evidence establishes from what the task permits.
-We first motivate that separation, define the contract and the claims it evaluates,
-and then specify the decision rule. The final two subsections explain the
-response-level output and the separate question of robustness to style.
+Evidence tells us what the reference supports. Permission tells us what the
+task allows the response to add or change. A separate requirement specifies
+how those additions or changes must be presented. Content that the reference
+does not establish may therefore still meet the task's requirements.
+Our framework separates these questions before combining their answers.
 
-\subsection{Why Evidence Alone Is Not Enough}
+We call the complete model-generated text the \emph{response}. We evaluate
+its individual \emph{claims}: statements whose content can be checked in
+context against the reference evidence.
 
-Consider a museum label based on a short reference about the Rosetta Stone.
-The reference records its discovery near Rosetta in 1799, a decree from 196 BCE,
-and its three scripts. It describes the stone as a fragment of a larger stele
-probably displayed in a temple, without specifying its exact placement.
-Throughout this paper, this text is a fixed illustrative input, not a documented
-verbatim quotation from a versioned historical source.
+ Consider a museum example based on a short source about the Rosetta Stone. 
+ The source says that the stone was found near Rosetta in 1799, 
+ contains a decree from 196 BCE in three scripts, and is part of a larger stele probably displayed in a temple. 
+ It does not say exactly where the complete stele stood. 
+ We use this excerpt only as a fixed illustrative source; it is not a verbatim quotation from a specific historical source.
+Now consider the claim: ``One possible reconstruction places the complete stele near a temple entrance.'' 
+The source neither supports nor contradicts this claim. 
+In a factual task that allows only information supported by the source, 
+the claim is not allowed. In a task that allows a plausible reconstruction, 
+the same claim may be allowed if the response presents it as a possibility. 
+The claim and the evidence are the same; only the task permission changes.
 
-Now consider the proposed addition: ``One possible reconstruction places the
-complete stele near a temple entrance.'' The reference neither establishes
-nor rules out this placement. A task requiring only source-established facts
-forbids the addition. A task permitting a plausible historical reconstruction
-can accept it when its conjectural status is clear. The evidence is unchanged;
-the permission differs.
-
-This contrast requires two questions. What does the designated evidence
-establish? When it leaves content unsettled, does the task permit that content,
-and how must the response present it? A strict summary and a hypothesis-generation
-task can answer the second question differently. We call the explicit
-representation of these conditions a \emph{truth contract}.
+Evaluating such a case therefore requires two distinct questions. 
+First, what does the reference evidence establish about the claim? 
+Second, when the evidence does not settle it, does the task permit the response to introduce that content, 
+and how must its claim be presented? We call the explicit representation of these task conditions a \emph{truth contract}. 
+The following subsections define this contract, specify the claims to which it applies, 
+and then derive the claim-level decision rule.
 
 \subsection{The Truth Contract}\label{subsec:contract}
-
-A truth contract states what settles a claim, which departures from that
+A truth contract specifies which evidence and checking procedure are used to evaluate a claim, which departures from that
 reference the response may introduce, and how they must be presented.
 For the complete task context $p$, we write
 \begin{equation}
 \TC(p)=(O,\Gamma,\mu).
 \label{eq:truth-contract}
 \end{equation}
-The context includes the prompt, applicable system instructions, dialogue
+The task context includes the prompt, applicable system instructions, dialogue
 history, domain constraints, and attached data. The three fields have distinct roles:
 \begin{itemize}
-\item $O$, the \emph{task oracle}, specifies the fixed textual reference and checking procedure.
-\item $\Gamma$, the \emph{permission scope}, identifies the content--evidence-state pairs the task allows.
+\item $O$, the \emph{task oracle}, is a domain-specific system for checking a response against reference evidence or specified tests.
+\item $\Gamma$, the \emph{permission scope}, specifies permitted departures from the evidence and any explicit requirement to use invented content instead of real facts.
 \item $\mu$, the \emph{required status marking}, specifies how that content must be presented.
 \end{itemize}
-The evaluator specifies these fields before inspecting the response.
-Conflicting instructions require a recorded precedence decision; unresolved
-ambiguity is a specification failure. Applicable external constraints remain
-binding. Permission cannot be enlarged after generation to accommodate an
-otherwise unauthorized claim.
+The evaluator fixes the task oracle, the permission scope, and the required status marking before reading the response. 
+This order matters because the contract defines the rules of evaluation; 
+it should not be adjusted after the fact to fit a particular output. 
+When instructions conflict, the evaluator must decide which instruction has priority and record that decision. 
+If the task context does not allow such a decision, the evaluation setup is underspecified. 
+External constraints, such as legal, safety, licensing, or domain-specific requirements, 
+still apply even if the prompt does not mention them again. 
+Finally, the permission scope cannot be expanded after generation to make an otherwise unauthorized claim acceptable.
 
 \paragraph{Task oracle}
-The oracle is a named body of text together with a checking procedure. The
-procedure specifies temporal scope, source authority, and conflict resolution.
-We restrict it to textual references, such as a source document or a frozen
-collection of domain-specific documents. It remains fixed across the prompts
-compared within an evaluation design. Different designs may designate different
-references, as Case~A illustrates. Creative instructions change permission,
-not the reference. Code execution, proof checking, and a universal oracle are
-outside the present framework.
+The task oracle checks a response using methods suited to its domain. For
+text, it identifies claims in the response (\emph{claim extraction}),
+interprets their meaning in context (\emph{claim recovery}),
+and checks them against the reference evidence (\emph{claim verification}); Sections~\ref{subsec:unit}
+and~\ref{subsec:verification} explain them. We use $q^*$ for the recovered
+claim content, preserving its meaning, entities, qualifiers, and temporal
+scope. The oracle records what the evidence establishes and how the response
+presents each claim. Permission and required marking are checked afterward.
 
-In the museum example, the oracle uses only the illustrative excerpt and a
-procedure for deciding what it entails or contradicts. It does not include
+The oracle includes both the reference evidence and the procedures used to
+process the response. Its implementation depends on the domain and may use
+human judgment, automated methods, or both. It may use a source document,
+a retrieval set, a database, gold
+labels, or executable code. For a program, the oracle may instead be a suite
+of unit tests that compares actual and expected outputs. For a formal proof,
+it may be a proof checker. These oracles need not extract or interpret
+natural-language claims. Their results establish only what the tests or
+checks cover; passing unit tests does not establish that a program is correct
+for every input. The following sections detail the textual case.
+
+The oracle is defined independently of the prompt: the evaluation protocol
+selects its references and domain-specific checking procedures before prompts are
+compared. The truth contract records which oracle is used; the prompt does
+not define or modify that oracle. It remains fixed across the prompts
+compared within an evaluation design. Different designs may designate
+different oracles, as Case~A illustrates. In particular, permission to invent
+content does not change the evidence against which that content is checked.
+This independence concerns the system's specification: it can read the task
+context to resolve references and understand the response, without treating
+the prompt's permission to invent as evidence that an invention is true.
+
+For reproducible evaluation, the protocol must specify the oracle, its sources
+or checks, their versions, and conditions of use. It must also state how source
+adequacy, temporal validity, and conflicts are handled. The oracle need not be
+complete: when it neither supports nor contradicts a claim, the result is
+\textsc{unknown}. Failure to specify or apply the oracle is a separate
+evaluation error.
+
+In the museum example, we instantiate this general definition with the
+illustrative excerpt from the Wikipedia article ``Rosetta Stone'' and
+procedures that extract and recover the response's claims, then determine
+what the excerpt entails or contradicts. It does not include
 whatever additional information an evaluator happens to know. Nor does it
 include a reconstruction merely because the task permits proposing it.
 The oracle specifies the standard to apply; reliable implementation of that
 standard remains an empirical problem.
 
 \paragraph{Permission scope}
-Permission scope identifies permitted departures by topic, entity, or claim
-type. Formally, $\Gamma$ is a set of pairs $(q^*,E)$, combining content with
-its evidence state. Permission for an unknown reconstruction need not authorize
-a contradiction of a known date. An alternate history may explicitly permit
-that contradiction; its evidence state still remains \textsc{contradicted}. In the museum task, a plausible historical
-placement may be eligible. A prediction that the stone will be returned to
-Egypt next year is outside that scope, even if described as a possibility.
-A strict factual task allows no departures from what the reference entails; we express this
-as $\Gamma=\varnothing$.
+Permission scope $\Gamma$ records rules about what the response may add or
+change beyond the reference evidence. Permission may concern a specific
+claim, such as a possible temple-entrance placement, or a broader topic, such
+as plausible reconstructions of the stone's original placement. Each claim
+is checked against these rules. In the museum task, changing the decree's
+known date or predicting the stone's return to Egypt next year falls outside
+the scope, even if presented as possible.
 
-Permission is distinct from value. An authorized reconstruction may be
-unhelpful, while an engaging invention may exceed the task's boundary.
-Permission is also distinct from a response-level quota: checking whether each
-claim belongs to $\Gamma$ does not enforce the instruction to add \emph{one}
-reconstruction. Such a quota requires a separate response-level check; the
-local rule does not decide which eligible claim should be penalized.
+For a strict factual task, $\Gamma=\varnothing$: no departures are permitted,
+but supported facts remain allowed. A different task may explicitly require
+invented content in a specified part of the response and exclude real facts
+there. Such exclusions are recorded as additional scope rules. Simply asking
+for fiction does not imply them: a story can include real places or events.
+
+Permission does not guarantee usefulness: an allowed reconstruction may add
+little value, while an interesting invention may fall outside the permitted
+scope. Permission scope also does not specify how many reconstructions the
+response may include. If the task asks for one reconstruction, two could each
+be within scope while together exceeding the requested number. This limit
+applies to the whole response; permission scope alone does not identify which
+reconstruction is the extra one.
 
 \paragraph{Required status marking}
-Required status marking states how the response must identify eligible content
-as uncertain, hypothetical, or fictional. The signal may be a local hedge,
-a hypothesis label, a section heading, or a declared fictional frame.
-In the museum task, ``One possible reconstruction'' signals conjecture.
-Presenting the placement as established does not meet that requirement.
-A signal can occur outside the sentence containing the claim, so its scope
-must be interpreted using the complete response and task context.
+Required status marking $\mu$ specifies how the response must make clear
+that permitted content is uncertain, hypothetical, or fictional. In the
+museum task, ``One possible reconstruction'' tells the reader that the
+temple-entrance placement is a suggestion rather than an established fact.
+This indication can appear in the sentence itself or in a heading or
+introduction that clearly applies to it.
 
-The contract addresses these truth-related conditions. It does not measure
-novelty, usefulness, writing quality, global reasoning, or safety.
-Its application therefore begins by identifying precisely what the response
-says and how it presents that content.
+This concern with communicating uncertainty relates to
+\citet{yona_metacognition_2026}, who propose that a model's expressed
+uncertainty should reflect its internal uncertainty. Here, $\mu$ describes
+the presentation required by the task, including for hypotheses and fiction;
+it does not measure the model's internal confidence. Marking content as
+uncertain or fictional does not expand the permission scope.
 
-\subsection{From Response Text to Claims}\label{subsec:unit}
+The contract specifies the reference evidence, what the response may add or
+change, and how it must present those additions or changes. Quality,
+usefulness, originality, reasoning, and safety require separate assessment.
+The next step is to identify what each claim says and how it is presented.
 
-A response may combine established information, conjecture, and material that
-makes no checkable commitment. We evaluate individual \emph{claims}: content
-attributed to the response that can be checked while preserving its context
-and its asserted, hypothetical, or fictional status. This is the sense in which
-we use \emph{truth-conditional}: it is meaningful to ask whether the content
-is true or false in its specified context.
-
-\emph{Claim extraction} locates candidate text units, often clauses or sentences.
-\emph{Claim recovery} interprets those units in context to identify what the
-response commits to. The distinction matters because identical wording can
-express a historical assertion, a fictional event, or a report about another
-speaker's assertion. Extraction alone does not settle that interpretation.
-
-Each recovered claim is represented by two components. The canonical content
-$q^*$ records the proposition being evaluated. The observed status marking
-$\widehat{m}$ records how the response presents it. For the museum reconstruction,
-$q^*$ is the temple-entrance placement and $\widehat{m}$ presents it as possible.
-Together, the components preserve the commitment; $q^*$ alone does not say
-that the response asserted the placement as established.
-Table~\ref{tab:notation} summarizes the notation introduced so far.
+For the following sections, $E$ denotes a claim's relation to the oracle:
+\textsc{entailed}, \textsc{contradicted}, or \textsc{unknown}.
+The observed status marking $\widehat{m}$ describes how the response actually
+presents the claim; $\mu$ specifies how the task requires it to be presented.
+Table~\ref{tab:notation} summarizes the notation.
 
 \begin{table}[!ht]
 \centering\small
@@ -538,8 +549,8 @@ Table~\ref{tab:notation} summarizes the notation introduced so far.
 \toprule
 Symbol & Meaning\\\midrule
 $p$ & Complete task context\\
-$O$ & Fixed textual reference and checking procedure\\
-$\Gamma$ & Permitted content--evidence-state pairs $(q^*,E)$\\
+$O$ & Domain-specific checking system; for text, claim extraction, recovery, and verification\\
+$\Gamma$ & Permission scope: what the response may add or change\\
 $E$ & Evidence state relative to $O$\\
 $\mu$ & Required status marking\\
 $q^*$ & Canonical claim content, preserving meaning and context\\
@@ -547,51 +558,144 @@ $\widehat{m}$ & Observed status marking recovered from the response in context\\
 \bottomrule
 \end{tabularx}
 \end{table}
+\FloatBarrier
 
-Canonicalization must preserve attribution, negation, quantity, time, and
-meaning-changing modality. Separating a hedge from its content is not permission
-to turn ``a story says that'' into a real-world assertion. The annotation
-protocol must specify how framing is represented in $q^*$ and $\widehat{m}$;
-ambiguous cases remain unresolved. Commitments that can receive different
-evidence states should be recovered separately.
+\subsection{From Response Text to Claims}\label{subsec:unit}
 
-Recovery can omit claims, introduce spurious ones, merge distinct commitments,
-or split one commitment into redundant subclaims. These errors affect both
-labels and coverage. Conversely, ``Now imagine the scene'' need not yield a
-truth-conditional claim at all. A justified absence of a claim is a normal
-outcome, whereas failure to recover a stable interpretation is a procedural
-failure. Appendix~\ref{app:diagnostics} records these failures separately.
+A response can mix facts, suggestions, and storytelling. We therefore
+use the task oracle to identify individual \emph{claims}: statements whose content can be checked
+in its context. Evaluating separate pieces of information is also the
+approach used by FActScore, which breaks a response into atomic facts before
+checking their support \citep{min_factscore_2023}. Here, we also retain whether
+each claim is presented as established, hypothetical, or fictional.
 
-\subsection{From Evidence State to Claim Label}\label{subsec:rule}
+The first two steps belong to the oracle. \emph{Claim extraction} finds the relevant words
+in the response. \emph{Claim recovery} identifies what those words mean in
+context. For example, in Figure~\ref{fig:claim-label-annotation}, ``The stone
+was found near Rosetta'' refers to the Rosetta Stone, and ``Rosetta, 1799''
+provides the date of discovery. Recovering the claim brings these details
+together. This need to preserve meaning when making a statement understandable
+on its own is also central to decontextualization
+\citep{choi_decontextualization_2021}.
 
-Once the contract and a stable claim representation are available,
-\emph{claim verification} compares $q^*$ with $O$. Successful adjudication
+For each claim, the oracle records what it says ($q^*$) and how it is presented
+($\widehat{m}$). Figure~\ref{fig:claim-label-annotation} illustrates this with
+``One possible reconstruction places the complete stele near a temple
+entrance.'' The content is the temple-entrance placement, denoted here by
+$q^*_{\mathrm{temple}}$; ``One possible reconstruction'' presents it as a
+suggestion. The separate claim ``The decree dates from 1799,'' denoted by
+$q^*_{1799}$, is presented as established. Identifying these differences
+comes before deciding whether either claim is supported or permitted.
+
+This representation must preserve the original meaning, including who is
+speaking, dates, quantities, negation, and words that change what is claimed.
+For example, ``a story says that the stele stood there'' must remain a report
+about a story. It must not become an assertion that the stele really stood
+there. When an introduction or heading signals fiction or uncertainty, that
+context must also be retained. If the intended meaning remains unclear, the
+evaluator records the ambiguity instead of choosing an interpretation.
+
+Likewise, ``The excerpt does not confirm that the stele stood near a temple
+entrance'' makes a claim about the source. It does not claim that the stele
+stood there. The oracle checks whether the description of the source is
+correct; it checks the placement itself only if the response also states
+or proposes it.
+
+Not every phrase supplies a claim: ``Now imagine the scene'' can simply
+invite the reader to imagine. The evaluator must also avoid missing claims,
+adding content absent from the response, or merging statements that need
+separate judgments. Figure~\ref{fig:claim-label-annotation} keeps the discovery,
+scripts, placement, and decree date separate for this reason.
+Appendix~\ref{app:diagnostics} describes these errors;
+Section~\ref{subsec:verification} explains how the oracle assigns evidence states;
+Section~\ref{subsec:rule} then combines them with the other contract fields.
+
+\subsection{Oracle Verification: Evidence States}\label{subsec:verification}
+
+After extraction and recovery, the oracle performs \emph{claim verification}:
+it checks each $q^*$ against its reference evidence. Successful verification
 returns one of three evidence states:
 \begin{itemize}
 \item \textsc{entailed}: the oracle establishes the claim;
 \item \textsc{contradicted}: the oracle establishes that the claim is incompatible with its evidence;
 \item \textsc{unknown}: the oracle neither establishes nor contradicts the claim.
 \end{itemize}
-Unknown is relative to the designated oracle. Silence in a correctly specified
-bounded reference is not an evaluation failure. Missing required evidence or
-an unresolved source conflict can instead prevent adjudication; the evaluator
-then reports the failure without assigning a claim label.
+An \textsc{unknown} result means that the specified evidence neither supports
+nor contradicts the claim. The museum excerpt, for example, is available but
+does not settle the temple-entrance placement. This differs from a failed
+evaluation: if a required source is inaccessible, a source conflict cannot
+be resolved, or the claim remains unclear, the evaluator records the failure
+and leaves the affected claim unlabeled. Appendix~\ref{app:diagnostics}
+describes these failures.
 
-An evidence state describes the relation to the oracle. A \emph{claim label}
-records the outcome under the contract. Table~\ref{tab:claim-rule} gives the
-complete rule. An entailed claim receives grounded (\Grd). Both unknown and
-contradicted claims proceed to permission and marking checks; permission does
-not change the evidence state.
+The oracle therefore returns each recovered claim with its content $q^*$,
+observed marking $\widehat{m}$, and evidence state $E$, together with any
+procedural failures. In Figure~\ref{fig:claim-label-annotation}, it recovers
+four claims and assigns two \textsc{entailed} states, one \textsc{unknown}
+state for the placement, and one \textsc{contradicted} state for the decree
+date. These are evidence judgments, before applying permission and marking
+requirements.
+
+\subsection{Combining Contract Results: Claim Labels}\label{subsec:rule}
+
+Once the oracle has checked a claim, the evaluator uses its evidence state
+to decide which contract conditions to check next. Supported content receives
+the grounded label (\Grd), unless the task explicitly excludes it. Content
+that is \textsc{unknown} or \textsc{contradicted} requires two further checks:
+does the task permit it, and does the response present it as required?
+If both conditions hold, it receives \emph{licensed divergence} (\LD).
+Otherwise, it receives \emph{hallucination} (\Hall).
+
+Figure~\ref{fig:claim-label-annotation} illustrates the ordinary museum task.
+The temple-entrance placement is \textsc{unknown}, but the task permits this
+reconstruction. With ``One possible reconstruction,'' it receives \LD{};
+presented as established, it would receive \Hall{} for a marking failure.
+The claim that the decree dates from 1799 contradicts the source and is not
+permitted, so it receives \Hall{}. Adding ``possibly'' would not authorize it.
+
+Permission can also depend on the evidence state. Allowing an unknown
+reconstruction does not automatically allow a contradiction of a known date.
+An alternate-history task could explicitly permit the changed date and
+require fictional marking; the result would then be \LD{}, while $E$ would
+remain \textsc{contradicted}.
+
+Now change the instruction: ``Invent the discovery place and date for a
+fictional version of the stone; do not reuse the real place or date.'' A
+response giving only ``The stone was found near Rosetta in 1799'' provides
+supported facts, but those facts are explicitly excluded here. The affected
+claims receive \Hall{} with reason \textsc{out-of-scope}, while their evidence
+state remains \textsc{entailed}. Under our proposed convention, the
+hallucination label therefore includes a supported fact that violates an
+explicit requirement for invented content. This exclusion must be stated
+in the task; a request for fiction alone does not impose it. Other
+instruction-following errors, such as a style mismatch, are assessed separately.
+
+For content that the reference evidence does not support, we write
+$(q^*,E)\in\Gamma$ when the task allows this content in this evidence state.
+We write $(q^*,E)\notin\Gamma$ when it does not. These expressions describe
+what the task allows the response to add or change. Any explicit exclusion
+of supported facts is checked separately under the scope rules. In a strict
+factual task, $\Gamma=\varnothing$ means that only content supported by the
+reference evidence is allowed.
+
+Each hallucination receives a reason code. Use \textsc{out-of-scope} when
+the content is not permitted or is explicitly excluded. Use
+\textsc{marking-failure} when a departure is permitted but is not presented
+as required. If both checks fail, \textsc{out-of-scope} takes priority.
+Table~\ref{tab:claim-rule} summarizes the rule after successful oracle
+processing; evaluation failures are handled as described in
+Section~\ref{subsec:verification}.
 
 \begin{table}[!ht]
 \centering\small
-\caption{Claim-labeling rule after successful preparation and adjudication.
-For departures, the scope check precedes the marking check.}
+\caption{Claim annotation after successful oracle processing. Explicit scope
+exclusions take priority. Unknown is an evidence state, not a final label.}
 \label{tab:claim-rule}
 \begin{tabularx}{\linewidth}{@{}lYll@{}}
 \toprule
 Evidence state & Additional condition & Label & Reason code\\\midrule
-\textsc{entailed} & None & \Grd & ---\\
+\textsc{entailed} & A requirement for invented content explicitly excludes this fact & \Hall & \textsc{out-of-scope}\\
+\textsc{entailed} & No such exclusion applies & \Grd & ---\\
 Unknown or contradicted & $(q^*,E)\notin\Gamma$ & \Hall & \textsc{out-of-scope}\\
 Unknown or contradicted & $(q^*,E)\in\Gamma$; $\widehat{m}$ fails $\mu$ & \Hall & \textsc{marking-failure}\\
 Unknown or contradicted & $(q^*,E)\in\Gamma$; $\widehat{m}$ satisfies $\mu$ & \LD & ---\\
@@ -599,28 +703,11 @@ Unknown or contradicted & $(q^*,E)\in\Gamma$; $\widehat{m}$ satisfies $\mu$ & \L
 \end{tabularx}
 \end{table}
 
-\emph{Licensed divergence} (\LD) records authorization and adequate marking,
-not established truth or creative value. The constructed claim ``The decree
-dates from 1799'' contradicts the reference's date of 196 BCE. It receives H
-in the museum task because changing that date is not permitted. An alternate
-history explicitly permitting that altered date and presenting it as fiction
-can license the same content. Its evidence state remains contradicted in both
-conditions. A general request to be creative does not authorize this specific
-departure.
-
-Every H receives exactly one reason code. A departure outside $\Gamma$
-receives \textsc{out-of-scope}, even if its marking also fails. Otherwise,
-inadequate marking receives \textsc{marking-failure}. The evidence state is
-retained separately, so contradiction remains distinguishable from unknown
-content. An entailed claim remains grounded even if it violates a separate
-style, relevance, or topic restriction; that violation belongs to another
-assessment.
-
-A refusal requires the same care in recovery. ``The excerpt does not establish
-that placement'' makes a claim about the evidence; it does not assert the
-placement. The evaluator checks that meta-claim and labels the placement only
-if the response also commits to it. Figure~\ref{fig:claim-label-annotation}
-applies the rule to four claims within one response.
+The evidence state is retained alongside the label. A supported but excluded
+fact can therefore be distinguished from a contradiction or an unknown
+addition. The label records whether the claim meets the contract; it does
+not change what the oracle establishes. Figure~\ref{fig:claim-label-annotation}
+shows the full process for the four museum claims.
 
 \begin{figure}[!t]
 \centering
@@ -686,7 +773,7 @@ applies the rule to four claims within one response.
   \node[lab] at (-8.55,4.85)
     {truth contract};
   \node[archive,anchor=east] (archive) at (-1.50,4.85)
-    {\textbf{Task oracle $O$}\\
+    {\textbf{Reference evidence used by $O$}\\
     \href{https://en.wikipedia.org/wiki/Rosetta_Stone}{Wikipedia article
     ``Rosetta Stone''}\\[-1pt]
     ``Found near Rosetta in 1799; 196 BCE decree in hieroglyphic, Demotic,
@@ -705,7 +792,7 @@ applies the rule to four claims within one response.
   \coordinate (busprompt) at (prompt.south |- busleft);
   \draw[semithick,draw=black!55] (prompt.south) -- (busprompt);
   \draw[semithick,draw=black!55] (busleft) -- (busright);
-  \foreach \field in {archive,scope,mark}
+  \foreach \field in {scope,mark}
     \draw[flow] (\field.north |- busleft) -- (\field.north);
 
   % Response
@@ -785,7 +872,8 @@ applies the rule to four claims within one response.
 \end{tikzpicture}}
 \caption{\textbf{From one prompt to four claim-label decisions.}
 One task context, one truth contract, four claims, and three labels. The task
-oracle fixes the evidence state and separates the two \textsc{entailed} claims
+oracle covers extraction, recovery, and verification, ending at the evidence-state
+row. It separates the two \textsc{entailed} claims
 from the rest; permission scope and required status marking then separate the
 licensed-divergence label (\LD) from the hallucination label (\Hall) for
 departures from the reference. The claim that the decree dates from
@@ -797,61 +885,50 @@ outside the contract, and never creates a fourth label. The reference excerpt is
 \end{figure}
 \FloatBarrier
 
-\subsection{From Claims to the Response}\label{subsec:response}
+\paragraph{Claim trace and the open aggregation question}\label{subsec:response}
 
-The primary output is a \emph{claim trace}: recovered claims, evidence states,
-applicable scope and marking decisions, labels, and reason codes. The evaluation
-also records procedural failures and claim-recovery coverage. Coverage concerns
-the response's attributable commitments that were recovered and canonicalized;
-it requires an independently adjudicated reference set. It does not measure
-whether the response supplied all information the task requested.
+The output is a \emph{claim trace}: a record of each recovered claim, its
+evidence state, permission and marking decisions, label, and reason code.
+Evaluation failures are also recorded. Recovery coverage measures how much
+of the response's claim content was recovered, not whether the response
+answered every part of the task.
 
-The response-level record has three components. Its first component, the
-\emph{content verdict}, summarizes the trace using this ordered default rule:
-\begin{enumerate}
-\item Any reliably adjudicated H makes the response \textsc{contract-violating}.
-\item Otherwise, inadequate recovery coverage or a blocking specification,
-oracle, or adjudication failure makes it \textsc{indeterminate}.
-\item Otherwise, the response is \textsc{contract-compliant} under the declared coverage policy.
-\end{enumerate}
-The coverage threshold must be declared before evaluation. If it permits
-incomplete recovery, a compliant verdict cannot certify that omitted claims
-contain no error. A known H takes precedence over incomplete evaluation of
-other claims. The verdict summarizes the local rule, not every task requirement.
-
-The second component is \emph{style-marking alignment}: whether the response
-realizes the requested degree of stylistic marking. The third is
-\emph{creative-task success}, assessed under a separate rubric for novelty,
-usefulness, quality, or diversity. Neither component changes a claim label.
-Global reasoning, consistency, completeness, relevance, and quotas require
-additional checks. Appendix~\ref{app:diagnostics} specifies the reporting
-categories, procedural failures, and optional aggregation policies.
+How to combine these decisions into a verdict on the whole response remains
+open. We propose no default rule, and the individual decisions must remain
+available. Style, creative value, global reasoning, consistency, completeness,
+relevance, and response-level limits require separate checks. The research
+agenda examines these questions; Appendix~\ref{app:diagnostics} describes
+possible reporting policies.
 
 \subsection{Style as a Robustness Question}\label{subsec:style}
 
-Style concerns linguistic form; status marking concerns how content is
-presented epistemically or within a discourse frame. They may share linguistic
-cues but play different evaluation roles. A metaphor does not, by itself,
-authorize a claim or make it false.
+A response can express the same claim in plain prose or in an engaging
+museum voice. If its content and its presentation as fact, hypothesis, or
+fiction remain the same, it should receive the same label under the same
+contract. This gives us a way to test whether an evaluator is robust to style.
 
-We use \emph{style marking} for departure from plain expository prose, including
-local metaphor or sustained authorial voice. As a provisional discretization,
-we distinguish minimally marked, locally marked, and sustained marked style,
-indexed by $\sigma\in\{0,1,2\}$ when needed. The levels describe degree,
-not a particular named style, creativity, or factuality. Their boundaries
-require empirical validation.
+Style describes the wording and voice of the response. Status marking tells
+the reader whether content is presented as established, hypothetical, or
+fictional. The same words may contribute to both, so a change in style must
+be checked for changes in meaning or status. A metaphor alone neither
+authorizes a claim nor makes it false.
 
-The robustness test holds $O$, $\Gamma$, $\mu$, and the matched pairs
-$(q^*,\widehat{m})$ fixed while changing stylistic realization. The predicted labels
-must then remain unchanged. The empirical question is whether an evaluator
-recovers those same claims and statuses from the different realizations.
-An independent check of equivalence is necessary: if a rewrite changes the
-commitment, it is not a valid test of style alone.
+The test compares different wordings while keeping the contract, claim
+content, and observed status marking fixed. In notation, $O$, $\Gamma$,
+$\mu$, and each pair $(q^*,\widehat{m})$ stay the same. The expected labels
+are therefore unchanged. Whether an evaluator can recover the same claims
+and statuses across these wordings is an empirical question. The equivalence
+of the versions must be checked independently: a rewrite that changes what
+is claimed or how it is presented is not a test of style alone.
 
-Requested style may inform interpretation, but it cannot substitute for evidence
-in the response about what was actually expressed. Observed style is recorded
-separately. Case~E illustrates the intended invariance; Priority~3 proposes
-its evaluation, and Appendix~\ref{app:diagnostics} supplies the formal test.
+A separate question is whether the response uses the style the task asks
+for. Requested and observed style are recorded separately. The request can
+help interpret the response, but it cannot establish what the response
+actually expresses. We use \emph{style marking} to describe how far its
+wording departs from plain explanatory prose, for example through metaphor
+or a sustained authorial voice. Case~E illustrates the robustness test;
+Priority~3 proposes its evaluation and a provisional style scale, and
+Appendix~\ref{app:diagnostics} gives the formal test.
 
 \section{Related Work}\label{sec:related}
 
@@ -1031,9 +1108,9 @@ as implicit or not separately represented may still influence a broader rubric.
 The coding describes our interpretation of each evaluation design, not whether
 its authors used truth-contract terminology. A quality score, preference, or
 test outcome is a claim-adjudication standard only when used to establish or
-contradict the evaluated claim. The inherited mapping vocabulary is broader
-than the present textual oracle: nontextual tests and environment states are
-comparison standards, not admissible instantiations of $O$.
+contradict the evaluated claim. Nontextual tests and environment states can
+instantiate $O$ when a specified procedure uses them to adjudicate claim
+content; their use as task-success criteria alone is insufficient.
 
 \subsection{Contract Fields in the Existing Coding}\label{sec:mapping}
 
@@ -1050,9 +1127,9 @@ those protocols actually adjudicate response claims, rather than only task
 success, requires verification. The count of thirty-five therefore should not
 be read as an independently verified count of operational claim oracles.
 We retain the entries for audit. Their original $O$ column records the broader
-source coding, not compliance with our textual-oracle restriction. In particular,
-execution outcomes and environment states fall outside the present framework;
-text-based instantiations still require source-level verification.
+source coding, not verified compliance with our definition of a task oracle.
+Execution outcomes, environment states, and text-based references all require
+source-level verification of their role in claim adjudication.
 % AUTHOR ACTION: reconcile rows 37--41 with source-level evidence and update counts if needed.
 
 \paragraph{Permission scope}
@@ -1518,7 +1595,7 @@ practical case for explicit annotation.
 
 \paragraph{2. Controlled contrasts}
 A factorial benchmark should vary $\Gamma$ or $\mu$ while holding the
-textual oracle fixed. Comparisons of $O$ require separate evaluation designs
+task oracle fixed. Comparisons of $O$ require separate evaluation designs
 with their own fixed references. Include a contradicted claim under matched
 tasks that respectively permit and forbid that specific contradiction. Changing required marking $\mu$
 is different from changing observed marking $\widehat{m}$, as Case~C does; protocols
@@ -1533,6 +1610,12 @@ limits the benefit of a separate implementation, not the need to consider
 permission.
 
 \paragraph{3. Style-robust recovery and error localization}
+As a provisional style scale, we distinguish minimally marked, locally
+marked, and sustained marked style, indexed by $\sigma\in\{0,1,2\}$ when
+needed. These levels describe departures from plain explanatory prose,
+not a particular named style, creativity, or factuality. Their boundaries
+require empirical validation.
+
 Matched realizations should preserve $q^*$ and $\widehat{m}$ under a fixed contract
 while varying style. Independent adjudication must establish those matches.
 Studies should measure omissions, spurious claims, under-decomposition,
@@ -1546,7 +1629,15 @@ robustness. No useful improvement in error localization limits the diagnostic
 benefit of the additional trace.
 
 \paragraph{4. Response-level evaluation}
-Studies should compare the content verdict with independent assessments of
+Recovery coverage requires an independently adjudicated reference set of
+the claims expressed in the response. It measures which of those claims
+were recovered with their meaning preserved, not whether the response
+supplied all information requested by the task. Possible ways to summarize
+the claim labels include reporting their distribution, flagging any
+hallucination, or weighting errors by severity. Their usefulness and
+sensitivity to missed claims require study.
+
+Studies should compare candidate global verdicts with independent assessments of
 reasoning, consistency, completeness, relevance, and task success. They should
 also examine coverage thresholds and constraints such as reconstruction quotas.
 Alternative aggregations require sensitivity analysis: conclusions and model
@@ -1618,8 +1709,8 @@ annotation improves evaluation. That question belongs to the agenda above.
 
 \subsection{Interpreting the Response-Level Record}
 
-The record in Section~\ref{subsec:response} makes different conclusions visible.
-A compliant content verdict concerns the evaluated claims under a coverage
+Section~\ref{subsec:response} leaves global reporting open for investigation.
+Under a candidate aggregation policy, a compliant content verdict concerns the evaluated claims under a coverage
 policy; it does not imply factual truth, creative success, or satisfaction of
 every response-level requirement. An indeterminate verdict records an
 incomplete evaluation, not necessarily a model error. Benchmarks should retain
@@ -1639,7 +1730,7 @@ contract, and reliable oracle adjudication. Separating $q^*$ from $\widehat{m}$ 
 particularly delicate when modality or fictional framing changes meaning.
 Unresolved cases require an explicit failure record, not forced labels.
 
-The response-level verdict has limited scope. It does not verify inference
+Any verdict derived only from claim labels has limited scope. It does not verify inference
 validity, cross-claim consistency, omissions, relevance, or quotas. The
 reconstruction example makes the quota limitation concrete: local eligibility
 alone cannot enforce a maximum number of additions. Further response-level
@@ -1661,7 +1752,7 @@ unknown or contradicted content may be introduced and how it must be presented. 
 roles explicit allows permitted divergence to remain distinguishable from
 contract violations without treating creative value as evidence of truth.
 
-The paper specifies a claim-level rule and a response-level record, examines
+The paper specifies a claim-level rule and leaves global aggregation open, examines
 forty-one resources through a descriptive coding, and develops five constructed
 cases. The resulting agenda separates annotation reliability, robustness, and
 practical benefit. The next step is to test these properties against comparably
@@ -1687,10 +1778,14 @@ the role of optional aggregation.
 
 
 \paragraph{Reporting and aggregation details}
-Section~\ref{subsec:response} defines the ordered content verdict and recovery
-coverage. Publish that verdict with its coverage threshold, the claim trace,
-and any procedural failures. A reliably adjudicated H takes precedence over
-failures affecting other claims.
+Section~\ref{subsec:response} defines the claim trace and leaves the global
+verdict as a research question. One candidate policy flags a response as
+\textsc{contract-violating} when any reliably adjudicated claim receives H;
+otherwise it reports \textsc{indeterminate} for inadequate coverage or a
+blocking failure, and \textsc{contract-compliant} when the declared checks
+are complete. This is an option to investigate, not the framework's default.
+Any study using it must publish its coverage threshold, claim trace, and
+procedural failures. Incomplete recovery cannot certify omitted claims.
 
 Style-marking alignment is \textsc{match}, \textsc{mismatch}, or
 \textsc{not applicable} when the task specifies no target. Compare the requested
@@ -1708,7 +1803,7 @@ silently substituted for one another.
 Optional proportional, severity-weighted, or task-specific aggregations may
 support ranking. Declare the policy before evaluation, retain every underlying
 label, and report sensitivity to plausible alternatives. Such scores do not
-override the default record of an observed violation. Global logical validity,
+erase an observed claim-level violation. Global logical validity,
 consistency, completeness, relevance, and quotas remain separate diagnostics.
 
 \paragraph{Procedural failures}
@@ -1751,7 +1846,11 @@ unlabeled.
 Silence is not one of these failures: a correctly instantiated bounded task
 oracle that does not entail or contradict a claim yields the
 \textsc{unknown} evidence state, which the contract is designed to handle.
-A blocking procedural failure prevents a compliant verdict and does not create an automatic \textsc{unknown} evidence state. If another claim reliably receives H, the ordered rule still returns \textsc{contract-violating}; otherwise it returns \textsc{indeterminate}.
+A blocking procedural failure does not create an automatic \textsc{unknown}
+evidence state. Under the candidate aggregation policy described above, a
+reliably adjudicated H takes priority and yields \textsc{contract-violating};
+otherwise a blocking failure yields \textsc{indeterminate}. This global
+reporting policy remains a research choice.
 Recent fact-verification work shows that these outcomes are easy to conflate in
 practice. How an \textsc{unknown} evidence condition is constructed shapes what
 a verifier learns and can hide genuine adjudication difficulty
@@ -1844,9 +1943,9 @@ retain a task-specific qualifier, but it does not create an additional code.
   \emph{heterogeneous suites and tool use}.
 
   \item[Adjudication standard (inherited column $O$).]
-  This descriptive vocabulary includes nontextual standards outside the present
-  framework. The column is preserved for traceability, not as an expanded
-  definition of our fixed textual oracle.
+  This descriptive vocabulary includes textual and nontextual standards.
+  The column is preserved for traceability; each entry requires verification
+  that the standard adjudicates claims rather than only task success.
   \emph{source document}, a supplied document treated as authoritative for
   claim adjudication;
   \emph{retrieval set}, retrieved items used to verify claims;
@@ -2001,8 +2100,8 @@ and rows 24--27 cover heterogeneous or task-dependent conditions.}
 selected purposive mapping.}
 Task oracle and task-success criteria are reported separately; a quality or
 creativity score is not a claim-adjudication standard unless it can establish or
-contradict an evaluated claim. Nontextual standards in the inherited $O$ column
-are outside the present framework.}
+contradict an evaluated claim. The role of nontextual standards in the inherited
+$O$ column requires source-level verification.}
 \label{tab:full-mapping-creative}
 \begin{tabularx}{0.99\linewidth}{
   @{}P{0.17\textwidth}P{0.25\textwidth}
