@@ -1,0 +1,44 @@
+% Constructed reference comparison for Case A; no historical evidence is claimed.
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[font=\sffamily\small,
+  box/.style={draw=clrB!70,fill=clrB!4,rounded corners=5pt,
+    text width=5.1cm,align=left,inner sep=9pt,minimum height=4.8cm},
+  flow/.style={-{Stealth[length=5pt]},line width=.9pt,draw=black!60}]
+\node[draw=black!65,rounded corners=5pt,fill=gray!5,
+  text width=11.1cm,align=center,inner sep=10pt] (response) at (0,4.0) {
+  \textbf{Identical response in both settings}\\[5pt]
+  ``The complete stele stood near a temple entrance.''\\[5pt]
+  Same claim and observed status: the placement is asserted as a fact.
+};
+\node[box] (left) at (-3.25,0) {
+  \textbf{A1: reference fragment only}\\[6pt]
+  The fragment describes discovery, scripts, and a probable temple display.
+  It does not settle the entrance placement.\\[6pt]
+  $O_1$: check this fragment.\\
+  $\Gamma=\varnothing$: allow supported content only.\\
+  $\mu$: no additional marking requirement for supported facts.
+};
+\node[box] (right) at (3.25,0) {
+  \textbf{A2: extended test reference}\\[6pt]
+  The same fragment plus the stipulated sentence:
+  ``The complete stele stood near a temple entrance.''\\[6pt]
+  $O_2$: check this extended reference.\\
+  Same $\Gamma$ and $\mu$ as A1.\\[4pt]
+  \emph{The added evidence is constructed for this example.}
+};
+\draw[flow] (response.south -| left.north) -- (left.north);
+\draw[flow] (response.south -| right.north) -- (right.north);
+\node[box,draw=clrH,fill=clrH!5,minimum height=2.2cm] (outleft) at (-3.25,-4.2) {
+  \textbf{Evidence: UNKNOWN}\\[4pt]
+  {\color{clrH}\bfseries HALLUCINATION (H)}\\[3pt]
+  Reason: out of scope; the reference leaves the claim unsupported.
+};
+\node[box,draw=clrLD,fill=clrLD!5,minimum height=2.2cm] (outright) at (3.25,-4.2) {
+  \textbf{Evidence: ENTAILED}\\[4pt]
+  {\color{clrLD}\bfseries GROUNDED (G)}\\[3pt]
+  The designated reference explicitly supports the same claim.
+};
+\draw[flow] (left.south) -- (outleft.north);
+\draw[flow] (right.south) -- (outright.north);
+\end{tikzpicture}%
+}

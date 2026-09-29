@@ -1,0 +1,69 @@
+% Categorical resource map. Geometry does not encode measured coverage.
+\begin{tikzpicture}[
+    x=1cm,y=1cm,font=\sffamily\small,
+    cluster/.style={rounded corners=10pt,line width=0.9pt,
+        text width=4.30cm,minimum height=2.40cm,
+        align=flush left,inner sep=10pt},
+    link/.style={densely dotted,gray!55,line width=1pt}
+]
+\node[cluster,draw=clrB!75,fill=clrB!6] (factual) at (-5.6,4.0) {
+    {\bfseries\color{clrB}Factuality evaluation}\\[2mm]
+    {\footnotesize Fact checking, factual QA,\\source faithfulness}\\[1.5mm]
+    {\footnotesize\itshape FEVER, TruthfulQA, HaluEval,\\HalluLens, XSum,\\AA-Omniscience}\\[1.5mm]
+    {\scriptsize Examples from rows 1--22}
+};
+\node[cluster,draw=clrP!75,fill=clrP!7] (intent) at (-5.6,0) {
+    {\bfseries\color{clrP}Intent evaluation}\\[2mm]
+    {\footnotesize Query-constraint satisfaction}\\[1.5mm]
+    {\footnotesize\itshape FaithQA}\\[1.5mm]
+    {\scriptsize Row 23}
+};
+\node[cluster,draw=clrG!70,fill=clrG!5] (mixed) at (-5.6,-4.0) {
+    {\bfseries\color{clrG}Mixed-task and tool-use\\evaluation}\\[2mm]
+    {\footnotesize Reasoning, tool-use QA,\\hallucination typing}\\[1.5mm]
+    {\footnotesize\itshape BIG-Bench, BIG-Bench Hard,\\ToolQA, HIC-Bench}\\[1.5mm]
+    {\scriptsize Rows 24--27}
+};
+\node[cluster,draw=magenta!65!black,fill=magenta!6] (writing) at (5.6,4.0) {
+    {\bfseries\color{magenta!65!black}Creative writing\\and reasoning}\\[2mm]
+    {\footnotesize Stories, writing quality,\\creative reasoning}\\[1.5mm]
+    {\footnotesize\itshape CreativityPrism, LitBench,\\WritingBench, Art-or-Artifice}\\[1.5mm]
+    {\scriptsize Examples from rows 28--32, 35--36}
+};
+\node[cluster,draw=clrO!80,fill=clrO!8] (divergent) at (5.6,0) {
+    {\bfseries\color{clrO}Divergent thinking and\\linguistic creativity}\\[2mm]
+    {\footnotesize Ideas, titles, and reformulation;\\originality, flexibility, elaboration}\\[1.5mm]
+    {\footnotesize\itshape Automated DT scoring,\\Verbal Creativity}\\[1.5mm]
+    {\scriptsize Rows 33--34}
+};
+\node[cluster,draw=clrLD!75,fill=clrLD!7] (solution) at (5.6,-4.0) {
+    {\bfseries\color{clrLD}Constrained problem solving}\\[2mm]
+    {\footnotesize Feasibility, correctness,\\novel or alternative solutions}\\[1.5mm]
+    {\footnotesize\itshape MacGyver, EscapeBench,\\CreativEval, NeoCoder, CreativeMath}\\[1.5mm]
+    {\scriptsize Rows 37--41}
+};
+
+\node[rounded corners=14pt,draw=clrH!80,fill=clrH!4,
+    line width=1.4pt,dashed,text width=4.65cm,
+    minimum height=4.4cm,align=center,inner sep=10pt] (gap) at (0,0) {
+    {\footnotesize\bfseries\color{clrH}EVALUATION TARGET}\\[3mm]
+    {\large\bfseries Joint evaluation}\\[3mm]
+    {\bfseries Creativity and\\divergent thinking}\\[1mm]
+    {\large +}\\[1mm]
+    {\bfseries Hallucination detection}\\[3mm]
+    {\footnotesize Distinguish licensed divergence\\from hallucination}\\[2mm]
+    {\scriptsize Under an explicit truth contract:\\reference evidence, permission scope,\\required status marking}
+};
+
+\draw[link] (factual.east) -- (gap.north west);
+\draw[link] (intent.east) -- (gap.west);
+\draw[link] (mixed.east) -- (gap.south west);
+\draw[link] (writing.west) -- (gap.north east);
+\draw[link] (divergent.west) -- (gap.east);
+\draw[link] (solution.west) -- (gap.south east);
+
+\node[align=center,font=\scriptsize,text=clrG] at (0,-6.45) {
+    Colors identify task families. The center is the proposed joint evaluation target.\\
+    Resource IDs refer to Table~\ref{tab:resource-inventory} and Appendix~\ref{app:mapping}.
+};
+\end{tikzpicture}

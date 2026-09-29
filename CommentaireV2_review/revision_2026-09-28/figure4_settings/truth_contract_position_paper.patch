@@ -1,0 +1,16 @@
+--- avant/truth_contract_position_paper.tex
++++ apres/truth_contract_position_paper.tex
+@@ -1491,9 +1491,10 @@
+ \centering
+ \input{figures/same_response_five_examples.tex}
+ \caption{\textbf{Five examples with a fixed response in each pair.}
+-Each row compares the same response under two settings; only the indicated
+-contract field changes in A--D. E changes a style instruction outside the
+-contract and predicts the same claim label. G = grounded; H = hallucination;
++The left column gives the unchanged response and contract conditions.
++Blue text specifies the requirement in each setting; the heading names
++what changes. Only $O$, $\Gamma$, or $\mu$ changes in A--D. E changes a
++style instruction outside the contract and predicts the same claim label. G = grounded; H = hallucination;
+ LD = licensed divergence. Evidence and labels are stipulated for these
+ constructed examples. A's extended reference is a test input, not a
+ historical assertion. B--D keep the claim's evidence state unknown.}

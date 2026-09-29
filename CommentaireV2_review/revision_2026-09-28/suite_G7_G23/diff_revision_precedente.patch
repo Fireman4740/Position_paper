@@ -1,0 +1,637 @@
+--- revision_precedente.tex
++++ truth_contract_position_paper.tex
+@@ -113,7 +113,7 @@
+ 
+ Large language models (LLMs) can produce fluent statements that contradict
+ available evidence or cannot be verified from it. 
+-Such statements are commonly discussed as hallucinations in factuality and source-faithfulness evaluations \citep{ji_survey_2023,huang_survey_2025}.
++Such statements are commonly discussed as hallucinations in factuality evaluation, including source-faithfulness tasks \citep{ji_survey_2023,huang_survey_2025}.
+ Although LLMs can handle increasingly complex tasks, hallucinations remain a problem.
+ Across successive generations, newer and larger models do not
+ consistently exhibit lower hallucination rates. Results from AA-Omniscience benchmarks show
+@@ -384,14 +384,14 @@
+ 
+ Third, we compare forty-one selected evaluation resources and illustrate the
+ framework with five examples
+-(Sections~\ref{sec:methodology} and~\ref{sec:cases}). %This comparison and these examples explain how the framework can be used, but they do not yet prove that it is reliable or useful in practice. 
++(Sections~\ref{sec:methodology} and~\ref{sec:examples}). %This comparison and these examples explain how the framework can be used, but they do not yet prove that it is reliable or useful in practice. 
+ The research agenda in Section~\ref{sec:agenda} asks whether the framework can be applied reliably and improves evaluation.
+ 
+ Section~\ref{sec:related} situates the proposal among work on factuality,
+ instruction following, and creativity. Section~\ref{sec:framework} defines
+ the contract and the claim-labeling rule. Section~\ref{sec:methodology}
+ compares how 41 selected evaluation resources represent evidence,
+-permission, marking, and style. Section~\ref{sec:cases} illustrates the rule
++permission, marking, and style. Section~\ref{sec:examples} illustrates the rule
+ with five constructed examples. Sections~\ref{sec:agenda} and
+ \ref{sec:discussion} describe the studies needed and the scope of the proposal.
+ 
+@@ -505,14 +505,22 @@
+ \citet{li_automated_2025} compare generated stories with human-written
+ reference stories using a set of creativity tests.
+ 
+-These criteria describe the quality and creative value of generated content.
+-They do not, by themselves, establish whether each claim is allowed.
+-Permission specifies what the task allows before that value is judged.
+-For example,
+-a low-quality reconstruction may satisfy the contract, and a highly rated
+-response may contain an unauthorized claim. Findings on factuality and
+-informativeness likewise motivate reporting distinct objectives
+-\citep{wu_balancing_2025,gong_factuality_2026}.
++These criteria ask whether a response is original, useful for its task,
++or well written. Factuality asks whether its claims are supported. In this
++paper, permission asks another question: did the task allow the response
++to introduce that content? A response can be clear and engaging while
++introducing an unauthorized claim; a permitted reconstruction can be dull
++or add little to the reader's understanding. Thus a favorable quality
++judgment does not settle whether the truth contract is satisfied.
++
++Usefulness depends on the task. In a museum explanation, a reconstruction
++might help a visitor understand an incomplete object; in a strict factual
++summary, that same addition may be outside the instructions. This is an
++illustration of our distinction between permission and value, not a
++permission mechanism attributed to prior work. Studies of factuality and
++informativeness likewise examine distinct evaluation objectives
++\citep{wu_balancing_2025,gong_factuality_2026}; informativeness is not by
++itself evidence that a passage is useful or easy to understand.
+ 
+ \subsection{Hallucination and Creativity}
+ 
+@@ -651,7 +659,12 @@
+ resolved and recorded; otherwise the contract is underspecified.
+ 
+ \paragraph{Task oracle}
+-The task oracle is a domain-specific checking system. For text, we treat
++We treat the task oracle as a black box: it takes a response as input and
++returns the recovered claims and their evidence states relative to the
++designated reference. To illustrate the subsequent labeling rule, we assume
++that these oracle outputs are correct. This is a simplifying assumption for
++the examples, not an empirical claim about an implemented evaluator.
++For text, we treat
+ claim extraction, interpretation in context, and evidence verification as
+ stages within that system; Sections~\ref{subsec:unit} and
+ \ref{subsec:verification} explain their interfaces. Its output records what
+@@ -659,17 +672,21 @@
+ establishes. The evaluator then applies permission and marking requirements.
+ We use $q^*$ for canonical claim content, retaining its meaning, entities,
+ qualifiers, and temporal scope. This definition specifies the oracle's role;
+-it does not prescribe a human or automated implementation.
++it does not prescribe a human or automated implementation. Sources,
++versions, temporal scope, and rules for resolving conflicting evidence must
++still be specified to identify the oracle being assumed. Implementation
++errors and procedural failures are discussed separately in
++Section~\ref{subsec:verification} and Appendix~\ref{app:diagnostics}.
+ 
+ An oracle can use source documents, retrieved evidence, reference answers,
+ or domain-specific checks. For executable output, tests can check behavior
+ on specified inputs; a proof checker can check a formal derivation. Such
+ checks establish only what their procedure covers. The rest of this section
+-develops the textual case.
++develops the textual setting.
+ 
+ Each evaluation design fixes its oracle before comparing responses. Different
+-designs may designate different references, as Case~A in
+-Section~\ref{sec:cases} illustrates. Permission to invent never changes what
++designs may designate different references, as Example~A in
++Section~\ref{sec:examples} illustrates. Permission to invent never changes what
+ the designated evidence establishes. For the museum example, the oracle
+ checks claims against the constructed reference fragment alone; it does
+ not add an evaluator's background knowledge. An available reference may
+@@ -796,6 +813,10 @@
+ 
+ \subsection{Oracle Verification: Evidence States}\label{subsec:verification}
+ 
++The black-box assumption isolates the labeling rule from the implementation
++of evidence checking. An implemented oracle can nevertheless make extraction,
++interpretation, or verification errors; assuming correct outputs for the
++examples does not establish its reliability in practice.
+ After extraction and recovery, the oracle performs \emph{claim verification}:
+ it checks each $q^*$ against its reference evidence. Successful verification
+ returns one of three evidence states:
+@@ -1065,7 +1086,11 @@
+ \paragraph{Claim trace and the open aggregation question}\label{subsec:response}
+ 
+ The output is a \emph{claim trace}, linking each decision to the response
+-span that produced it. For a recovered claim $i$, we record
++span that produced it. It collects the elements introduced above: the
++recovered claim and observed marking (Section~\ref{subsec:unit}), its evidence
++state (Section~\ref{subsec:verification}), and the permission check, marking
++check, label, and reason code (Section~\ref{subsec:rule}). For a recovered
++claim $i$, we record
+ \begin{equation}
+ \tau_i=(s_i,q_i^*,\widehat{m}_i,\mathrm{ES}_i,a_i,b_i,\ell_i,r_i),
+ \label{eq:claim-trace}
+@@ -1082,8 +1107,9 @@
+ $\widehat{m}_3$ is possible, and $\mathrm{ES}_3$ is \textsc{unknown}.
+ The permission and marking checks both pass, giving $\ell_3=\LD$ without
+ a violation reason. The figure encloses the trace for all four claims.
+-Recovery coverage measures how much of the response's claim content was
+-recovered; it does not measure whether the response answered the whole task.
++The trace must also make omissions and failed processing visible.
++Appendix~\ref{app:diagnostics} defines recovery coverage for that purpose;
++answering the whole task remains a separate question.
+ 
+ How to combine these decisions into a verdict on the whole response remains
+ open. We propose no default rule, and the individual decisions must remain
+@@ -1120,27 +1146,39 @@
+ help interpret the response, but it cannot establish what the response
+ actually expresses. We use \emph{style marking} to describe how far its
+ wording departs from plain explanatory prose, for example through metaphor
+-or a sustained authorial voice. Case~E illustrates the robustness test;
+-Priority~3 proposes its evaluation and a provisional style scale, and
+-Appendix~\ref{app:diagnostics} gives the formal test.
++or a sustained authorial voice. Example~E illustrates the separation between
++requested style and claim labels. Priority~3 proposes tests of robustness
++to changed wording and a provisional style scale; Appendix~\ref{app:diagnostics}
++gives the corresponding invariance test.
+ 
+ \section{Resource Mapping}\label{sec:methodology}
+ 
+-We compare forty-one selected evaluation resources to see how they represent
+-the task oracle, permission scope, and required status marking. We also
+-examine whether they change the style of a response while keeping its claim
+-content and observed status marking fixed. This comparison, which we call
+-the \emph{resource mapping}, describes evaluation designs. It does not test
+-whether our labeling rule works in practice.
++LLM evaluation covers more than checking factual answers: it also examines
++whether a response follows an intended request, uses tools, develops creative
++content, or solves a constrained problem. We compare forty-one resources
++across these task families to give a broader view of how evaluation designs
++handle reference evidence, permission, required status marking, and style.
++The comparison includes datasets, benchmarks, and scoring protocols, which
++we collectively call \emph{evaluation resources}.
++
++The resulting \emph{resource mapping} connects the framework to a range of
++evaluation settings. Its categories provide a way to compare task designs
++beyond any one dataset; findings about their prevalence remain limited to
++the selected inventory. The mapping does not test the labeling rule's
++reliability in practice.
+ 
+ \subsection{Selection and Scope}
+ 
+ The unit of analysis is an \emph{evaluation resource}: a benchmark, dataset,
+-or protocol that specifies how responses are evaluated. The selection covers
+-factual question answering, responses based on sources, intent evaluation,
+-creative writing, idea generation, and problem solving under constraints.
+-It is intended to examine different evaluation designs, not estimate how
+-common they are across the field. We call this a \emph{purposive sample}.
++or protocol that specifies how responses are evaluated. The six task categories listed in
++Table~\ref{tab:resource-inventory} cover factuality evaluation, intent evaluation,
++mixed-task and tool-use evaluation, creative writing and reasoning, divergent
++thinking and linguistic creativity, and constrained problem solving.
++The inventory brings together hallucination-related and creativity-related
++resources identified for this paper, extending the comparison beyond
++factual question answering. It supports a general discussion of evaluation
++designs, without establishing exhaustive coverage of the field. We call
++this selection a \emph{purposive sample}.
+ 
+ Table~\ref{tab:resource-inventory} lists all 41 resources in the main text.
+ Appendix~\ref{app:mapping} gives their detailed coding and source references. The available record does not explain how the resources were initially
+@@ -1167,11 +1205,12 @@
+ \label{tab:resource-inventory}
+ \begin{tabularx}{\linewidth}{@{}P{0.24\linewidth}Y@{}}
+ \toprule\textbf{Task family} & \textbf{Resource IDs and names}\\\midrule
+-Factuality and source faithfulness & 1.~FEVER; 2.~TruthfulQA; 3.~PopQA; 4.~SimpleQA; 5.~TriviaQA; 6.~DefAn; 7.~HaluEval; 8.~FactBench; 9.~HalluLens; 10.~FRANK; 11.~QAGS; 12.~SummEval; 13.~XSum; 14.~CNN/DailyMail; 15.~DelucionQA; 16.~HalluQA; 17.~CR-LLM; 18.~HotpotQA; 19.~HalluRAG; 20.~RealTime QA; 21.~HypoTermQA; 22.~AA-Omniscience\\\addlinespace[4pt]
++Factuality evaluation & 1.~FEVER; 2.~TruthfulQA; 3.~PopQA; 4.~SimpleQA; 5.~TriviaQA; 6.~DefAn; 7.~HaluEval; 8.~FactBench; 9.~HalluLens; 10.~FRANK; 11.~QAGS; 12.~SummEval; 13.~XSum; 14.~CNN/DailyMail; 15.~DelucionQA; 16.~HalluQA; 17.~CR-LLM; 18.~HotpotQA; 19.~HalluRAG; 20.~RealTime QA; 21.~HypoTermQA; 22.~AA-Omniscience\\\addlinespace[4pt]
+ Intent evaluation & 23.~FaithQA\\\addlinespace[4pt]
+-Mixed tasks and tool use & 24.~BIG-Bench; 25.~BIG-Bench Hard; 26.~ToolQA; 27.~HIC-Bench\\\addlinespace[4pt]
+-Creative writing, ideas, and reasoning & 28.~CreativityPrism; 29.~LitBench; 30.~Short Story; 31.~WritingBench; 32.~Art-or-Artifice / TTCW; 33.~Automated DT scoring; 34.~Verbal Creativity; 35.~Automated Creativity; 36.~Hallucinating LLM Could Be Creative\\\addlinespace[4pt]
+-Problem solving under constraints & 37.~MacGyver; 38.~EscapeBench; 39.~CreativEval; 40.~NeoCoder; 41.~CreativeMath\\\addlinespace[4pt]
++Mixed-task and tool-use evaluation & 24.~BIG-Bench; 25.~BIG-Bench Hard; 26.~ToolQA; 27.~HIC-Bench\\\addlinespace[4pt]
++Creative writing and reasoning & 28.~CreativityPrism; 29.~LitBench; 30.~Short Story; 31.~WritingBench; 32.~Art-or-Artifice / TTCW; 35.~Automated Creativity; 36.~Hallucinating LLM Could Be Creative\\\addlinespace[4pt]
++Divergent thinking and linguistic creativity & 33.~Automated DT scoring; 34.~Verbal Creativity\\\addlinespace[4pt]
++Constrained problem solving & 37.~MacGyver; 38.~EscapeBench; 39.~CreativEval; 40.~NeoCoder; 41.~CreativeMath\\\addlinespace[4pt]
+ \bottomrule\end{tabularx}\end{table}\FloatBarrier
+ 
+ \subsection{Coding Protocol}
+@@ -1187,22 +1226,24 @@
+ claims or labels are compared across different wordings that preserve claim
+ content and observed status marking.
+ \end{itemize}
+-We organize the recorded tasks into five descriptive families, using the
+-task and success criterion written in each resource row: factuality and
+-source faithfulness (IDs 1--22), intent evaluation (23), mixed tasks and
+-tool use (24--27), creative writing, ideas, and reasoning (28--36), and
+-problem solving under constraints (37--41). A family summarizes the task;
+-it does not establish the permission for an individual claim. These are
+-editorial groupings of the present inventory, not an empirically validated
+-taxonomy or a record of independently replicated annotation.
+-
+-Factuality tasks check answers or summaries against evidence. Intent
+-evaluation checks interpretation of a request. Mixed suites and tool-use
+-tasks combine subtasks or interactions. Creative tasks assess stories,
+-ideas, or reasoning paths. Constrained problem solving evaluates whether
+-a proposed solution meets stated requirements. Figure~\ref{fig:profiles}
+-subdivides the creative family into writing/reasoning and divergent thinking
+-or linguistic creativity to make those task differences visible.
++We group the resources into six task categories, using the same names
++throughout the paper: \emph{factuality evaluation} (IDs 1--22),
++\emph{intent evaluation} (23), \emph{mixed-task and tool-use evaluation}
++(24--27), \emph{creative writing and reasoning} (28--32, 35--36),
++\emph{divergent thinking and linguistic creativity} (33--34), and
++\emph{constrained problem solving} (37--41).
++
++Factuality evaluation checks answers or summaries against evidence. Intent
++evaluation checks interpretation of a request. Mixed-task and tool-use
++evaluation combines subtasks or interactions. Creative writing and reasoning
++assesses stories, written explanations, or alternative reasoning paths.
++Divergent thinking and linguistic creativity assesses the variety and
++originality of ideas or language. Constrained problem solving checks whether
++a proposed solution meets stated requirements. These categories summarize
++the task and evaluation criteria recorded for each resource; they do not
++rank resources or determine whether an individual claim is permitted.
++They are descriptive groupings, not an independently validated taxonomy.
++Figure~\ref{fig:profiles} uses these same six categories.
+ 
+ The appendix defines the categories and lists the assigned codes. These
+ codes reflect our interpretation of each resource, whose authors may use
+@@ -1211,7 +1252,7 @@
+ for the oracle only if it is used to support or contradict the evaluated
+ content; measuring overall task success alone is not enough.
+ 
+-\subsection{Recorded Evaluation Criteria}\label{sec:mapping}
++\subsection{Resource Analysis Criteria}\label{sec:mapping}
+ 
+ \paragraph{Reference evidence and reported checks}
+ The inventory records source documents, reference answers, retrieved
+@@ -1220,7 +1261,7 @@
+ derived from a summary and its source (11), and SimpleQA uses reference
+ answers with a grading procedure (4)
+ \citep{thorne_fever_2018,wang_asking_2020,wei_measuring_2024}.
+-Case~A in Section~\ref{sec:cases} illustrates why a label must retain the
++Example~A in Section~\ref{sec:examples} illustrates why a label must retain the
+ identity of the reference used.
+ 
+ For constrained problem solving, the inspected protocols evaluate solution
+@@ -1306,8 +1347,8 @@
+ \resizebox{\textwidth}{!}{\input{figures/resource_clusters.tex}}
+ \caption{\textbf{Resource families and the proposed evaluation target.}
+ Colored clusters group selected resources by task type; examples and appendix
+-row numbers identify each group. Writing/reasoning and divergent or linguistic creativity
+-are shown separately to make their different tasks visible.
++row numbers identify each group. The six category names match
++Table~\ref{tab:resource-inventory} and Appendix~\ref{app:mapping}.
+ The central area states the evaluation sought: creativity and divergent
+ thinking assessed together with hallucination detection under an explicit
+ truth contract. Related combinations already occur in the selection; the
+@@ -1319,136 +1360,107 @@
+ \end{figure}
+ \FloatBarrier
+ 
+-\section{Worked Examples}\label{sec:cases}
+-
+-The five constructed cases examine different parts of the evaluation.
+-Case~A changes the reference used for the same response; Case~B changes its
+-historical or fictional context; Case~C changes observed status marking;
+-Case~D changes the claim's content relative to a fixed permission scope;
+-and Case~E changes wording while aiming to preserve content and status.
+-Figure~\ref{fig:case-transitions} develops Case~A as two parallel settings.
+-These examples specify expected labels, not results from model experiments.
+-Case~B changes several factors together. Case~E requires an independent
+-check that its two versions express equivalent claims and statuses.
++\section{Worked Examples}\label{sec:examples}
++
++The five constructed examples compare how a fixed response is evaluated
++under two task settings. Examples A--D change reference evidence, permission
++scope, or required status marking. Example E is a control: changing only the
++requested style leaves the truth contract unchanged. Within each comparison,
++the response text, recovered claim content, and observed status marking
++remain fixed. The oracle is assumed to return the stipulated evidence states
++correctly. These are illustrations of the rule, not model experiment results.
++Figure~\ref{fig:example-transitions} summarizes the five comparisons.
+ 
+ \begin{figure}[!ht]
+ \centering
+-\input{figures/same_response_two_oracles.tex}
+-\caption{\textbf{The same response under two evaluation designs (Case A).}
+-Both settings require supported content and keep the response, recovered
+-claim, and observed marking fixed. Setting A1 uses a reference that leaves
+-the placement unknown; A2 uses a constructed extension that explicitly
+-supports it. Only the designated oracle changes. The labels are predictions
+-of the rule, not measured model results. The added sentence in A2 is a
+-stipulated test input, not a historical claim about the Rosetta Stone.}
+-\label{fig:case-transitions}
++\input{figures/same_response_five_examples.tex}
++\caption{\textbf{Five examples with a fixed response in each pair.}
++Each row compares the same response under two settings; only the indicated
++contract field changes in A--D. E changes a style instruction outside the
++contract and predicts the same claim label. G = grounded; H = hallucination;
++LD = licensed divergence. Evidence and labels are stipulated for these
++constructed examples. A's extended reference is a test input, not a
++historical assertion. B--D keep the claim's evidence state unknown.}
++\label{fig:example-transitions}
+ \end{figure}
+ \FloatBarrier
+-\paragraph{Case A: changing the task oracle}
+-This case holds the response fixed and changes which reference is used to
+-check it. Source faithfulness and external factuality can differ in
+-summarization, as discussed for XSum by \citet{maynez_faithfulness_2020}.
+-Figure~\ref{fig:case-transitions} illustrates that distinction with
+-constructed inputs. The response is ``The complete stele stood near a
+-temple entrance.'' The first reference is the museum fragment. The second
+-adds, solely for this test, an explicit statement supporting that placement.
+-\par\textbf{Fixed.} The response, claim content, observed marking, and
+-$\Gamma=\varnothing$, which allows only supported content. Neither setting
+-adds a special marking requirement for a supported factual statement.
+-\par\textbf{Changed.} The designated task oracle: reference A1 leaves the
+-placement unknown; reference A2 explicitly supports it. Each reference is
+-fixed within its evaluation design.
+-\par\textbf{Predicted result.} Under A1 the claim is \textsc{unknown} and
+-receives \Hall{} with reason \textsc{out-of-scope}. Under A2 it is
+-\textsc{entailed} and receives \Grd{}. A2 supplies stipulated test evidence;
+-the example makes no historical assertion that the placement is established.
+-
+-\paragraph{Case B: moving from a factual account to a fictional story}
+-This case changes both what the task permits and how the response presents
+-the content. It does not isolate permission alone.
+-\textbf{Purpose.} To distinguish a claim presented as historical fact from
+-the same placement proposed as part of a fictional story.
+-\par\textbf{Fixed.} The Rosetta Stone reference and the example sentence
+-string ``The complete stele stood near a temple entrance.''
+-\par\textbf{Changed.} The historical condition asks for a museum label using
+-only supported information. The fictional condition permits an invented setting and places
+-the same sentence inside a declared alternate-history story. Permission and
+-observed status marking change; the reference does not.
+-\par\textbf{Predicted result.} Here, the content checked against the historical
+-reference is the proposed temple-entrance placement; its fictional status is
+-recorded in the observed marking. The reference neither supports nor
+-contradicts that placement, so its evidence state remains \textsc{unknown}.
+-In the historical condition, $\Gamma=\varnothing$, so
+-it receives the hallucination label with reason code \textsc{out-of-scope}.
+-In the fictional condition, the task permits the placement and the declared
+-frame supplies the required marking, so it receives licensed divergence.
+-This treatment applies to the placement proposed within the story. A response
+-reporting what a story says would express a different claim and would need
+-to be checked as such. Identical wording alone does not guarantee identical
+-claim content.
+-
+-\paragraph{Case C: changing the observed status marking}
+-This comparison reuses the Rosetta Stone reconstruction from
+-Section~\ref{subsec:contract}. The permission scope allows a plausible
+-placement, and the required status marking requires presenting it as a
+-possibility. The request for one reconstruction is a separate limit on the
+-whole response.
+-\textbf{Purpose.} To illustrate that permission alone is not enough: presentation is
+-part of the contract.
+-\par\textbf{Fixed.} The task oracle $O$, $\Gamma$, $\mu$, the content $q^*$
+-that the complete stele stood near a temple entrance, and its \textsc{unknown}
+-evidence state.
+-\par\textbf{Changed.} Only the observed status marking $\widehat{m}$.
+-\par\textbf{Predicted result.} ``The complete stele stood near a temple
+-entrance'' receives the hallucination label with reason code
+-\textsc{marking-failure}. ``One possible reconstruction places the complete
+-stele near a temple entrance'' receives the licensed-divergence label. The
+-content, evidence state, and all three contract fields are identical; only the
+-wording that presents the placement as established or possible differs.
+-
+-\paragraph{Case D: testing a scope boundary}
+-This case returns to the Rosetta Stone task. Permission covers a plausible
+-historical reconstruction, and required marking identifies it as a possibility.
+-\textbf{Purpose.} To show that presenting content as possible does not make
+-it permitted: its topic must also fall within the scope.
+-\par\textbf{Fixed.} The task oracle $O$, $\Gamma$, $\mu$, the \textsc{unknown}
+-evidence state, and observed marking $\widehat{m}$ presenting the content as possible.
+-\par\textbf{Changed.} Only the content $q^*$: ``One possible reconstruction
+-places the complete stele near a temple entrance'' versus the constructed
+-prediction ``One possibility is that the stone will be returned to Egypt next
+-year.''
+-\par\textbf{Predicted result.} The historical reconstruction lies inside
+-$\Gamma$ and receives the licensed-divergence label. The future transfer
+-prediction is also \textsc{unknown} and marked as a possibility, but it is not
+-the historical reconstruction that the task permits. It falls outside
+-$\Gamma$ and receives the hallucination label with reason code
+-\textsc{out-of-scope}.
+-
+-\paragraph{Case E: changing the wording while preserving the claim}
+-This case compares two styles that express the same content as established
+-fact.
+-\textbf{Purpose.} To illustrate the label that should remain unchanged when
+-wording changes but content and status do not.
+-\par\textbf{Fixed.} The task oracle $O$ of the Rosetta Stone example of
+-Figure~\ref{fig:claim-label-annotation}, $\Gamma$, $\mu$, the content component
+-$q^*$ that the decree appears in hieroglyphic, Demotic, and Greek, and the
+-observed status marking $\widehat{m}$.
+-\par\textbf{Changed.} The requested style and the response's wording change
+-together. Both versions are intended to preserve the claim content and status.
+-Plain wording: ``The decree is written in hieroglyphic, Demotic, and
+-Greek.''
+-Expressive wording: ``The same message speaks three times over: once in
+-hieroglyphs, once in Demotic, once in Greek.''
+-\par\textbf{Predicted result.} An evaluator should recover the same claim
+-from both versions and assign the grounded label, since the oracle supports
+-it. Whether each version uses the requested style is assessed separately.
+-After an independent check confirms equal content and status, a difference
+-in recovered claims or labels would indicate an evaluator error on this test.
+-One such result would not establish how often style affects claim recovery.
+-
+-These cases give expected labels under stated conditions. The next step is
+-to test whether evaluators identify those conditions reliably and produce
+-the expected labels. The research agenda sets out those studies.
++
++\paragraph{Example A: changing the task oracle}
++The response is ``The complete stele stood near a temple entrance.''
++Source faithfulness and external factuality can differ in summarization,
++as discussed for XSum by \citet{maynez_faithfulness_2020}. This example uses
++two constructed references to illustrate why the designated evidence matters.
++\par\textbf{Fixed.} Response, claim, observed factual assertion,
++$\Gamma=\varnothing$, and no additional marking requirement for supported facts.
++\par\textbf{Changed.} $O_1$ uses the museum fragment, which leaves the
++placement unknown. $O_2$ uses the same fragment plus the stipulated sentence
++``The complete stele stood near a temple entrance.'' Each oracle is fixed
++within its evaluation design.
++\par\textbf{Predicted result.} The unknown claim receives \Hall{} with
++\textsc{out-of-scope} under $O_1$; the entailed claim receives \Grd{} under
++$O_2$. The additional reference sentence supplies test evidence; it does
++not establish a historical fact about the original placement.
++
++\paragraph{Example B: allowing a reconstruction}
++The response is ``One possible reconstruction places the complete stele
++near a temple entrance.''
++\par\textbf{Fixed.} The reference oracle, proposed placement, its unknown
++evidence state, and the sentence's observed marking as a possibility.
++Both settings require any permitted reconstruction to be marked as such.
++\par\textbf{Changed.} The first setting allows supported information only
++($\Gamma_1=\varnothing$). The second allows plausible reconstructions of the
++original placement ($\Gamma_2$ includes this proposal).
++\par\textbf{Predicted result.} The same response receives \Hall{} with
++\textsc{out-of-scope} in the first setting and \LD{} in the second.
++Its hedging satisfies the marking requirement but cannot itself authorize
++content that the first task excludes.
++
++\paragraph{Example C: changing required status marking}
++The response is again ``One possible reconstruction places the complete
++stele near a temple entrance.''
++\par\textbf{Fixed.} The reference oracle, permission for that reconstruction,
++claim content, unknown evidence state, and observed sentence-level marking.
++\par\textbf{Changed.} $\mu_1$ explicitly requires the heading ``Hypothesis''
++for a reconstruction. $\mu_2$ accepts an explicit sentence-level conjecture
++cue, such as ``One possible reconstruction.'' This is a constructed contrast
++between two presentation requirements, not a claim that a heading is
++universally necessary for marking a conjecture.
++\par\textbf{Predicted result.} The unchanged response lacks the required
++heading under $\mu_1$ and receives \Hall{} with \textsc{marking-failure}.
++It satisfies $\mu_2$ and receives \LD{}. Here the requirement changes, not
++what the response actually says or how it presents the placement.
++
++\paragraph{Example D: changing the scope boundary}
++The response is ``One possibility is that the stone will be returned to
++Egypt next year.'' The statement is a constructed future scenario.
++\par\textbf{Fixed.} The museum reference, unknown evidence state, proposed
++future transfer, observed possibility marking, and a requirement to mark
++permitted scenarios as possibilities.
++\par\textbf{Changed.} $\Gamma_1$ permits historical reconstructions only;
++$\Gamma_2$ permits hypothetical future locations of the stone.
++\par\textbf{Predicted result.} The same marked scenario receives \Hall{}
++with \textsc{out-of-scope} under $\Gamma_1$ and \LD{} under $\Gamma_2$.
++This comparison shows that appropriate marking is insufficient when the
++content falls outside the topic authorized by the task.
++
++\paragraph{Example E: changing requested style only}
++The response is ``The decree is written in hieroglyphic, Demotic, and Greek.''
++\par\textbf{Fixed.} The response, recovered claim, observed factual assertion,
++and all three truth-contract fields. The reference supports the claim,
++supported facts are allowed, and no special status marking is required.
++\par\textbf{Changed.} One prompt asks for plain language; the other asks
++for metaphorical language without authorizing any additional content.
++\par\textbf{Predicted result.} The claim receives \Grd{} under both prompts.
++Whether this unchanged response meets each style instruction is assessed
++separately. A requested style does not expand permission scope and is not
++an additional field of the truth contract.
++
++These examples isolate changes to the evaluation conditions while keeping
++the response fixed. A complementary robustness test changes a response's
++wording while holding its claim content, observed status marking, and
++contract fixed, as described in Section~\ref{subsec:style}. Both designs
++require independent checks that the intended invariants are preserved.
++The research agenda sets out the corresponding studies.
+ 
+ 
+ \section{Research Agenda}\label{sec:agenda}
+@@ -1501,8 +1513,11 @@
+ For example, compare the same contradicted claim under tasks that permit
+ or forbid that change. The protocol must distinguish changing what marking
+ is required ($\mu$) from changing what the response actually shows
+-($\widehat{m}$), as Case~C does. A change from historical to fictional framing,
+-as in Case~B, may also change the claim's meaning and requires separate analysis.
++($\widehat{m}$): Example~C changes $\mu$ while keeping the response fixed;
++a complementary test changes the observed cue while keeping $\mu$ fixed.
++Moving a statement into a fictional frame may also change its meaning and
++requires separate analysis; Example~B instead changes permission for the
++same marked reconstruction.
+ 
+ Studies should record evidence states, labels, reason codes, and independent
+ judgments of whether the content meets the task's requirements. They should
+@@ -1511,7 +1526,7 @@
+ for invention.
+ \emph{Critical test.} A comparison does not isolate one condition if it also
+ changes the claim's meaning. If independent judgments consistently reject
+-the proposed labels in those cases, the convention needs reconsideration.
++the proposed labels under those conditions, the convention needs reconsideration.
+ If a comparison method using the same information is equally accurate and
+ informative, a separate implementation has no demonstrated advantage there.
+ 
+@@ -1601,7 +1616,7 @@
+ it receives LD, just as an excluded supported fact remains entailed when it
+ receives H. Studies must test whether annotators understand and accept these
+ uses of the labels. Keeping the evidence state and reason code makes the
+-different cases visible even when the label itself is disputed.
++different situations visible even when the label itself is disputed.
+ 
+ Theoretical work provides context for reliability concerns. Some results
+ describe minimum error rates under assumptions about how a model expresses
+@@ -1642,7 +1657,7 @@
+ validated as an evaluator. Applying it requires claims that can be interpreted
+ reliably, a specified contract, and dependable evidence checks. Separating
+ content ($q^*$) from observed marking ($\widehat{m}$) is difficult when words
+-such as ``may'' or a fictional setting change the meaning. Unresolved cases
++such as ``may'' or a fictional setting change the meaning. Unresolved interpretations
+ must be recorded as evaluation failures.
+ 
+ Claim labels also leave questions about the whole response unanswered. They
+@@ -1718,7 +1733,7 @@
+ 
+ Claims that are individually permitted may contradict one another. If the
+ oracle is consistent and claims are correctly interpreted in the same context,
+-however, two contradictory claims cannot both be entailed. An apparent case
++however, two contradictory claims cannot both be entailed. An apparent instance
+ requires checking the oracle and recovered claims before interpreting the labels.
+ 
+ \paragraph{Procedural failures}
+@@ -1755,7 +1770,7 @@
+   \item[Adjudication failure.] The evaluator cannot reach one evidence state
+         using the specified procedure.
+ \end{description}
+-In each case the evaluator records the failure and leaves the affected span
++For each failure the evaluator records the failure and leaves the affected span
+ unlabeled.
+ An available source that neither supports nor contradicts a claim can yield
+ \textsc{unknown} after a completed check. A source that cannot be accessed
+@@ -1858,11 +1873,12 @@
+ \begin{description}
+   \item[Task category.]
+   These categories describe types of tasks; they do not rank them.
+-  \emph{factuality and source faithfulness};
++  \emph{factuality evaluation};
+   \emph{intent evaluation};
+-  \emph{creative writing, ideas, and reasoning};
+-  \emph{problem solving under constraints};
+-  \emph{mixed tasks and tool use}.
++  \emph{creative writing and reasoning};
++  \emph{divergent thinking and linguistic creativity};
++  \emph{constrained problem solving};
++  \emph{mixed-task and tool-use evaluation}.
+ 
+   \item[Reported reference or checking procedure.]
+   The codes include textual and nontextual checks. Each entry still needs
+@@ -1965,7 +1981,7 @@
+ \endfoot
+ \bottomrule
+ \endlastfoot
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: factuality and source faithfulness}}\\*
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: factuality evaluation}}\\*
+ 1.~FEVER\textsuperscript{A} \citep{thorne_fever_2018} & Fact checking\newline Check: source document (Wikipedia evidence sentences) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+ 2.~TruthfulQA\textsuperscript{A} \citep{lin_truthfulqa_2022} & Factual QA\newline Check: mixed or task-dependent (sourced reference answers; human adjudication for generations) & quality or preference rubric (informativeness) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+ 3.~PopQA\textsuperscript{A} \citep{mallen_when_2023} & Long-tail QA\newline Check: database or knowledge base (Wikidata) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+@@ -2001,7 +2017,7 @@
+ \endfoot
+ \bottomrule
+ \endlastfoot
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: factuality and source faithfulness (continued)}}\\
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: factuality evaluation (continued)}}\\
+ 14.~CNN/DailyMail\textsuperscript{A} \citep{hermann_teaching_2015,wang_asking_2020} & News corpus used in summarization evaluation\newline Check: source document (news source article) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+ 15.~DelucionQA\textsuperscript{M} \citep{sadat_delucionqa_2023} & Domain QA\newline Check: source document (retrieved chunks from one Jeep Gladiator manual) & mixed (answerability, coverage, and abstention) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+ 16.~HalluQA\textsuperscript{M} \citep{cheng_evaluating_2023} & Chinese adversarial QA\newline Check: gold labels (answer sets backed by sources or explanations) & mixed (answer correctness and refusal handling) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+@@ -2015,7 +2031,7 @@
+ \multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: intent evaluation}}\\
+ 23.~FaithQA\textsuperscript{M} \citep{hao_faithqa_2025} & Intent verification\newline Check: mixed or task-dependent (RAG reports; Wikipedia for factual QA; none for creative writing) & specification or tests (query-constraint satisfaction) & $S$: NC\newline $\Gamma$: NR\\\addlinespace[1pt]
+ \midrule
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: mixed tasks and tool use}}\\
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: mixed-task and tool-use evaluation}}\\
+ 24.~BIG-Bench\textsuperscript{A} \citep{srivastava_beyond_2023} & Multi-task reasoning\newline Check: mixed or task-dependent (subtask targets and adjudication) & not separately represented & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]
+ 25.~BIG-Bench Hard\textsuperscript{A} \citep{suzgun_challenging_2023} & Reasoning suite\newline Check: gold labels (task-specific reference answers) & not separately represented & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]
+ 26.~ToolQA\textsuperscript{A} \citep{zhuang_toolqa_2023} & Tool-use QA\newline Check: mixed or task-dependent (fixed corpora and generated gold answers) & not separately represented & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]
+@@ -2042,18 +2058,20 @@
+ \endfoot
+ \bottomrule
+ \endlastfoot
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: creative writing, ideas, and reasoning}}\\
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: creative writing and reasoning}}\\
+ 28.~CreativityPrism\textsuperscript{M} \citep{hou_creativityprism_2025} & Multi-task creativity\newline Check: mixed or task-dependent (tests or correctness judges where applicable) & mixed (task-specific rubrics) & $S$: NC\newline $\Gamma$: IF (task)\\\addlinespace[1pt]
+ 29.~LitBench\textsuperscript{M} \citep{fein_litbench_2025} & Story evaluation\newline Check: no external factual reference identified (human preferences assess quality) & quality or preference rubric (human preferences) & $S$: NC\newline $\Gamma$: IF (story)\\\addlinespace[1pt]
+ 30.~Short Story\textsuperscript{M} \citep{ismayilzada_evaluating_2025} & Story generation\newline Check: no external factual reference identified (cue words constrain the task, not claim truth) & mixed (novelty, diversity, complexity, and judged creativity) & $S$: NC\newline $\Gamma$: IF (story)\\\addlinespace[1pt]
+ 31.~WritingBench\textsuperscript{M} \citep{wu_writingbench_2025} & Generative writing\newline Check: mixed or task-dependent (provided materials when present) & quality or preference rubric (writing rubric) & $S$: SC\newline $\Gamma$: IF (task)\\\addlinespace[1pt]
+ 32.~Art-or-Artifice / TTCW\textsuperscript{M} \citep{chakrabarty_art_2024} & Creative writing\newline Check: no external factual reference identified (expert tests assess creativity) & quality or preference rubric (expert rubric) & $S$: NC\newline $\Gamma$: IF (story)\\\addlinespace[1pt]
+-33.~Automated DT scoring\textsuperscript{M} \citep{organisciak_beyond_2023} & Divergent thinking\newline Check: no external factual reference identified & novelty or divergent-thinking rubric & $S$: NC\newline $\Gamma$: IF (ideation)\\\addlinespace[1pt]
+-34.~Verbal Creativity\textsuperscript{M} \citep{dinu_testing_2025} & Linguistic creativity\newline Check: no external factual reference identified & novelty or divergent-thinking rubric (originality, flexibility, elaboration) & $S$: NC\newline $\Gamma$: IF (linguistic creativity)\\\addlinespace[1pt]
+ 35.~Automated Creativity\textsuperscript{M} \citep{li_automated_2025} & Creative writing\newline Check: no external factual reference identified (reference texts anchor quality, not claim truth) & quality or preference rubric (reference-text quality anchor) & $S$: NC\newline $\Gamma$: IF (task)\\\addlinespace[1pt]
+ 36.~Hallucinating LLM Could Be Creative\textsuperscript{P} \citep{sun_hallucinating_2024} & Reasoning-path evaluation\newline Check: mixed or task-dependent (task correctness; consistency/clustering are diagnostics) & mixed (correctness, consistency, diversity) & $S$: NC\newline $\Gamma$: PA (mixed frame)\\\addlinespace[1pt]
+ \midrule
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: problem solving under constraints}}\\
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: divergent thinking and linguistic creativity}}\\*
++33.~Automated DT scoring\textsuperscript{M} \citep{organisciak_beyond_2023} & Divergent thinking\newline Check: no external factual reference identified & novelty or divergent-thinking rubric & $S$: NC\newline $\Gamma$: IF (ideation)\\\addlinespace[1pt]
++34.~Verbal Creativity\textsuperscript{M} \citep{dinu_testing_2025} & Linguistic creativity\newline Check: no external factual reference identified & novelty or divergent-thinking rubric (originality, flexibility, elaboration) & $S$: NC\newline $\Gamma$: IF (linguistic creativity)\\\addlinespace[1pt]
++\midrule
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: constrained problem solving}}\\
+ 37.~MacGyver\textsuperscript{M} \citep{tian_macgyver_2025} & Problem solving\newline Check: task validity (human judgment of feasibility and efficiency) & feasibility or correctness criterion (feasibility and efficiency) & $S$: NC\newline $\Gamma$: NR\\\addlinespace[1pt]
+ 38.~EscapeBench\textsuperscript{M} \citep{qian_escapebench_2025} & Agent puzzles\newline Check: task validity (game state and progress) & feasibility or correctness criterion & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]
+ 39.~CreativEval\textsuperscript{M} \citep{delorenzo_creativeval_2024} & Code generation\newline Check: task validity (functionality under Verilog testbenches) & novelty or divergent-thinking rubric (fluency, flexibility, originality, elaboration) & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]

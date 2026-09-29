@@ -1,0 +1,37 @@
+--- avant.tex
++++ truth_contract_position_paper.tex
+@@ -1478,14 +1478,26 @@
+ 
+ \section{Exemple}\label{sec:cases}\label{sec:examples}
+ 
+-The five constructed examples compare how a fixed response is evaluated
+-under two task settings. Examples A--D change reference evidence, permission
+-scope, or required status marking. Example E is a control: changing only the
+-requested style leaves the truth contract unchanged. Within each comparison,
+-the response text, recovered claim content, and observed status marking
+-remain fixed. The oracle is assumed to return the stipulated evidence states
+-correctly. These are illustrations of the rule, not model experiment results.
+-Figure~\ref{fig:example-transitions} summarizes the five comparisons.
++The five constructed examples illustrate how evaluation depends on the
++truth contract while keeping the response text, recovered claim content,
++and observed status marking fixed within each comparison.
++Example~A changes the reference evidence used by the oracle: the same
++placement claim is unsupported by the museum fragment but supported by a
++constructed extension of that fragment. Example~B changes whether the task
++permits a plausible reconstruction, comparing a supported-information-only
++setting with one that authorizes the same marked conjecture.
++Example~C changes the required status marking: the same conjecture fails a
++requirement for an explicit ``Hypothesis'' heading but satisfies a requirement
++for a conjecture cue within the sentence. Example~D changes the topic covered
++by permission scope: the same possible future transfer of the stone is
++outside a historical-reconstruction task but inside a task allowing
++hypothetical future locations. Finally, Example~E changes only the requested
++style, from plain to metaphorical language; the truth contract and the
++claim label remain unchanged, while style compliance is assessed separately.
++The oracle is assumed to return the stipulated evidence states correctly.
++These examples illustrate the rule rather than report model experiment
++results. Figure~\ref{fig:example-transitions} presents the two settings and
++predicted labels for each comparison.
+ 
+ \begin{figure}[!ht]
+ \centering

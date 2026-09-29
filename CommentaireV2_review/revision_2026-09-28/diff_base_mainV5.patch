@@ -1,0 +1,840 @@
+--- base_avant_revision.tex
++++ mainV5_encadrant.tex
+@@ -107,7 +107,6 @@
+ labels remain stable when only style changes, and how claim labels can
+ inform an assessment of the whole response.
+ \end{abstract}
+-
+ \section{Introduction}\label{sec:intro}
+ 
+ Large language models (LLMs) can produce fluent statements that contradict
+@@ -175,13 +174,13 @@
+ % Only what the response may add changes.
+ \node[fone contract] (contract-factual) at (0,-4.45) {
+   \textbf{Truth contract}\\[7pt]
+-  \textbf{Source:} source excerpt (right)\\[3pt]
++  \textbf{Source:} source fragment (right)\\[3pt]
+   \textbf{The response may add:} nothing beyond the source\\[3pt]
+   \textbf{The response must:} mark uncertainty clearly
+ };
+ \node[fone contract] (contract-creative) at (8.10,-4.45) {
+   \textbf{Truth contract}\\[7pt]
+-  \textbf{Source:} source excerpt (right)\\[3pt]
++  \textbf{Source:} source fragment (right)\\[3pt]
+   \textbf{The response may add:} one plausible reconstruction\\[3pt]
+   \textbf{The response must:} mark uncertainty clearly
+ };
+@@ -189,12 +188,11 @@
+ % Source document: a custom wavy outline needs no extra TikZ library.
+ \node[anchor=north west,align=left,text width=4.05cm,inner sep=8pt]
+   (reference) at (14.80,-4.05) {
+-  \textbf{Source excerpt}\\[5pt]
++  \textbf{Source fragment}\\[5pt]
+   Wikipedia article ``Rosetta Stone''---illustrative input\\[7pt]
+-  ``A stele found near Rosetta in 1799 bears a decree from 196 BCE
+-  in hieroglyphic, Demotic, and Greek. The stone is a fragment of a l
+-  arger stele that was probably once displayed in a temple.''\\[7pt]
+-  \emph{Only this excerpt is used as the source.}
++  ``A stele found near Rosetta in 1799 bears a Rosetta stone from 196 BCE
++  in hieroglyphic, Demotic, and Greek. The stone is a fragment of a larger stele that was probably once displayed in a temple.''\\[7pt]
++  \emph{Only this fragment is used as the source.}
+ };
+ % Paint the source outline behind its text.
+ \begin{pgfonlayer}{fonebackground}
+@@ -301,12 +299,13 @@
+ \end{tikzpicture}%
+ }
+ \endgroup
+-\caption{\textbf{Example evaluation flow for one generated text with two different prompts. %Same source and response, different task instructions.
++\caption{\textbf{Example evaluation flow for the same generated text with two different prompts. %Same source and response, different task instructions.
+ }
+-The generated response contains a proposed reconstruction that the source neither confirms nor contradicts. The factual task
+-classifies it as a hallucination because it allows only facts from the source.
+-The creative task labels the same claim as licensed divergence because it permits this reconstruction and the response presents it as a possibility. Licensed divergence does
+-not mean that the claim is true. The requested writing style is evaluated separately.}
++The generated response contains a proposed reconstruction that the source neither confirms nor contradicts. Under the factual task, the claim is
++classified as a hallucination because it allows only facts from the source.
++With the creative task the same claim is labeled as licensed divergence because it permits this reconstruction and the response presents it as a possibility. Licensed divergence does
++not mean that the claim is true. %The requested writing style is evaluated separately.
++}
+ \label{fig:prompt-to-claim}
+ \end{figure}
+ 
+@@ -382,78 +381,80 @@
+ Creative-task success is assessed separately, and evaluation failures are reported.
+ 
+ Third, we compare forty-one selected evaluation resources and illustrate the
+-framework with five examples
++framework with five examples %constructed cases
+ (Sections~\ref{sec:methodology} and~\ref{sec:cases}). %This comparison and these examples explain how the framework can be used, but they do not yet prove that it is reliable or useful in practice. 
+-The research agenda in Section~\ref{sec:agenda} asks whether the framework can be applied reliably and improves evaluation.
+-
+-Section~\ref{sec:framework} presents the framework, and
++The research agenda in Section~\ref{sec:agenda} studies whether the framework can be applied reliably and improves evaluation.
++
++Section~\ref{sec:framework} presents the framework and
+ Section~\ref{sec:related} compares it with existing work.
+-Sections~\ref{sec:methodology} and~\ref{sec:cases} present the comparison and
+-the examples. Sections~\ref{sec:agenda} and~\ref{sec:discussion}
++Section ~\ref{sec:methodology} presents the comparison of the analyzed resource sand and ~\ref{sec:cases}  illustrates our approach trhough 5 constructed cases. Sections~\ref{sec:agenda} and~\ref{sec:discussion}
+ present future research questions and discuss the scope of the framework.
+ 
+ \section{Framework}\label{sec:framework}
+ 
+-Evidence tells us what the reference supports. Permission tells us what the
+-task allows the response to add or change. A separate requirement specifies
++The reference tells us what can be considered as grounded. Permission tells us what the
++task allows the response to add or change with regards to the evidence. A separate requirement specifies
+ how those additions or changes must be presented. Content that the reference
+ does not establish may therefore still meet the task's requirements.
+ Our framework separates these questions before combining their answers.
+ 
+ We call the complete model-generated text the \emph{response}. We evaluate
+ its individual \emph{claims}: statements whose content can be checked in
+-context against the reference evidence.
+-
+- Consider a museum example based on a short source about the Rosetta Stone. 
++context against the reference.
++
++ Consider a museum example, described in Figure~\ref{fig:prompt-to-claim}, based on a short source about the Rosetta Stone. 
+  The source says that the stone was found near Rosetta in 1799, 
+- contains a decree from 196 BCE in three scripts, and is part of a larger stele probably displayed in a temple. 
++ contains a decree from 196 BC in three scripts, and is part of a larger stele probably displayed in a temple. 
+  It does not say exactly where the complete stele stood. 
+- We use this excerpt only as a fixed illustrative source; it is not a verbatim quotation from a specific historical source.
++ This passage is used only as a fixed example for illustration; it is not a direct quotation from a specific historical source.
+ Now consider the claim: ``One possible reconstruction places the complete stele near a temple entrance.'' 
+ The source neither supports nor contradicts this claim. 
+ In a factual task that allows only information supported by the source, 
+-the claim is not allowed. In a task that allows a plausible reconstruction, 
++this claim is not allowed. In a task that allows a plausible reconstruction, 
+ the same claim may be allowed if the response presents it as a possibility. 
+-The claim and the evidence are the same; only the task permission changes.
+-
+-Evaluating such a case therefore requires two distinct questions. 
+-First, what does the reference evidence establish about the claim? 
+-Second, when the evidence does not settle it, does the task permit the response to introduce that content, 
++Hence here the claim and the source are the same; only the task permission changes.
++
++Evaluating such a case therefore involves two distinct questions. 
++First, what does the reference source establish about the claim? 
++Second, when the reference does not settle it, does the task permit the response to introduce that content in the claim, 
+ and how must its claim be presented? We call the explicit representation of these task conditions a \emph{truth contract}. 
+ The following subsections define this contract, specify the claims to which it applies, 
+-and then derive the claim-level decision rule.
++and then derive a claim-level decision rule. 
+ 
+ \subsection{The Truth Contract}\label{subsec:contract}
+-A truth contract specifies which evidence and checking procedure are used to evaluate a claim, which departures from that
++A truth contract specifies which reference and checking procedure are used to evaluate a claim, which departures from that
+ reference the response may introduce, and how they must be presented.
+-For the complete task context $p$, we write
+-\begin{equation}
+-\TC(p)=(O,\Gamma,\mu).
+-\label{eq:truth-contract}
+-\end{equation}
+-The task context includes the prompt, applicable system instructions, dialogue
+-history, domain constraints, and attached data. The three fields have distinct roles:
++The Truth Contract (TC) is in general a function of the complete task context $p$. The latter includes the prompt, applicable system instructions (e.g. the prompt system), dialogue
++history, domain constraints, and attached data.
++We describe the Truth Contract with three key elements
++
+ \begin{itemize}
+ \item $O$, the \emph{task oracle}, is a domain-specific system for checking a response against reference evidence or specified tests.
+ \item $\Gamma$, the \emph{permission scope}, specifies permitted departures from the evidence and any explicit requirement to use invented content instead of real facts.
+ \item $\mu$, the \emph{required status marking}, specifies how that content must be presented.
+ \end{itemize}
++Formally, we write:
++\begin{equation}
++\TC(p)=(O,\Gamma,\mu).
++\label{eq:truth-contract}
++\end{equation}
++
++
+ The evaluator fixes the task oracle, the permission scope, and the required status marking before reading the response. 
+-This order matters because the contract defines the rules of evaluation; 
+-it should not be adjusted after the fact to fit a particular output. 
+-When instructions conflict, the evaluator must decide which instruction has priority and record that decision. 
+-If the task context does not allow such a decision, the evaluation setup is underspecified. 
+-External constraints, such as legal, safety, licensing, or domain-specific requirements, 
++%This order matters because the contract defines the rules of evaluation; it should not be adjusted after the fact to fit a particular output. 
++We suppose that the evaluator provides coherent and not conflicting instructions. 
++
++%When instructions conflict, the evaluator must decide which instruction has priority and record that decision.  If the task context does not allow such a decision, the evaluation setup is underspecified. 
++External constraints, such as legal, safety, licensing, or domain-specific requirements 
+ still apply even if the prompt does not mention them again. 
+-Finally, the permission scope cannot be expanded after generation to make an otherwise unauthorized claim acceptable.
++%Finally, the permission scope cannot be expanded after generation to make an otherwise unauthorized claim acceptable.
+ 
+ \paragraph{Task oracle}
+-The task oracle checks a response using methods suited to its domain. For
+-text, it identifies claims in the response (\emph{claim extraction}),
++The task oracle checks an response of an LLM using methods suited to its domain. For example, for natural language text responses, it identifies claims in the response (\emph{claim extraction}),
+ interprets their meaning in context (\emph{claim recovery}),
+ and checks them against the reference evidence (\emph{claim verification}); Sections~\ref{subsec:unit}
+-and~\ref{subsec:verification} explain them. We use $q^*$ for the recovered
+-claim content, preserving its meaning, entities, qualifiers, and temporal
++and~\ref{subsec:verification} explain these steps. We use $q^*$ for the recovered
++canonical claim content, preserving its meaning, entities, qualifiers, and temporal
+ scope. The oracle records what the evidence establishes and how the response
+ presents each claim. Permission and required marking are checked afterward.
+ 
+@@ -463,49 +464,42 @@
+ a retrieval set, a database, gold
+ labels, or executable code. For a program, the oracle may instead be a suite
+ of unit tests that compares actual and expected outputs. For a formal proof,
+-it may be a proof checker. These oracles need not extract or interpret
+-natural-language claims. Their results establish only what the tests or
++it may be a proof checker. %These oracles need not extract or interpret natural-language claims. 
++Their results establish only what the tests or
+ checks cover; passing unit tests does not establish that a program is correct
+ for every input. The following sections detail the textual case.
+ 
+ The oracle is defined independently of the prompt: the evaluation protocol
+ selects its references and domain-specific checking procedures before prompts are
+-compared. The truth contract records which oracle is used; the prompt does
+-not define or modify that oracle. It remains fixed across the prompts
+-compared within an evaluation design. Different designs may designate
+-different oracles, as Case~A illustrates. In particular, permission to invent
++compared. The truth contract records which oracle is used.% the prompt does not define or modify that oracle. 
++The oracle remains fixed for all prompts
++ within an evaluation use case. Different evaluation uses cases may designate
++different oracles, as the example in Case~A (section \ref{sec:cases}) illustrates. In particular, permission to invent
+ content does not change the evidence against which that content is checked.
+-This independence concerns the system's specification: it can read the task
+-context to resolve references and understand the response, without treating
+-the prompt's permission to invent as evidence that an invention is true.
+-
+-For reproducible evaluation, the protocol must specify the oracle, its sources
+-or checks, their versions, and conditions of use. It must also state how source
+-adequacy, temporal validity, and conflicts are handled. The oracle need not be
+-complete: when it neither supports nor contradicts a claim, the result is
+-\textsc{unknown}. Failure to specify or apply the oracle is a separate
+-evaluation error.
+-
+-In the museum example, we instantiate this general definition with the
+-illustrative excerpt from the Wikipedia article ``Rosetta Stone'' and
+-procedures that extract and recover the response's claims, then determine
+-what the excerpt entails or contradicts. It does not include
+-whatever additional information an evaluator happens to know. Nor does it
+-include a reconstruction merely because the task permits proposing it.
+-The oracle specifies the standard to apply; reliable implementation of that
+-standard remains an empirical problem.
++%This independence concerns the system's specification: it can read the task context to resolve references and understand the response, without treating the prompt's permission to invent as evidence that an invention is true.
++
++%For reproducible evaluation, the protocol must specify the oracle, its sources or checks, their versions, and conditions of use. It must also state how source adequacy, temporal validity, and conflicts are handled.
++The oracle need not be
++omniscient: it can neither support nor contradict a claim, its result result in this case is for the claim is:
++\textsc{unknown}. 
++
++
++In the museum example, the source of the oracle is
++a fragment from the Wikipedia article ``Rosetta Stone''. We also suppose that the oracle is capable of extracting the response's claims, then determine
++what the source entails or contradicts. %It does not include whatever additional information an evaluator happens to know. Nor does it include a reconstruction merely because the task permits proposing it.
++%The oracle specifies the standard to apply; reliable implementation of that standard remains an empirical problem.
+ 
+ \paragraph{Permission scope}
+ Permission scope $\Gamma$ records rules about what the response may add or
+-change beyond the reference evidence. Permission may concern a specific
++change beyond the reference evidence of the oracle. Permission may concern a specific
+ claim, such as a possible temple-entrance placement, or a broader topic, such
+ as plausible reconstructions of the stone's original placement. Each claim
+-is checked against these rules. In the museum task, changing the decree's
++is checked against these rules. In the museum task, changing the Rosetta stone's
+ known date or predicting the stone's return to Egypt next year falls outside
+ the scope, even if presented as possible.
+ 
+-For a strict factual task, $\Gamma=\varnothing$: no departures are permitted,
+-but supported facts remain allowed. A different task may explicitly require
++For a strict factual task, $\Gamma=\varnothing$: no departures from the source are permitted%, but supported facts remain allowed. 
++A different task may explicitly require
+ invented content in a specified part of the response and exclude real facts
+ there. Such exclusions are recorded as additional scope rules. Simply asking
+ for fiction does not imply them: a story can include real places or events.
+@@ -538,7 +532,7 @@
+ usefulness, originality, reasoning, and safety require separate assessment.
+ The next step is to identify what each claim says and how it is presented.
+ 
+-For the following sections, $E$ denotes a claim's relation to the oracle:
++For the following sections, $ES$ denotes a claim's relation to the oracle:
+ \textsc{entailed}, \textsc{contradicted}, or \textsc{unknown}.
+ The observed status marking $\widehat{m}$ describes how the response actually
+ presents the claim; $\mu$ specifies how the task requires it to be presented.
+@@ -554,7 +548,7 @@
+ $p$ & Complete task context\\
+ $O$ & Domain-specific checking system; for text, claim extraction, recovery, and verification\\
+ $\Gamma$ & Permission scope: what the response may add or change\\
+-$E$ & Evidence state relative to $O$\\
++$ES$ & Evidence state relative to $O$\\
+ $\mu$ & Required status marking\\
+ $q^*$ & Canonical claim content, preserving meaning and context\\
+ $\widehat{m}$ & Observed status marking recovered from the response in context\\
+@@ -586,7 +580,7 @@
+ ``One possible reconstruction places the complete stele near a temple
+ entrance.'' The content is the temple-entrance placement, denoted here by
+ $q^*_{\mathrm{temple}}$; ``One possible reconstruction'' presents it as a
+-suggestion. The separate claim ``The decree dates from 1799,'' denoted by
++suggestion. The separate claim ``The Rosetta stone dates from 1799,'' denoted by
+ $q^*_{1799}$, is presented as established. Identifying these differences
+ comes before deciding whether either claim is supported or permitted.
+ 
+@@ -598,7 +592,7 @@
+ context must also be retained. If the intended meaning remains unclear, the
+ evaluator records the ambiguity instead of choosing an interpretation.
+ 
+-Likewise, ``The excerpt does not confirm that the stele stood near a temple
++Likewise, ``The fragment does not confirm that the stele stood near a temple
+ entrance'' makes a claim about the source. It does not claim that the stele
+ stood there. The oracle checks whether the description of the source is
+ correct; it checks the placement itself only if the response also states
+@@ -608,7 +602,7 @@
+ invite the reader to imagine. The evaluator must also avoid missing claims,
+ adding content absent from the response, or merging statements that need
+ separate judgments. Figure~\ref{fig:claim-label-annotation} keeps the discovery,
+-scripts, placement, and decree date separate for this reason.
++scripts, placement, and Rosetta stone date separate for this reason.
+ Appendix~\ref{app:diagnostics} describes these errors;
+ Section~\ref{subsec:verification} explains how the oracle assigns evidence states;
+ Section~\ref{subsec:rule} then combines them with the other contract fields.
+@@ -624,20 +618,24 @@
+ \item \textsc{unknown}: the oracle neither establishes nor contradicts the claim.
+ \end{itemize}
+ An \textsc{unknown} result means that the specified evidence neither supports
+-nor contradicts the claim. The museum excerpt, for example, is available but
+-does not settle the temple-entrance placement. This differs from a failed
+-evaluation: if a required source is inaccessible, a source conflict cannot
+-be resolved, or the claim remains unclear, the evaluator records the failure
+-and leaves the affected claim unlabeled. Appendix~\ref{app:diagnostics}
+-describes these failures.
++nor contradicts the claim. The museum fragment, for example, is available but
++does not settle the temple-entrance placement. 
++
++We suppose that the oracle is correct in its answers and its sources are coherent. In practice, for general purposes this is an open research question. Features, such as correct claim extraction, correct claim evaluation, source coherence has to be studied, but this goes beyond the purpose of our present position paper. 
++
++
++
++
++%This differs from a failed evaluation: if a required source is inaccessible, a source conflict cannot be resolved, or the claim remains unclear, the evaluator records the failure and leaves the affected claim unlabeled. Appendix~\ref{app:diagnostics}describes these failures.
+ 
+ The oracle therefore returns each recovered claim with its content $q^*$,
+-observed marking $\widehat{m}$, and evidence state $E$, together with any
++observed marking $\widehat{m}$, and evidence state $ES$, together with any
+ procedural failures. In Figure~\ref{fig:claim-label-annotation}, it recovers
+ four claims and assigns two \textsc{entailed} states, one \textsc{unknown}
+-state for the placement, and one \textsc{contradicted} state for the decree
++state for the placement, and one \textsc{contradicted} state for the Rosetta stone
+ date. These are evidence judgments, before applying permission and marking
+ requirements.
++
+ 
+ \subsection{Combining Contract Results: Claim Labels}\label{subsec:rule}
+ 
+@@ -653,13 +651,13 @@
+ The temple-entrance placement is \textsc{unknown}, but the task permits this
+ reconstruction. With ``One possible reconstruction,'' it receives \LD{};
+ presented as established, it would receive \Hall{} for a marking failure.
+-The claim that the decree dates from 1799 contradicts the source and is not
++The claim that the Rosetta stone dates from 1799 contradicts the source and is not
+ permitted, so it receives \Hall{}. Adding ``possibly'' would not authorize it.
+ 
+ Permission can also depend on the evidence state. Allowing an unknown
+ reconstruction does not automatically allow a contradiction of a known date.
+ An alternate-history task could explicitly permit the changed date and
+-require fictional marking; the result would then be \LD{}, while $E$ would
++require fictional marking; the result would then be \LD{}, while $ES$ would
+ remain \textsc{contradicted}.
+ 
+ Now change the instruction: ``Invent the discovery place and date for a
+@@ -699,9 +697,9 @@
+ Evidence state & Additional condition & Label & Reason code\\\midrule
+ \textsc{entailed} & A requirement for invented content explicitly excludes this fact & \Hall & \textsc{out-of-scope}\\
+ \textsc{entailed} & No such exclusion applies & \Grd & ---\\
+-Unknown or contradicted & $(q^*,E)\notin\Gamma$ & \Hall & \textsc{out-of-scope}\\
+-Unknown or contradicted & $(q^*,E)\in\Gamma$; $\widehat{m}$ fails $\mu$ & \Hall & \textsc{marking-failure}\\
+-Unknown or contradicted & $(q^*,E)\in\Gamma$; $\widehat{m}$ satisfies $\mu$ & \LD & ---\\
++Unknown or contradicted & $(q^*,ES)\notin\Gamma$ & \Hall & \textsc{out-of-scope}\\
++Unknown or contradicted & $(q^*,ES)\in\Gamma$; $\widehat{m}$ fails $\mu$ & \Hall & \textsc{marking-failure}\\
++Unknown or contradicted & $(q^*,ES)\in\Gamma$; $\widehat{m}$ satisfies $\mu$ & \LD & ---\\
+ \bottomrule
+ \end{tabularx}
+ \end{table}
+@@ -767,9 +765,9 @@
+   \node[lab] at (\xlabel,7.55) {task context};
+   \node[prompt,text width=10.60cm] (prompt) at (-0.50,7.55)
+     {\textbf{Prompt:} ``Using the
+-    illustrative reference excerpt on the Rosetta Stone, write a museum label for
++    illustrative reference fragment on the Rosetta Stone, write a museum label for
+     young visitors that brings the stone and its significance to life.
+-    Keep historical statements faithful to the excerpt. Where it is silent,
++    Keep historical statements faithful to the fragment. Where it is silent,
+     you may add one plausible reconstruction, marked as conjecture.''};
+ 
+   % All three truth-contract fields share one visual row.
+@@ -804,7 +802,7 @@
+     ``Rosetta, 1799.\ The stone was found near Rosetta. Its decree appears
+     in hieroglyphic, Demotic, and Greek. One possible reconstruction places
+     the complete stele near a temple entrance, like a public noticeboard
+-    carved in stone.\ The decree dates from 1799.''};
++    carved in stone.\ The Rosetta stone dates from 1799.''};
+   \foreach \field in {archive,scope,mark}
+     \draw[flow] (\field.south) -- (\field.south |- response.north);
+ 
+@@ -813,11 +811,11 @@
+   \node[span] (s1) at (\xone,0.25)
+     {$s_1$ ``found near Rosetta\\in 1799''\\[-1pt]\emph{claim-only}};
+   \node[span] (s2) at (\xtwo,0.25)
+-    {$s_2$ ``decree appears in\\three scripts''\\[-1pt]\emph{claim-only}};
++    {$s_2$ ``decree on the Rosetta stone appears in\\three scripts''\\[-1pt]\emph{claim-only}};
+   \node[span] (s3) at (\xthree,0.25)
+     {$s_3$ ``complete stele near\\a temple entrance\ldots''\\[-1pt]\emph{claim + status marking}};
+   \node[span] (s4) at (\xfour,0.25)
+-    {$s_4$ ``decree dates\\from 1799''\\[-1pt]\emph{claim-only}};
++    {$s_4$ ``Rosetta stone dates\\from 1799''\\[-1pt]\emph{claim-only}};
+   \foreach \sp in {s1,s2,s3,s4}
+     \draw[flow] (response.south -| \sp.north) -- (\sp.north);
+ 
+@@ -831,7 +829,7 @@
+   \node[claim] (c3) at (\xthree,-1.55)
+     {$q^*_3$: complete stele\\stood near a temple\\entrance\\$\widehat{m}_3$: possible};
+   \node[claim] (c4) at (\xfour,-1.55)
+-    {$q^*_4$: decree dates\\from 1799\\$\widehat{m}_4$: asserted};
++    {$q^*_4$: Rosetta stone dates\\from 1799\\$\widehat{m}_4$: asserted};
+   \foreach \sp/\cl in {s1/c1,s2/c2,s3/c3,s4/c4}
+     \draw[flow] (\sp.south) -- (\cl.north);
+ 
+@@ -879,28 +877,26 @@
+ row. It separates the two \textsc{entailed} claims
+ from the rest; permission scope and required status marking then separate the
+ licensed-divergence label (\LD) from the hallucination label (\Hall) for
+-departures from the reference. The claim that the decree dates from
+-1799 is contradicted by the oracle's date of 196 BCE and receives \Hall{}
++departures from the reference. The claim that the Rosetta stone dates from
++1799 is contradicted by the oracle's date of 196 BCE and is annotated as \Hall{}
+ because this task does not permit changing that date. The requested style-marking level is
+ recorded below the pipeline,
+-outside the contract, and never creates a fourth label. The reference excerpt is an illustrative input, not a documented verbatim quotation. The temple-entrance placement and incorrect date are constructed test claims.}
++outside the contract, and never creates a fourth label. The reference fragment is an illustrative input, not a documented verbatim quotation. The temple-entrance placement and incorrect date are constructed test claims.}
+ \label{fig:claim-label-annotation}
+ \end{figure}
+ \FloatBarrier
+ 
+ \paragraph{Claim trace and the open aggregation question}\label{subsec:response}
+ 
+-The output is a \emph{claim trace}: a record of each recovered claim, its
+-evidence state, permission and marking decisions, label, and reason code.
+-Evaluation failures are also recorded. Recovery coverage measures how much
+-of the response's claim content was recovered, not whether the response
+-answered every part of the task.
+-
+-How to combine these decisions into a verdict on the whole response remains
+-open. We propose no default rule, and the individual decisions must remain
++The output of the system is a \emph{claim trace}: a record of each recovered claim, its
++evidence state, permission scope and marking decisions ($\widehat{m}$), label and reason code. For example, ...
++
++
++How to combine these claim labels into a verdict on the whole response remains an
++open question. We propose no default rule, and the individual decisions must remain
+ available. Style, creative value, global reasoning, consistency, completeness,
+ relevance, and response-level limits require separate checks. The research
+-agenda examines these questions; Appendix~\ref{app:diagnostics} describes
++agenda section examines these questions; Appendix~\ref{app:diagnostics} describes
+ possible reporting policies.
+ 
+ \subsection{Style as a Robustness Question}\label{subsec:style}
+@@ -916,8 +912,8 @@
+ be checked for changes in meaning or status. A metaphor alone neither
+ authorizes a claim nor makes it false.
+ 
+-The test compares different wordings while keeping the contract, claim
+-content, and observed status marking fixed. In notation, $O$, $\Gamma$,
++The style test compares different wordings while keeping the contract, claim
++content and observed status marking fixed. In notation, $O$, $\Gamma$,
+ $\mu$, and each pair $(q^*,\widehat{m})$ stay the same. The expected labels
+ are therefore unchanged. Whether an evaluator can recover the same claims
+ and statuses across these wordings is an empirical question. The equivalence
+@@ -925,13 +921,15 @@
+ is claimed or how it is presented is not a test of style alone.
+ 
+ A separate question is whether the response uses the style the task asks
+-for. Requested and observed style are recorded separately. The request can
++for. Requested and observed styles are recorded separately. The request can
+ help interpret the response, but it cannot establish what the response
+ actually expresses. We use \emph{style marking} to describe how far its
+-wording departs from plain explanatory prose, for example through metaphor
+-or a sustained authorial voice. Case~E illustrates the robustness test;
+-Priority~3 proposes its evaluation and a provisional style scale, and
++wording departs from plain explanatory prose, for example through metaphors
++or a sustained authorial voice. The exemple Case~E (presented in Section \ref{sec:cases}) illustrates the robustness test;
++The research agenda proposes its evaluation and a provisional style scale and
+ Appendix~\ref{app:diagnostics} gives the formal test.
++
++
+ 
+ \section{Related Work}\label{sec:related}
+ 
+@@ -945,13 +943,13 @@
+ \citet{ji_survey_2023} separate source contradictions from content that cannot
+ be verified from the source. \citet{huang_survey_2025} distinguish factuality
+ and faithfulness failures, including inconsistencies with instructions,
+-context, or logic. These classifications describe different kinds of error.
++context, or logic. These classifications describe different kinds of errors.
+ An evaluation must still specify which evidence and checking procedure it uses.
+ 
+ Source-faithfulness evaluation asks whether a response agrees with a supplied
+-document \citep{maynez_faithfulness_2020}. For example, FactCC predicts whether
+-each summary sentence is consistent with the document and identifies
+-passages that help explain the prediction \citep{kryscinski_evaluating_2020}.
++document \citep{maynez_faithfulness_2020}. For example, FactCC \citep{kryscinski_evaluating_2020} a document summarization dataset, predicts whether
++each summary sentence is consistent with the original document and identifies
++passages that help explain the prediction .
+ QAGS generates questions from the summary, answers them using the summary
+ and the source document separately, and compares the answers. Different
+ answers suggest a factual inconsistency \citep{wang_asking_2020}.
+@@ -994,9 +992,7 @@
+ Missing claims or splitting the response incorrectly can also affect the
+ evaluation
+ \citep{wanner_closer_2024,metropolitansky_claimify_2025}.
+-These studies support evaluating individual claims in context. Whether our
+-separation of claim content and observed status marking can be applied
+-reliably remains to be tested.
++These studies support evaluating individual claims in context. %Whether our separation of claim content and observed status marking can be applied reliably remains to be tested.
+ 
+ \subsection{Instruction Following, Permission, and Marking}
+ 
+@@ -1044,11 +1040,11 @@
+ 
+ These criteria describe the quality and creative value of generated content.
+ They do not, by themselves, establish whether each claim is allowed.
+-Permission specifies what the task allows before that value is judged.
+-For example,
+-a low-quality reconstruction may satisfy the contract, and a highly rated
+-response may contain an unauthorized claim. Findings on factuality and
+-informativeness likewise motivate reporting distinct objectives
++For example, a low-quality reconstruction may satisfy the contract, and a response liked by a human evaluator may contain unauthorized claims. The quality and ease of understanding of a response perceived by humans are different features from the factuality of the response.
++
++According to these papers, the notion of permission specifies what the task allows. They also introduce the "usefulness" that evaluates wether a text fragment is useful, ie. helps understanding a claim.
++
++ 
+ \citep{wu_balancing_2025,gong_factuality_2026}.
+ 
+ \subsection{Hallucination and Creativity}
+@@ -1123,26 +1119,23 @@
+ 
+ \section{Resource Mapping}\label{sec:methodology}
+ 
+-We compare forty-one selected evaluation resources to see how they represent
++We compare forty-one selected evaluation resources ( section \ref{tab:full-mapping-creative}) to see how they represent
+ the task oracle, permission scope, and required status marking. We also
+-examine whether they change the style of a response while keeping its claim
+-content and observed status marking fixed. This comparison, which we call
+-the \emph{resource mapping}, describes evaluation designs. It does not test
+-whether our labeling rule works in practice.
++examine whether the style change of a response while keeping its claim
++content and observed status marking fixed is covered. This comparison, which we call
++the \emph{resource mapping}, describes evaluation designs. %It does not test whether our labeling rule works in practice.
+ 
+ \subsection{Selection and Scope}
+ 
+ The unit of analysis is an \emph{evaluation resource}: a benchmark, dataset,
+-or protocol that specifies how responses are evaluated. The selection covers
++or protocol that specifies how responses are evaluated. The selection covers LLM evaluation datasets on 
+ factual question answering, responses based on sources, intent evaluation,
+ creative writing, idea generation, and problem solving under constraints.
+ It is intended to examine different evaluation designs, not estimate how
+ common they are across the field. We call this a \emph{purposive sample}.
+ 
+ Appendix~\ref{app:mapping} lists the resources and the categories assigned to
+-them. The available record does not explain how the resources were initially
+-found or selected. That procedure must be documented for others to reproduce
+-the selection; the final list alone is insufficient.
++them. This list covers LLM hallucination datasets found at the time of the writing of this paper. %The available record does not explain how the resources were initially found or selected.  That procedure must be documented for others to reproduce the selection; the final list alone is insufficient.
+ % AUTHOR ACTION: replace the preceding limitation with the actual documented
+ % discovery procedure when available. Do not invent dates, queries, or screening.
+ 
+@@ -1159,8 +1152,7 @@
+ claims or labels are compared across different wordings that preserve claim
+ content and observed status marking.
+ \end{itemize}
+-The task categories group similar tasks without ranking them. They are
+-descriptive and do not enter the labeling rule.
++We grouped the resources according to their task category. These categories are: factuality evaluation, intent evaluation, intent evaluation, tool use ... TODO %The task categories group similar tasks according to   without ranking them. They are descriptive and do not enter the labeling rule.
+ 
+ Factual tasks require claims supported by reference evidence. Intent
+ evaluation checks whether a response correctly interprets the user's
+@@ -1175,23 +1167,22 @@
+ 
+ The appendix defines the categories and lists the assigned codes. These
+ codes reflect our interpretation of each resource, whose authors may use
+-different terms. A field that is implicit or not reported separately may
++different terms. A task domain that is implicit or not reported separately may
+ still affect a broader evaluation. A score or test result serves as evidence
+ for the oracle only if it is used to support or contradict the evaluated
+ content; measuring overall task success alone is not enough.
+ 
+-\subsection{What the Coding Records}\label{sec:mapping}
++\subsection{Resource analysis criteria}\label{sec:mapping}
+ 
+ \paragraph{Task oracle}
+ The tables identify a reference or checking procedure for thirty-five
+-resources. For six, the coding identifies none that establishes or contradicts
+-claims. The recorded types include source documents, reference answers or
++resources. Six resources don't specify how factuality is evaluated.  The recorded types include source documents, reference answers or
+ labels, and checks using tools or human judgment. Specifically, the tables
+ record fifteen mixed or task-dependent types, eight source documents, six
+ sets of reference answers or labels, three environment or tool states, one
+ retrieval set, one knowledge base, and one human checking procedure.
+ 
+-The XSum example in Section~\ref{sec:cases} illustrates why the reference
++The XSum, summarization example in Section~\ref{sec:cases}, Case A,  illustrates why the reference
+ matters: the same claim can be unsupported by the source document but
+ supported by external evidence. The task oracle must therefore specify
+ which evidence is used.
+@@ -1232,12 +1223,12 @@
+ offering a permitted hypothesis: the response may make no claim about the
+ answer at all.
+ 
+-\subsection{Joint Evaluation and Style Variation}
++\subsection{Style Variation as a Separate Observation}
+ 
+ WritingBench is the only resource coded as scoring the requested style, but
+ it does not compare versions with the same claim content and observed status marking
+-\citep{wu_writingbench_2025}. None of the forty-one entries records a test
+-that varies style while keeping those elements fixed.
++\citep{wu_writingbench_2025}. None of the forty-one entries record a test
++that varies style while keeping permission scope and observed status marking fixed.
+ 
+ Scoring requested style asks whether a response uses the style requested
+ by the task. A comparison with fixed claims asks a different question:
+@@ -1246,45 +1237,135 @@
+ \emph{Not applicable} covers tasks for which this comparison may not make
+ sense, such as checking executable outputs rather than prose.
+ 
+-Figure~\ref{fig:profiles} groups the selected resources by task family and
+-places the joint evaluation sought by this paper at the center: assessing
+-creativity and divergent thinking while distinguishing licensed divergence
+-from hallucination under an explicit truth contract. The groups summarize
+-the appendix coding; the central area identifies a research target, rather
+-than a measured empty region in an exhaustive survey.
+-
+-Some selected resources already combine creativity-related criteria with
+-correctness checks or hallucination typing, as recorded for HIC-Bench and
+-several constrained-problem-solving resources in Appendix~\ref{app:mapping}.
+-The question is whether such evaluations distinguish permitted invention
+-from hallucination using reference evidence, permission scope, and required
+-status marking. The current coding does not establish that no existing
+-protocol does so; that absence claim requires source-level verification.
+-Style variation remains a separate test of whether an evaluator's judgment
+-changes when claim content and observed status marking stay fixed.
++Figure~\ref{fig:profiles} summarizes this distinction with colored boxes for
++the task groups. The red box, linked to the factual tasks, highlights a
++comparison not recorded in the selected resources: changing style while
++keeping claim content and observed status marking fixed. WritingBench
++appears separately because it scores requested style. The remaining boxes
++group resources whose requested style is coded as not controlled or not
++applicable. Their positions help separate the boxes; neither axis gives a
++score or ranks the resources.
++
++The figure concerns style evaluation. The appendix tables provide the
++separate information about the task oracle, permission scope, and required
++status marking. Together, these observations suggest a test worth conducting.
++They do not show that existing evaluators would fail it, or that the missing
++comparison is absent from all work outside this selection.
+ 
+ \begin{figure}[!ht]
+ \centering
+-\resizebox{\textwidth}{!}{\input{figures/resource_clusters.tex}}
+-\caption{\textbf{Resource families and the joint evaluation gap.}
+-Colored clusters group selected resources by task type; examples and appendix
+-row numbers identify each group. Creative writing and divergent thinking
+-are shown separately to make their different tasks visible.
+-The central area states the evaluation sought: creativity and divergent
+-thinking assessed together with hallucination detection under an explicit
+-truth contract. Related combinations already occur in the selection; the
+-figure does not establish that this target is absent from all prior work.
+-Positions, distances, and cluster sizes carry no quantitative meaning.
+-Resource-level coding appears in
+-Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}.}
++\resizebox{\textwidth}{!}{%
++\begin{tikzpicture}[
++    x=1cm,y=1cm,>=Latex,font=\small,
++    axis/.style={thick,-{Latex[length=3mm]}},
++    clusterbox/.style={
++        rounded corners=6pt,thick,align=left,inner sep=6pt,
++        text width=3.9cm
++    },
++    note/.style={font=\scriptsize,align=left}
++]
++% Positions separate categorical groups; they do not encode measurements.
++\draw[thick] (0,0) -- (15.2,0);
++\node[below,align=center] at (7.6,-0.20)
++    {Task groups (not ordered or ranked)};
++\draw[axis] (0,0) -- (0,8.9);
++\node[anchor=west,font=\footnotesize] at (0.25,8.65)
++    {Requested style: treatment recorded in the coding};
++\node[left,align=right,font=\footnotesize] at (-0.22,1.35)
++    {not controlled or\\not applicable};
++\node[left,align=right,font=\footnotesize] at (-0.22,4.45)
++    {offsets for\\legibility only};
++\node[left,align=right,font=\footnotesize] at (-0.22,7.35)
++    {style scored and\\missing comparison};
++\draw[densely dotted,gray!35] (0.12,2.85) -- (15.0,2.85);
++\draw[densely dotted,gray!35] (0.12,6.10) -- (15.0,6.10);
++
++\node[
++    draw=red!70,very thick,rounded corners=8pt,fill=red!6,
++    text width=4.15cm,minimum height=1.65cm,align=center
++] (gap) at (2.65,7.30) {
++    \textbf{No selected resource}\\[1mm]
++    \footnotesize factual tasks + style variation\\
++    \footnotesize with claim content and\\
++    \footnotesize observed status marking fixed
++};
++
++\node[clusterbox,draw=magenta!70!black,fill=magenta!12,
++    text width=4.45cm] (writing) at (11.85,7.30) {
++    {\bfseries Fiction and idea generation}\\[1mm]
++    \footnotesize requested style scored;\\
++    \footnotesize claim content and status not held fixed\\
++    \footnotesize \textit{WritingBench}, row 31
++};
++
++\node[clusterbox,draw=blue!70!black,fill=blue!12,
++    text width=4.05cm] (strict) at (2.65,1.35) {
++    {\bfseries Factual tasks}\\[1mm]
++    \footnotesize question answering, summarization,\\
++    \footnotesize source faithfulness\\
++    \footnotesize \textit{FEVER, TruthfulQA, XSum,}\\
++    \footnotesize \textit{AA-Omniscience}, rows 1--22
++};
++
++\node[clusterbox,draw=violet!70!black,fill=violet!12,
++    text width=3.10cm] (intent) at (6.15,4.45) {
++    {\bfseries Intent evaluation}\\[1mm]
++    \footnotesize \textit{FaithQA}, row 23
++};
++
++\node[clusterbox,draw=gray!75!black,fill=gray!12,
++    text width=3.80cm] (mixed) at (7.65,1.35) {
++    {\bfseries Mixed tasks and tool use}\\[1mm]
++    \footnotesize \textit{BIG-Bench, BIG-Bench Hard,}\\
++    \footnotesize \textit{ToolQA, HIC-Bench}, rows 24--27
++};
++
++\node[clusterbox,draw=orange!85!black,fill=orange!15,
++    text width=4.60cm] (creative) at (11.85,4.45) {
++    {\bfseries Fiction, idea generation,}\\
++    {\bfseries and creative reasoning}\\[1mm]
++    \footnotesize \textit{CreativityPrism, LitBench, Short Story,}\\
++    \footnotesize \textit{Art-or-Artifice, Automated DT, Verbal}\\
++    \footnotesize \textit{Creativity, Automated Creativity,}\\
++    \footnotesize \textit{Hallucinating LLM Could Be Creative}\\
++    \footnotesize rows 28--30, 32--36
++};
++
++\node[clusterbox,draw=green!55!black,fill=green!12,
++    text width=4.05cm] (solution) at (12.65,1.35) {
++    {\bfseries Problem solving under constraints}\\[1mm]
++    \footnotesize \textit{MacGyver, EscapeBench, CreativEval,}\\
++    \footnotesize \textit{NeoCoder, CreativeMath}, rows 37--41
++};
++
++\draw[densely dashed,red!55,line width=0.7pt]
++    (gap.south) -- (gap.south |- strict.north);
++\node[note,text width=14.6cm,anchor=north] at (7.6,-0.85) {
++    \textbf{Reading guide.}
++    Colors distinguish task groups. Box positions only separate the groups;
++    distances do not represent scores, frequency, or performance.
++    The dashed line links factual tasks to the missing comparison.
++    Row numbers refer to
++    Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}.
++};
++\end{tikzpicture}%
++}
++\caption{\textbf{Task groups and requested style in the selected resources.}
++WritingBench is the only entry coded as scoring requested style, but it does
++not hold claim content and observed status marking fixed. No entry records
++a style comparison that keeps both fixed. The red box highlights this
++missing comparison for factual tasks; it is not an additional resource.
++The figure summarizes the current coding in Appendix~\ref{app:mapping},
++which still needs independent verification. It does not measure evaluator
++performance or display the other truth-contract fields.}
+ \label{fig:profiles}
+ \end{figure}
+ \FloatBarrier
+ 
+-\section{Exemple}\label{sec:cases}
+-
+-The five cases illustrate how the rule applies when a reference, instruction,
+-claim, or wording changes. These examples explain the rule; they are not
++\section{Exemples}\label{sec:cases}
++
++We present five cases to illustrate how the rule applies when a reference, instruction,
++claim, or response wording changes. These examples explain the rule; they are not
+ model outputs collected in an experiment. Each states what stays the same, what changes,
+ and which label the rule predicts. Case~B changes several conditions together.
+ Case~E can test an evaluator only after an independent check confirms that
+@@ -1421,8 +1502,8 @@
+ \end{figure}
+ \FloatBarrier
+ \paragraph{Case A: changing the task oracle}
+-In XSum, a summary statement may be absent from the source document while
+-remaining correct against external evidence \citep{maynez_faithfulness_2020}.
++In XSum \citep{maynez_faithfulness_2020}, a text summarization dataset, a summary statement may be absent from the source document while
++remaining correct against external evidence .
+ Consider a claim that the source document neither supports nor contradicts,
+ but that a specified external reference supports.
+ \textbf{Purpose.} To illustrate why the oracle used for evaluation matters.
+@@ -1434,9 +1515,10 @@
+ \par\textbf{Predicted result.} Relative to the source document, the claim is
+ \textsc{unknown}. Because $\Gamma=\varnothing$, it receives the hallucination
+ label with reason code \textsc{out-of-scope}. Relative to the external task
+-oracle, the same claim is \textsc{entailed} and receives the grounded label.
+-
+-\paragraph{Case B: moving from a factual account to a fictional story}
++oracle, the same claim is \textsc{entailed}  and receives the  label $\Grd$
++.
++
++\paragraph{Case B: moving from a factual context to a fictional story}
+ This case changes both what the task permits and how the response presents
+ the content. It does not isolate permission alone.
+ \textbf{Purpose.} To distinguish a claim presented as historical fact from
+@@ -1504,7 +1586,7 @@
+ wording changes but content and status do not.
+ \par\textbf{Fixed.} The task oracle $O$ of the Rosetta Stone example of
+ Figure~\ref{fig:claim-label-annotation}, $\Gamma$, $\mu$, the content component
+-$q^*$ that the decree appears in hieroglyphic, Demotic, and Greek, and the
++$q^*$ that the decree on the Rosetta stone appears in hieroglyphic, Demotic, and Greek, and the
+ observed status marking $\widehat{m}$.
+ \par\textbf{Changed.} The requested style and the response's wording change
+ together. Both versions are intended to preserve the claim content and status.
+@@ -1526,7 +1608,7 @@
+ 
+ \section{Research Agenda}\label{sec:agenda}
+ 
+-The agenda asks three questions: can evaluators apply the framework reliably,
++The agenda contains three main questions: can evaluators apply the framework reliably,
+ does stating the contract explicitly help evaluation, and does the approach
+ work in other settings? Table~\ref{tab:agenda} groups seven priorities around
+ these questions. Priorities 1--3 concern reliable annotation and checking;
+@@ -1945,8 +2027,8 @@
+ 
+ \begin{description}
+   \item[Task category.]
+-  These categories describe types of tasks; they do not rank them.
+-  \emph{strict grounding};
++  These categories describe types of tasks; %they do not rank them.
++  The task types are: \emph{strict grounding};
+   \emph{intent evaluation};
+   \emph{declared-frame invention and ideation};
+   \emph{constrained solution search};
+@@ -2039,8 +2121,8 @@
+ \scriptsize
+ \setlength{\tabcolsep}{3pt}
+ \renewcommand{\arraystretch}{1.0}
+-\caption{\textbf{Factuality and faithfulness resources in the selected
+-purposive mapping (part I).}
++\caption{\textbf{Factuality and faithfulness resources with the selected
++purposive mapping values (part I).}
+ The recorded oracle reference or checking procedure is separate from quality
+ or task success. Textual and nontextual checks can serve as oracles when they
+ establish or contradict evaluated content. ``Not controlled'' does not mean

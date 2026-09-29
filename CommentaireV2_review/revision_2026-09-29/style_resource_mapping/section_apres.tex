@@ -1,0 +1,299 @@
+\section{Resource Mapping}\label{sec:methodology}
+
+We compare forty-one selected evaluation resources to see how they use the
+three components of the truth contract: the task oracle, permission scope,
+and required status marking. We also examine how they evaluate style.
+In particular, we ask whether they compare different wordings of a response
+while keeping claim content and observed status marking fixed. This
+comparison, which we call the \emph{resource mapping}, describes how the
+resources evaluate responses. It does not test whether our labeling rule
+works in practice.
+
+\subsection{Selection and Scope}
+
+An \emph{evaluation resource} is a benchmark, dataset, or protocol that
+specifies how responses are evaluated. We selected resources for different
+tasks, from factuality evaluation to creative writing and problem solving.
+The aim is to compare how these tasks are evaluated. The selection does not
+cover all existing resources or show how common each approach is across
+the field. Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}
+list the 41 resources and their references.
+
+The available records do not explain how the resources were first found
+and selected. This information is needed for others to repeat the selection.
+We also could not examine every source in the same detail: for some resources,
+we read the methods; for others, we relied on the authors' summaries; and
+one source was only partly accessible. If we did not identify a criterion
+in these materials, this does not prove that the resource lacks it.
+The recent resources discussed in Section~\ref{sec:related} remain outside
+this comparison until they have been examined in the same way.
+% AUTHOR ACTION: document the actual resource search and selection procedure.
+% Do not invent dates, queries, or inclusion criteria.
+
+\subsection{Comparison Criteria}
+
+For each resource, we examine three groups of information:
+\begin{itemize}
+\item \textbf{Truth contract.} What reference evidence or checks does the task
+oracle use? What content does the task permit? How must that content be marked?
+\item \textbf{Task.} What does the response have to do, and how are its quality
+or success evaluated?
+\item \textbf{Style.} Does the evaluation check the requested style? Does it
+compare different wordings with the same claim content and observed status
+marking?
+\end{itemize}
+These questions use the distinctions introduced in
+Section~\ref{sec:framework}. A check that a solution works does not necessarily
+establish whether every claim in its explanation is supported.
+
+We group the resources into six task categories. The names and resource IDs
+are the same in the tables and Figure~\ref{fig:profiles}:
+\begin{itemize}
+\item \textbf{Factuality evaluation} (IDs 1--22) checks answers or summaries
+against reference evidence.
+\item \textbf{Intent evaluation} (23) checks whether a response correctly
+interprets the user's request.
+\item \textbf{Mixed-task and tool-use evaluation} (24--27) combines different
+tasks or requires the use of tools.
+\item \textbf{Creative writing and reasoning} (28--32, 35--36) evaluates
+stories, written explanations, or different ways of solving a problem.
+\item \textbf{Divergent thinking and linguistic creativity} (33--34)
+evaluates the variety and originality of ideas or language.
+\item \textbf{Constrained problem solving} (37--41) checks whether a solution
+meets the task's requirements, such as working with limited resources or
+passing code tests.
+\end{itemize}
+These categories describe the tasks. They do not rank the resources or
+determine whether an individual claim is permitted. They reflect our reading
+of the resources and have not been checked through independent annotation.
+
+\subsection{Resource Tables}\label{subsec:resource-tables}
+
+Each row describes one resource. The columns give its name and reference,
+the task and the evidence or checks used, other evaluation criteria, and
+our reading of what content the task allows.
+
+``No extra quality measure identified'' means that we did not identify a
+quality measure beyond the evidence or correctness check already listed.
+``Only supported content (inferred)'' means that we read the task as requiring
+claims to be supported. For creative tasks, the final column describes what
+we understand the instructions to allow. When it says ``Permission not
+established by this review,'' we have not established which unsupported
+additions are permitted. This does not mean that all additions are forbidden.
+Required status marking and style are discussed after the tables.
+
+\begingroup
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{longtable}{@{}P{.20\linewidth}P{.32\linewidth}P{.24\linewidth}P{.19\linewidth}@{}}
+\caption{\textbf{Factuality evaluation (resources 1--13).} The final column gives our reading of the task instructions. Permission for individual claims still needs to be checked.}
+\label{tab:full-mapping-factual-a}\\
+\toprule
+\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
+\endfirsthead
+\multicolumn{4}{l}{\textbf{Table \thetable{} (continued)}}\\
+\toprule
+\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
+\endhead
+\midrule\multicolumn{4}{r}{\emph{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: factuality evaluation}}\\*
+1.~FEVER \citep{thorne_fever_2018} & Fact checking\newline Wikipedia evidence sentences. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+2.~TruthfulQA \citep{lin_truthfulqa_2022} & Factual QA\newline Sourced reference answers; human adjudication for generations. & Informativeness & Only supported content (inferred)\\\addlinespace[3pt]
+3.~PopQA \citep{mallen_when_2023} & Long-tail QA\newline Wikidata. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+4.~SimpleQA \citep{wei_measuring_2024} & Factual QA\newline Verified reference answers. & Answer correctness and not-attempted outcome & Only supported content (inferred)\\\addlinespace[3pt]
+5.~TriviaQA \citep{joshi_triviaqa_2017} & Reading QA\newline Gold answers plus Web/Wikipedia documents. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+6.~DefAn \citep{rahman_defan_2024} & Factual QA\newline Definitive reference answers. & Prompt alignment and cross-run consistency & Only supported content (inferred)\\\addlinespace[3pt]
+7.~HaluEval \citep{li_halueval_2023} & Multi-task hallucination recognition\newline Task references or source text; Web-assisted adjudication. & Specificity and relevance folded into some labels & Only supported content (inferred)\\\addlinespace[3pt]
+8.~FactBench \citep{bayat_factbench_2024} & Open-ended factuality evaluation\newline Web-retrieved material. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+9.~HalluLens \citep{bang_hallulens_2025} & Extrinsic/intrinsic hallucination benchmark\newline Wikipedia, nonexistent entities, or task context. & Correctness and refusal/acceptance & Only supported content (inferred)\\\addlinespace[3pt]
+10.~FRANK \citep{pagnoni_understanding_2021} & Summarization\newline Source documents. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+11.~QAGS \citep{wang_asking_2020} & Summarization\newline Source documents. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+12.~SummEval \citep{fabbri_summeval_2021} & Summarization\newline Source documents. & Automatic metrics and human summarization-quality judgments & Only supported content (inferred)\\\addlinespace[3pt]
+13.~XSum \citep{narayan_xsum_2018} & Summarization\newline BBC source article. & ROUGE, human preference, and information preservation & Only supported content (inferred)\\
+\end{longtable}
+\endgroup
+
+\begingroup
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{longtable}{@{}P{.20\linewidth}P{.32\linewidth}P{.24\linewidth}P{.19\linewidth}@{}}
+\caption{\textbf{Factuality evaluation, intent evaluation, and mixed-task and tool-use evaluation (resources 14--27).} The final column gives our reading of the task instructions. Permission for individual claims still needs to be checked.}
+\label{tab:full-mapping-factual-b}\\
+\toprule
+\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
+\endfirsthead
+\multicolumn{4}{l}{\textbf{Table \thetable{} (continued)}}\\
+\toprule
+\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
+\endhead
+\midrule\multicolumn{4}{r}{\emph{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: factuality evaluation (continued)}}\\*
+14.~CNN/\allowbreak DailyMail \citep{hermann_teaching_2015,wang_asking_2020} & News corpus used in summarization evaluation\newline News source article. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+15.~DelucionQA \citep{sadat_delucionqa_2023} & Domain QA\newline Retrieved chunks from one Jeep Gladiator manual. & Answerability, coverage, and abstention & Only supported content (inferred)\\\addlinespace[3pt]
+16.~HalluQA \citep{cheng_evaluating_2023} & Chinese adversarial QA\newline Answer sets backed by sources or explanations. & Answer correctness and refusal handling & Only supported content (inferred)\\\addlinespace[3pt]
+17.~CR-LLM \citep{li_cr-llm_2024} & Concept reasoning\newline Reference concepts plus GPT-4 contextual adjudication. & Concept granularity & Only supported content (inferred)\\\addlinespace[3pt]
+18.~HotpotQA \citep{yang_hotpotqa_2018} & Multi-hop QA\newline Wikipedia evidence passages. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+19.~HalluRAG \citep{ridder_hallurag_2025} & RAG hallucination detection\newline Provided passages/answers and derived sentence labels. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+20.~RealTime QA \citep{kasai_realtime_2024} & Real-time QA\newline Time-indexed reference answers. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+21.~HypoTermQA \citep{uluoglakci_hypotermqa_2024} & Hypothetical-term evaluation\newline Term-validity labels and Wikipedia definitions. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
+22.~AA-Omniscience \citep{jackson_aaomniscience_2025,artificialanalysis_aaomniscience_public_2025} & Cross-domain factual QA\newline Source-derived reference answers, evaluated by an LLM grader. & Accuracy, incorrect-answer penalty, and abstention-sensitive reliability & Only supported content (inferred)\\\addlinespace[3pt]
+\midrule
+\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: intent evaluation}}\\*
+23.~FaithQA \citep{hao_faithqa_2025} & Intent verification\newline RAG reports; Wikipedia for factual QA; none for creative writing. & Query-constraint satisfaction & Permission not established by this review\\\addlinespace[3pt]
+\midrule
+\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: mixed-task and tool-use evaluation}}\\*
+24.~BIG-Bench \citep{srivastava_beyond_2023} & Multi-task reasoning\newline Subtask targets and adjudication. & No extra quality measure identified & Permission not established by this review\\\addlinespace[3pt]
+25.~BIG-Bench Hard \citep{suzgun_challenging_2023} & Reasoning suite\newline Task-specific reference answers. & No extra quality measure identified & Permission not established by this review\\\addlinespace[3pt]
+26.~ToolQA \citep{zhuang_toolqa_2023} & Tool-use QA\newline Fixed corpora and generated gold answers. & No extra quality measure identified & Permission not established by this review\\\addlinespace[3pt]
+27.~HIC-Bench \citep{yang_hicbench_2025} & Hallucination typing\newline CDKB/Wikipedia principles and human-verified judgments. & Originality, feasibility, value, and composite metrics & Permission not established by this review\\
+\end{longtable}
+\endgroup
+
+\begingroup
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{longtable}{@{}P{.20\linewidth}P{.32\linewidth}P{.24\linewidth}P{.19\linewidth}@{}}
+\caption{\textbf{Creative writing and reasoning, divergent thinking and linguistic creativity, and constrained problem solving (resources 28--41).} The final column gives our reading of the task instructions. Permission for individual claims still needs to be checked.}
+\label{tab:full-mapping-creative}\\
+\toprule
+\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
+\endfirsthead
+\multicolumn{4}{l}{\textbf{Table \thetable{} (continued)}}\\
+\toprule
+\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
+\endhead
+\midrule\multicolumn{4}{r}{\emph{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: creative writing and reasoning}}\\*
+28.~CreativityPrism \citep{hou_creativityprism_2025} & Multi-task creativity\newline Tests or correctness judges where applicable. & Task-specific rubrics & Invention within task instructions\\\addlinespace[3pt]
+29.~LitBench \citep{fein_litbench_2025} & Story evaluation\newline No external factual reference identified (human preferences assess quality). & Human preferences & Fictional content within the story\\\addlinespace[3pt]
+30.~Short Story \citep{ismayilzada_evaluating_2025} & Story generation\newline No external factual reference identified (cue words constrain the task, not claim truth). & Novelty, diversity, complexity, and judged creativity & Fictional content within the story\\\addlinespace[3pt]
+31.~WritingBench \citep{wu_writingbench_2025} & Generative writing\newline Provided materials when present. & Writing quality and requested style & Invention within task instructions\\\addlinespace[3pt]
+32.~Art-or-Artifice / TTCW \citep{chakrabarty_art_2024} & Creative writing\newline No external factual reference identified (expert tests assess creativity). & Expert rubric & Fictional content within the story\\\addlinespace[3pt]
+35.~Automated Creativity \citep{li_automated_2025} & Creative writing\newline No external factual reference identified (reference texts anchor quality, not claim truth). & Reference-text quality anchor & Invention within task instructions\\\addlinespace[3pt]
+36.~Hallucinating LLM Could Be Creative \citep{sun_hallucinating_2024} & Reasoning-path evaluation\newline Task correctness; consistency/clustering are diagnostics. & Correctness, consistency, diversity & Permission only partly characterized\\\addlinespace[3pt]
+\midrule
+\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: divergent thinking and linguistic creativity}}\\*
+33.~Automated DT scoring \citep{organisciak_beyond_2023} & Divergent thinking\newline No external factual reference identified. & Novelty and variety of ideas & New ideas within the task\\\addlinespace[3pt]
+34.~Verbal Creativity \citep{dinu_testing_2025} & Linguistic creativity\newline No external factual reference identified. & Originality, flexibility, elaboration & Creative language within the task\\\addlinespace[3pt]
+\midrule
+\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: constrained problem solving}}\\*
+37.~MacGyver \citep{tian_macgyver_2025} & Problem solving\newline Human judgment of feasibility and efficiency. & Feasibility and efficiency & Permission not established by this review\\\addlinespace[3pt]
+38.~EscapeBench \citep{qian_escapebench_2025} & Agent puzzles\newline Game state and progress. & Feasibility or correctness & Permission not established by this review\\\addlinespace[3pt]
+39.~CreativEval \citep{delorenzo_creativeval_2024} & Code generation\newline Functionality under Verilog testbenches. & Fluency, flexibility, originality, elaboration & Permission not established by this review\\\addlinespace[3pt]
+40.~NeoCoder \citep{lu_benchmarking_2025} & Code generation\newline Test success and constraint adherence. & Correctness, constraint adherence, divergence & Permission not established by this review\\\addlinespace[3pt]
+41.~CreativeMath \citep{ye_assessing_2025} & Mathematical solution generation\newline Reference solutions and unanimous LLM correctness judgment. & Correctness and solution novelty & Permission not established by this review\\
+\end{longtable}
+\endgroup
+
+\subsection{Resource Analysis Criteria}\label{sec:mapping}
+
+\paragraph{Task oracle}
+The resources use different reference evidence and checks. FEVER uses
+evidence sentences (ID~1), QAGS compares answers obtained from a summary
+and its source (11), and SimpleQA checks answers against reference answers
+(4) \citep{thorne_fever_2018,wang_asking_2020,wei_measuring_2024}.
+The reference matters because the same claim can be supported by one
+reference and left unknown by another, as Example~A in
+Section~\ref{sec:examples} illustrates.
+
+For constrained problem solving, the checks ask whether a solution works.
+MacGyver uses human judgments of feasibility and efficiency (37);
+EscapeBench checks progress in a game (38); CreativEval uses Verilog tests
+(39); NeoCoder checks test success and task constraints (40); and
+CreativeMath uses LLM judgments of mathematical correctness (41)
+\citep{tian_macgyver_2025,qian_escapebench_2025,delorenzo_creativeval_2024,
+lu_benchmarking_2025,ye_assessing_2025}. These checks can evaluate a solution
+without verifying every claim in its explanation. The tables describe
+what each check does; they do not establish that it performs every part
+of the task oracle defined in Section~\ref{subsec:contract}.
+
+For six resources, we did not identify an external factual reference in the
+evaluation criteria we examined: LitBench, Short Story, Art-or-Artifice,
+Automated DT scoring, Verbal Creativity, and Automated Creativity
+(IDs 29, 30, 32--35). Their evaluations still use task instructions,
+requirements for stories, reference texts for quality, or creativity
+criteria. Our reading does not establish that these resources never check
+factual claims.
+
+\paragraph{Permission scope}
+For the 22 resources in factuality evaluation (IDs 1--22), we read the tasks
+as allowing supported content only. For eight resources (28--35), we infer
+what content is allowed from the task instructions or the fictional setting.
+For resource 36, we have identified only part of the permission conditions.
+For the remaining ten resources (23--27 and 37--41), we have not established
+which unsupported additions are allowed.
+
+These descriptions explain our reading of the tasks. We still need to check
+whether their instructions cover the full permission scope defined in
+Section~\ref{subsec:contract}. Section~\ref{sec:agenda} describes this work.
+
+\paragraph{Required status marking}
+For these resources, we have not yet established both what status marking
+the task requires and how the evaluation checks it. We therefore do not
+classify resources as having or lacking a marking requirement. A requirement
+may be present in instructions that our review has not fully examined.
+
+Some resources evaluate whether a response answers or declines to answer.
+SimpleQA includes a not-attempted outcome, HalluLens evaluates refusal, and
+DelucionQA records answerability and whether a response answers
+\citep{wei_measuring_2024,bang_hallulens_2025,sadat_delucionqa_2023}.
+AA-Omniscience also includes abstention in its reliability evaluation
+\citep{jackson_aaomniscience_2025}. This differs from checking how a claim
+is marked: declining to answer may produce no claim about the answer at all,
+whereas a permitted hypothesis introduces a claim whose status must be clear.
+
+\subsection{Joint Evaluation and Style Variation}
+
+Style evaluation can ask two questions. The first is whether a response
+uses the requested style. WritingBench includes this in its evaluation
+\citep{wu_writingbench_2025}. The second is whether changing the wording
+changes an evaluator's judgment when claim content and observed status
+marking remain fixed. We have not documented this second comparison in the
+selected resources. This does not establish that it is absent from every
+task they include or from other resources. For actions or executable code,
+a comparison of prose style may not apply.
+
+Figure~\ref{fig:profiles} groups the resources by task category. Its center
+shows what we want to evaluate together: creativity and divergent thinking,
+and whether claims are licensed divergence or hallucination under a truth
+contract. Some resources already combine creativity with correctness checks
+or hallucination evaluation, including HIC-Bench and resources for
+constrained problem solving in Table~\ref{tab:full-mapping-creative}.
+We still need to examine whether they use reference evidence, permission
+scope, and required status marking to distinguish permitted content from
+hallucination. The figure states this question; it does not prove that no
+existing resource addresses it.
+
+Style remains a separate question. An evaluation can check creative quality
+and factuality without testing whether a change in wording affects its
+judgment. The next section uses the same contract components to explain
+what should change, or stay the same, in five constructed examples.
+
+\begin{figure}[!ht]
+\centering
+\resizebox{\textwidth}{!}{\input{figures/resource_clusters.tex}}
+\caption{\textbf{Task categories and the evaluation proposed in this paper.}
+The boxes use the same six categories as the resource tables in
+Section~\ref{subsec:resource-tables}. Names and IDs identify the resources
+in each group. The center brings together creativity, divergent thinking,
+and hallucination evaluation under a truth contract. Some resources already
+combine these questions; the figure does not establish that this combination
+is absent from prior work. Box positions and sizes do not give scores or
+rank resources. Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}
+give the details for each resource.}
+\label{fig:profiles}
+\end{figure}
+\FloatBarrier
+

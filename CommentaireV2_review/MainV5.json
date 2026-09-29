@@ -1,0 +1,594 @@
+{
+	"generator": "overleaf-comments-bookmarklet v1.6",
+	"project": "CL soumission",
+	"url": "https://www.overleaf.com/project/6a4360d12626817eabd8de53",
+	"capturedAt": "2026-09-28T08:34:38.049Z",
+	"fileCount": 5,
+	"tabIteration": "full",
+	"threadCount": 186,
+	"messageCount": 208,
+	"trackedChangesNote": "swept top-to-bottom per file; for the authoritative set, Review > Accept in Overleaf so the text syncs via git",
+	"files": [
+		{
+			"file": "mainV5.tex",
+			"fileSource": "editor-tab",
+			"threadCount": 31,
+			"messageCount": 38,
+			"truncatedCount": 1,
+			"panelUnchanged": false,
+			"selectorHealth": {
+				"breadcrumbs": false,
+				"editorScroller": true,
+				"threadsParsed": 31,
+				"duplicatesDropped": 0,
+				"entriesUnparsed": 0
+			},
+			"threads": [
+				{
+					"dataPos": 20486,
+					"dataTop": 9373,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "16 September, 9:04 pm",
+							"text": "comparison de quoi avec quoi ?",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 20522,
+					"dataTop": 9392,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "16 September, 9:05 pm",
+							"text": "examples",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 20666,
+					"dataTop": 9450,
+					"messages": [
+						{
+							"author": "Pierre-Yves Genest",
+							"time": "14 September, 10:22 am",
+							"text": "praise : magnifique !\n(Il reste quelques typos à corriger néanmoins)",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 20709,
+					"dataTop": 9507,
+					"messages": [
+						{
+							"author": "Martino Lovisetto",
+							"time": "21 September, 9:57 am",
+							"text": "début de section trop \"brusque\". Mettre une phrase de contexte pour introduire. (la reference de quoi ?)",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 21048,
+					"dataTop": 9642,
+					"messages": [
+						{
+							"author": "Mathis Carlesso",
+							"time": "21 September, 9:59 am",
+							"text": "mettre au debut de la section",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 21048,
+					"dataTop": 9642,
+					"messages": [
+						{
+							"author": "Martino Lovisetto",
+							"time": "21 September, 10:01 am",
+							"text": "faire une transition plus smooth pour mettre en relation ces deux paragraphes",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 21121,
+					"dataTop": 9680,
+					"messages": [
+						{
+							"author": "Mathis Carlesso",
+							"time": "21 September, 10:00 am",
+							"text": "plus de context",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 21183,
+					"dataTop": 9680,
+					"messages": [
+						{
+							"author": "Mathis Carlesso",
+							"time": "21 September, 10:00 am",
+							"text": "plus détailler",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 22932,
+					"dataTop": 10371,
+					"messages": [
+						{
+							"author": "Martino Lovisetto",
+							"time": "21 September, 10:17 am",
+							"text": "tu veux dire quoi par \"departures\" ? Tu veux dire \"differences par rapport à la source\" ? Tu veux dire \"morceaux de texte de la source\" ? Cela peut être ambigue, il faut simplifier et clarifier",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 23313,
+					"dataTop": 10505,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "16 September, 9:25 pm",
+							"text": "il y a bcp trop de choses ici. pas cohérentes avec les 3 composants et non introduites.",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 23529,
+					"dataTop": 10601,
+					"messages": [
+						{
+							"author": "Martino Lovisetto",
+							"time": "21 September, 10:20 am",
+							"text": "deviation ?",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 23744,
+					"dataTop": 10697,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "16 September, 9:24 pm",
+							"text": "reformuler: p n'est pas un \"task context\" TC(p) l'est",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 24067,
+					"dataTop": 10889,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "16 September, 9:27 pm",
+							"text": "reformuler: after the call of the LLM (`?)",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 24552,
+					"dataTop": 11100,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "16 September, 9:29 pm",
+							"text": "je ne vois pas l'intérêt de cette phrase ici",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 25814,
+					"dataTop": 11676,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "16 September, 9:30 pm",
+							"text": "avant tu dis qu'un oracle évalue une \"response\". alors il doit être capable d'y extraire les claims",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 26292,
+					"dataTop": 11887,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "16 September, 9:32 pm",
+							"text": "redondant, enlever",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 26885,
+					"dataTop": 12156,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "16 September, 9:36 pm",
+							"text": "bcp trop détaillé pour ce papier. On avaiit défini l'orcale comme une boite noire, ce n'est pas la peine d'aller dans les détails",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 35615,
+					"dataTop": 16322,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "17 September, 7:03 pm",
+							"text": "?? c'est el première fois que tu parles de cela, c'est quoi ?",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 47595,
+					"dataTop": 22080,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "17 September, 10:09 am",
+							"text": "A enlever",
+							"possiblyTruncated": false
+						},
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "24 September, 11:20 am",
+							"text": "déplacer dans la section 2.5: Style as a Robustness Question}\\label{subsec:style}",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 48894,
+					"dataTop": 22694,
+					"messages": [
+						{
+							"author": "Mathis Carlesso",
+							"time": "25 September, 9:56 am",
+							"text": "Définir formellement",
+							"possiblyTruncated": false
+						},
+						{
+							"author": "Mathis Carlesso",
+							"time": "25 September, 9:57 am",
+							"text": "avec exemple de la figure 2",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 49065,
+					"dataTop": 22790,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "17 September, 7:03 pm",
+							"text": "As presented in figure 2",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 54137,
+					"dataTop": 25171,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "17 September, 7:14 pm",
+							"text": "c'est quoi isi : un humain, un programme ?",
+							"possiblyTruncated": false
+						},
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "25 September, 10:11 am",
+							"text": "clarifier / oracle",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 64517,
+					"dataTop": 29912,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "23 September, 8:58 pm",
+							"text": "pas claire",
+							"possiblyTruncated": false
+						},
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "25 September, 10:45 am",
+							"text": "décrire les catégories des tâches et comment tu les a identifié. Remplacer les noms de catégories pa...",
+							"possiblyTruncated": true
+						}
+					]
+				},
+				{
+					"dataPos": 65315,
+					"dataTop": 30219,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "23 September, 9:00 pm",
+							"text": "il faut lister les ressources ici, pas dans l'annexe. Tu les décris trop en détails pour que le texte reste compréhensible sans regarder les annexes. Il devrais l'être pourtant.",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 66600,
+					"dataTop": 30776,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "23 September, 9:03 pm",
+							"text": "lesquels ?",
+							"possiblyTruncated": false
+						},
+						{
+							"author": "Mathis Carlesso",
+							"time": "25 September, 10:58 am",
+							"text": "préciser",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 67911,
+					"dataTop": 31390,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "23 September, 9:10 pm",
+							"text": "reformuler ou mettre dans une section perspectives",
+							"possiblyTruncated": false
+						},
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "25 September, 10:57 am",
+							"text": "mettre le paragraphe dans le research agenda",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 68191,
+					"dataTop": 31543,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "23 September, 9:11 pm",
+							"text": "ici tu met d'abord le label et ensuite kle nombre. Dans la section précédente tu présentes les résultats différamment, il faut homogénéiser",
+							"possiblyTruncated": false
+						},
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "25 September, 10:59 am",
+							"text": "précise les numéros de ressource en chiffres",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 75274,
+					"dataTop": 35037,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "23 September, 9:19 pm",
+							"text": "Il faut commencer par quelques mots sur le Case A puis B puis ainsi de suite",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 82201,
+					"dataTop": 38185,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "23 September, 9:22 pm",
+							"text": "changer la police",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 87727,
+					"dataTop": 40815,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "23 September, 9:24 pm",
+							"text": "pas assez précis",
+							"possiblyTruncated": false
+						}
+					]
+				},
+				{
+					"dataPos": 88864,
+					"dataTop": 41448,
+					"messages": [
+						{
+							"author": "elod.egyed-zsigmond",
+							"time": "23 September, 9:27 pm",
+							"text": "quel est l'intérêt de ce tableau ?",
+							"possiblyTruncated": false
+						}
+					]
+				}
+			],
+			"trackedChanges": [
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "constructed cases"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "The reference tells us what can be considered as grounded."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "Our framework separates these questions before combining their answers."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "We call the complete model-generated text the \\emph{response}"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "We evaluate"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "its individual \\emph{claims}: statements whose content can be checked in"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "context against the reference."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "which departures from that"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "reference the response may introduce"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "departures"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "ormally, we write"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "after the fact t"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "Finally, the permission scope cannot be expanded after generation to make an otherwise unauthorized claim acceptable."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "These oracles need not extract or interpret natural-language claims."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "the prompt does not define or modify that oracle."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "The oracle remains fixed for all prompts"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "within an evaluation use case."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "For reproducible evaluation, the protocol must specify the oracle, its sources or checks, their versions, and conditions of use. It must also state how source adequacy, temporal validity, and conflicts are handled."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "The oracle need not be"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "omniscient:"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "Outside the truth contract:}"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "the task also requests an engaging museum voice. Prompt--response"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "style-marking alignment compares that requested level with the level the"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "response realizes and reports match or mismatch separately. It creates no"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "claim and changes no label."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "\\paragraph{Claim trace and the open aggregation question}\\label{subsec:response}"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "vidence state, permission scope and marking decisions ($\\widehat{m}$), label and reason code. For example, ..."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "evaluator"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "he task categories group similar tasks according to   without ranking them"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "The appendix defines the categories and lists the assigned codes."
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "hese numbers"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "ontradictions"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "and explicit exclusions of supported facts. That"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "not scored}, twenty-six resources) from"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "Case~B change"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "can evaluators apply the framework reliably"
+				},
+				{
+					"kind": "ol-cm-change ol-cm-change-c",
+					"text": "The research agenda in on"
+				}
+			]
+		}
+	]
+}

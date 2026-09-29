@@ -1,0 +1,550 @@
+--- avant_simplification.tex
++++ truth_contract_position_paper.tex
+@@ -1168,7 +1168,7 @@
+ 
+ The unit of analysis is an \emph{evaluation resource}: a benchmark, dataset,
+ or protocol that specifies how responses are evaluated. The six task categories listed in
+-Table~\ref{tab:resource-inventory} cover factuality evaluation, intent evaluation,
++Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative} cover factuality evaluation, intent evaluation,
+ mixed-task and tool-use evaluation, creative writing and reasoning, divergent
+ thinking and linguistic creativity, and constrained problem solving.
+ The inventory brings together hallucination-related and creativity-related
+@@ -1177,38 +1177,21 @@
+ designs, without establishing exhaustive coverage of the field. We call
+ this selection a \emph{purposive sample}.
+ 
+-Table~\ref{tab:resource-inventory} lists all 41 resources in the main text.
+-Appendix~\ref{app:mapping} gives their detailed coding and source references. The available record does not explain how the resources were initially
+-found or selected. That procedure must be documented for others to reproduce
+-the selection; the final list alone is insufficient.
+-A targeted source check for this revision distinguished methodological
+-passages examined in full text from primary summaries and partial access.
+-Appendix~\ref{app:mapping} marks that access level for each resource.
+-The check clarifies positive evaluation mechanisms and exposes uncertain
+-coding; it does not validate every negative code or reconstruct the original
+-selection procedure. Recent related designs discussed in
+-Section~\ref{sec:related} are not added to the 41-row count without the same
+-coding work.
++Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}
++list all 41 resources, their references, and the evaluation criteria in the
++main text. The available record does not explain how the resources were
++initially found or selected. That procedure must be documented for others
++to reproduce the selection; the final list alone is insufficient.
++
++The source check was uneven: some entries were examined through relevant
++methodological passages, others through primary summaries, and one source
++was only partly accessible. These limits affect how confidently we can
++interpret each protocol. In particular, failing to identify a criterion
++in the reviewed material does not establish that the resource lacks it.
++Recent designs discussed in Section~\ref{sec:related} remain outside the
++41-resource inventory until the same comparison has been completed.
+ % AUTHOR ACTION: replace the preceding limitation with the actual documented
+ % discovery procedure when available. Do not invent dates, queries, or screening.
+-
+-\begin{table}[!ht]
+-\centering\small
+-\setlength{\tabcolsep}{5pt}\renewcommand{\arraystretch}{1.15}
+-\caption{\textbf{The 41 resources in the comparison.} IDs identify the same
+-resources in the text, Figure~\ref{fig:profiles}, and Appendix~\ref{app:mapping},
+-which supplies protocol references and detailed coding. The groups describe
+-task families; they do not rank resources or assign claim labels.}
+-\label{tab:resource-inventory}
+-\begin{tabularx}{\linewidth}{@{}P{0.24\linewidth}Y@{}}
+-\toprule\textbf{Task family} & \textbf{Resource IDs and names}\\\midrule
+-Factuality evaluation & 1.~FEVER; 2.~TruthfulQA; 3.~PopQA; 4.~SimpleQA; 5.~TriviaQA; 6.~DefAn; 7.~HaluEval; 8.~FactBench; 9.~HalluLens; 10.~FRANK; 11.~QAGS; 12.~SummEval; 13.~XSum; 14.~CNN/DailyMail; 15.~DelucionQA; 16.~HalluQA; 17.~CR-LLM; 18.~HotpotQA; 19.~HalluRAG; 20.~RealTime QA; 21.~HypoTermQA; 22.~AA-Omniscience\\\addlinespace[4pt]
+-Intent evaluation & 23.~FaithQA\\\addlinespace[4pt]
+-Mixed-task and tool-use evaluation & 24.~BIG-Bench; 25.~BIG-Bench Hard; 26.~ToolQA; 27.~HIC-Bench\\\addlinespace[4pt]
+-Creative writing and reasoning & 28.~CreativityPrism; 29.~LitBench; 30.~Short Story; 31.~WritingBench; 32.~Art-or-Artifice / TTCW; 35.~Automated Creativity; 36.~Hallucinating LLM Could Be Creative\\\addlinespace[4pt]
+-Divergent thinking and linguistic creativity & 33.~Automated DT scoring; 34.~Verbal Creativity\\\addlinespace[4pt]
+-Constrained problem solving & 37.~MacGyver; 38.~EscapeBench; 39.~CreativEval; 40.~NeoCoder; 41.~CreativeMath\\\addlinespace[4pt]
+-\bottomrule\end{tabularx}\end{table}\FloatBarrier
+ 
+ \subsection{Coding Protocol}
+ 
+@@ -1242,12 +1225,148 @@
+ They are descriptive groupings, not an independently validated taxonomy.
+ Figure~\ref{fig:profiles} uses these same six categories.
+ 
+-The appendix defines the categories and lists the assigned codes. These
+-codes reflect our interpretation of each resource, whose authors may use
+-different terms. A field that is implicit or not reported separately may
+-still affect a broader evaluation. A score or test result serves as evidence
+-for the oracle only if it is used to support or contradict the evaluated
+-content; measuring overall task success alone is not enough.
++The descriptions reflect our reading of each resource, whose authors may
++use different terms. A score serves as reference evidence only if it is used
++to support or contradict the evaluated content; measuring overall task
++success alone is not enough.
++
++\subsection{Resource Tables}\label{subsec:resource-tables}
++
++Read each row from left to right: the resource and its citation; the task
++and the evidence or checks used; other criteria such as quality, novelty,
++or feasibility; and our interpretation of what content the task allows.
++The category headings use the same names as Figure~\ref{fig:profiles}.
++
++``No extra quality measure identified'' means that this review did not
++identify a separate quality criterion beyond the evidence or correctness
++check in the preceding column. ``Only supported content (inferred)'' means
++that we interpret the task as requiring support for its claims.
++``Permission not established by this review'' means that we have not
++established which unsupported additions the task permits. It does not
++mean that all additions are forbidden or that the resource has no instructions.
++The permission descriptions for creative tasks likewise summarize our
++interpretation of the task or fictional setting.
++
++Status-marking requirements have not yet been verified across these
++resources, so the tables do not assign them a positive or negative result.
++Style is discussed separately below: a missing controlled comparison of
++style does not imply that a resource ignores writing quality.
++
++\begingroup
++\small
++\setlength{\tabcolsep}{3pt}
++\renewcommand{\arraystretch}{1.0}
++\begin{longtable}{@{}P{.20\linewidth}P{.32\linewidth}P{.24\linewidth}P{.19\linewidth}@{}}
++\caption{\textbf{Factuality evaluation (resources 1--13).} The final column interprets task instructions; it is not a verified claim-level permission rule.}
++\label{tab:full-mapping-factual-a}\\
++\toprule
++\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
++\endfirsthead
++\multicolumn{4}{l}{\textbf{Table \thetable{} (continued)}}\\
++\toprule
++\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
++\endhead
++\midrule\multicolumn{4}{r}{\emph{Continued on next page}}\\
++\endfoot
++\bottomrule
++\endlastfoot
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: factuality evaluation}}\\*
++1.~FEVER \citep{thorne_fever_2018} & Fact checking\newline Wikipedia evidence sentences. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++2.~TruthfulQA \citep{lin_truthfulqa_2022} & Factual QA\newline Sourced reference answers; human adjudication for generations. & Informativeness & Only supported content (inferred)\\\addlinespace[3pt]
++3.~PopQA \citep{mallen_when_2023} & Long-tail QA\newline Wikidata. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++4.~SimpleQA \citep{wei_measuring_2024} & Factual QA\newline Verified reference answers. & Answer correctness and not-attempted outcome & Only supported content (inferred)\\\addlinespace[3pt]
++5.~TriviaQA \citep{joshi_triviaqa_2017} & Reading QA\newline Gold answers plus Web/Wikipedia documents. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++6.~DefAn \citep{rahman_defan_2024} & Factual QA\newline Definitive reference answers. & Prompt alignment and cross-run consistency & Only supported content (inferred)\\\addlinespace[3pt]
++7.~HaluEval \citep{li_halueval_2023} & Multi-task hallucination recognition\newline Task references or source text; Web-assisted adjudication. & Specificity and relevance folded into some labels & Only supported content (inferred)\\\addlinespace[3pt]
++8.~FactBench \citep{bayat_factbench_2024} & Open-ended factuality evaluation\newline Web-retrieved material. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++9.~HalluLens \citep{bang_hallulens_2025} & Extrinsic/intrinsic hallucination benchmark\newline Wikipedia, nonexistent entities, or task context. & Correctness and refusal/acceptance & Only supported content (inferred)\\\addlinespace[3pt]
++10.~FRANK \citep{pagnoni_understanding_2021} & Summarization\newline Source documents. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++11.~QAGS \citep{wang_asking_2020} & Summarization\newline Source documents. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++12.~SummEval \citep{fabbri_summeval_2021} & Summarization\newline Source documents. & Automatic metrics and human summarization-quality judgments & Only supported content (inferred)\\\addlinespace[3pt]
++13.~XSum \citep{narayan_xsum_2018} & Summarization\newline BBC source article. & ROUGE, human preference, and information preservation & Only supported content (inferred)\\
++\end{longtable}
++\endgroup
++
++\begingroup
++\small
++\setlength{\tabcolsep}{3pt}
++\renewcommand{\arraystretch}{1.0}
++\begin{longtable}{@{}P{.20\linewidth}P{.32\linewidth}P{.24\linewidth}P{.19\linewidth}@{}}
++\caption{\textbf{Factuality evaluation, intent evaluation, and mixed-task and tool-use evaluation (resources 14--27).} The final column interprets task instructions; it is not a verified claim-level permission rule.}
++\label{tab:full-mapping-factual-b}\\
++\toprule
++\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
++\endfirsthead
++\multicolumn{4}{l}{\textbf{Table \thetable{} (continued)}}\\
++\toprule
++\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
++\endhead
++\midrule\multicolumn{4}{r}{\emph{Continued on next page}}\\
++\endfoot
++\bottomrule
++\endlastfoot
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: factuality evaluation (continued)}}\\*
++14.~CNN/\allowbreak DailyMail \citep{hermann_teaching_2015,wang_asking_2020} & News corpus used in summarization evaluation\newline News source article. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++15.~DelucionQA \citep{sadat_delucionqa_2023} & Domain QA\newline Retrieved chunks from one Jeep Gladiator manual. & Answerability, coverage, and abstention & Only supported content (inferred)\\\addlinespace[3pt]
++16.~HalluQA \citep{cheng_evaluating_2023} & Chinese adversarial QA\newline Answer sets backed by sources or explanations. & Answer correctness and refusal handling & Only supported content (inferred)\\\addlinespace[3pt]
++17.~CR-LLM \citep{li_cr-llm_2024} & Concept reasoning\newline Reference concepts plus GPT-4 contextual adjudication. & Concept granularity & Only supported content (inferred)\\\addlinespace[3pt]
++18.~HotpotQA \citep{yang_hotpotqa_2018} & Multi-hop QA\newline Wikipedia evidence passages. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++19.~HalluRAG \citep{ridder_hallurag_2025} & RAG hallucination detection\newline Provided passages/answers and derived sentence labels. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++20.~RealTime QA \citep{kasai_realtime_2024} & Real-time QA\newline Time-indexed reference answers. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++21.~HypoTermQA \citep{uluoglakci_hypotermqa_2024} & Hypothetical-term evaluation\newline Term-validity labels and Wikipedia definitions. & No extra quality measure identified & Only supported content (inferred)\\\addlinespace[3pt]
++22.~AA-Omniscience \citep{jackson_aaomniscience_2025,artificialanalysis_aaomniscience_public_2025} & Cross-domain factual QA\newline Source-derived reference answers, evaluated by an LLM grader. & Accuracy, incorrect-answer penalty, and abstention-sensitive reliability & Only supported content (inferred)\\\addlinespace[3pt]
++\midrule
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: intent evaluation}}\\*
++23.~FaithQA \citep{hao_faithqa_2025} & Intent verification\newline RAG reports; Wikipedia for factual QA; none for creative writing. & Query-constraint satisfaction & Permission not established by this review\\\addlinespace[3pt]
++\midrule
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: mixed-task and tool-use evaluation}}\\*
++24.~BIG-Bench \citep{srivastava_beyond_2023} & Multi-task reasoning\newline Subtask targets and adjudication. & No extra quality measure identified & Permission not established by this review\\\addlinespace[3pt]
++25.~BIG-Bench Hard \citep{suzgun_challenging_2023} & Reasoning suite\newline Task-specific reference answers. & No extra quality measure identified & Permission not established by this review\\\addlinespace[3pt]
++26.~ToolQA \citep{zhuang_toolqa_2023} & Tool-use QA\newline Fixed corpora and generated gold answers. & No extra quality measure identified & Permission not established by this review\\\addlinespace[3pt]
++27.~HIC-Bench \citep{yang_hicbench_2025} & Hallucination typing\newline CDKB/Wikipedia principles and human-verified judgments. & Originality, feasibility, value, and composite metrics & Permission not established by this review\\
++\end{longtable}
++\endgroup
++
++\begingroup
++\small
++\setlength{\tabcolsep}{3pt}
++\renewcommand{\arraystretch}{1.0}
++\begin{longtable}{@{}P{.20\linewidth}P{.32\linewidth}P{.24\linewidth}P{.19\linewidth}@{}}
++\caption{\textbf{Creative writing and reasoning, divergent thinking and linguistic creativity, and constrained problem solving (resources 28--41).} The final column interprets task instructions; it is not a verified claim-level permission rule.}
++\label{tab:full-mapping-creative}\\
++\toprule
++\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
++\endfirsthead
++\multicolumn{4}{l}{\textbf{Table \thetable{} (continued)}}\\
++\toprule
++\textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
++\endhead
++\midrule\multicolumn{4}{r}{\emph{Continued on next page}}\\
++\endfoot
++\bottomrule
++\endlastfoot
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: creative writing and reasoning}}\\*
++28.~CreativityPrism \citep{hou_creativityprism_2025} & Multi-task creativity\newline Tests or correctness judges where applicable. & Task-specific rubrics & Invention within task instructions\\\addlinespace[3pt]
++29.~LitBench \citep{fein_litbench_2025} & Story evaluation\newline No external factual reference identified (human preferences assess quality). & Human preferences & Fictional content within the story\\\addlinespace[3pt]
++30.~Short Story \citep{ismayilzada_evaluating_2025} & Story generation\newline No external factual reference identified (cue words constrain the task, not claim truth). & Novelty, diversity, complexity, and judged creativity & Fictional content within the story\\\addlinespace[3pt]
++31.~WritingBench \citep{wu_writingbench_2025} & Generative writing\newline Provided materials when present. & Writing quality and requested style & Invention within task instructions\\\addlinespace[3pt]
++32.~Art-or-Artifice / TTCW \citep{chakrabarty_art_2024} & Creative writing\newline No external factual reference identified (expert tests assess creativity). & Expert rubric & Fictional content within the story\\\addlinespace[3pt]
++35.~Automated Creativity \citep{li_automated_2025} & Creative writing\newline No external factual reference identified (reference texts anchor quality, not claim truth). & Reference-text quality anchor & Invention within task instructions\\\addlinespace[3pt]
++36.~Hallucinating LLM Could Be Creative \citep{sun_hallucinating_2024} & Reasoning-path evaluation\newline Task correctness; consistency/clustering are diagnostics. & Correctness, consistency, diversity & Permission only partly characterized\\\addlinespace[3pt]
++\midrule
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: divergent thinking and linguistic creativity}}\\*
++33.~Automated DT scoring \citep{organisciak_beyond_2023} & Divergent thinking\newline No external factual reference identified. & Novelty and variety of ideas & New ideas within the task\\\addlinespace[3pt]
++34.~Verbal Creativity \citep{dinu_testing_2025} & Linguistic creativity\newline No external factual reference identified. & Originality, flexibility, elaboration & Creative language within the task\\\addlinespace[3pt]
++\midrule
++\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: constrained problem solving}}\\*
++37.~MacGyver \citep{tian_macgyver_2025} & Problem solving\newline Human judgment of feasibility and efficiency. & Feasibility and efficiency & Permission not established by this review\\\addlinespace[3pt]
++38.~EscapeBench \citep{qian_escapebench_2025} & Agent puzzles\newline Game state and progress. & Feasibility or correctness & Permission not established by this review\\\addlinespace[3pt]
++39.~CreativEval \citep{delorenzo_creativeval_2024} & Code generation\newline Functionality under Verilog testbenches. & Fluency, flexibility, originality, elaboration & Permission not established by this review\\\addlinespace[3pt]
++40.~NeoCoder \citep{lu_benchmarking_2025} & Code generation\newline Test success and constraint adherence. & Correctness, constraint adherence, divergence & Permission not established by this review\\\addlinespace[3pt]
++41.~CreativeMath \citep{ye_assessing_2025} & Mathematical solution generation\newline Reference solutions and unanimous LLM correctness judgment. & Correctness and solution novelty & Permission not established by this review\\
++\end{longtable}
++\endgroup
++
+ 
+ \subsection{Resource Analysis Criteria}\label{sec:mapping}
+ 
+@@ -1280,14 +1399,15 @@
+ the absence of all evidence checks or all task constraints.
+ 
+ \paragraph{Permission scope}
+-The recorded permission codes are \emph{inferred empty} (22 resources,
+-IDs 1--22), \emph{implicit frame} (8, IDs 28--35), \emph{partial} (1, ID 36),
+-and \emph{not separately represented} (10, IDs 23--27 and 37--41).
+-These codes describe how the mapping interprets task instructions. A field
+-not represented separately in this record may still be expressed in a
+-resource's instructions. Appendix~\ref{app:mapping} defines the codes;
+-Section~\ref{sec:agenda} identifies the protocol audit needed to test their
+-coverage of the contract definition.
++We interpret factuality evaluation tasks as allowing supported content
++only (22 resources, IDs 1--22). For eight creative resources (28--35),
++permission is inferred from the task or fictional setting. For resource 36,
++the permission conditions are only partly characterized. For the remaining
++ten resources (23--27 and 37--41), this review has not established the scope
++of permitted additions. These are interpretations of the selected tasks,
++not verified claim-level permission rules. Section~\ref{sec:agenda}
++describes the protocol audit needed to check them against the full
++contract definition.
+ 
+ \paragraph{Required status marking}
+ The status-marking field is \emph{unverified} throughout this inventory:
+@@ -1317,21 +1437,20 @@
+ 
+ Scoring requested style asks whether a response uses the style requested
+ by the task. A comparison with fixed claims asks a different question:
+-does changing only the style change the evaluator's judgment? The code
+-\emph{not controlled} means that the coding records no such comparison.
+-\emph{Not applicable} covers tasks for which this comparison may not make
+-sense, such as checking executable outputs rather than prose.
++does changing only the style change the evaluator's judgment? Our review
++has not documented such a comparison for the selected resources. For action
++sequences or executable outputs, a test of prose style may not be applicable.
+ 
+ Figure~\ref{fig:profiles} groups the selected resources by task family and
+ places the joint evaluation sought by this paper at the center: assessing
+ creativity and divergent thinking while distinguishing licensed divergence
+ from hallucination under an explicit truth contract. The groups summarize
+-the appendix coding; the central area identifies a research target, rather
++the resource tables; the central area identifies a research target, rather
+ than a measured empty region in an exhaustive survey.
+ 
+ Some selected resources already combine creativity-related criteria with
+ correctness checks or hallucination typing, as recorded for HIC-Bench and
+-several constrained-problem-solving resources in Appendix~\ref{app:mapping}.
++constrained problem solving in Table~\ref{tab:full-mapping-creative}.
+ The question is whether such evaluations distinguish permitted invention
+ from hallucination using reference evidence, permission scope, and required
+ status marking. The current coding does not establish that no existing
+@@ -1343,21 +1462,21 @@
+ \centering
+ \resizebox{\textwidth}{!}{\input{figures/resource_clusters.tex}}
+ \caption{\textbf{Resource families and the proposed evaluation target.}
+-Colored clusters group selected resources by task type; examples and appendix
+-row numbers identify each group. The six category names match
+-Table~\ref{tab:resource-inventory} and Appendix~\ref{app:mapping}.
++Colored clusters group selected resources by task type; examples and resource
++IDs identify each group. The six category names match the tables in
++Section~\ref{subsec:resource-tables}.
+ The central area states the evaluation sought: creativity and divergent
+ thinking assessed together with hallucination detection under an explicit
+ truth contract. Related combinations already occur in the selection; the
+ figure does not establish that this target is absent from all prior work.
+ Positions, distances, and cluster sizes carry no quantitative meaning.
+-Resource-level coding appears in
++Resource-level comparisons appear in
+ Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}.}
+ \label{fig:profiles}
+ \end{figure}
+ \FloatBarrier
+ 
+-\section{Exemple}\label{sec:cases}
++\section{Exemple}\label{sec:cases}\label{sec:examples}
+ 
+ The five constructed examples compare how a fixed response is evaluated
+ under two task settings. Examples A--D change reference evidence, permission
+@@ -1876,243 +1995,9 @@
+ error. Comparisons should report this sensitivity, while retaining the
+ individual labels and checks.
+ 
+-\appendixsection{Resource Mapping}%
+-\phantomsection
+-\makeatletter\def\@currentlabel{B}\makeatother\label{app:mapping}
+-\renewcommand*{\theHtable}{B.\arabic{table}}
+-
+-Table~\ref{tab:resource-inventory} gives the complete inventory in the
+-main text. Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}
+-provide source references, reported checks, quality criteria, and interpretive
+-coding. Resource IDs are unchanged across the two presentations.
+-
+-The superscript after each resource records the depth of the source check:
+-M means relevant methodological passages were examined in full text;
+-A means the check relied on a primary abstract or overview;
+-P means access was partial. These indicators do not certify the entire
+-protocol or any absence claim. In particular, permission and style codes
+-remain interpretations to be checked at the level of individual tasks.
+-
+-\paragraph{Coding vocabulary}
+-The tables use the vocabulary below. Their compact codes summarize the
+-current record; they are not validated annotations of all underlying
+-prompts and subtasks. Required claim-status marking is unverified for
+-every row, in the specific sense defined below.
+-
+-\begin{description}
+-  \item[Task category.]
+-  These categories describe types of tasks; they do not rank them.
+-  \emph{factuality evaluation};
+-  \emph{intent evaluation};
+-  \emph{creative writing and reasoning};
+-  \emph{divergent thinking and linguistic creativity};
+-  \emph{constrained problem solving};
+-  \emph{mixed-task and tool-use evaluation}.
+-
+-  \item[Reported reference or checking procedure.]
+-  The codes include textual and nontextual checks. Each entry still needs
+-  verification that it checks the evaluated content rather than only overall
+-  task success.
+-  \emph{source document}, a supplied document treated as authoritative for
+-  evidence checking;
+-  \emph{retrieval set}, retrieved items used to verify claims;
+-  \emph{database or knowledge base}, a structured factual resource;
+-  \emph{gold labels}, reference answers or labels used for checking;
+-  \emph{environment or tool state}, observable state or tool output;
+-  \emph{human adjudication}, a specified procedure for human checking;
+-  \emph{fictional-world constraints}, established facts or rules within a
+-  specified fictional setting;
+-  \emph{mixed or task-dependent}, when the type varies across subtasks or
+-  combines types;
+-  \emph{no external factual reference identified}, when the inspected
+-  criteria provide no such reference; task, semantic, or quality constraints
+-  may still be present.
+-  This field describes the reported role. A task-validity check is
+-  identified as such; it is not automatically a verifier of all claims in
+-  an accompanying explanation.
+-
+-  \item[Quality or task-success criterion.]
+-  \emph{not separately represented};
+-  \emph{quality or preference rubric};
+-  \emph{novelty or divergent-thinking rubric};
+-  \emph{feasibility or correctness criterion};
+-  \emph{specification or tests};
+-  \emph{mixed}.
+-  Here, \emph{not separately represented} means that no additional criterion
+-  is reported beyond agreement with the task oracle; ordinary accuracy against
+-  $O$ is not recoded as a separate task-success dimension.
+-
+-  \item[Style code $S$.]
+-  NC means no comparison with fixed claim content and status is recorded;
+-  NC/NA also allows inapplicability to some action or code outputs;
+-  SC means requested style is scored, without a recorded comparison at
+-  fixed claim content and status. NC does not mean that style requirements
+-  are absent. These descriptions concern the inventory's observations.
+-
+-  \item[Permission scope $\Gamma$.]
+-  IE (\emph{inferred empty}) means that the coding infers that only supported
+-  content is allowed;
+-  IF (\emph{implicit frame}) means that permission is inferred from the task or
+-  fictional setting;
+-  PA (\emph{partial}) records only part of the permission conditions;
+-  \emph{task-specific} and \emph{subtask-specific} indicate that permission
+-  depends on the task or subtask;
+-  \emph{mixed} combines conditions;
+-  NR (\emph{not separately represented}) means that no separate permission field
+-  was identified.
+-  These descriptions explain the labels; they do not supply all the criteria
+-  needed to distinguish them reliably. The recorded coding criterion asks
+-  whether a specification, test, or instruction authorizes unknown content.
+-  It does not document a systematic check for permitted contradictions or
+-  explicit exclusions of supported facts. The protocols must be reexamined
+-  before this coding can be treated as covering the full definition of
+-  $\Gamma$ in Section~\ref{subsec:contract}.
+-  % AUTHOR ACTION: document the coding criteria and verify permission coverage
+-  % against the source protocols before changing any categories or counts.
+-
+-  \item[Required status marking $\mu$.]
+-  All rows are \emph{unverified} for this field: the current audit has not
+-  established a claim-status requirement together with its verification
+-  procedure. This replaces the overlapping initial codes ``not scored''
+-  and ``not separated''; those codes cannot support a count of absent versus
+-  embedded checks. Abstention, refusal, confidence, and a fictional genre
+-  are insufficient on their own to determine this field. Future recoding
+-  must record the exact instruction, evaluated unit, checking criterion,
+-  and protocol version before calling a requirement explicit or embedded.
+-\end{description}
+-
+-The original resources do not necessarily use the term \emph{task oracle}.
+-These codes record our interpretation of the references and checks
+-available in each evaluation design; they do not imply that a source uses
+-truth-contract terminology.
+-A preference score, quality rubric, novelty score, general task-success
+-signal, LLM-judge preference, or nonfactual user instruction is not by itself
+-a task oracle.
+-It remains in the quality or task-success column unless the evaluation uses it
+-to establish or contradict a claim.
+-
+-\begingroup
+-\footnotesize
+-\setlength{\tabcolsep}{3pt}
+-\renewcommand{\arraystretch}{1.0}
+-\begin{longtable}{@{}P{.22\linewidth}P{.35\linewidth}P{.24\linewidth}P{.14\linewidth}@{}}
+-\caption{\textbf{Factuality and source-faithfulness resources (part I).} Source-check depths and interpretive codes follow the codebook above;
+-$\mu$ is unverified throughout.}
+-\label{tab:full-mapping-factual-a}\\
+-\toprule
+-\textbf{Resource} & \textbf{Task and reported reference/checks} & \textbf{Quality / task success} & \textbf{Interpretive codes}\\\midrule
+-\endfirsthead
+-\multicolumn{4}{l}{\textbf{Table \thetable{} (continued)}}\\
+-\toprule
+-\textbf{Resource} & \textbf{Task and reported reference/checks} & \textbf{Quality / task success} & \textbf{Interpretive codes}\\\midrule
+-\endhead
+-\midrule\multicolumn{4}{r}{\emph{Continued on next page}}\\
+-\endfoot
+-\bottomrule
+-\endlastfoot
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: factuality evaluation}}\\*
+-1.~FEVER\textsuperscript{A} \citep{thorne_fever_2018} & Fact checking\newline Check: source document (Wikipedia evidence sentences) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-2.~TruthfulQA\textsuperscript{A} \citep{lin_truthfulqa_2022} & Factual QA\newline Check: mixed or task-dependent (sourced reference answers; human adjudication for generations) & quality or preference rubric (informativeness) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-3.~PopQA\textsuperscript{A} \citep{mallen_when_2023} & Long-tail QA\newline Check: database or knowledge base (Wikidata) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-4.~SimpleQA\textsuperscript{M} \citep{wei_measuring_2024} & Factual QA\newline Check: gold labels (verified reference answers) & answer correctness and not-attempted outcome & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-5.~TriviaQA\textsuperscript{A} \citep{joshi_triviaqa_2017} & Reading QA\newline Check: mixed or task-dependent (gold answers plus Web/Wikipedia documents) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-6.~DefAn\textsuperscript{A} \citep{rahman_defan_2024} & Factual QA\newline Check: gold labels (definitive reference answers) & mixed (prompt alignment and cross-run consistency) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-7.~HaluEval\textsuperscript{A} \citep{li_halueval_2023} & Multi-task hallucination recognition\newline Check: mixed or task-dependent (task references or source text; Web-assisted adjudication) & mixed (specificity and relevance folded into some labels) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-8.~FactBench\textsuperscript{A} \citep{bayat_factbench_2024} & Open-ended factuality evaluation\newline Check: retrieval set (Web-retrieved material) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-9.~HalluLens\textsuperscript{M} \citep{bang_hallulens_2025} & Extrinsic/intrinsic hallucination benchmark\newline Check: mixed or task-dependent (Wikipedia, nonexistent entities, or task context) & mixed (correctness and refusal/acceptance) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-10.~FRANK\textsuperscript{A} \citep{pagnoni_understanding_2021} & Summarization\newline Check: source document (source documents) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-11.~QAGS\textsuperscript{A} \citep{wang_asking_2020} & Summarization\newline Check: source document (source documents) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-12.~SummEval\textsuperscript{A} \citep{fabbri_summeval_2021} & Summarization\newline Check: source document (source documents) & mixed (automatic metrics and human summarization-quality judgments) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-13.~XSum\textsuperscript{A} \citep{narayan_xsum_2018} & Summarization\newline Check: source document (BBC source article) & mixed (ROUGE, human preference, and information preservation) & $S$: NC\newline $\Gamma$: IE\\
+-\end{longtable}
+-\endgroup
+-
+-\begingroup
+-\footnotesize
+-\setlength{\tabcolsep}{3pt}
+-\renewcommand{\arraystretch}{1.0}
+-\begin{longtable}{@{}P{.22\linewidth}P{.35\linewidth}P{.24\linewidth}P{.14\linewidth}@{}}
+-\caption{\textbf{Factuality, intent, and mixed-task resources (part II).} Source-check depths and interpretive codes follow the codebook above;
+-$\mu$ is unverified throughout.}
+-\label{tab:full-mapping-factual-b}\\
+-\toprule
+-\textbf{Resource} & \textbf{Task and reported reference/checks} & \textbf{Quality / task success} & \textbf{Interpretive codes}\\\midrule
+-\endfirsthead
+-\multicolumn{4}{l}{\textbf{Table \thetable{} (continued)}}\\
+-\toprule
+-\textbf{Resource} & \textbf{Task and reported reference/checks} & \textbf{Quality / task success} & \textbf{Interpretive codes}\\\midrule
+-\endhead
+-\midrule\multicolumn{4}{r}{\emph{Continued on next page}}\\
+-\endfoot
+-\bottomrule
+-\endlastfoot
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: factuality evaluation (continued)}}\\
+-14.~CNN/DailyMail\textsuperscript{A} \citep{hermann_teaching_2015,wang_asking_2020} & News corpus used in summarization evaluation\newline Check: source document (news source article) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-15.~DelucionQA\textsuperscript{M} \citep{sadat_delucionqa_2023} & Domain QA\newline Check: source document (retrieved chunks from one Jeep Gladiator manual) & mixed (answerability, coverage, and abstention) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-16.~HalluQA\textsuperscript{M} \citep{cheng_evaluating_2023} & Chinese adversarial QA\newline Check: gold labels (answer sets backed by sources or explanations) & mixed (answer correctness and refusal handling) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-17.~CR-LLM\textsuperscript{A} \citep{li_cr-llm_2024} & Concept reasoning\newline Check: mixed or task-dependent (reference concepts plus GPT-4 contextual adjudication) & quality or preference rubric (concept granularity) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-18.~HotpotQA\textsuperscript{A} \citep{yang_hotpotqa_2018} & Multi-hop QA\newline Check: source document (Wikipedia evidence passages) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-19.~HalluRAG\textsuperscript{M} \citep{ridder_hallurag_2025} & RAG hallucination detection\newline Check: mixed or task-dependent (provided passages/answers and derived sentence labels) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-20.~RealTime QA\textsuperscript{A} \citep{kasai_realtime_2024} & Real-time QA\newline Check: gold labels (time-indexed reference answers) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-21.~HypoTermQA\textsuperscript{M} \citep{uluoglakci_hypotermqa_2024} & Hypothetical-term evaluation\newline Check: mixed or task-dependent (term-validity labels and Wikipedia definitions) & not separately represented & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-22.~AA-Omniscience\textsuperscript{M} \citep{jackson_aaomniscience_2025,artificialanalysis_aaomniscience_public_2025} & Cross-domain factual QA\newline Check: gold labels (source-derived reference answers, evaluated by an LLM grader) & mixed (accuracy, incorrect-answer penalty, and abstention-sensitive reliability) & $S$: NC\newline $\Gamma$: IE\\\addlinespace[1pt]
+-\midrule
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: intent evaluation}}\\
+-23.~FaithQA\textsuperscript{M} \citep{hao_faithqa_2025} & Intent verification\newline Check: mixed or task-dependent (RAG reports; Wikipedia for factual QA; none for creative writing) & specification or tests (query-constraint satisfaction) & $S$: NC\newline $\Gamma$: NR\\\addlinespace[1pt]
+-\midrule
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: mixed-task and tool-use evaluation}}\\
+-24.~BIG-Bench\textsuperscript{A} \citep{srivastava_beyond_2023} & Multi-task reasoning\newline Check: mixed or task-dependent (subtask targets and adjudication) & not separately represented & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]
+-25.~BIG-Bench Hard\textsuperscript{A} \citep{suzgun_challenging_2023} & Reasoning suite\newline Check: gold labels (task-specific reference answers) & not separately represented & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]
+-26.~ToolQA\textsuperscript{A} \citep{zhuang_toolqa_2023} & Tool-use QA\newline Check: mixed or task-dependent (fixed corpora and generated gold answers) & not separately represented & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]
+-27.~HIC-Bench\textsuperscript{M} \citep{yang_hicbench_2025} & Hallucination typing\newline Check: mixed or task-dependent (CDKB/Wikipedia principles and human-verified judgments) & mixed (originality, feasibility, value, and composite metrics) & $S$: NC\newline $\Gamma$: NR\\
+-\end{longtable}
+-\endgroup
+-
+-\begingroup
+-\footnotesize
+-\setlength{\tabcolsep}{3pt}
+-\renewcommand{\arraystretch}{1.0}
+-\begin{longtable}{@{}P{.22\linewidth}P{.35\linewidth}P{.24\linewidth}P{.14\linewidth}@{}}
+-\caption{\textbf{Creative-task and constrained-solution resources.} Source-check depths and interpretive codes follow the codebook above;
+-$\mu$ is unverified throughout.}
+-\label{tab:full-mapping-creative}\\
+-\toprule
+-\textbf{Resource} & \textbf{Task and reported reference/checks} & \textbf{Quality / task success} & \textbf{Interpretive codes}\\\midrule
+-\endfirsthead
+-\multicolumn{4}{l}{\textbf{Table \thetable{} (continued)}}\\
+-\toprule
+-\textbf{Resource} & \textbf{Task and reported reference/checks} & \textbf{Quality / task success} & \textbf{Interpretive codes}\\\midrule
+-\endhead
+-\midrule\multicolumn{4}{r}{\emph{Continued on next page}}\\
+-\endfoot
+-\bottomrule
+-\endlastfoot
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: creative writing and reasoning}}\\
+-28.~CreativityPrism\textsuperscript{M} \citep{hou_creativityprism_2025} & Multi-task creativity\newline Check: mixed or task-dependent (tests or correctness judges where applicable) & mixed (task-specific rubrics) & $S$: NC\newline $\Gamma$: IF (task)\\\addlinespace[1pt]
+-29.~LitBench\textsuperscript{M} \citep{fein_litbench_2025} & Story evaluation\newline Check: no external factual reference identified (human preferences assess quality) & quality or preference rubric (human preferences) & $S$: NC\newline $\Gamma$: IF (story)\\\addlinespace[1pt]
+-30.~Short Story\textsuperscript{M} \citep{ismayilzada_evaluating_2025} & Story generation\newline Check: no external factual reference identified (cue words constrain the task, not claim truth) & mixed (novelty, diversity, complexity, and judged creativity) & $S$: NC\newline $\Gamma$: IF (story)\\\addlinespace[1pt]
+-31.~WritingBench\textsuperscript{M} \citep{wu_writingbench_2025} & Generative writing\newline Check: mixed or task-dependent (provided materials when present) & quality or preference rubric (writing rubric) & $S$: SC\newline $\Gamma$: IF (task)\\\addlinespace[1pt]
+-32.~Art-or-Artifice / TTCW\textsuperscript{M} \citep{chakrabarty_art_2024} & Creative writing\newline Check: no external factual reference identified (expert tests assess creativity) & quality or preference rubric (expert rubric) & $S$: NC\newline $\Gamma$: IF (story)\\\addlinespace[1pt]
+-35.~Automated Creativity\textsuperscript{M} \citep{li_automated_2025} & Creative writing\newline Check: no external factual reference identified (reference texts anchor quality, not claim truth) & quality or preference rubric (reference-text quality anchor) & $S$: NC\newline $\Gamma$: IF (task)\\\addlinespace[1pt]
+-36.~Hallucinating LLM Could Be Creative\textsuperscript{P} \citep{sun_hallucinating_2024} & Reasoning-path evaluation\newline Check: mixed or task-dependent (task correctness; consistency/clustering are diagnostics) & mixed (correctness, consistency, diversity) & $S$: NC\newline $\Gamma$: PA (mixed frame)\\\addlinespace[1pt]
+-\midrule
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: divergent thinking and linguistic creativity}}\\*
+-33.~Automated DT scoring\textsuperscript{M} \citep{organisciak_beyond_2023} & Divergent thinking\newline Check: no external factual reference identified & novelty or divergent-thinking rubric & $S$: NC\newline $\Gamma$: IF (ideation)\\\addlinespace[1pt]
+-34.~Verbal Creativity\textsuperscript{M} \citep{dinu_testing_2025} & Linguistic creativity\newline Check: no external factual reference identified & novelty or divergent-thinking rubric (originality, flexibility, elaboration) & $S$: NC\newline $\Gamma$: IF (linguistic creativity)\\\addlinespace[1pt]
+-\midrule
+-\multicolumn{4}{@{}p{.96\linewidth}@{}}{\textbf{Task family: constrained problem solving}}\\
+-37.~MacGyver\textsuperscript{M} \citep{tian_macgyver_2025} & Problem solving\newline Check: task validity (human judgment of feasibility and efficiency) & feasibility or correctness criterion (feasibility and efficiency) & $S$: NC\newline $\Gamma$: NR\\\addlinespace[1pt]
+-38.~EscapeBench\textsuperscript{M} \citep{qian_escapebench_2025} & Agent puzzles\newline Check: task validity (game state and progress) & feasibility or correctness criterion & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]
+-39.~CreativEval\textsuperscript{M} \citep{delorenzo_creativeval_2024} & Code generation\newline Check: task validity (functionality under Verilog testbenches) & novelty or divergent-thinking rubric (fluency, flexibility, originality, elaboration) & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]
+-40.~NeoCoder\textsuperscript{M} \citep{lu_benchmarking_2025} & Code generation\newline Check: task validity (test success and constraint adherence) & mixed (correctness, constraint adherence, divergence) & $S$: NC/NA\newline $\Gamma$: NR\\\addlinespace[1pt]
+-41.~CreativeMath\textsuperscript{M} \citep{ye_assessing_2025} & Mathematical solution generation\newline Check: task validity (reference solutions and unanimous LLM correctness judgment) & mixed (correctness and solution novelty) & $S$: NC\newline $\Gamma$: NR\\
+-\end{longtable}
+-\endgroup
+-
+-\clearpage
+ \appendixsection{AA-Omniscience Leaderboard Snapshot}%
+ \phantomsection
+-\makeatletter\def\@currentlabel{C}\makeatother\label{app:omniscience}
++\makeatletter\def\@currentlabel{B}\makeatother\label{app:omniscience}
+ 
+ Section~\ref{subsec:relative} cites AA-Omniscience as evidence that scale and
+ recency are not sufficient proxies for factual reliability.
+@@ -2142,7 +2027,7 @@
+ hallucination rate.
+ 
+ \begin{figure}[!ht]
+-\renewcommand*{\theHfigure}{C.\arabic{figure}}
++\renewcommand*{\theHfigure}{B.\arabic{figure}}
+ \centering
+ \IfFileExists{figures/AA-Omniscience Hallucination Rate vs- Total Parameters (26 Aug '26) (1).png}{\includegraphics[width=0.98\linewidth]{figures/AA-Omniscience Hallucination Rate vs- Total Parameters (26 Aug '26) (1).png}}{\fbox{\parbox{0.90\linewidth}{\textbf{Source graphic not supplied.} Restore the original AA-Omniscience snapshot image from the source project. No measurements are reconstructed here.}}}
+ \par\smallskip

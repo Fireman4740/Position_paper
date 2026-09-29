@@ -1,0 +1,399 @@
+--- Resource_Mapping_avant.tex
++++ Resource_Mapping_apres.tex
+@@ -1,113 +1,93 @@
+ \section{Resource Mapping}\label{sec:methodology}
+ 
+-LLM evaluation covers more than checking factual answers: it also examines
+-whether a response follows an intended request, uses tools, develops creative
+-content, or solves a constrained problem. We compare forty-one resources
+-across these task families to give a broader view of how evaluation designs
+-handle reference evidence, permission, required status marking, and style.
+-The comparison includes datasets, benchmarks, and scoring protocols, which
+-we collectively call \emph{evaluation resources}.
+-
+-The resulting \emph{resource mapping} connects the framework to a range of
+-evaluation settings. Its categories provide a way to compare task designs
+-beyond any one dataset; findings about their prevalence remain limited to
+-the selected inventory. The mapping does not test the labeling rule's
+-reliability in practice.
++We compare forty-one selected evaluation resources to see how they use the
++three components of the truth contract: the task oracle, permission scope,
++and required status marking. We also examine how they evaluate style.
++In particular, we ask whether they compare different wordings of a response
++while keeping claim content and observed status marking fixed. This
++comparison, which we call the \emph{resource mapping}, describes how the
++resources evaluate responses. It does not test whether our labeling rule
++works in practice.
+ 
+ \subsection{Selection and Scope}
+ 
+-The unit of analysis is an \emph{evaluation resource}: a benchmark, dataset,
+-or protocol that specifies how responses are evaluated. The six task categories listed in
+-Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative} cover factuality evaluation, intent evaluation,
+-mixed-task and tool-use evaluation, creative writing and reasoning, divergent
+-thinking and linguistic creativity, and constrained problem solving.
+-The inventory brings together hallucination-related and creativity-related
+-resources identified for this paper, extending the comparison beyond
+-factual question answering. It supports a general discussion of evaluation
+-designs, without establishing exhaustive coverage of the field. We call
+-this selection a \emph{purposive sample}.
+-
+-Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}
+-list all 41 resources, their references, and the evaluation criteria in the
+-main text. The available record does not explain how the resources were
+-initially found or selected. That procedure must be documented for others
+-to reproduce the selection; the final list alone is insufficient.
+-
+-The source check was uneven: some entries were examined through relevant
+-methodological passages, others through primary summaries, and one source
+-was only partly accessible. These limits affect how confidently we can
+-interpret each protocol. In particular, failing to identify a criterion
+-in the reviewed material does not establish that the resource lacks it.
+-Recent designs discussed in Section~\ref{sec:related} remain outside the
+-41-resource inventory until the same comparison has been completed.
+-% AUTHOR ACTION: replace the preceding limitation with the actual documented
+-% discovery procedure when available. Do not invent dates, queries, or screening.
+-
+-\subsection{Coding Protocol}
+-
+-For each resource, we assign categories to describe its evaluation design.
+-This process, called \emph{coding}, records seven aspects in three groups:
++An \emph{evaluation resource} is a benchmark, dataset, or protocol that
++specifies how responses are evaluated. We selected resources for different
++tasks, from factuality evaluation to creative writing and problem solving.
++The aim is to compare how these tasks are evaluated. The selection does not
++cover all existing resources or show how common each approach is across
++the field. Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}
++list the 41 resources and their references.
++
++The available records do not explain how the resources were first found
++and selected. This information is needed for others to repeat the selection.
++We also could not examine every source in the same detail: for some resources,
++we read the methods; for others, we relied on the authors' summaries; and
++one source was only partly accessible. If we did not identify a criterion
++in these materials, this does not prove that the resource lacks it.
++The recent resources discussed in Section~\ref{sec:related} remain outside
++this comparison until they have been examined in the same way.
++% AUTHOR ACTION: document the actual resource search and selection procedure.
++% Do not invent dates, queries, or inclusion criteria.
++
++\subsection{Comparison Criteria}
++
++For each resource, we examine three groups of information:
+ \begin{itemize}
+-\item Contract information: the task oracle type, permission scope, and required
+-status marking.
+-\item Task information: the type of task and any separate criterion for
+-quality or task success.
+-\item Style evaluation: how the requested style is treated, and whether
+-claims or labels are compared across different wordings that preserve claim
+-content and observed status marking.
++\item \textbf{Truth contract.} What reference evidence or checks does the task
++oracle use? What content does the task permit? How must that content be marked?
++\item \textbf{Task.} What does the response have to do, and how are its quality
++or success evaluated?
++\item \textbf{Style.} Does the evaluation check the requested style? Does it
++compare different wordings with the same claim content and observed status
++marking?
+ \end{itemize}
+-We group the resources into six task categories, using the same names
+-throughout the paper: \emph{factuality evaluation} (IDs 1--22),
+-\emph{intent evaluation} (23), \emph{mixed-task and tool-use evaluation}
+-(24--27), \emph{creative writing and reasoning} (28--32, 35--36),
+-\emph{divergent thinking and linguistic creativity} (33--34), and
+-\emph{constrained problem solving} (37--41).
+-
+-Factuality evaluation checks answers or summaries against evidence. Intent
+-evaluation checks interpretation of a request. Mixed-task and tool-use
+-evaluation combines subtasks or interactions. Creative writing and reasoning
+-assesses stories, written explanations, or alternative reasoning paths.
+-Divergent thinking and linguistic creativity assesses the variety and
+-originality of ideas or language. Constrained problem solving checks whether
+-a proposed solution meets stated requirements. These categories summarize
+-the task and evaluation criteria recorded for each resource; they do not
+-rank resources or determine whether an individual claim is permitted.
+-They are descriptive groupings, not an independently validated taxonomy.
+-Figure~\ref{fig:profiles} uses these same six categories.
+-
+-The descriptions reflect our reading of each resource, whose authors may
+-use different terms. A score serves as reference evidence only if it is used
+-to support or contradict the evaluated content; measuring overall task
+-success alone is not enough.
++These questions use the distinctions introduced in
++Section~\ref{sec:framework}. A check that a solution works does not necessarily
++establish whether every claim in its explanation is supported.
++
++We group the resources into six task categories. The names and resource IDs
++are the same in the tables and Figure~\ref{fig:profiles}:
++\begin{itemize}
++\item \textbf{Factuality evaluation} (IDs 1--22) checks answers or summaries
++against reference evidence.
++\item \textbf{Intent evaluation} (23) checks whether a response correctly
++interprets the user's request.
++\item \textbf{Mixed-task and tool-use evaluation} (24--27) combines different
++tasks or requires the use of tools.
++\item \textbf{Creative writing and reasoning} (28--32, 35--36) evaluates
++stories, written explanations, or different ways of solving a problem.
++\item \textbf{Divergent thinking and linguistic creativity} (33--34)
++evaluates the variety and originality of ideas or language.
++\item \textbf{Constrained problem solving} (37--41) checks whether a solution
++meets the task's requirements, such as working with limited resources or
++passing code tests.
++\end{itemize}
++These categories describe the tasks. They do not rank the resources or
++determine whether an individual claim is permitted. They reflect our reading
++of the resources and have not been checked through independent annotation.
+ 
+ \subsection{Resource Tables}\label{subsec:resource-tables}
+ 
+-Read each row from left to right: the resource and its citation; the task
+-and the evidence or checks used; other criteria such as quality, novelty,
+-or feasibility; and our interpretation of what content the task allows.
+-The category headings use the same names as Figure~\ref{fig:profiles}.
+-
+-``No extra quality measure identified'' means that this review did not
+-identify a separate quality criterion beyond the evidence or correctness
+-check in the preceding column. ``Only supported content (inferred)'' means
+-that we interpret the task as requiring support for its claims.
+-``Permission not established by this review'' means that we have not
+-established which unsupported additions the task permits. It does not
+-mean that all additions are forbidden or that the resource has no instructions.
+-The permission descriptions for creative tasks likewise summarize our
+-interpretation of the task or fictional setting.
+-
+-Status-marking requirements have not yet been verified across these
+-resources, so the tables do not assign them a positive or negative result.
+-Style is discussed separately below: a missing controlled comparison of
+-style does not imply that a resource ignores writing quality.
++Each row describes one resource. The columns give its name and reference,
++the task and the evidence or checks used, other evaluation criteria, and
++our reading of what content the task allows.
++
++``No extra quality measure identified'' means that we did not identify a
++quality measure beyond the evidence or correctness check already listed.
++``Only supported content (inferred)'' means that we read the task as requiring
++claims to be supported. For creative tasks, the final column describes what
++we understand the instructions to allow. When it says ``Permission not
++established by this review,'' we have not established which unsupported
++additions are permitted. This does not mean that all additions are forbidden.
++Required status marking and style are discussed after the tables.
+ 
+ \begingroup
+ \small
+ \setlength{\tabcolsep}{3pt}
+ \renewcommand{\arraystretch}{1.0}
+ \begin{longtable}{@{}P{.20\linewidth}P{.32\linewidth}P{.24\linewidth}P{.19\linewidth}@{}}
+-\caption{\textbf{Factuality evaluation (resources 1--13).} The final column interprets task instructions; it is not a verified claim-level permission rule.}
++\caption{\textbf{Factuality evaluation (resources 1--13).} The final column gives our reading of the task instructions. Permission for individual claims still needs to be checked.}
+ \label{tab:full-mapping-factual-a}\\
+ \toprule
+ \textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
+@@ -142,7 +122,7 @@
+ \setlength{\tabcolsep}{3pt}
+ \renewcommand{\arraystretch}{1.0}
+ \begin{longtable}{@{}P{.20\linewidth}P{.32\linewidth}P{.24\linewidth}P{.19\linewidth}@{}}
+-\caption{\textbf{Factuality evaluation, intent evaluation, and mixed-task and tool-use evaluation (resources 14--27).} The final column interprets task instructions; it is not a verified claim-level permission rule.}
++\caption{\textbf{Factuality evaluation, intent evaluation, and mixed-task and tool-use evaluation (resources 14--27).} The final column gives our reading of the task instructions. Permission for individual claims still needs to be checked.}
+ \label{tab:full-mapping-factual-b}\\
+ \toprule
+ \textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
+@@ -182,7 +162,7 @@
+ \setlength{\tabcolsep}{3pt}
+ \renewcommand{\arraystretch}{1.0}
+ \begin{longtable}{@{}P{.20\linewidth}P{.32\linewidth}P{.24\linewidth}P{.19\linewidth}@{}}
+-\caption{\textbf{Creative writing and reasoning, divergent thinking and linguistic creativity, and constrained problem solving (resources 28--41).} The final column interprets task instructions; it is not a verified claim-level permission rule.}
++\caption{\textbf{Creative writing and reasoning, divergent thinking and linguistic creativity, and constrained problem solving (resources 28--41).} The final column gives our reading of the task instructions. Permission for individual claims still needs to be checked.}
+ \label{tab:full-mapping-creative}\\
+ \toprule
+ \textbf{Resource} & \textbf{What is checked, and against what?} & \textbf{Other evaluation criteria} & \textbf{Allowed content: our reading}\\\midrule
+@@ -217,111 +197,102 @@
+ \end{longtable}
+ \endgroup
+ 
+-
+ \subsection{Resource Analysis Criteria}\label{sec:mapping}
+ 
+-\paragraph{Reference evidence and reported checks}
+-The inventory records source documents, reference answers, retrieved
+-material, and task-validity checks. These are different bases for evaluation.
+-For example, FEVER uses evidence sentences (ID~1), QAGS compares answers
+-derived from a summary and its source (11), and SimpleQA uses reference
+-answers with a grading procedure (4)
+-\citep{thorne_fever_2018,wang_asking_2020,wei_measuring_2024}.
+-Example~A in Section~\ref{sec:examples} illustrates why a label must retain the
+-identity of the reference used.
+-
+-For constrained problem solving, the inspected protocols evaluate solution
+-validity: feasibility under stated constraints in MacGyver (37), progress
+-in the game environment in EscapeBench (38), functionality under Verilog
+-testbenches in CreativEval (39), test success and constraint adherence in
+-NeoCoder (40), and LLM-judged mathematical correctness in CreativeMath (41)
++\paragraph{Task oracle}
++The resources use different reference evidence and checks. FEVER uses
++evidence sentences (ID~1), QAGS compares answers obtained from a summary
++and its source (11), and SimpleQA checks answers against reference answers
++(4) \citep{thorne_fever_2018,wang_asking_2020,wei_measuring_2024}.
++The reference matters because the same claim can be supported by one
++reference and left unknown by another, as Example~A in
++Section~\ref{sec:examples} illustrates.
++
++For constrained problem solving, the checks ask whether a solution works.
++MacGyver uses human judgments of feasibility and efficiency (37);
++EscapeBench checks progress in a game (38); CreativEval uses Verilog tests
++(39); NeoCoder checks test success and task constraints (40); and
++CreativeMath uses LLM judgments of mathematical correctness (41)
+ \citep{tian_macgyver_2025,qian_escapebench_2025,delorenzo_creativeval_2024,
+-lu_benchmarking_2025,ye_assessing_2025}. These checks do not automatically
+-verify every claim in an accompanying explanation. The tables therefore
+-report their stated role, rather than count them as verified implementations
+-of a single claim-level oracle.
+-
+-For LitBench, Short Story, Art-or-Artifice, Automated DT scoring, Verbal
+-Creativity, and Automated Creativity (IDs 29, 30, 32--35), no external
+-factual reference was identified in the inspected evaluation criteria.
+-Their prompts, story requirements, quality references, or creativity
+-rubrics still constrain evaluation. This observation does not establish
+-the absence of all evidence checks or all task constraints.
++lu_benchmarking_2025,ye_assessing_2025}. These checks can evaluate a solution
++without verifying every claim in its explanation. The tables describe
++what each check does; they do not establish that it performs every part
++of the task oracle defined in Section~\ref{subsec:contract}.
++
++For six resources, we did not identify an external factual reference in the
++evaluation criteria we examined: LitBench, Short Story, Art-or-Artifice,
++Automated DT scoring, Verbal Creativity, and Automated Creativity
++(IDs 29, 30, 32--35). Their evaluations still use task instructions,
++requirements for stories, reference texts for quality, or creativity
++criteria. Our reading does not establish that these resources never check
++factual claims.
+ 
+ \paragraph{Permission scope}
+-We interpret factuality evaluation tasks as allowing supported content
+-only (22 resources, IDs 1--22). For eight creative resources (28--35),
+-permission is inferred from the task or fictional setting. For resource 36,
+-the permission conditions are only partly characterized. For the remaining
+-ten resources (23--27 and 37--41), this review has not established the scope
+-of permitted additions. These are interpretations of the selected tasks,
+-not verified claim-level permission rules. Section~\ref{sec:agenda}
+-describes the protocol audit needed to check them against the full
+-contract definition.
++For the 22 resources in factuality evaluation (IDs 1--22), we read the tasks
++as allowing supported content only. For eight resources (28--35), we infer
++what content is allowed from the task instructions or the fictional setting.
++For resource 36, we have identified only part of the permission conditions.
++For the remaining ten resources (23--27 and 37--41), we have not established
++which unsupported additions are allowed.
++
++These descriptions explain our reading of the tasks. We still need to check
++whether their instructions cover the full permission scope defined in
++Section~\ref{subsec:contract}. Section~\ref{sec:agenda} describes this work.
+ 
+ \paragraph{Required status marking}
+-The status-marking field is \emph{unverified} throughout this inventory:
+-the present source check has not established, for each row, both a
+-requirement on how a claim's status must be presented and the procedure
+-that verifies it. This is the status of our audit, not a finding that the
+-resources lack such requirements. We therefore do not report counts that
+-contrast absent and embedded marking checks.
+-
+-Several resources explicitly assess abstention or refusal. SimpleQA
+-includes a not-attempted outcome, HalluLens evaluates refusal, and
++For these resources, we have not yet established both what status marking
++the task requires and how the evaluation checks it. We therefore do not
++classify resources as having or lacking a marking requirement. A requirement
++may be present in instructions that our review has not fully examined.
++
++Some resources evaluate whether a response answers or declines to answer.
++SimpleQA includes a not-attempted outcome, HalluLens evaluates refusal, and
+ DelucionQA records answerability and whether a response answers
+ \citep{wei_measuring_2024,bang_hallulens_2025,sadat_delucionqa_2023}.
+-AA-Omniscience also accounts for abstention in reliability evaluation
+-\citep{jackson_aaomniscience_2025}. These measures concern whether an answer
+-is offered. They do not by themselves establish how a permitted hypothesis
+-or fictional claim must be marked under a truth contract.
++AA-Omniscience also includes abstention in its reliability evaluation
++\citep{jackson_aaomniscience_2025}. This differs from checking how a claim
++is marked: declining to answer may produce no claim about the answer at all,
++whereas a permitted hypothesis introduces a claim whose status must be clear.
+ 
+ \subsection{Joint Evaluation and Style Variation}
+ 
+-WritingBench explicitly scores writing requirements, including style
+-\citep{wu_writingbench_2025}. Our inventory records this separately from a
+-comparison that holds claim content and observed status marking fixed.
+-No such controlled comparison is documented in the current coding. That
+-statement describes the inventory; a comprehensive claim of absence would
+-require inspecting every relevant protocol and subtask.
+-
+-Scoring requested style asks whether a response uses the style requested
+-by the task. A comparison with fixed claims asks a different question:
+-does changing only the style change the evaluator's judgment? Our review
+-has not documented such a comparison for the selected resources. For action
+-sequences or executable outputs, a test of prose style may not be applicable.
+-
+-Figure~\ref{fig:profiles} groups the selected resources by task family and
+-places the joint evaluation sought by this paper at the center: assessing
+-creativity and divergent thinking while distinguishing licensed divergence
+-from hallucination under an explicit truth contract. The groups summarize
+-the resource tables; the central area identifies a research target, rather
+-than a measured empty region in an exhaustive survey.
+-
+-Some selected resources already combine creativity-related criteria with
+-correctness checks or hallucination typing, as recorded for HIC-Bench and
++Style evaluation can ask two questions. The first is whether a response
++uses the requested style. WritingBench includes this in its evaluation
++\citep{wu_writingbench_2025}. The second is whether changing the wording
++changes an evaluator's judgment when claim content and observed status
++marking remain fixed. We have not documented this second comparison in the
++selected resources. This does not establish that it is absent from every
++task they include or from other resources. For actions or executable code,
++a comparison of prose style may not apply.
++
++Figure~\ref{fig:profiles} groups the resources by task category. Its center
++shows what we want to evaluate together: creativity and divergent thinking,
++and whether claims are licensed divergence or hallucination under a truth
++contract. Some resources already combine creativity with correctness checks
++or hallucination evaluation, including HIC-Bench and resources for
+ constrained problem solving in Table~\ref{tab:full-mapping-creative}.
+-The question is whether such evaluations distinguish permitted invention
+-from hallucination using reference evidence, permission scope, and required
+-status marking. The current coding does not establish that no existing
+-protocol does so; that absence claim requires source-level verification.
+-Style variation remains a separate test of whether an evaluator's judgment
+-changes when claim content and observed status marking stay fixed.
++We still need to examine whether they use reference evidence, permission
++scope, and required status marking to distinguish permitted content from
++hallucination. The figure states this question; it does not prove that no
++existing resource addresses it.
++
++Style remains a separate question. An evaluation can check creative quality
++and factuality without testing whether a change in wording affects its
++judgment. The next section uses the same contract components to explain
++what should change, or stay the same, in five constructed examples.
+ 
+ \begin{figure}[!ht]
+ \centering
+ \resizebox{\textwidth}{!}{\input{figures/resource_clusters.tex}}
+-\caption{\textbf{Resource families and the proposed evaluation target.}
+-Colored clusters group selected resources by task type; examples and resource
+-IDs identify each group. The six category names match the tables in
+-Section~\ref{subsec:resource-tables}.
+-The central area states the evaluation sought: creativity and divergent
+-thinking assessed together with hallucination detection under an explicit
+-truth contract. Related combinations already occur in the selection; the
+-figure does not establish that this target is absent from all prior work.
+-Positions, distances, and cluster sizes carry no quantitative meaning.
+-Resource-level comparisons appear in
+-Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}.}
++\caption{\textbf{Task categories and the evaluation proposed in this paper.}
++The boxes use the same six categories as the resource tables in
++Section~\ref{subsec:resource-tables}. Names and IDs identify the resources
++in each group. The center brings together creativity, divergent thinking,
++and hallucination evaluation under a truth contract. Some resources already
++combine these questions; the figure does not establish that this combination
++is absent from prior work. Box positions and sizes do not give scores or
++rank resources. Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative}
++give the details for each resource.}
+ \label{fig:profiles}
+ \end{figure}
+ \FloatBarrier

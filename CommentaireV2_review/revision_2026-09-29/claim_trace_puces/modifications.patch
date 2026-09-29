@@ -1,0 +1,51 @@
+--- claim_trace_avant.tex
++++ claim_trace_apres.tex
+@@ -1,17 +1,35 @@
+-The output is a \emph{claim trace}, linking each decision to the response
+-span that produced it. It collects the elements introduced above: the
+-recovered claim and observed marking (Section~\ref{subsec:unit}), its evidence
+-state (Section~\ref{subsec:verification}), and the permission check, marking
+-check, label, and reason code (Section~\ref{subsec:rule}). For a recovered
+-claim $i$, we record
++The output is a \emph{claim trace}: a record that links each claim's
++label to the words in the response and the checks that led to that label.
++It brings together the information introduced in
++Sections~\ref{subsec:unit}--\ref{subsec:rule}. For each recovered claim $i$,
++the trace contains eight elements:
++\begin{itemize}
++\item $s_i$, the \emph{response span}: the words in the response from which
++the claim was recovered.
++\item $q_i^*$, the \emph{recovered claim content}: what those words mean in
++context, including the entities, dates, and qualifications needed to
++preserve the claim's meaning.
++\item $\widehat{m}_i$, the \emph{observed status marking}: how the response
++presents the claim, for example as established, possible, or fictional.
++\item $\mathrm{ES}_i$, the \emph{evidence state}: whether the task oracle
++finds the claim \textsc{entailed}, \textsc{contradicted}, or \textsc{unknown}
++relative to its reference evidence.
++\item $a_i$, the \emph{permission check}: whether the claim is permitted
++by the permission scope $\Gamma$.
++\item $b_i$, the \emph{marking check}: whether the observed status marking
++$\widehat{m}_i$ satisfies the required status marking $\mu$.
++\item $\ell_i$, the \emph{claim label}: grounded (\Grd), licensed divergence
++(\LD), or hallucination (\Hall), as assigned by the decision rule.
++\item $r_i$, the \emph{reason code}: the reason for a violation, if one is
++identified, such as \textsc{out-of-scope} or \textsc{marking-failure}.
++\end{itemize}
++We write this record as
+ \begin{equation}
+-\tau_i=(s_i,q_i^*,\widehat{m}_i,\mathrm{ES}_i,a_i,b_i,\ell_i,r_i),
++\tau_i=(s_i,q_i^*,\widehat{m}_i,\mathrm{ES}_i,a_i,b_i,\ell_i,r_i).
+ \label{eq:claim-trace}
+ \end{equation}
+-where $s_i$ identifies the response span, $a_i$ records the permission check,
+-$b_i$ records whether observed marking satisfies $\mu$, $\ell_i$ is the
+-claim label, and $r_i$ is its reason code, if any. Checks that the decision
+-rule does not require are recorded as not evaluated, rather than as passed.
+-Together, these entries form the trace for the response; procedural failures
+-are recorded alongside it and do not receive a successful claim label.
++If the decision rule does not require a check, its result is recorded as
++\emph{not evaluated}, not as passed. The records for the individual claims
++together form the trace for the response. Procedural failures are recorded
++alongside these records; the affected claims remain unlabeled.
+ 

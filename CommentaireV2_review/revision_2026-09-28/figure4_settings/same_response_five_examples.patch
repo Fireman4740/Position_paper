@@ -1,0 +1,83 @@
+--- avant/same_response_five_examples.tex
++++ apres/same_response_five_examples.tex
+@@ -1,40 +1,49 @@
+-% Constructed comparisons; fixed response within each row, no measured results.
++% Constructed comparisons: response, claim content, and observed marking stay fixed.
+ \begingroup
+ \small
+-\setlength{\tabcolsep}{4pt}
+-\renewcommand{\arraystretch}{1.12}
+-\begin{tabularx}{\linewidth}{@{}P{.38\linewidth}YY@{}}
++\setlength{\tabcolsep}{5pt}
++\renewcommand{\arraystretch}{1.10}
++\begin{tabularx}{\linewidth}{@{}P{.35\linewidth}YY@{}}
+ \toprule
+-\textbf{Same response in both settings} & \textbf{Setting 1} & \textbf{Setting 2}\\\midrule
+-\textbf{A. Reference evidence $O$}\\[-2pt]
+-``The complete stele stood near a temple entrance.'' &
+-Fragment only: \textsc{unknown}.\newline
++\textbf{Fixed response and conditions} & \textbf{Setting 1} & \textbf{Setting 2}\\\midrule
++\multicolumn{3}{@{}l}{\textbf{A. Changed field: reference evidence used by $O$}}\\[2pt]
++``The complete stele stood near a temple entrance.''\newline
++{\footnotesize Fixed: $\Gamma=\varnothing$; $\mu$ requires no extra marking for supported facts.} &
++{\color{clrB}\textbf{$O_1$: check the museum fragment only.}}\newline
++\textsc{unknown} $\rightarrow$ {\color{clrH}\textbf{H}}\newline
++(out of scope) &
++{\color{clrB}\textbf{$O_2$: check the fragment plus an explicit supporting sentence.}}\newline
++Added test evidence: the placement sentence on the left.\newline
++\textsc{entailed} $\rightarrow$ \textbf{G}\\\addlinespace[5pt]\midrule
++\multicolumn{3}{@{}l}{\textbf{B. Changed field: permission scope $\Gamma$}}\\[2pt]
++``One possible reconstruction places the complete stele near a temple entrance.''\newline
++{\footnotesize Fixed: $O$ = fragment; $\mu$ requires a conjecture cue. Evidence: unknown.} &
++{\color{clrB}\textbf{$\Gamma_1=\varnothing$: supported information only.}}\newline
+ {\color{clrH}\textbf{H}} (out of scope) &
+-Extended reference: \textsc{entailed}.\newline
+-\textbf{G}\\\addlinespace[5pt]
+-\textbf{B. Permission $\Gamma$}\\[-2pt]
+-``One possible reconstruction places the complete stele near a temple entrance.'' &
+-Supported information only.\newline
++{\color{clrB}\textbf{$\Gamma_2$: plausible reconstructions of the original placement are allowed.}}\newline
++{\color{clrLD}\textbf{LD}}\\\addlinespace[5pt]\midrule
++\multicolumn{3}{@{}l}{\textbf{C. Changed field: required status marking $\mu$}}\\[2pt]
++Same response as B, with the cue ``One possible reconstruction.''\newline
++{\footnotesize Fixed: $O$ = fragment; $\Gamma$ allows this reconstruction. Evidence: unknown.} &
++{\color{clrB}\textbf{$\mu_1$: the heading ``Hypothesis'' is required.}}\newline
++{\color{clrH}\textbf{H}} (marking failure) &
++{\color{clrB}\textbf{$\mu_2$: an explicit conjecture cue in the sentence is sufficient.}}\newline
++{\color{clrLD}\textbf{LD}}\\\addlinespace[5pt]\midrule
++\multicolumn{3}{@{}l}{\textbf{D. Changed field: topic allowed by $\Gamma$}}\\[2pt]
++``One possibility is that the stone will be returned to Egypt next year.''\newline
++{\footnotesize Fixed: $O$ = fragment; $\mu$ requires possibility marking. Evidence: unknown.} &
++{\color{clrB}\textbf{$\Gamma_1$: historical reconstructions only.}}\newline
+ {\color{clrH}\textbf{H}} (out of scope) &
+-Reconstruction allowed.\newline
+-{\color{clrLD}\textbf{LD}}\\\addlinespace[5pt]
+-\textbf{C. Required marking $\mu$}\\[-2pt]
+-Same reconstruction sentence as B, including ``One possible reconstruction.'' &
+-Heading ``Hypothesis'' required.\newline
+-{\color{clrH}\textbf{H}} (marking failure) &
+-Sentence-level conjecture cue accepted.\newline
+-{\color{clrLD}\textbf{LD}}\\\addlinespace[5pt]
+-\textbf{D. Scope boundary $\Gamma$}\\[-2pt]
+-``One possibility is that the stone will be returned to Egypt next year.'' &
+-Historical reconstructions only.\newline
+-{\color{clrH}\textbf{H}} (out of scope) &
+-Future-location scenarios allowed.\newline
+-{\color{clrLD}\textbf{LD}}\\\addlinespace[5pt]
+-\textbf{E. Style control: same TC}\\[-2pt]
+-``The decree is written in hieroglyphic, Demotic, and Greek.'' &
+-Plain style requested.\newline
++{\color{clrB}\textbf{$\Gamma_2$: hypothetical future locations are allowed.}}\newline
++{\color{clrLD}\textbf{LD}}\\\addlinespace[5pt]\midrule
++\multicolumn{3}{@{}l}{\textbf{E. Changed instruction: requested style; $O$, $\Gamma$, and $\mu$ unchanged}}\\[2pt]
++``The decree is written in hieroglyphic, Demotic, and Greek.''\newline
++{\footnotesize Fixed: $O$ = fragment; supported facts allowed; no extra status marking. Evidence: entailed.} &
++{\color{clrB}\textbf{Style request: ``Use plain language.''}}\newline
++Same truth contract.\newline
+ \textbf{G} &
+-Metaphorical style requested.\newline
++{\color{clrB}\textbf{Style request: ``Use metaphorical language.''}}\newline
++Same truth contract.\newline
+ \textbf{G}\\
+ \bottomrule
+ \end{tabularx}
