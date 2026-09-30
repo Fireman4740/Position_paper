@@ -1,0 +1,240 @@
+{
+  "manuscript": "réécriture_papier/truth_contract_position_paper.tex",
+  "manuscript_sha256": "20509235d75bec31b7c9c071e17f58a33e2b3931828d632f4ecded6fe23942a1",
+  "comments_sha256": "aafb437f95a66fb6cb89331b7261f1052a337eeaf17a6dbd3fc497e66146fefd",
+  "exported_at": "2026-09-29T14:49:08.436Z",
+  "declared_global_counts": {
+    "fileCount": 3,
+    "threadCount": 102,
+    "messageCount": 118
+  },
+  "actual_counts": {
+    "files": 1,
+    "threads": 14,
+    "messages": 18,
+    "messages_flagged_truncated": 5,
+    "tracked_change_fragments": 44
+  },
+  "items": [
+    {
+      "id": "V6-01",
+      "source_position": 22801,
+      "approximate_local_line": 431,
+      "target": "Related Work 2.1 : Evidence Relations and Hallucination Taxonomies (sans label propre)",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 9:50 am",
+          "text": "which contract?",
+          "possiblyTruncated": false
+        },
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 10:09 am",
+          "text": "expliquer....",
+          "possiblyTruncated": true
+        }
+      ]
+    },
+    {
+      "id": "V6-02",
+      "source_position": 22849,
+      "approximate_local_line": 431,
+      "target": "Related Work 2.1",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 9:50 am",
+          "text": "which permission?",
+          "possiblyTruncated": false
+        },
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 10:09 am",
+          "text": "expliquer....",
+          "possiblyTruncated": true
+        }
+      ]
+    },
+    {
+      "id": "V6-03",
+      "source_position": 24494,
+      "approximate_local_line": 449,
+      "target": "subsec:extraction",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 9:51 am",
+          "text": "??",
+          "possiblyTruncated": false
+        },
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 10:11 am",
+          "text": "la notation de \"status marking\" n'a pas été expliquée pour l'instant de façon explicite. Il faut y r...",
+          "possiblyTruncated": true
+        }
+      ]
+    },
+    {
+      "id": "V6-04",
+      "source_position": 25578,
+      "approximate_local_line": 474,
+      "target": "Related Work 2.3",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 9:51 am",
+          "text": "Gamma, O and mu have not been defined yet !",
+          "possiblyTruncated": false
+        }
+      ]
+    },
+    {
+      "id": "V6-05",
+      "source_position": 40925,
+      "approximate_local_line": 745,
+      "target": "tab:notation",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 11:07 am",
+          "text": "mettre les index comme présenté en section 3.4",
+          "possiblyTruncated": false
+        }
+      ]
+    },
+    {
+      "id": "V6-06",
+      "source_position": 42139,
+      "approximate_local_line": 764,
+      "target": "subsec:unit",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 10:24 am",
+          "text": "expliciter que \nestablished = ...\nhypothetical = ...\nfictional = ...",
+          "possiblyTruncated": true
+        },
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 10:57 am",
+          "text": "ce sont les labels de \"status marking\". Ils font donc partie du framework et il serait pertinent de ...",
+          "possiblyTruncated": true
+        }
+      ]
+    },
+    {
+      "id": "V6-07",
+      "source_position": 42181,
+      "approximate_local_line": 773,
+      "target": "subsec:unit",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 10:26 am",
+          "text": "steps of what? à expliciter",
+          "possiblyTruncated": false
+        }
+      ]
+    },
+    {
+      "id": "V6-08",
+      "source_position": 45514,
+      "approximate_local_line": 824,
+      "target": "subsec:verification",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 10:51 am",
+          "text": "expliciter l'exemple de claim UNKNOW -> \"“One possible\nreconstruction. . .\ntemple entrance\"",
+          "possiblyTruncated": false
+        }
+      ]
+    },
+    {
+      "id": "V6-09",
+      "source_position": 47425,
+      "approximate_local_line": 857,
+      "target": "subsec:rule",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 10:58 am",
+          "text": "donner un exemple (toujours avec la stele)",
+          "possiblyTruncated": false
+        }
+      ]
+    },
+    {
+      "id": "V6-10",
+      "source_position": 58353,
+      "approximate_local_line": 1084,
+      "target": "subsec:response",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 11:20 am",
+          "text": "est-ce que cette section a vraiment un interet dans le cadre de ce papier ?",
+          "possiblyTruncated": false
+        }
+      ]
+    },
+    {
+      "id": "V6-11",
+      "source_position": 58434,
+      "approximate_local_line": 1086,
+      "target": "subsec:response / subsec:global",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 11:18 am",
+          "text": "expliquer à quoi sert cette claim trace. Faire le lien avec 2.7 pour dire que la reponse d'un LLM est caracterisée par un verdict qui est complexe et ici nous proposon un outil pour aider à la formalisation de ce verdict (meme si comme on y arrive ne fait pas l'objet du framework)",
+          "possiblyTruncated": false
+        }
+      ]
+    },
+    {
+      "id": "V6-12",
+      "source_position": 59142,
+      "approximate_local_line": 1097,
+      "target": "subsec:response",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 11:08 am",
+          "text": "en maiuscule",
+          "possiblyTruncated": false
+        }
+      ]
+    },
+    {
+      "id": "V6-13",
+      "source_position": 59650,
+      "approximate_local_line": 1106,
+      "target": "subsec:response",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 11:08 am",
+          "text": "en maiuscule ?",
+          "possiblyTruncated": false
+        }
+      ]
+    },
+    {
+      "id": "V6-14",
+      "source_position": 61336,
+      "approximate_local_line": 1138,
+      "target": "subsec:style",
+      "messages": [
+        {
+          "author": "Martino Lovisetto",
+          "time": "29 September, 11:26 am",
+          "text": "est-ce que il est vraiment sage de mettre en evidence le pb de la creativité sans le traiter ? Surtout dans la section 3 qui est censée être le coeur de notre plus value scientifique. J'aurais tendence à en parler que dans la section 2 comme lacune actuelle de l'état de l'art et dans la reserach agenda à la fin.",
+          "possiblyTruncated": false
+        }
+      ]
+    }
+  ]
+}

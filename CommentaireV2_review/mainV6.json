@@ -1,0 +1,401 @@
+{
+  "generator": "overleaf-comments-bookmarklet v1.6",
+  "project": "CL soumission",
+  "url": "https://www.overleaf.com/project/6a4360d12626817eabd8de53",
+  "capturedAt": "2026-09-29T14:49:08.436Z",
+  "fileCount": 3,
+  "tabIteration": "full",
+  "threadCount": 102,
+  "messageCount": 118,
+  "trackedChangesNote": "swept top-to-bottom per file; for the authoritative set, Review > Accept in Overleaf so the text syncs via git",
+  "files": [
+    {
+      "file": "mainV6.tex",
+      "fileSource": "editor-tab",
+      "threadCount": 14,
+      "messageCount": 18,
+      "truncatedCount": 5,
+      "panelUnchanged": false,
+      "selectorHealth": {
+        "breadcrumbs": false,
+        "editorScroller": true,
+        "threadsParsed": 14,
+        "duplicatesDropped": 0,
+        "entriesUnparsed": 0
+      },
+      "threads": [
+        {
+          "dataPos": 22801,
+          "dataTop": 12521,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 9:50 am",
+              "text": "which contract?",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 10:09 am",
+              "text": "expliquer....",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 22849,
+          "dataTop": 12521,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 9:50 am",
+              "text": "which permission?",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 10:09 am",
+              "text": "expliquer....",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 24494,
+          "dataTop": 13461,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 9:51 am",
+              "text": "??",
+              "possiblyTruncated": false
+            },
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 10:11 am",
+              "text": "la notation de \"status marking\" n'a pas été expliquée pour l'instant de façon explicite. Il faut y r...",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 25578,
+          "dataTop": 14114,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 9:51 am",
+              "text": "Gamma, O and mu have not been defined yet !",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 40925,
+          "dataTop": 22310,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 11:07 am",
+              "text": "mettre les index comme présenté en section 3.4",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 42139,
+          "dataTop": 22906,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 10:24 am",
+              "text": "expliciter que \nestablished = ...\nhypothetical = ...\nfictional = ...",
+              "possiblyTruncated": true
+            },
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 10:57 am",
+              "text": "ce sont les labels de \"status marking\". Ils font donc partie du framework et il serait pertinent de ...",
+              "possiblyTruncated": true
+            }
+          ]
+        },
+        {
+          "dataPos": 42181,
+          "dataTop": 22944,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 10:26 am",
+              "text": "steps of what? à expliciter",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 45514,
+          "dataTop": 24844,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 10:51 am",
+              "text": "expliciter l'exemple de claim UNKNOW -> \"“One possible\nreconstruction. . .\ntemple entrance\"",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 47425,
+          "dataTop": 25919,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 10:58 am",
+              "text": "donner un exemple (toujours avec la stele)",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 58353,
+          "dataTop": 31908,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 11:20 am",
+              "text": "est-ce que cette section a vraiment un interet dans le cadre de ce papier ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 58434,
+          "dataTop": 31947,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 11:18 am",
+              "text": "expliquer à quoi sert cette claim trace. Faire le lien avec 2.7 pour dire que la reponse d'un LLM est caracterisée par un verdict qui est complexe et ici nous proposon un outil pour aider à la formalisation de ce verdict (meme si comme on y arrive ne fait pas l'objet du framework)",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 59142,
+          "dataTop": 32369,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 11:08 am",
+              "text": "en maiuscule",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 59650,
+          "dataTop": 32618,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 11:08 am",
+              "text": "en maiuscule ?",
+              "possiblyTruncated": false
+            }
+          ]
+        },
+        {
+          "dataPos": 61336,
+          "dataTop": 33655,
+          "messages": [
+            {
+              "author": "Martino Lovisetto",
+              "time": "29 September, 11:26 am",
+              "text": "est-ce que il est vraiment sage de mettre en evidence le pb de la creativité sans le traiter ? Surtout dans la section 3 qui est censée être le coeur de notre plus value scientifique. J'aurais tendence à en parler que dans la section 2 comme lacune actuelle de l'état de l'art et dans la reserach agenda à la fin.",
+              "possiblyTruncated": false
+            }
+          ]
+        }
+      ],
+      "trackedChanges": [
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The contract"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Permission"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "These studies support evaluating individual claims in context. Whether our"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "separation of claim content and observed status marking can be applied"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "reliably remains to be tested."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "A sufficiently detailed instruction-following rubric can represent $O$,"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\Gamma$, and $\\mu$ and produce the same claim labels. Our position is that"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "these conditions should be stated explicitly and checked alongside each"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "claim's evidence. To test whether a separate implementation helps, it must"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "be compared with methods that have access to the same evidence and task"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "conditions, measuring reliability, the ability to explain errors, and cost."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\begin{table}[!ht]"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\centering\\small"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\caption{Core notation. Required marking belongs to the task; observed marking belongs to the recovered claim.}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\label{tab:notation}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\begin{tabularx}{\\linewidth}{@{}lY@{}}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\toprule"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Symbol & Meaning\\\\\\midrule"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$p$ & Complete task context\\\\"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$O$ & Domain-specific checking system; for text, claim extraction, recovery, and verification\\\\"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\Gamma$ & Permission scope: what the response may add or change\\\\"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\mathrm{ES}$ & Evidence state relative to $O$\\\\"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\mu$ & Required status marking\\\\"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$q^*$ & Canonical claim content, preserving meaning and context\\\\"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "$\\widehat{m}$ & Observed status marking recovered from the response in context\\\\"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\bottomrule"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\end{tabularx}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\end{table}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\FloatBarrier"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "established, hypothetical, or fictional."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The first two steps belong to the oracle."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The museum excerpt, for example, is available but"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "does not settle the temple-entrance placement"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "Permission can also depend on the evidence state. Allowing an unknown"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "reconstruction does not automatically allow a contradiction of a known date."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "An alternate-history task could explicitly permit the changed date and"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "require fictional marking; the result would then be \\LD{}, while $\\mathrm{ES}$ would"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "remain \\textsc{contradicted}."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\paragraph{Claim trace and the open aggregation question}\\label{subsec:response}"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "The output is a \\emph{claim trace}: a record that li"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "established, possible, or fictional."
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "grounded (\\Grd), licensed divergence"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "(\\LD), or hallucination (\\Hall)"
+        },
+        {
+          "kind": "ol-cm-change ol-cm-change-c",
+          "text": "\\subsection{Style as a Robustness Question}\\label{subsec:style}"
+        }
+      ]
+    }
+
+  ]
+}

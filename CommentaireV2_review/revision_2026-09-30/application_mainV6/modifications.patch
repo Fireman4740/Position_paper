@@ -1,0 +1,328 @@
+--- avant/truth_contract_position_paper.tex
++++ apres/truth_contract_position_paper.tex
+@@ -428,8 +428,9 @@
+ These checking procedures can be used within a textual task oracle.
+ The evaluation protocol must still specify which sources count as reference
+ evidence and how to distinguish contradiction from missing evidence.
+-The contract then checks what the task permits. Permission does not change
+-whether the reference supports, contradicts, or leaves a claim unknown.
++The truth contract proposed here also records what the task permits the
++response to add or change beyond that evidence. This permission does not
++change whether the reference supports, contradicts, or leaves a claim unknown.
+ 
+ \subsection{Claim-Level Evaluation}\label{subsec:extraction}
+ 
+@@ -451,8 +452,10 @@
+ established fact; this use of cautious wording is called \emph{hedging}
+ \citep{hyland_hedging_1996}. In our museum example, ``One possible
+ reconstruction'' presents the temple-entrance placement as a suggestion,
+-not as an established historical fact. The oracle must retain this
+-difference when recording the observed status marking.
++not as an established historical fact. This is what we call the observed
++status marking: how the response presents a claim, for example as a fact,
++a hypothesis, or fiction. The oracle must retain this information when
++recovering the claim.
+ 
+ Missing claims or splitting the response incorrectly can also affect the
+ evaluation
+@@ -473,13 +476,14 @@
+ 
+ A permission describes what a response \emph{may} introduce, whereas an
+ obligation specifies what it \emph{must} do. A response need not produce
+-unknown content simply because $\Gamma$ allows it. If it does produce such
+-content, $\mu$ specifies how it must be presented. Evaluating each instruction
++unknown content simply because the task allows it. If it does produce such
++content, the required status marking specifies how it must be presented. Evaluating each instruction
+ separately can make these distinctions clearer than one overall response score
+ \citep{lee_mcjudgebench_2026}.
+ 
+-A sufficiently detailed instruction-following rubric can represent $O$,
+-$\Gamma$, and $\mu$ and produce the same claim labels. Our position is that
++A sufficiently detailed instruction-following rubric can represent the
++reference evidence and checking procedure, permission scope, and required
++status marking, and produce the same claim labels. Our position is that
+ these conditions should be stated explicitly and checked alongside each
+ claim's evidence. To test whether a separate implementation helps, it must
+ be compared with methods that have access to the same evidence and task
+@@ -736,10 +740,11 @@
+ usefulness, originality, reasoning, and safety require separate assessment.
+ The next step is to identify what each claim says and how it is presented.
+ 
+-For the following sections, $\mathrm{ES}$ denotes a claim's relation to the oracle:
++For a claim $i$, $\mathrm{ES}_i$ denotes its relation to the reference evidence:
+ \textsc{entailed}, \textsc{contradicted}, or \textsc{unknown}.
+-The observed status marking $\widehat{m}$ describes how the response actually
+-presents the claim; $\mu$ specifies how the task requires it to be presented.
++The observed status marking $\widehat{m}_i$ describes how the response actually
++presents that claim; $\mu$ specifies how the task requires it to be presented.
++The index $i$ identifies a claim; $O$, $\Gamma$, and $\mu$ apply to the task.
+ Table~\ref{tab:notation} summarizes the notation.
+ 
+ \begin{table}[!ht]
+@@ -752,10 +757,10 @@
+ $p$ & Complete task context\\
+ $O$ & Domain-specific checking system; for text, claim extraction, recovery, and verification\\
+ $\Gamma$ & Permission scope: what the response may add or change\\
+-$\mathrm{ES}$ & Evidence state relative to $O$\\
++$\mathrm{ES}_i$ & Evidence state of claim $i$ relative to $O$\\
+ $\mu$ & Required status marking\\
+-$q^*$ & Canonical claim content, preserving meaning and context\\
+-$\widehat{m}$ & Observed status marking recovered from the response in context\\
++$q_i^*$ & Canonical content of claim $i$, preserving meaning and context\\
++$\widehat{m}_i$ & Observed status marking of claim $i$, recovered from the response in context\\
+ \bottomrule
+ \end{tabularx}
+ \end{table}
+@@ -763,14 +768,26 @@
+ 
+ \subsection{From Response Text to Claims}\label{subsec:unit}
+ 
+-A response of a LLM can mix facts, suggestions, and storytelling. We therefore
++An LLM response can mix facts, suggestions, and storytelling. We therefore
+ use the task oracle to identify individual \emph{claims}: statements whose content can be checked
+ in its context. Evaluating separate pieces of information is also the
+ approach used by FActScore, which breaks a response into atomic facts before
+-checking their support \citep{min_factscore_2023}. Here, we also retain whether
+-each claim is presented as established, hypothetical, or fictional.
+-
+-The first two steps belong to the oracle. \emph{Claim extraction} finds the relevant words
++checking their support \citep{min_factscore_2023}. Here, we also record how
++each claim is presented. We use the following labels for observed status marking:
++\begin{itemize}
++\item \textsc{established}: the response presents the claim as a fact;
++\item \textsc{hypothetical}: the response presents the claim as a possibility,
++for example a proposed reconstruction;
++\item \textsc{fictional}: the response presents the claim as part of an
++invented story.
++\end{itemize}
++These labels describe how the response presents the claim. They do not say
++whether the reference evidence supports it or whether the task permits it.
++The required status marking specifies how the claim must be presented;
++the observed status marking records how it is actually presented.
++
++To recover this information, the oracle starts with claim extraction and
++claim recovery. \emph{Claim extraction} finds the relevant words
+ in the response. \emph{Claim recovery} identifies what those words mean in
+ context. For example, in Figure~\ref{fig:claim-label-annotation}, ``The stone
+ was found near Rosetta in 1799'' refers to the Rosetta Stone and specifies
+@@ -783,9 +800,9 @@
+ ($\widehat{m}$). Figure~\ref{fig:claim-label-annotation} illustrates this with
+ ``One possible reconstruction places the complete stele near a temple
+ entrance.'' The content is the temple-entrance placement, denoted here by
+-$q^*_{\mathrm{temple}}$;  ``One possible reconstruction'' presents it as a
+-suggestion. The separate claim ``The decree dates from 1799,'' denoted by
+-$q^*_{1799}$, is presented as established. Identifying these differences
++$q^*_{\mathrm{temple}}$; ``One possible reconstruction'' gives it the status
++marking \textsc{hypothetical}. The separate claim ``The decree dates from
++1799,'' denoted by $q^*_{1799}$, has the status marking \textsc{established}. Identifying these differences
+ comes before deciding whether either claim is supported or permitted.
+ 
+ This representation must preserve the original meaning, including who is
+@@ -803,7 +820,8 @@
+ or proposes it.
+ 
+ Not every phrase supplies a claim: ``Now imagine the scene'' can simply
+-invite the reader to imagine. In addition to not taking into account passages that are not claims, the evaluator must avoid missing claims,
++invite the reader to imagine. The evaluator excludes such passages and must
++avoid missing claims,
+ adding content absent from the response, or merging statements that need
+ separate judgments. Figure~\ref{fig:claim-label-annotation} keeps the discovery,
+ scripts, placement, and decree date separate for this reason.
+@@ -817,16 +835,20 @@
+ it checks each $q^*$ against its reference evidence. Successful verification
+ returns one of the following three evidence states:
+ \begin{itemize}
+-\item \textsc{entailed}: the oracle states the claim;
+-\item \textsc{contradicted}: the oracle states that the claim is incompatible with its evidence;
+-\item \textsc{unknown}: the oracle neither states nor contradicts the claim.
++\item \textsc{entailed}: the reference evidence supports the claim;
++\item \textsc{contradicted}: the reference evidence contradicts the claim;
++\item \textsc{unknown}: the reference evidence neither supports nor contradicts the claim.
+ \end{itemize}
+ An \textsc{unknown} result means that the specified evidence neither supports
+-nor contradicts the claim. The museum excerpt, for example, is available but
+-does not settle the temple-entrance placement. This differs from a failed
+-evaluation: if a required source is inaccessible, a source conflict cannot
+-be resolved, or the claim remains unclear. The evaluator records the failure
+-and leaves the affected claim unlabeled. Appendix~\ref{app:diagnostics}
++nor contradicts the claim. Consider ``One possible reconstruction places
++the complete stele near a temple entrance.'' The museum excerpt says that
++the stele was probably displayed in a temple, but does not specify its
++placement near an entrance. That placement is therefore \textsc{unknown}
++relative to the excerpt, before checking whether the task permits it.
++
++This differs from a failed evaluation. If a required source is inaccessible,
++a source conflict cannot be resolved, or the claim remains unclear, the
++evaluator records the failure and leaves the affected claim unlabeled. Appendix~\ref{app:diagnostics}
+ describes these failures.
+ 
+ The oracle therefore returns each recovered claim with its content $q^*$,
+@@ -850,7 +872,7 @@
+ Figure~\ref{fig:claim-label-annotation} illustrates the ordinary museum task.
+ The temple-entrance placement is \textsc{unknown}, but the task permits this
+ reconstruction. With ``One possible reconstruction,'' it receives \LD{};
+-presented as established, it would receive \Hall{} for a marking failure.
++with status marking \textsc{established}, it would receive \Hall{} for a marking failure.
+ The claim that the decree dates from 1799 contradicts the source and is not
+ permitted, so it receives \Hall{}. Adding ``possibly'' would not authorize it.
+ 
+@@ -897,9 +919,9 @@
+ Evidence state & Additional condition & Claim Label & Reason code\\\midrule
+ \textsc{entailed} & A requirement for invented content explicitly excludes this fact & \Hall & \textsc{out-of-scope}\\
+ \textsc{entailed} & No such exclusion applies & \Grd & ---\\
+-Unknown or contradicted & $(q^*,\mathrm{ES})\notin\Gamma$ & \Hall & \textsc{out-of-scope}\\
+-Unknown or contradicted & $(q^*,\mathrm{ES})\in\Gamma$; $\widehat{m}$ fails $\mu$ & \Hall & \textsc{marking-failure}\\
+-Unknown or contradicted & $(q^*,\mathrm{ES})\in\Gamma$; $\widehat{m}$ satisfies $\mu$ & \LD & ---\\
++\textsc{unknown} or \textsc{contradicted} & $(q^*,\mathrm{ES})\notin\Gamma$ & \Hall & \textsc{out-of-scope}\\
++\textsc{unknown} or \textsc{contradicted} & $(q^*,\mathrm{ES})\in\Gamma$; $\widehat{m}$ fails $\mu$ & \Hall & \textsc{marking-failure}\\
++\textsc{unknown} or \textsc{contradicted} & $(q^*,\mathrm{ES})\in\Gamma$; $\widehat{m}$ satisfies $\mu$ & \LD & ---\\
+ \bottomrule
+ \end{tabularx}
+ \end{table}
+@@ -1023,13 +1045,13 @@
+   \node[lab] at (\xlabel,-1.55)
+     {canonical claims};
+   \node[claim] (c1) at (\xone,-1.55)
+-    {$q^*_1$: found near Rosetta\\in 1799\\$\widehat{m}_1$: asserted};
++    {$q^*_1$: found near Rosetta\\in 1799\\$\widehat{m}_1$: \textsc{established}};
+   \node[claim] (c2) at (\xtwo,-1.55)
+-    {$q^*_2$: decree in\\hieroglyphic, Demotic,\\and Greek\\$\widehat{m}_2$: asserted};
++    {$q^*_2$: decree in\\hieroglyphic, Demotic,\\and Greek\\$\widehat{m}_2$: \textsc{established}};
+   \node[claim] (c3) at (\xthree,-1.55)
+-    {$q^*_3$: complete stele\\stood near a temple\\entrance\\$\widehat{m}_3$: possible};
++    {$q^*_3$: complete stele\\stood near a temple\\entrance\\$\widehat{m}_3$: \textsc{hypothetical}};
+   \node[claim] (c4) at (\xfour,-1.55)
+-    {$q^*_4$: decree dates\\from 1799\\$\widehat{m}_4$: asserted};
++    {$q^*_4$: decree dates\\from 1799\\$\widehat{m}_4$: \textsc{established}};
+   \foreach \sp/\cl in {s1/c1,s2/c2,s3/c3,s4/c4}
+     \draw[flow] (\sp.south) -- (\cl.north);
+ 
+@@ -1081,13 +1103,16 @@
+ \FloatBarrier
+ 
+ \begin{samepage}
+-\paragraph{Claim trace and the open aggregation question}\label{subsec:response}
+-
+-The output is a \emph{claim trace}: a record that links each claim's
+-label to the words in the response and the checks that led to that label.
+-It brings together the information introduced in
+-Sections~\ref{subsec:unit}--\ref{subsec:rule}. For each recovered claim $i$,
+-the trace contains eight elements:
++\paragraph{Claim trace}\label{subsec:response}
++
++A response can contain claims with different labels and reasons for failure.
++The \emph{claim trace} records these decisions separately, linking each label
++to the words in the response and the checks that led to it. It helps explain
++which claims are contradicted, outside the permission scope, or not marked
++as required. As discussed in Section~\ref{subsec:global}, judging the whole
++response also requires checks of reasoning, consistency, and completeness.
++The trace provides the individual claim decisions for that assessment.
++For each recovered claim $i$, it contains eight elements:
+ \begin{itemize}
+ \item $s_i$, the \emph{response span}: the words in the response from which
+ the claim was recovered.
+@@ -1095,7 +1120,9 @@
+ context, including the entities, dates, and qualifications needed to
+ preserve the claim's meaning.
+ \item $\widehat{m}_i$, the \emph{observed status marking}: how the response
+-presents the claim, for example as established, possible, or fictional.
++presents the claim, using the labels \textsc{established},
++\textsc{hypothetical}, or \textsc{fictional} introduced in
++Section~\ref{subsec:unit}.
+ \item $\mathrm{ES}_i$, the \emph{evidence state}: whether the task oracle
+ finds the claim \textsc{entailed}, \textsc{contradicted}, or \textsc{unknown}
+ relative to its reference evidence.
+@@ -1103,12 +1130,13 @@
+ by the permission scope $\Gamma$.
+ \item $b_i$, the \emph{marking check}: whether the observed status marking
+ $\widehat{m}_i$ satisfies the required status marking $\mu$.
+-\item $\ell_i$, the \emph{claim label}: grounded (\Grd), licensed divergence
+-(\LD), or hallucination (\Hall), as assigned by the decision rule.
++\item $\ell_i$, the \emph{claim label}: \textsc{grounded} (\Grd),
++\textsc{licensed divergence} (\LD), or \textsc{hallucination} (\Hall),
++as assigned by the decision rule.
+ \item $r_i$, the \emph{reason code}: the reason for a violation, if one is
+ identified, such as \textsc{out-of-scope} or \textsc{marking-failure}.
+ \end{itemize}
+-We write this claim trace record, $$, as
++We write the record for claim $i$ as
+ \begin{equation}
+ \tau_i=(s_i,q_i^*,\widehat{m}_i,\mathrm{ES}_i,a_i,b_i,\ell_i,r_i).
+ \label{eq:claim-trace}
+@@ -1121,7 +1149,7 @@
+ 
+ For the third claim in Figure~\ref{fig:claim-label-annotation}, $s_3$ is the
+ temple-entrance sentence, $q_3^*$ is the proposed placement,
+-$\widehat{m}_3$ is possible, and $\mathrm{ES}_3$ is \textsc{unknown}.
++$\widehat{m}_3$ is \textsc{hypothetical}, and $\mathrm{ES}_3$ is \textsc{unknown}.
+ The permission and marking checks both pass, giving $\ell_3=\LD$ without
+ a violation reason. The figure encloses the trace for all four claims.
+ The trace must also make omissions and failed processing visible.
+@@ -1130,43 +1158,33 @@
+ 
+ How to combine these decisions into a verdict on the whole response remains
+ open. We propose no default rule, and the individual decisions must remain
+-available. Style, creative value, global reasoning, consistency, completeness,
+-relevance, and response-level limits require separate checks. The research
+-agenda examines these questions; Appendix~\ref{app:diagnostics} describes
+-possible reporting policies.
+-
+-\subsection{Style as a Robustness Question}\label{subsec:style}
+-
+-A response can express the same claim in plain prose or in an engaging
+-museum voice. If its content and its presentation as fact, hypothesis, or
+-fiction remain the same, it should receive the same label under the same
+-contract. This gives us a way to test whether an evaluator is robust to style.
+-
+-Style describes the wording and voice of the response. Status marking tells
+-the reader whether content is presented as established, hypothetical, or
+-fictional. The same words may contribute to both, so a change in style must
+-be checked for changes in meaning or status. A metaphor alone neither
+-authorizes a claim nor makes it false.
+-
+-The style robustness test compares different wordings while keeping the contract, claim
+-content, and observed status marking fixed. In notation, $O$, $\Gamma$,
+-$\mu$, and each pair $(q^*,\widehat{m})$ stay the same. The expected labels
+-are therefore unchanged. Whether an evaluator can recover the same claims
+-and statuses across these wordings is an empirical question. The equivalence
+-of the versions must be checked independently: a rewrite that changes what
+-is claimed or how it is presented is not a test of style alone.
++available. Priority~4 in Section~\ref{sec:agenda} examines how to combine
++them with checks of the whole response; Appendix~\ref{app:diagnostics}
++describes possible reporting policies.
++
++\subsection{Style and Status Marking}\label{subsec:style}
++
++Style describes the wording and voice of the response. Status marking
++records whether a claim is presented as \textsc{established},
++\textsc{hypothetical}, or \textsc{fictional}. The same words may contribute
++to both, so a change in style must be checked for changes in claim content
++or status marking. If both remain the same, the decision rule gives the same
++label under the same contract. A metaphor alone neither authorizes a claim
++nor makes it false.
+ 
+ A separate question is whether the response uses the style the task asks
+ for. In Figure~\ref{fig:claim-label-annotation}, the request for an engaging
+-museum voice is compared with the voice actually realized in the response.
+-That comparison does not add a contract field or change a claim label. Requested and observed style are recorded separately. The request can
+-help interpret the response, but it cannot establish what the response
+-actually expresses. We use \emph{style marking} to describe how far its
+-wording departs from plain explanatory prose, for example through metaphor
+-or a sustained authorial voice. Example~E illustrates the separation between
+-requested style and claim labels. Priority~3 proposes tests of robustness
+-to changed wording and a provisional style scale; Appendix~\ref{app:diagnostics}
+-gives the corresponding invariance test.
++museum voice is compared with the voice actually used in the response.
++Requested and observed style are recorded separately; this comparison does
++not add a contract field or change a claim label. We use \emph{style marking}
++to describe how far the wording departs from plain explanatory prose, for
++example through metaphor or a sustained authorial voice. Example~E shows
++that changing only the requested style leaves the claim labels unchanged.
++
++Whether an evaluator can recover the same claims and status marking across
++different wordings remains to be tested. Priority~3 in
++Section~\ref{sec:agenda} describes these comparisons;
++Appendix~\ref{app:diagnostics} gives the corresponding invariance test.
+ 
+ \section{Resource Mapping}\label{sec:methodology}
+ 
