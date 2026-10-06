@@ -1,41 +1,36 @@
-% Constructed comparisons: response, claim content, and observed marking stay fixed.
+% Claim trace for the four constructed examples (A--D).
+% Within each pair, the response, claim, and observed marking stay fixed; one contract field changes.
 \begingroup
 \footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.0}
-\begin{tabularx}{\linewidth}{@{}P{.35\linewidth}YY@{}}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.12}
+\newcommand{\chgcell}[1]{\cellcolor{clrB!12}#1}
+\newcommand{\pass}{\textcolor{clrLD}{\ensuremath{\checkmark}}}
+\newcommand{\fail}{\textcolor{clrH}{\ensuremath{\times}}}
+\newcommand{\notev}{---}
+\newcommand{\exrow}[3]{\multicolumn{8}{@{}p{\dimexpr\linewidth-8pt\relax}@{}}{\textbf{#1} Response: #2 \emph{(presented as #3)}}\\[1pt]}
+\newcommand{\lesson}[1]{\multicolumn{8}{@{}p{\dimexpr\linewidth-8pt\relax}@{}}{\scriptsize\itshape $\Rightarrow$ #1}\\\addlinespace[4pt]}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}p{.18\linewidth}YY>{\raggedright\arraybackslash}p{.09\linewidth}>{\centering\arraybackslash}p{.055\linewidth}>{\centering\arraybackslash}p{.055\linewidth}>{\raggedright\arraybackslash}p{.10\linewidth}@{}}
 \toprule
-\textbf{Fixed response and conditions} & \textbf{Setting 1} & \textbf{Setting 2}\\\midrule
-\multicolumn{3}{@{}l}{\textbf{A. Changed field: reference evidence used by $O$}}\\[2pt]
-``The complete stele stood near a temple entrance.''\newline
-{\scriptsize Fixed: $\Gamma=\varnothing$; $\mu$ requires no extra marking for supported facts.} &
-{\color{clrB}\textbf{$O_1$: check the museum fragment only.}}\newline
-\textsc{unknown} $\rightarrow$ {\color{clrH}\textbf{H}}\newline
-(out of scope) &
-{\color{clrB}\textbf{$O_2$: check the fragment plus an explicit supporting sentence.}}\newline
-Added test evidence: the placement sentence on the left.\newline
-\textsc{entailed} $\rightarrow$ \textbf{G}\\\addlinespace[3pt]\midrule
-\multicolumn{3}{@{}l}{\textbf{B. Changed field: permission scope $\Gamma$}}\\[2pt]
-``One possible reconstruction places the complete stele near a temple entrance.''\newline
-{\scriptsize Fixed: $O$ = fragment; $\mu$ requires a conjecture cue. Evidence: unknown.} &
-{\color{clrB}\textbf{$\Gamma_1=\varnothing$: supported information only.}}\newline
-{\color{clrH}\textbf{H}} (out of scope) &
-{\color{clrB}\textbf{$\Gamma_2$: plausible reconstructions of the original placement are allowed.}}\newline
-{\color{clrLD}\textbf{LD}}\\\addlinespace[3pt]\midrule
-\multicolumn{3}{@{}l}{\textbf{C. Changed field: required status marking $\mu$}}\\[2pt]
-Same response as B, with the cue ``One possible reconstruction.''\newline
-{\scriptsize Fixed: $O$ = fragment; $\Gamma$ allows this reconstruction. Evidence: unknown.} &
-{\color{clrB}\textbf{$\mu_1$: the heading ``Hypothesis'' is required.}}\newline
-{\color{clrH}\textbf{H}} (marking failure) &
-{\color{clrB}\textbf{$\mu_2$: an explicit conjecture cue in the sentence is sufficient.}}\newline
-{\color{clrLD}\textbf{LD}}\\\addlinespace[3pt]\midrule
-\multicolumn{3}{@{}l}{\textbf{D. Changed field: topic allowed by $\Gamma$}}\\[2pt]
-``One possibility is that the stone will be returned to Egypt next year.''\newline
-{\scriptsize Fixed: $O$ = fragment; $\mu$ requires possibility marking. Evidence: unknown.} &
-{\color{clrB}\textbf{$\Gamma_1$: historical reconstructions only.}}\newline
-{\color{clrH}\textbf{H}} (out of scope) &
-{\color{clrB}\textbf{$\Gamma_2$: hypothetical future locations are allowed.}}\newline
-{\color{clrLD}\textbf{LD}}\\
+& \multicolumn{3}{c}{\textbf{Truth contract}} & & \multicolumn{2}{c}{\textbf{Checks}} & \\
+\cmidrule(lr){2-4}\cmidrule(lr){6-7}
+& \textbf{Reference ($O$)} & \textbf{Permission scope ($\Gamma$)} & \textbf{Required marking ($\mu$)} & \textbf{Evidence state} & \textbf{Perm.} & \textbf{Mark.} & \textbf{Label}\\\midrule
+\exrow{A. Change the reference.}{``The complete stele stood near a temple entrance.''}{a fact}
+A1 & \chgcell{Museum fragment (placement not stated)} & Supported facts only & None for supported facts & unknown & \fail & \notev & \textcolor{clrH}{\textbf{H}} out of scope\\
+A2 & \chgcell{Fragment + a sentence stating the placement} & Supported facts only & None for supported facts & entailed & \notev & \notev & \textbf{G}\\
+\lesson{The same claim is unknown or entailed depending on the reference.}
+\exrow{B. Change what is permitted.}{``One possible reconstruction places the complete stele near a temple entrance.''}{a possibility}
+B1 & Museum fragment & \chgcell{Supported facts only} & Mark reconstructions as possibilities & unknown & \fail & \notev & \textcolor{clrH}{\textbf{H}} out of scope\\
+B2 & Museum fragment & \chgcell{Plausible reconstructions of the placement} & Mark reconstructions as possibilities & unknown & \pass & \pass & \textcolor{clrLD}{\textbf{LD}}\\
+\lesson{With the same marking, the label depends on what the task permits.}
+\exrow{C. Change the required marking.}{same as B, with no heading}{a possibility within the sentence}
+C1 & Museum fragment & Plausible reconstructions of the placement & \chgcell{A ``Hypothesis'' heading} & unknown & \pass & \fail & \textcolor{clrH}{\textbf{H}} marking failure\\
+C2 & Museum fragment & Plausible reconstructions of the placement & \chgcell{A conjecture cue in the sentence} & unknown & \pass & \pass & \textcolor{clrLD}{\textbf{LD}}\\
+\lesson{A permitted claim still fails if its presentation does not meet the requirement.}
+\exrow{D. Change the permitted topic.}{``One possibility is that the stone will be returned to Egypt next year.''}{a possibility}
+D1 & Museum fragment & \chgcell{Historical reconstructions only} & Mark scenarios as possibilities & unknown & \fail & \notev & \textcolor{clrH}{\textbf{H}} out of scope\\
+D2 & Museum fragment & \chgcell{Hypothetical future locations} & Mark scenarios as possibilities & unknown & \pass & \pass & \textcolor{clrLD}{\textbf{LD}}\\
+\multicolumn{8}{@{}p{\dimexpr\linewidth-8pt\relax}@{}}{\scriptsize\itshape $\Rightarrow$ Correct marking is not enough when the topic is outside the permission scope.}\\
 \bottomrule
 \end{tabularx}
 \endgroup

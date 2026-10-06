@@ -18,7 +18,7 @@
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{graphicx}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc,fit}
 \usepackage{placeins}
@@ -1291,40 +1291,54 @@ hallucination otherwise.
 
 \section{Resource Mapping}\label{sec:methodology}
 
-Before applying the truth contract, we need to know whether existing
-evaluations already apply it. We therefore ask one question: \emph{does an existing evaluation
-resource state how the reference evidence, the permission scope, and the
-required status marking together determine the label of the same claim?}
+This section analyzes how existing evaluations handle the three fields of
+the truth contract: the reference evidence, the permission scope, and the
+required status marking. The goal is to identify what current evaluations
+can and cannot assess, and therefore which needs the framework of
+Section~\ref{sec:framework} addresses.
 
-This question matters only when a task can permit unknown or contradicted
-claims. If the permission scope is empty, every such claim is a
-hallucination, whatever its marking. In the museum task, the placement of
-the complete stele near a temple entrance is unknown in the reference. To
-evaluate it, a protocol must record this evidence state, check that the task
-allows a plausible reconstruction, and check that the response presents the
-placement as a possibility.
+We analyze 53 \emph{evaluation resources}. An evaluation resource is any
+published work that specifies how model outputs are judged: a benchmark, a
+dataset together with its evaluation protocol, a task suite, a metric, or
+an evaluation study. A dataset alone is not enough, because it supplies
+inputs and targets but does not decide how outputs are judged. For
+CNN/DailyMail, for example, the corpus provides news articles, and the QAGS
+metric defines the consistency check \citep{hermann_teaching_2015,
+wang_asking_2020}. For each resource, we therefore analyze its
+\emph{protocol}: the reference it uses, the content its task allows, the
+presentation it requires, and how its scoring checks these points.
 
-We compare 53 evaluation resources and find that none applies this
-decision. Each field is checked by some resources, and several resources
-check two of them. However, the fields are checked in different kinds of
-tasks. Section~\ref{subsec:selection} explains how we selected the
-resources, Section~\ref{subsec:criteria} how we read each one,
-Section~\ref{subsec:families} how we group them into four families,
-Section~\ref{sec:mapping} what each family checks, and
+The analysis focuses on what happens when a task can permit unknown or
+contradicted claims, because this is where the truth contract changes the
+evaluation. If the permission scope is empty, every such claim is a
+hallucination, whatever its marking. In the museum task, evaluating the
+reconstructed placement of the stele requires three steps for the same
+claim: recording that the placement is unknown in the reference, checking
+that the task allows a plausible reconstruction, and checking that the
+response presents the placement as a possibility.
+
+We analyze 53 evaluation resources. Each field of the truth contract is
+checked by some of them, and several resources check two fields together.
+The fields, however, are checked in different kinds of tasks, and no
+resource combines all three for the same claim. This gap is what the truth
+contract addresses. Section~\ref{subsec:selection} explains how we selected
+the resources, Section~\ref{subsec:criteria} how we read each protocol,
+Section~\ref{subsec:families} how we group the resources into four
+families, Section~\ref{sec:mapping} what each family checks, and
 Section~\ref{subsec:gap} what is missing.
 
 \subsection{Selection}\label{subsec:selection}
 
-The selection follows from this question. To see whether a protocol
-combines the three fields, we need tasks where nothing beyond the reference
-is allowed, tasks that request new content, and the resources closest to
-each field. We started from the datasets and benchmarks discussed in the
-surveys cited in this paper \citep{ji_survey_2023,huang_survey_2025,
-jiang_survey_2024,franceschelli_creativity_2024}. We then added resources
-for task categories that these surveys cover less: attribution and
-citation, abstention and uncertainty expression, false premises and
-counterfactual reasoning, role-playing, and research proposals. Every
-retained resource meets three conditions:
+The analysis must cover the full range of permission scopes: tasks where
+nothing beyond the reference is allowed, tasks that regulate how to answer,
+and tasks that request new content. We started from the datasets and
+benchmarks discussed in the surveys cited in this paper
+\citep{ji_survey_2023,huang_survey_2025,jiang_survey_2024,
+franceschelli_creativity_2024}. We then added resources for task
+categories that these surveys cover less: attribution and citation,
+abstention and uncertainty expression, false premises and counterfactual
+reasoning, role-playing, and research proposals. Every retained resource
+meets three conditions:
 \begin{itemize}
 \item it defines how an answer, a text, or a claim is judged: against
 reference evidence, task instructions, or human ratings;
@@ -1332,15 +1346,9 @@ reference evidence, task instructions, or human ratings;
 prompts, rubrics, or annotation guidelines when they exist;
 \item it informs at least one field of the truth contract.
 \end{itemize}
-
-We compare evaluation protocols, not datasets. A dataset provides inputs
-and targets; a protocol decides how outputs are judged. For CNN/DailyMail,
-for example, the corpus provides news articles, and the QAGS metric defines
-the consistency check \citep{hermann_teaching_2015,wang_asking_2020}.
-The inventory therefore includes benchmarks, task suites, metrics, and
-evaluation studies. For each one, we read the primary paper and its
-published prompts, rubrics, or annotation guidelines. The aim is to cover
-the range of permission scopes and the closest precedents, not to list
+For each resource, we read the primary paper and its published prompts,
+rubrics, or annotation guidelines. The aim is to cover the range of
+permission scopes and the closest precedents for each field, not to list
 every resource in the literature.
 
 \subsection{Reading Each Protocol}\label{subsec:criteria}
@@ -1720,22 +1728,21 @@ outside a historical-reconstruction task but inside a task allowing
 hypothetical future locations.
 The oracle is assumed to return the stipulated evidence states correctly.
 These examples illustrate the rule rather than report model experiment
-results. Table~\ref{tab:example-settings} presents the two settings and
+results. Figure~\ref{fig:example-settings} presents the two settings and
 predicted labels for each comparison.
 
-\begin{table}[!ht]
+\begin{figure}[!ht]
 \centering
-\input{figures/same_response_contract_examples.tex}
-\caption{\textbf{Four examples with a fixed response in each pair.}
-The left column gives the unchanged response and contract conditions.
-Blue text specifies the requirement in each setting; the heading names
-what changes. Only $O$, $\Gamma$, or $\mu$ changes in A--D.
-G = grounded; H = hallucination;
-LD = licensed divergence. Evidence and labels are stipulated for these
-constructed examples. A's extended reference is a test input, not a
-historical assertion. B--D keep the claim's evidence state unknown.}
-\label{tab:example-settings}
-\end{table}
+\input{figures/contract_interventions.tex}
+\caption{\textbf{Four examples with a fixed response.} Each panel keeps the
+response, its claim, and its observed marking fixed, and changes one field
+of the truth contract. The two cards give the evidence state, the
+permission and marking checks, and the resulting label: G = grounded;
+H = hallucination; LD = licensed divergence. Evidence states and labels are
+stipulated for these constructed examples; the sentence added in $O_2$ is a
+test input, not a historical assertion.}
+\label{fig:example-settings}
+\end{figure}
 \FloatBarrier
 
 \paragraph{Example A: changing the task oracle}

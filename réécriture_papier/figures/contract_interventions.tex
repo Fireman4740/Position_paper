@@ -1,0 +1,56 @@
+% Four controlled interventions on the truth contract (Examples A--D).
+\begingroup
+\sffamily\hyphenpenalty=10000\exhyphenpenalty=10000
+\newcommand{\PW}{6.65}   % panel width
+\newcommand{\CW}{2.87}   % card width
+\newcommand{\HH}{0.80}   % card header height
+\newcommand{\BH}{1.92}   % card body height
+\newcommand{\lab}[2]{\tikz[baseline=-0.65ex]\node[circle,fill=#1,text=white,font=\sffamily\bfseries\footnotesize,minimum size=5.4mm,inner sep=0pt]{#2};}
+\newcommand{\why}[1]{\tikz[baseline=-0.65ex]\node[draw=clrH!55,fill=clrH!8,text=clrH,font=\sffamily\bfseries\tiny,rounded corners=1.5pt,inner xsep=2.5pt,inner ysep=2pt]{#1};}
+\newcommand{\ok}{\textcolor{clrLD}{\textbf{pass}}}
+\newcommand{\ko}{\textcolor{clrH}{\textbf{fail}}}
+% \card{x}{y}{color}{header}{body}{bottom}
+\newcommand{\card}[6]{%
+  \begin{scope}
+    \clip[rounded corners=3pt] (#1,#2) rectangle ++(\CW,-\HH-\BH);
+    \fill[#3!13] (#1,#2) rectangle ++(\CW,-\HH);
+  \end{scope}
+  \draw[#3!65,rounded corners=3pt,line width=0.6pt] (#1,#2) rectangle ++(\CW,-\HH-\BH);
+  \node[text width=\CW cm-6pt,align=center,font=\sffamily\bfseries\scriptsize,inner sep=0pt]
+    at ($(#1,#2)+(0.5*\CW,-0.5*\HH)$) {#4};
+  \node[anchor=north west,text width=\CW cm-8pt,align=left,font=\sffamily\scriptsize,inner sep=0pt]
+    at ($(#1,#2)+(0.14,-\HH-0.14)$) {#5};
+  \node[anchor=south,inner sep=0pt] at ($(#1,#2)+(0.5*\CW,-\HH-\BH+0.12)$) {#6};
+}
+% \panel{x}{y}{title}{response}{takeaway}
+\newcommand{\panel}[5]{%
+  \draw[gray!45,fill=gray!3,rounded corners=4pt,line width=0.6pt] (#1,#2) rectangle ++(\PW,-5.38);
+  \node[anchor=north west,font=\sffamily\bfseries\small,inner sep=0pt] at ($(#1,#2)+(0.18,-0.14)$) {#3};
+  \node[anchor=north west,fill=clrB!7,rounded corners=3pt,text width=\PW cm-0.36cm-8pt,
+        font=\sffamily\scriptsize,inner sep=4pt,minimum height=0.95cm,align=left]
+    at ($(#1,#2)+(0.18,-0.55)$) {\textbf{Response (fixed):}\\#4};
+  \node[fill=gray!12,rounded corners=3pt,text width=\PW cm-0.36cm-8pt,align=center,
+        font=\sffamily\bfseries\scriptsize,inner sep=4pt]
+    at ($(#1,#2)+(0.5*\PW,-4.83)$) {#5};
+  \draw[-{Stealth[length=5pt,width=6pt]},gray!65,line width=2.2pt]
+    ($(#1,#2)+(0.18+\CW+0.08,-3.2)$) -- ++(0.39,0);
+}
+\begin{tikzpicture}[x=1cm,y=1cm]
+% ---------- A ----------
+\panel{0}{0}{A.\ Change the reference ($O$)}{``The complete stele stood near a temple entrance.''}{Changing $O$ changes the evidence state.}
+\card{0.18}{-1.7}{clrH}{$O_1$: museum fragment}{Evidence: \textsc{unknown}\\Permission: \ko}{\lab{clrH}{H}\,\why{OUT-OF-SCOPE}}
+\card{3.6}{-1.7}{clrB}{$O_2$: fragment + placement sentence}{Evidence: \textsc{entailed}\\Checks: not needed}{\lab{clrB}{G}}
+% ---------- B ----------
+\panel{6.85}{0}{B.\ Change the permission scope ($\Gamma$)}{``One possible reconstruction places the complete stele near a temple entrance.''}{With the same marking, the label depends on what the task permits.}
+\card{7.03}{-1.7}{clrH}{$\Gamma_1$: supported facts only}{Evidence: \textsc{unknown}\\Permission: \ko}{\lab{clrH}{H}\,\why{OUT-OF-SCOPE}}
+\card{10.45}{-1.7}{clrLD}{$\Gamma_2$: reconstructions allowed}{Evidence: \textsc{unknown}\\Permission: \ok\\Marking: \ok}{\lab{clrLD}{LD}}
+% ---------- C ----------
+\panel{0}{-5.58}{C.\ Change the required marking ($\mu$)}{``One possible reconstruction places the complete stele near a temple entrance.'' (no heading)}{A permitted claim still fails if its presentation does not meet $\mu$.}
+\card{0.18}{-7.28}{clrH}{$\mu_1$: a ``Hypothesis'' heading is required}{Evidence: \textsc{unknown}\\Permission: \ok\\Marking: \ko}{\lab{clrH}{H}\,\why{MARKING-FAILURE}}
+\card{3.6}{-7.28}{clrLD}{$\mu_2$: a cue in the sentence is enough}{Evidence: \textsc{unknown}\\Permission: \ok\\Marking: \ok}{\lab{clrLD}{LD}}
+% ---------- D ----------
+\panel{6.85}{-5.58}{D.\ Change the permitted topic ($\Gamma$)}{``One possibility is that the stone will be returned to Egypt next year.''}{Correct marking is not enough when the topic is outside $\Gamma$.}
+\card{7.03}{-7.28}{clrH}{$\Gamma_1$: historical reconstructions only}{Evidence: \textsc{unknown}\\Permission: \ko}{\lab{clrH}{H}\,\why{OUT-OF-SCOPE}}
+\card{10.45}{-7.28}{clrLD}{$\Gamma_2$: future locations allowed}{Evidence: \textsc{unknown}\\Permission: \ok\\Marking: \ok}{\lab{clrLD}{LD}}
+\end{tikzpicture}
+\endgroup
