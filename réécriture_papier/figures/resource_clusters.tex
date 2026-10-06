@@ -2,68 +2,91 @@
 \begin{tikzpicture}[
     x=1cm,y=1cm,font=\sffamily\small,
     cluster/.style={rounded corners=10pt,line width=0.9pt,
-        text width=4.30cm,minimum height=2.40cm,
+        text width=4.30cm,minimum height=2.70cm,
         align=flush left,inner sep=10pt},
     link/.style={densely dotted,gray!55,line width=1pt}
 ]
-\node[cluster,draw=clrB!75,fill=clrB!6] (factual) at (-5.6,4.0) {
+\node[cluster,draw=clrB!75,fill=clrB!6] (factual) at (-5.6,6.8) {
     {\bfseries\color{clrB}Factuality evaluation}\\[2mm]
     {\footnotesize Fact checking, factual QA,\\source faithfulness}\\[1.5mm]
-    {\footnotesize\itshape FEVER, TruthfulQA, HaluEval,\\HalluLens, XSum,\\AA-Omniscience}\\[1.5mm]
-    {\scriptsize Examples from rows 1--22}
+    {\footnotesize\itshape FEVER, FactBench, HalluRAG,\\RAGTruth}\\[1.5mm]
+    {\scriptsize Rows 1--23}
 };
-\node[cluster,draw=clrP!75,fill=clrP!7] (intent) at (-5.6,0) {
+\node[cluster,draw=clrP!75,fill=clrP!6] (intent) at (-5.6,3.4) {
     {\bfseries\color{clrP}Intent evaluation}\\[2mm]
     {\footnotesize Query-constraint satisfaction}\\[1.5mm]
     {\footnotesize\itshape FaithQA}\\[1.5mm]
-    {\scriptsize Row 23}
+    {\scriptsize Row 24}
 };
-\node[cluster,draw=clrG!70,fill=clrG!5] (mixed) at (-5.6,-4.0) {
-    {\bfseries\color{clrG}Mixed-task and tool-use\\evaluation}\\[2mm]
-    {\footnotesize Reasoning, tool-use QA,\\hallucination typing}\\[1.5mm]
-    {\footnotesize\itshape BIG-Bench, BIG-Bench Hard,\\ToolQA, HIC-Bench}\\[1.5mm]
-    {\scriptsize Rows 24--27}
+\node[cluster,draw=clrG!75,fill=clrG!6] (mixed) at (-5.6,0) {
+    {\bfseries\color{clrG}Multi-task evaluation}\\[2mm]
+    {\footnotesize Subtask targets and metrics}\\[1.5mm]
+    {\footnotesize\itshape BIG-Bench, BIG-Bench Hard,\\CreativityPrism}\\[1.5mm]
+    {\scriptsize Rows 25--27}
 };
-\node[cluster,draw=magenta!65!black,fill=magenta!6] (writing) at (5.6,4.0) {
-    {\bfseries\color{magenta!65!black}Creative writing\\and reasoning}\\[2mm]
-    {\footnotesize Stories, writing quality,\\creative reasoning}\\[1.5mm]
-    {\footnotesize\itshape CreativityPrism, LitBench,\\WritingBench, Art-or-Artifice}\\[1.5mm]
-    {\scriptsize Examples from rows 28--32, 35--36}
+\node[cluster,draw=clrO!75,fill=clrO!6] (attribution) at (-5.6,-3.4) {
+    {\bfseries\color{clrO}Attribution and citation}\\[2mm]
+    {\footnotesize Identified sources and\\citation support}\\[1.5mm]
+    {\footnotesize\itshape ALCE, AIS}\\[1.5mm]
+    {\scriptsize Rows 44--45}
 };
-\node[cluster,draw=clrO!80,fill=clrO!8] (divergent) at (5.6,0) {
+\node[cluster,draw=clrB!75,fill=clrB!6] (uncertainty) at (-5.6,-6.8) {
+    {\bfseries\color{clrB}Abstention and\\uncertainty expression}\\[2mm]
+    {\footnotesize Nonanswers, selective uncertainty,\\and confidence expression}\\[1.5mm]
+    {\footnotesize\itshape AbstentionBench, UNCLE, LoGU}\\[1.5mm]
+    {\scriptsize Rows 46--49}
+};
+\node[cluster,draw=magenta!65!black!75,fill=magenta!65!black!6] (writing) at (5.6,6.8) {
+    {\bfseries\color{magenta!65!black}Creative writing}\\[2mm]
+    {\footnotesize Stories and written responses}\\[1.5mm]
+    {\footnotesize\itshape LitBench, Short Story,\\WritingBench, Art-or-Artifice}\\[1.5mm]
+    {\scriptsize Rows 28--32}
+};
+\node[cluster,draw=clrO!75,fill=clrO!6] (divergent) at (5.6,3.4) {
     {\bfseries\color{clrO}Divergent thinking and\\linguistic creativity}\\[2mm]
-    {\footnotesize Ideas, titles, and reformulation;\\originality, flexibility, elaboration}\\[1.5mm]
+    {\footnotesize Ideas and language inventions}\\[1.5mm]
     {\footnotesize\itshape Automated DT scoring,\\Verbal Creativity}\\[1.5mm]
     {\scriptsize Rows 33--34}
 };
-\node[cluster,draw=clrLD!75,fill=clrLD!7] (solution) at (5.6,-4.0) {
-    {\bfseries\color{clrLD}Constrained problem solving}\\[2mm]
-    {\footnotesize Feasibility, correctness,\\novel or alternative solutions}\\[1.5mm]
-    {\footnotesize\itshape MacGyver, EscapeBench,\\CreativEval, NeoCoder, CreativeMath}\\[1.5mm]
-    {\scriptsize Rows 37--41}
+\node[cluster,draw=clrLD!75,fill=clrLD!6] (solution) at (5.6,0) {
+    {\bfseries\color{clrLD}Problem solving and\\scientific ideation}\\[2mm]
+    {\footnotesize Proposals and solutions}\\[1.5mm]
+    {\footnotesize\itshape HIC-Bench, Si et al., NeoCoder}\\[1.5mm]
+    {\scriptsize Rows 35--43}
+};
+\node[cluster,draw=clrP!75,fill=clrP!6] (premises) at (5.6,-3.4) {
+    {\bfseries\color{clrP}False premises and\\counterfactual reasoning}\\[2mm]
+    {\footnotesize Premise correction or reasoning\\under a stipulated condition}\\[1.5mm]
+    {\footnotesize\itshape FaithEval, (QA)$^2$, IfQA}\\[1.5mm]
+    {\scriptsize Rows 50--52}
+};
+\node[cluster,draw=magenta!65!black!75,fill=magenta!65!black!6] (characters) at (5.6,-6.8) {
+    {\bfseries\color{magenta!65!black}Role-playing and\\fictional-world consistency}\\[2mm]
+    {\footnotesize Narrative time, perspective,\\and character knowledge}\\[1.5mm]
+    {\footnotesize\itshape TimeChara}\\[1.5mm]
+    {\scriptsize Row 53}
 };
 
 \node[rounded corners=14pt,draw=clrH!80,fill=clrH!4,
     line width=1.4pt,dashed,text width=4.65cm,
-    minimum height=4.4cm,align=center,inner sep=10pt] (gap) at (0,0) {
-    {\footnotesize\bfseries\color{clrH}EVALUATION TARGET}\\[3mm]
-    {\large\bfseries Joint evaluation}\\[3mm]
-    {\bfseries Creativity and\\divergent thinking}\\[1mm]
-    {\large +}\\[1mm]
-    {\bfseries Hallucination detection}\\[3mm]
-    {\footnotesize Distinguish licensed divergence\\from hallucination}\\[2mm]
-    {\scriptsize Under an explicit truth contract:\\reference evidence, permission scope,\\required status marking}
+    minimum height=4.4cm,align=center,inner sep=10pt] (contract) at (0,0) {
+    {\footnotesize\bfseries\color{clrH}CLAIM-LEVEL DECISION}\\[3mm]
+    {\large\bfseries Truth contract}\\[3mm]
+    {\bfseries Reference evidence}\\[1.5mm]
+    {\bfseries Permission scope}\\[1.5mm]
+    {\bfseries Required status marking}\\[3mm]
+    {\footnotesize Assign a label while retaining\\the evidence state}\\[2mm]
+    {\scriptsize Grounded, licensed divergence,\\or hallucination}
 };
+\draw[link] (factual.east) -- (contract.north west);
+\draw[link] (intent.east) -- (contract.north west);
+\draw[link] (mixed.east) -- (contract.west);
+\draw[link] (attribution.east) -- (contract.south west);
+\draw[link] (uncertainty.east) -- (contract.south west);
+\draw[link] (writing.west) -- (contract.north east);
+\draw[link] (divergent.west) -- (contract.north east);
+\draw[link] (solution.west) -- (contract.east);
+\draw[link] (premises.west) -- (contract.south east);
+\draw[link] (characters.west) -- (contract.south east);
 
-\draw[link] (factual.east) -- (gap.north west);
-\draw[link] (intent.east) -- (gap.west);
-\draw[link] (mixed.east) -- (gap.south west);
-\draw[link] (writing.west) -- (gap.north east);
-\draw[link] (divergent.west) -- (gap.east);
-\draw[link] (solution.west) -- (gap.south east);
-
-\node[align=center,font=\scriptsize,text=clrG] at (0,-6.45) {
-    Colors identify task families. The center is the proposed joint evaluation target.\\
-    Resource IDs refer to Tables~\ref{tab:full-mapping-factual-a}--\ref{tab:full-mapping-creative} in the main text.
-};
 \end{tikzpicture}

@@ -45,3 +45,4 @@ tmp/*
 !conference-template/**/*.pdf
 .fuse_hidden0000001300000001
 .fuse_hidden0000001300000002
+CommentaireV2_review/*
