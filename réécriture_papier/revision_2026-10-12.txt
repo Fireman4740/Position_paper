@@ -169,3 +169,19 @@ family discussion now distinguish these checks without introducing a broader
 name for the status-marking field.
 Validation : make check réussi ; aucune référence non résolue ni débordement de
 boîte dans le log. Contrôle visuel du tableau avant livraison du PDF actualisé.
+
+Complément — 13 octobre 2026 : tableau 4 comparatif
+
+Cible : What Is Missing / tab:precedents.
+Patch / changelog : les trois colonnes descriptives sont remplacées par une
+colonne Resource et les trois champs déjà utilisés dans le mapping : Reference
+and check, Permission scope, Required status marking. Les cellules reprennent
+les informations du manuscrit et du tableau 3. « Not identified » reste borné
+aux protocoles sélectionnés. Les unités larges (proposition, programme, réponse)
+restent visibles ; la ligne Truth contract présente le fonctionnement proposé.
+Response to reviewer: We align the nearest-precedent table with the three contract
+fields so readers can compare them directly. Short descriptions preserve the
+units of evaluation, while the proposed design is distinguished from validated
+methods. The table does not assert a literature-wide absence or add new sources.
+Validation : compilation réussie, citations inchangées, tableau vérifié
+visuellement en page 24 ; aucun débordement ni référence non résolue.

@@ -1660,23 +1660,23 @@ judgment differs from a separate status-marking record for each claim.
 
 \begin{table}[!ht]
 \centering\small
-\caption{\textbf{Closest precedents in the resource mapping.}
-The entries distinguish the evaluated unit from the requirement checked;
-they do not count how many contract fields a resource fully covers.
-The final row describes the proposed truth contract design.}
+\caption{\textbf{Closest precedents compared by truth contract field.}
+``Not identified'' refers to the selected protocols under our definitions.
+The final row describes the proposed combination of the three fields for
+each claim, not a validated evaluation method.}
 \label{tab:precedents}
-\begin{tabularx}{\linewidth}{@{}P{.20\linewidth}YY@{}}
+\begin{tabularx}{\linewidth}{@{}P{.17\linewidth}YYY@{}}
 \toprule
-Resource & Unit and check & Distinction from the proposed rule\\\midrule
-HalluRAG & Sentence support; inability to answer & Nonanswer requirement, not permission to invent\\\addlinespace[2pt]
-ALCE & Statement support and citations & Attribution, not hypothesis or fiction status\\\addlinespace[2pt]
-LoGU & Claims; factual correctness and selective uncertainty & No task-specific invention permission identified\\\addlinespace[2pt]
-HIC-Bench & Scientific proposals; hallucination and creativity judgments & Proposal-level assessment\\\addlinespace[2pt]
-NeoCoder & Programs; tests and technique constraints & Program-level assessment\\\addlinespace[2pt]
-Si et al. & Proposals; expert ratings and headings & Proposal-level assessment\\\addlinespace[2pt]
-TimeChara & Responses; knowledge and expressed unawareness & Response-level assessment\\\addlinespace[2pt]
-\midrule
-Truth contract (Section~\ref{sec:framework}) & Claims; evidence state, permission scope, and required status marking & Proposed combination of these checks into one claim label\\
+\textbf{Resource} & \textbf{Reference and check} & \textbf{Permission scope} & \textbf{Required status marking}\\\midrule
+HalluRAG & Sentence support & Supported content only & Not identified\\\addlinespace[4pt]
+ALCE & Statement support & Supported content only & Not identified\\\addlinespace[4pt]
+LoGU & Fact checks per claim & No invention permission identified & Selective uncertainty\\\addlinespace[4pt]
+HIC-Bench & Judgments of whole proposals & New proposals within constraints & Not identified\\\addlinespace[4pt]
+NeoCoder & Program tests & New programs; technique constraints & Not identified\\\addlinespace[4pt]
+Si et al. & Ratings of whole proposals & New methods & Not identified\\\addlinespace[4pt]
+TimeChara & Response consistency & Character knowledge limits & Not identified per claim\\\midrule
+\rowcolor{bgB}
+\textbf{Truth contract}\newline(Section~\ref{sec:framework}) & Evidence state for each claim & Allowed additions and explicit exclusions & Required status for each claim\\
 \bottomrule
 \end{tabularx}
 
@@ -2033,18 +2033,23 @@ of recovery coverage, declared before evaluation, and follows this order:
 or a failure prevents the required checks.
 \item Otherwise, report \emph{no hallucination detected among evaluated claims}.
 \end{enumerate}
-This is an option to test, not the framework's default. A study using it must
-publish its coverage threshold, claim trace, and evaluation failures. A
-favorable result cannot certify claims that were not recovered or compliance
-with other instructions. For example, two individually permitted
-reconstructions can violate a request for exactly one reconstruction.
+This optional rule still needs to be tested. Studies using it must state
+the minimum recovery coverage they require and report the claim trace
+and any checks they could not complete. A result with no H applies only
+to the claims evaluated. The response may still break other instructions:
+for example, it may give two permitted reconstructions when the task asks
+for only one.
 
-Recovery coverage is the proportion of independently annotated claims
-expressed in the response that are successfully recovered. The protocol
-must fix the segmentation and matching convention, requiring preservation
-of content and status without double-counting redundant recoveries. When
-there are no eligible claims, report coverage as not applicable rather
-than assigning a perfect score. Task completeness remains separate.
+Recovery coverage measures the share of claims in the response that the
+evaluator recovers. To measure it, compare the recovered claims with a
+list prepared by independent annotators. Decide in advance what counts
+as one claim and how to match recovered claims to this list. Count a
+claim as recovered only if its meaning and status are preserved, and
+count it only once.
+
+If the response contains no claims to evaluate, report coverage as
+``not applicable.'' Finding all the claims in a response does not mean
+that the response provides everything the task requested.
 
 Creative-task success is \textsc{pass}, \textsc{fail}, \textsc{not assessed},
 or a task-specific score under stated criteria. Report those criteria and
