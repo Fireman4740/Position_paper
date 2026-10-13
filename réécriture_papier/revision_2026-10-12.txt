@@ -1,0 +1,171 @@
+MISE À JOUR DU 13 OCTOBRE 2026
+La décision du 13 octobre remplace le traitement des faits étayés explicitement
+exclus décrit aux points 1 et 2 ci-dessous. Le texte du 12 octobre est conservé
+comme historique ; voir le complément en fin de document pour la règle actuelle.
+
+Révision locale — 12 octobre 2026
+
+Cible : truth_contract_position_paper.tex et figures/contract_interventions.tex.
+Périmètre : plan validé, puis allègement supplémentaire de la claim trace.
+Source : uniquement le manuscrit présent au début de cette révision. Aucune
+citation, entrée BibTeX, donnée ou résultat ajouté. Les modifications déjà
+présentes dans le fichier ont été conservées.
+Ce document décrit les changements ; il ne constitue pas une nouvelle review
+indépendante ni une validation scientifique du framework.
+
+1. P0.1, P0.3 ; audit 22.1–2 — portée du label et statut/format
+Cibles : Introduction ; Framework (Permission scope, Required status marking,
+Marking check, Claim Labels, table 2) ; Example C ; figure 3C ; Discussion ; Conclusion.
+Patch / changelog : un fait entailed reste grounded même si une consigne interdit
+son utilisation ; la violation de consigne est séparée. Un titre manquant ne
+produit pas H lorsque le statut est déjà clair. L'exemple C conserve LD dans ses
+deux conditions et signale séparément le défaut de format. Les indices textuels
+ou contextuels du statut sont enregistrés. Pas de changement de nom ESTABLISHED.
+Response to reviewer: We separate supported-content instruction violations and
+formatting failures from the claim-labeling rule. Example C now illustrates this
+boundary. The marking annotation retains the cue and context used to interpret
+status rather than relying on the three status names alone.
+
+2. P0.2, P0.4, P1.5 ; audit 22.1 et 22.6 — représentation et référence
+Cibles : Response Text to Claims ; Oracle Verification ; Claim Labels ; Appendix A.
+Patch / changelog : contenu et statut conservent conjointement le sens. L'assertion,
+l'hypothèse et le rapport sur une histoire sont distingués. Les regroupements de
+la figure 2 sont signalés ; les composants nécessitant des jugements différents
+doivent être séparés. La prémisse adoptée comme référence est distinguée d'une
+permission de s'écarter d'une référence inchangée. « Canonicalization » supprimé.
+Response to reviewer: We clarify which content the oracle verifies and retain
+report and negation scope. Grouped claims are explicitly illustrative. The
+contract must fix whether an invented premise belongs to the reference or is a
+permitted departure before the response is evaluated.
+Décision de l'auteur : conserver la possibilité contradicted + permission +
+statut satisfait → LD. L'état contradicted reste visible. AGENTS.md a été corrigé.
+
+3. P0.5–7 ; audit 22.3, 22.5–6 — mapping et précédents
+Cibles : Introduction ; Resource Mapping, tables 3 et 4.
+Patch / changelog : conclusions bornées aux protocoles sélectionnés et aux unités
+évaluées ; distinction entre objectif factuel et contrôle effectivement réalisé.
+La colonne d'inventaire devient « Presentation requirements » pour ne pas
+assimiler citations, abstention et format au required status marking. Le tableau
+des précédents utilise des descriptions plutôt qu'un comptage de champs couverts.
+LoGU et TimeChara sont harmonisés avec les descriptions déjà présentes dans
+Related Work : factual correctness/selective uncertainty et évaluation de la
+connaissance du personnage incluant expressed unawareness. La formule de LoGU
+n'a pas été ajoutée, ni un audit externe de ses métriques. Le critère de comparaison
+porte sur la prise en charge explicite de LD, sans exclure les tâches factuelles
+du framework. Le chevauchement QAGS/CNN-DailyMail est explicité.
+Response to reviewer: We narrow the comparison to the selected protocols and
+their evaluated units. The inventory distinguishes broad presentation conditions
+from status marking. The nearest-precedent descriptions are aligned with the
+manuscript's existing Related Work, without claiming blanket acceptance of hedged
+claims or absence of TimeChara's response-level unawareness check. Joint checks
+and their compression into one label are distinguished.
+Limite : pas de nouvel audit des 53 sources ni de nouveaux pointeurs de protocole,
+conformément à la consigne de s'appuyer uniquement sur le manuscrit.
+
+4. P0.8, P1.4, P1.6, P1.8 ; audit 22.7 — trace et résultats globaux
+Cibles : Claim trace ; Discussion ; Appendix A.
+Patch / changelog : tuple à huit éléments et symboles auxiliaires supprimés,
+remplacés par une annotation remplie en langage courant. « Not evaluated » reste
+distinct de passed. Résultats agrégés bornés aux claims évalués. Définition de la
+couverture, convention de correspondance à fixer et cas sans claim explicites.
+La contrainte d'une seule reconstruction reste un contrôle global. La trace rend
+les décisions auditables ; elle ne prouve pas quelle décision est incorrecte.
+Response to reviewer: We replace the tuple with a populated record and bound
+aggregate outcomes to evaluated claims. Coverage requires independent annotations
+and a declared matching convention. Claim labels do not certify whole-response
+compliance, and diagnostic conclusions require independent reference judgments.
+
+5. P1.2, P1.7 ; audit 22.8 — motivation et agenda
+Cibles : Introduction ; Research Agenda, table 5 ; Discussion.
+Patch / changelog : détour initial sur scaling et inévitabilité raccourci ; les
+qualifications et références restent en Discussion et Appendix B. La robustesse
+au style est condensée sous Evaluation methods ; six priorités au lieu de sept,
+avec renumérotation cohérente. Les comparaisons avec factuality evaluation et
+instruction following restent des propositions d'études.
+Response to reviewer: We shorten the opening reliability discussion and keep its
+qualifications in the Discussion. Style robustness is a potential test within
+evaluation methods, after contract annotation and labeling reliability. It is
+not introduced into the mapping.
+
+6. P2 ; audit 22.4 — présentation
+Cibles : figures 1–3 ; Introduction ; Resource Mapping ; Examples.
+Patch / changelog : référence construite explicitée dès les figures ; même public
+et même base de prompt en figure 1 ; « larger » corrigé ; tags « claim-only »
+supprimés ; « Predicted result » remplacé par « Rule outcome ». Les états sont
+stipulés, les labels sont dérivés. Inventaire des ressources dédoublonné dans la
+prose, sans supprimer de ressource. Ajustement de largeur de la figure 3 et
+espacement du tableau des précédents. Suppression d'un end{samepage} orphelin
+dans la zone de la trace remplacée.
+Response to reviewer: The figures identify constructed inputs at first use, and
+the captions distinguish stipulated evidence from rule-derived labels. The two
+introductory prompts now share their audience. Terminology and task categories
+are retained throughout.
+
+Recommandations non retenues / adaptées
+P1.1 : ordre des sections conservé, conformément au choix de révision minimale.
+P1.3 : inventaire conservé en place ; tableau des précédents simplifié, sans
+nouvelle annexe de codage ni vérification externe.
+P1.4 : aucun déplacement du tuple en annexe ; notation supprimée comme demandé.
+P2 ESTABLISHED : nom conservé, son sens de présentation restant explicitement
+distinct du support par l'évidence.
+P2 placement figure 1 : pas de refonte du placement ; le raccourcissement du début
+supprime la citation interrompue par le détour sur scaling.
+
+AGENTS.md
+Fichier actif, titre, commandes de build, macros, labels et convention contradicted
+mis à jour à partir du manuscrit et des décisions validées. Consignes de style,
+source unique, portée du mapping et séparation des violations explicitées.
+
+Validation
+make check puis make pdf : succès. Aucun ajout ni retrait de clé de citation ;
+aucune clé utilisée absente de la bibliographie. Aucune référence ou citation non
+résolue dans le log final, aucun overfull box. Avertissement hyperref de la classe
+sur pdfpagelabels et avertissements underfull sans erreur de compilation.
+Contrôle visuel des figures et des tableaux modifiés effectué.
+
+Complément — 13 octobre 2026 : rétablissement de l'exclusion des faits étayés
+
+Demande : défendre la position selon laquelle un fait étayé peut recevoir H
+si la tâche l'exclut explicitement en faveur d'un contenu inventé.
+Cibles : Abstract ; Introduction / Our position ; Framework / Truth Contract,
+Permission scope, notation et Claim Labels (table 2) ; Discussion / What Is
+Relative and What Is Not ; Conclusion ; AGENTS.md.
+Patch / changelog : règle entailed + exclusion explicite → H (out-of-scope)
+rétablie. Entailed sans cette exclusion → G. L'état d'évidence reste inchangé.
+L'exemple existant du lieu et de la date illustre une réponse uniquement factuelle
+lorsque la tâche exige leur invention et interdit les valeurs réelles.
+L'abstract et l'introduction annoncent cette convention ; un court paragraphe de
+discussion défend la prise en compte de la permission même pour un fait étayé.
+Les défauts purement formels restent distincts. La trace simplifiée, les figures
+et le mapping ne sont pas modifiés par ce rétablissement.
+Response to reviewer: We retain the broader, contract-relative use of the
+hallucination label. When an invention requirement explicitly rules out a
+supported fact, that fact receives H while its evidence state remains entailed.
+We now state this convention in the abstract and introduction, restore it in the
+decision table, and explain its rationale in the discussion. This distinguishes
+a permission failure from an evidence error without treating every formatting
+failure as hallucination.
+Validation : make check réussi, aucune citation ajoutée, aucune clé manquante
+ni référence non résolue. Vérification visuelle du tableau avant livraison.
+
+Complément — 13 octobre 2026 : vocabulaire du mapping
+
+Demande : conserver « Required status marking » et limiter cette colonne au
+statut de fait, de possibilité ou de fiction. Cette décision remplace le choix
+de « Presentation requirements » décrit au point 3 du journal du 12 octobre.
+Cibles : Reading Each Protocol ; table 3 ; What Each Family Checks ; AGENTS.md.
+Patch / changelog : en-têtes et légende harmonisés avec le framework. Les citations,
+l'abstention, les réponses d'ignorance et les contraintes de format sont décrites
+dans « Reference and check ». Les symboles de la dernière colonne sont ajustés à
+son sens restreint. L'incertitude exprimée reste pertinente lorsqu'elle marque
+le statut d'un claim ; une non-réponse n'est pas assimilée à un tel marquage.
+Les 53 ressources, leurs identifiants, leurs citations et les catégories de tâches
+sont conservés. Aucun nouveau contrôle externe des protocoles n'est revendiqué :
+la modification réorganise et resserre les descriptions présentes dans le manuscrit.
+Response to reviewer: We use “Required status marking” consistently for the
+presentation of claims as fact, possibility, or fiction. Citations, abstention,
+and formatting are recorded with the protocol's other checks. The legend and
+family discussion now distinguish these checks without introducing a broader
+name for the status-marking field.
+Validation : make check réussi ; aucune référence non résolue ni débordement de
+boîte dans le log. Contrôle visuel du tableau avant livraison du PDF actualisé.
