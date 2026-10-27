@@ -92,7 +92,8 @@ marking that states how the response must present that content.
 The framework evaluates individual claims in context and labels them as
 grounded, hallucination, or \emph{licensed divergence}. Under this proposed
 convention, a supported fact also receives the hallucination label when
-the task explicitly excludes it in favor of invented content. Its evidence
+the task explicitly excludes it in favor of invented content, or when the
+response presents it as a mere possibility instead of a fact. Its evidence
 state remains entailed. Claims left unknown
 or contradicted by the reference receive the licensed-divergence label
 when the task permits them and their presentation satisfies the required
@@ -344,7 +345,9 @@ evidence and the task instructions. We call this combination a \emph{truth
 contract}. It answers three questions: What reference evidence and checking procedure should be used to check the response? What content does the task permit or exclude? How must the response present such content?
 These questions should be answered from the task context
 before the response is evaluated.
-The truth contract makes evaluation rules explicit. Content supported by the reference receives the grounded label when the response presents it as a fact, unless the task explicitly excludes it.
+The truth contract makes evaluation rules explicit. Content supported by
+the reference receives the grounded label when the response presents it as
+a fact, unless the task explicitly excludes it.
 If the task requires invented content instead, an explicitly excluded fact
 receives the hallucination label while remaining entailed by the reference.
 This convention makes permission relevant even when the evidence supports
@@ -355,10 +358,13 @@ hallucination. Licensed divergence therefore indicates
 that unsupported content was both permitted and presented as the task
 requires. It does not indicate that the content is true.
 The required status marking, stated in the prompt or inferred from the
-task type, is what lets the evaluation see, for every claim, how the model
-presents its uncertainty. Following \citet{yona_metacognition_2026}, an
+task type, asks the model to present facts as facts and possibilities as
+possibilities. It lets the evaluation see, for every claim, how the model
+presents its certainty. Following \citet{yona_metacognition_2026}, an
 unsupported claim that the response openly offers as a hypothesis is not
-treated like the same claim stated with confidence. Our position is that
+treated like the same claim stated with confidence. Conversely, a supported
+fact that the response presents as a mere guess misrepresents what is
+established. Our position is that
 the available evidence and the task instructions should be evaluated
 together.
 
@@ -979,72 +985,101 @@ fiction alone does not impose this exclusion: a story can include real
 places or events.
 
 \paragraph{Required status marking}
-Required status marking $\mu$ records how the task wants content to be
-presented. Its principle is simple: facts should be presented as facts,
-and possibilities as possibilities. Supported content is therefore stated
-as a fact, and content that goes beyond the reference appears as a
-possibility, such as a hypothesis, or as fiction.
-
-A prompt can state an explicit constraint on $\mu$. In the museum task of
-Figure~\ref{fig:claim-label-annotation}, it asks that plausible information
-be marked as a hypothesis. A constraint can also fix how this status must
-be shown, for example under a section heading titled ``Hypothesis.''
-
-Most prompts are shorter and say nothing about presentation. Ideally, the
-evaluator would then infer $\mu$ from the task type, as we do for some
-resources in Section~\ref{sec:methodology}, and record this inference with
-the contract. Three short prompts show how:
+Required status marking $\mu$ records how the task requires content to be
+presented. It specifies two things:
 \begin{itemize}
-\item ``Who found the Rosetta Stone?'' The task permits no additions. If
-the reference supports the answer, ``It was found by French soldiers in
-1799'' satisfies $\mu$, whereas ``It may have been found by French
-soldiers'' presents a fact as a guess and fails it.
-\item ``Write a short story set in ancient Egypt.'' Invented events must be
-presented as fiction. The story frame usually does this, and real places
-can still appear inside the story.
-\item ``Why might this experiment have failed?'' Explanations must be
-presented as possibilities: ``The sample may have been contaminated''
+\item the \emph{required status}: supported content must be stated as a
+fact, and content that goes beyond the reference must appear as a
+possibility, such as a hypothesis, or as fiction. In fiction, real places
+and events can also appear inside the story without being stated as facts;
+\item any prescribed \emph{form} for showing that status, such as a section
+heading titled ``Hypothesis.''
+\end{itemize}
+In the museum task of Figure~\ref{fig:claim-label-annotation}, the prompt
+states $\mu$ explicitly: permitted plausible information must be marked as
+a hypothesis. This is the presentation the evaluator will look for in the
+response.
+
+Many prompts are shorter and say nothing about presentation. The evaluator
+nevertheless makes $\mu$ explicit for every task, before evaluating the
+response. It annotates $\mu$ when the prompt states it, and otherwise infers
+it from the task type, as we also do for some resources in
+Section~\ref{sec:methodology}. This inference is recorded with the
+contract. We never leave $\mu$ unspecified, so that every evaluation can
+say whether the response shows its uncertainty. Three short prompts
+illustrate the inference:
+\begin{itemize}
+\item ``Who found the Rosetta Stone?'' The task permits no additions
+($\Gamma=\varnothing$). $\mu$ still applies: a supported answer must be
+stated as a fact, and an answer that goes beyond the reference must be
+marked as uncertain. If the reference supports the answer, ``It was found
+by French soldiers in 1799'' satisfies $\mu$, whereas ``It may have been
+found by French soldiers'' presents a fact as a guess and fails $\mu$. For
+an unsupported answer, marking does not make it acceptable, but it shows
+whether the model answered with confidence.
+\item ``Write a short story set in ancient Egypt.'' $\Gamma$ permits
+invented events and characters, and $\mu$ requires them to be presented as
+fiction; the story frame usually satisfies this requirement.
+\item ``Why might this experiment have failed?'' $\Gamma$ permits
+explanations that the evidence does not establish, and $\mu$ requires them
+to be presented as possibilities: ``The sample may have been contaminated''
 satisfies $\mu$, whereas ``The sample was contaminated'' does not.
 \end{itemize}
-In practice, this inference is not always unambiguous: ``Tell me about the
-Rosetta Stone'' may call for a factual summary or for an engaging story.
-The evaluator then records the plausible readings instead of silently
-choosing one.
-
-Like the permission scope, $\mu$ is fixed before the response is seen. The
-\emph{observed status marking} then records how the response actually
-presents each claim, and Section~\ref{subsec:contract-checks} compares the
-two. Marking a claim as uncertain or fictional never expands its
-permission scope.
+Like the permission scope, $\mu$ is therefore fixed before the response is
+seen. The \emph{observed status marking} records how
+the response actually presents each claim; Section~\ref{subsec:contract-checks}
+explains how it is compared with $\mu$. Marking a claim as uncertain or
+fictional never expands its permission scope.
 
 \paragraph{Why required status marking matters}
-Without $\mu$, an evaluation can only ask whether a claim is supported. It
-cannot tell a confident error from a claim that the response openly offers
-as a possibility. \citet{yona_metacognition_2026} argue that this
-difference is central to trust. They describe hallucinations as confident
-errors, that is, incorrect information delivered without appropriate
-qualification. The same error, clearly hedged, becomes a hypothesis that
-the reader can weigh. They therefore propose \emph{faithful uncertainty}:
-what a model says about its confidence should match its internal
-confidence.
+The required status marking is what lets the evaluation represent the
+uncertainty of the model in its response. Without $\mu$, an evaluation can
+only ask whether a claim is supported. It cannot tell a confident error
+from a claim that the response openly offers as a possibility.
+\citet{yona_metacognition_2026} argue that this distinction is central to
+trust. They describe hallucinations as confident errors, that is, incorrect
+information delivered without appropriate qualification, and note that an
+error communicated with appropriate hedging becomes a hypothesis offered
+for consideration. They propose \emph{faithful uncertainty}: what a model
+says about its confidence should match its internal confidence. Expressing
+uncertainty then becomes a third option between answering and abstaining,
+which keeps useful information while warning the reader.
 
-The truth contract applies this idea to each claim, in both directions:
+The truth contract gives this option a place in claim-level evaluation,
+and applies it in both directions: facts must be presented as facts, and
+possibilities as possibilities.
 \begin{itemize}
-\item a permitted claim presented as a possibility receives \LD{}; the same
-claim stated as a fact receives \Hall{};
-\item a supported fact stated as a fact receives \Grd{}; the same fact
-presented as a mere possibility receives \Hall{}, because a model that
-hedges everything gives the reader no signal \citep{yona_metacognition_2026}.
+\item $\mu$ states, before the response is seen, which status each kind of
+content requires: supported facts are stated as facts, and plausible
+information is marked as a hypothesis;
+\item the observed status marking $\widehat{m}_i$ records how the response
+actually presents each claim;
+\item the claim label then separates a permitted claim that is clearly
+marked (\LD{}) from the same claim stated as a fact (\Hall{}, marking
+failure), and a supported fact stated as a fact (\Grd{}) from the same fact
+presented as a mere possibility (\Hall{}, marking failure).
 \end{itemize}
-For claims that the task does not permit, marking cannot change the label,
-but the claim trace still shows whether the model answered with confidence
-or signaled its doubt.
+Penalizing a hedged fact follows the same logic as penalizing a confident
+error. As \citet{yona_metacognition_2026} note, a model that hedges
+everything provides no signal: the reader can no longer tell what is
+established from what is only proposed.
+Because $\mu$ is made explicit for every task, the observed status marking
+is recorded for every claim, not only for permitted ones. When the task does
+not permit a claim, marking cannot change its label: the claim receives
+\Hall{} whether it is hedged or not. The trace nevertheless keeps the
+difference between a confident error, presented as \textsc{established},
+and an error that the response marks as uncertain. The claim trace
+therefore shows, claim by claim, where the model signals its uncertainty
+and where it does not, instead of hiding this information in a single
+correctness score.
 
-One difference remains. Faithful uncertainty compares the wording with the
-model's internal confidence, whereas $\mu$ compares it with what the
-reference establishes. A model that is genuinely unsure of a true fact and
-hedges it is faithful in their sense, but receives \Hall{} under the truth
-contract. Measuring internal confidence requires separate tools, such as
+One difference with faithful uncertainty remains: $\mu$ is set by the task,
+and the evaluation compares the observed marking with the evidence state of
+each claim, whereas faithful uncertainty compares the wording with the
+model's internal confidence. Under the truth contract, a model that is
+genuinely unsure of a true fact and hedges it still receives \Hall{}, because
+the response misrepresents what the reference establishes. Checking the
+alignment with internal confidence requires separate measures, such as
 those of \citet{yona_faithful_2024}.
 
 Figure~\ref{fig:claim-label-annotation} shows how these three parameters
@@ -1191,8 +1226,11 @@ says nothing about it, such as the stele's original placement
 changed (\textsc{contradicted} claims);
 \item a strict factual task has no such rule ($\Gamma=\varnothing$).
 \end{itemize}
-Checking permission means deciding whether one of the rules defined in $\Gamma$ covers the
-claim $q^*_i$ and the corresponding $\mathrm{ES}_i$.The evidence state is part of this test because a rule can allow a claim that
+Checking permission means deciding whether one of the rules of $\Gamma$
+covers the claim, as an annotator decides whether a sentence follows an
+instruction. We write $(q^*_i,\mathrm{ES}_i)\in\Gamma$ when a rule of
+$\Gamma$ covers the recovered claim content $q^*_i$ in its evidence state
+$\mathrm{ES}_i$. The evidence state is part of this test because a rule can allow a claim that
 the reference leaves unknown without allowing one that the reference
 contradicts. In the museum example, the permission check passes for the
 temple-entrance placement, but changing the decree's known date falls
@@ -1204,8 +1242,8 @@ The evaluator checks whether the response presents the claim as required
 by $\mu$. It compares two records:
 \begin{itemize}
 \item \emph{Required status marking} $\mu$ comes from the task, either
-stated in the prompt or inferred from the task type
-(Section~\ref{subsec:contract}): how must permitted content be presented?
+stated in the prompt or inferred from the task type, and is specified for
+every task (Section~\ref{subsec:contract}): how must content be presented?
 This is the status the response must communicate.
 
 \item \emph{Observed status marking} $\widehat{m}_i$ is recorded from the
@@ -1237,8 +1275,11 @@ The recovered content is the temple-entrance placement, denoted here by
 $q^*_{\mathrm{temple}}$; its observed status marking,
 $\widehat{m}_{\mathrm{temple}}$, is \textsc{hypothetical}. Another claim in
 the same response, ``The decree dates from 1799,'' denoted by $q^*_{1799}$, has observed status
-marking \textsc{established}. The permission check remains separate from
-this presentation check.
+marking \textsc{established}. The requirement also works in the other
+direction: ``The decree may date from 196 BCE'' presents an entailed claim
+as \textsc{hypothetical} and fails $\mu$, which requires supported facts to
+be stated as facts. The permission check remains separate from this
+presentation check.
 
 A task may also prescribe a specific form of marking, for example a section
 heading titled ``Hypothesis'' above the plausible information. A heading is one
@@ -1266,12 +1307,15 @@ The index $i$ identifies a claim; $O$, $\Gamma$, and $\mu$ apply to the task.
 \subsection{Combining Contract Results: Claim Labels}\label{subsec:rule}
 
 The evaluator now combines each claim's evidence state with the permission
-scope and required status marking specified for the task. Supported content receives
-the grounded label (\Grd), unless the task explicitly excludes it and provided that the response
-presents it as a fact. An
-excluded fact receives claim label \Hall{} with the reason code
-\textsc{out-of-scope} (reason codes are listed below), while its
-evidence state remains \textsc{entailed}. Content that is \textsc{unknown}
+scope and required status marking specified for the task. Supported content
+receives the grounded label (\Grd) when the response presents it as a fact,
+unless the task explicitly excludes it. An excluded fact receives claim
+label \Hall{} with the reason code \textsc{out-of-scope} (reason codes are
+listed below), while its evidence state remains \textsc{entailed}. A
+supported fact that the response presents as a mere possibility, while
+$\mu$ requires it to be stated as a fact, receives \Hall{} with the reason
+code \textsc{marking-failure}; its evidence state also remains
+\textsc{entailed}. Content that is \textsc{unknown}
 or \textsc{contradicted} requires two further checks:
 does the task permit it, and does the response present it as required?
 If both conditions hold, it receives \emph{licensed divergence} (\LD).
@@ -1331,7 +1375,7 @@ formatting failures remain separate.}
 Evidence state & Additional condition & Claim Label & Reason code\\\midrule
 \textsc{entailed} & Explicitly excluded by a requirement for invented content & \Hall & \textsc{out-of-scope}\\
 \textsc{entailed} & Not excluded; presented as a fact & \Grd & ---\\
-\textsc{entailed} & Not excluded; presented as a possibility & \Hall & \textsc{marking-failure}\\
+\textsc{entailed} & Not excluded; presented as a possibility although $\mu$ requires a fact & \Hall & \textsc{marking-failure}\\
 \textsc{unknown} or \textsc{contradicted} & Not permitted & \Hall & \textsc{out-of-scope}\\
 \textsc{unknown} or \textsc{contradicted} & Permitted; required status not communicated & \Hall & \textsc{marking-failure}\\
 \textsc{unknown} or \textsc{contradicted} & Permitted; required status communicated & \LD & ---\\
@@ -1574,8 +1618,8 @@ call for factual content and others for invented content, so the
 permission scope changes from one request to the next. WritingBench
 nevertheless stays in creative writing, because producing written
 responses is its principal task.
-Table~\ref{tab:resource-mapping} orders the resources by family (shaded
-rows); each family row lists its task categories in parentheses.
+Table~\ref{tab:resource-mapping} orders the resources by family, with task
+categories as subheadings.
 
 \clearpage
 \begingroup
@@ -1612,7 +1656,8 @@ under reference and check.}
 \endfoot
 \bottomrule
 \endlastfoot
-\rowcolor{bgB}\multicolumn{4}{@{}p{\linewidth}@{}}{\footnotesize\bfseries Family 1: supported content only (factuality evaluation)}\\*
+\multicolumn{4}{@{}l@{}}{\textbf{Family 1: supported content only}}\\*
+\multicolumn{4}{@{}l@{}}{\emph{Factuality evaluation}}\\*
 1.~FEVER \citep{thorne_fever_2018}\newline\emph{Supplied claim} & Wikipedia; three-way claim labels & Not evaluated (supplied claims) & \Lacks\\\addlinespace[1pt]
 2.~TruthfulQA \citep{lin_truthfulqa_2022}\newline\emph{Answer} & Sourced answers; truthfulness and informativeness & \Weak{} Factual answer & \Weak{} Qualified answers accepted\\\addlinespace[1pt]
 3.~PopQA \citep{mallen_when_2023}\newline\emph{Answer} & Wikidata aliases; substring match & \Weak{} Factual answer & \Lacks\\\addlinespace[1pt]
@@ -1637,26 +1682,33 @@ under reference and check.}
 22.~ToolQA \citep{zhuang_toolqa_2023}\newline\emph{Final answer} & Computed targets; exact match & \Weak{} Answer from tool data & \Lacks\\\addlinespace[1pt]
 23.~RAGTruth \citep{niu_ragtruth_2024}\newline\emph{Response span} & Provided context; conflicting and baseless spans & \Stated{} Context fidelity & \Lacks\\\addlinespace[1pt]
 \midrule
-\rowcolor{bgB}\multicolumn{4}{@{}p{\linewidth}@{}}{\footnotesize\bfseries Family 2: regulated answers (intent evaluation; attribution and citation; abstention and uncertainty; false premises and counterfactuals)}\\*
+\multicolumn{4}{@{}l@{}}{\textbf{Family 2: regulated answers}}\\*
+\multicolumn{4}{@{}l@{}}{\emph{Intent evaluation}}\\*
 24.~FaithQA \citep{hao_faithqa_2025}\newline\emph{Query constraint} & Extracted constraints; weighted satisfaction & \Stated{} Request constraints and exclusions & \Varies\\\addlinespace[1pt]
+\multicolumn{4}{@{}l@{}}{\emph{Attribution and citation}}\\*
 25.~ALCE \citep{gao_alce_2023}\newline\emph{Statement and citations} & Retrieved passages; correctness; required citations and their support & \Stated{} Supported statements & \Lacks\\\addlinespace[1pt]
 26.~AIS \citep{rashkin_ais_2023}\newline\emph{Utterance in context} & Identified sources; interpretability and attribution; no inline citation required & \Stated{} Attributable claims & \Lacks\\\addlinespace[1pt]
+\multicolumn{4}{@{}l@{}}{\emph{Abstention and uncertainty expression}}\\*
 27.~AbstentionBench \citep{kirichenko_abstentionbench_2025}\newline\emph{Answer} & Answerability labels; abstention and correctness judges & \Stated{} Answer or abstain, by sample & \Lacks\\\addlinespace[1pt]
 28.~UNCLE \citep{yang_uncle_2025}\newline\emph{Answer aspect} & Reference answers and knowledge probes & \Weak{} Factual aspects & \Stated{} Uncertainty when unsure\\\addlinespace[1pt]
 29.~LoGU \citep{yang_logu_2025}\newline\emph{Atomic claim} & Factual correctness and selective uncertainty; knowledge probes & \Weak{} Factual claims & \Stated{} Selective uncertainty\\\addlinespace[1pt]
 30.~Yona et al. \citep{yona_faithful_2024}\newline\emph{Assertion} & Sampled answers; confidence versus decisiveness & \Weak{} Factual answer & \Stated{} Hedging alignment scored\\\addlinespace[1pt]
+\multicolumn{4}{@{}l@{}}{\emph{False premises and counterfactual reasoning}}\\*
 31.~FaithEval \citep{ming_faitheval_2025}\newline\emph{Answer} & Supplied context; target match; required ``unknown'' or ``conflict'' answers & \Stated{} Use supplied context & \Lacks\\\addlinespace[1pt]
 32.~(QA)$^2$ \citep{kim_qa2_2023}\newline\emph{Answer and assumption} & Assumption labels; human acceptability of correction or uncertainty & \Stated{} Address questionable assumptions & \Weak{} Uncertainty accepted\\\addlinespace[1pt]
 33.~IfQA \citep{yu_ifqa_2023}\newline\emph{Answer} & Counterfactual targets; exact match and F1; condition supplied in question & \Stated{} Reason under stated condition & \Lacks\\\addlinespace[1pt]
 \midrule
-\rowcolor{bgB}\multicolumn{4}{@{}p{\linewidth}@{}}{\footnotesize\bfseries Family 3: requested new content (creative writing; divergent thinking; problem solving and ideation; role-playing)}\\*
+\multicolumn{4}{@{}l@{}}{\textbf{Family 3: requested new content}}\\*
+\multicolumn{4}{@{}l@{}}{\emph{Creative writing}}\\*
 34.~LitBench \citep{fein_litbench_2025}\newline\emph{Story pair} & Human preferences; preference accuracy & \Weak{} Story invention & \Lacks\\\addlinespace[1pt]
 35.~Short Story \citep{ismayilzada_evaluating_2025}\newline\emph{Story} & Cue words; creativity metrics and ratings & \Stated{} Invention within cues & \Lacks\\\addlinespace[1pt]
 36.~WritingBench \citep{wu_writingbench_2025}\newline\emph{Written response} & Query-specific rubrics; scores & \Stated{} Query constraints & \Varies\\\addlinespace[1pt]
 37.~Art-or-Artifice / TTCW \citep{chakrabarty_art_2024}\newline\emph{Story} & Plot; expert TTCW tests & \Stated{} Fiction within plot & \Lacks\\\addlinespace[1pt]
 38.~Automated Creativity \citep{li_automated_2025}\newline\emph{Story} & Reference story; TTCW ratings & \Stated{} Fiction within plot & \Lacks\\\addlinespace[1pt]
+\multicolumn{4}{@{}l@{}}{\emph{Divergent thinking and linguistic creativity}}\\*
 39.~Automated DT scoring \citep{organisciak_beyond_2023}\newline\emph{Alternative use} & Human originality ratings & \Weak{} Unusual uses & \Lacks\\\addlinespace[1pt]
 40.~Verbal Creativity \citep{dinu_testing_2025}\newline\emph{Language response} & Test items; originality and flexibility & \Stated{} Invent or reformulate & \Lacks\\\addlinespace[1pt]
+\multicolumn{4}{@{}l@{}}{\emph{Problem solving and scientific ideation}}\\*
 41.~CR-LLM \citep{li_cr-llm_2024}\newline\emph{Concept} & Reference concept; correctness and granularity & \Stated{} Reasonable alternatives & \Lacks\\\addlinespace[1pt]
 42.~HIC-Bench \citep{yang_hicbench_2025}\newline\emph{Scientific proposal} & Scientific principles; hallucination and creativity judgments & \Stated{} Proposals under prompt constraints & \Lacks\\\addlinespace[1pt]
 43.~Hallucinating LLM Could Be Creative \citep{sun_hallucinating_2024}\newline\emph{Reasoning paths} & Correct final answers; path clustering & \Stated{} Alternative paths & \Lacks\\\addlinespace[1pt]
@@ -1666,9 +1718,11 @@ under reference and check.}
 47.~NeoCoder \citep{lu_benchmarking_2025}\newline\emph{Program} & Tests and technique detection; correctness and novelty & \Stated{} Avoid prohibited techniques & \Lacks\\\addlinespace[1pt]
 48.~CreativeMath \citep{ye_assessing_2025}\newline\emph{Mathematical solution} & Reference solutions; correctness and novelty & \Stated{} New solution methods & \Lacks\\\addlinespace[1pt]
 49.~Si et al. \citep{si_ideas_2025}\newline\emph{Research proposal} & Proposal template and headings; blind expert ratings & \Stated{} Propose new methods & \Lacks\\\addlinespace[1pt]
+\multicolumn{4}{@{}l@{}}{\emph{Role-playing and fictional-world consistency}}\\*
 50.~TimeChara \citep{ahn_timechara_2024}\newline\emph{Character response} & Narrative time and perspective; consistency and expressed unawareness at response level & \Stated{} Nothing beyond character knowledge at a given time & \Lacks\\\addlinespace[1pt]
 \midrule
-\rowcolor{bgB}\multicolumn{4}{@{}p{\linewidth}@{}}{\footnotesize\bfseries Family 4: mixed suites (multi-task evaluation)}\\*
+\multicolumn{4}{@{}l@{}}{\textbf{Family 4: mixed suites}}\\*
+\multicolumn{4}{@{}l@{}}{\emph{Multi-task evaluation}}\\*
 51.~BIG-Bench \citep{srivastava_beyond_2023}\newline\emph{Subtask output} & Targets or task-specific metrics & \Varies & \Varies\\\addlinespace[1pt]
 52.~BIG-Bench Hard \citep{suzgun_challenging_2023}\newline\emph{Final answer} & Task targets; exact match or accuracy & \Varies & \Lacks\\\addlinespace[1pt]
 53.~CreativityPrism \citep{hou_creativityprism_2025}\newline\emph{Task output} & Task tests or judges; quality, novelty, and diversity & \Varies & \Varies\\
@@ -1747,11 +1801,9 @@ by task.
 
 \subsection{What Is Missing}\label{subsec:gap}
 
-Among the selected protocols, we did not identify one that combines the
-three fields for the same claim, that is, one that records the evidence
-state of the claim, states when the task permits an unknown or
-contradicted claim, and states and checks which marking such a claim
-requires. The closest comparisons clarify the scope of this finding:
+Among the selected protocols, we did not identify the explicit joint
+claim-level decision defined in Section~\ref{subsec:criteria}. The closest
+comparisons clarify the scope of this finding:
 \begin{itemize}
 \item HalluRAG \citep{ridder_hallurag_2025} and ALCE \citep{gao_alce_2023}
 check evidence for sentences or statements.
@@ -1850,7 +1902,7 @@ This example shows why the reference evidence must be fixed for each
 evaluation: the same claim can have different evidence states under
 different references.
 \par\textbf{Fixed.} Response, claim, observed factual assertion,
-$\Gamma=\varnothing$, and no additional marking requirement for supported facts.
+$\Gamma=\varnothing$, and $\mu$, which requires supported facts to be stated as facts.
 \par\textbf{Changed.} $O_1$ uses the reference fragment, which leaves the
 placement unknown. $O_2$ uses the same fragment plus the stipulated sentence
 ``The complete stele stood near a temple entrance.'' Each oracle is fixed
@@ -2042,7 +2094,8 @@ A task can authorize a possibility without making it true. Likewise,
 changing the designated oracle changes the evidence relation used for
 evaluation, not the underlying world's facts. Under the proposed convention,
 H covers unknown or contradicted content that is not permitted or whose
-required status is not communicated. A permitted contradiction remains
+required status is not communicated, and supported facts that the response
+presents as mere possibilities. A permitted contradiction remains
 contradicted even when it receives LD. Conversely, a supported fact remains
 entailed when an explicit invention requirement excludes it and gives it H.
 The evidence state records the relation to the reference; the label also
@@ -2051,8 +2104,10 @@ accounts for what the task permits.
 We propose this broader use of hallucination because support alone does
 not determine whether content belongs in a response. Giving the real date
 when the task explicitly requires an invented one replaces the requested
-content with content the task rules out. Retaining the entailed state
-makes clear that the error concerns permission, not evidence. This does
+content with content the task rules out. Presenting the real date as a
+guess also misinforms the reader about what is established. In both cases,
+retaining the entailed state makes clear that the error concerns permission
+or presentation, not evidence. This does
 not make every instruction failure a hallucination: a missing heading
 remains a separate formatting error when the required status is clear.
 
@@ -2099,15 +2154,7 @@ The truth contract is a proposal for claim-level evaluation, and its
 reliability in practice remains to be measured. The framework assumes a
 correct oracle, and in practice this assumption can fail. A required source
 may be unavailable, or the context may leave the observed marking unclear.
-Suppose a children's label begins with ``Imagine the temple three thousand
-years ago'' and later states ``The stele stood near the entrance.'' The
-second sentence may belong to the imagined scene (\textsc{fictional}) or
-make a historical claim (\textsc{established}). Appendix~\ref{app:diagnostics}
-describes these limits of the oracle; claims affected by them are recorded
-as failures rather than given a label. Inferring $\mu$ from the task type
-also adds a judgment by the evaluator: a prompt can support several
-readings, and agreement on these inferences must be measured
-(Section~\ref{sec:agenda}).
+
 
 Claim labels evaluate each claim against the contract. Reasoning,
 consistency, completeness, and constraints on the whole response require
@@ -2133,10 +2180,10 @@ be presented.
 
 This contract distinguishes grounded claims, hallucinations, and licensed
 divergence without treating permission as evidence of truth. Through the
-required status marking, it also records whether the response shows its
-uncertainty as the task requires, so that a claim offered as a hypothesis
-is not evaluated like a confident error \citep{yona_metacognition_2026}. An unknown or
-contradicted claim can be licensed when the task permits it and its status
+required status marking, it also checks that the response presents facts
+as facts and possibilities as possibilities, so that a claim offered as a
+hypothesis is not evaluated like a confident error, and a hedged fact is
+not evaluated like a grounded one \citep{yona_metacognition_2026}. An unknown orcontradicted claim can be licensed when the task permits it and its status
 is presented as required. Conversely, a supported fact explicitly excluded
 by an invention requirement receives the hallucination label while remaining
 entailed. The evidence state remains visible alongside the claim label,
